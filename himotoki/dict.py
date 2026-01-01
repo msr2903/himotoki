@@ -291,13 +291,8 @@ class ConjugatedText:
     
     def get_conj_description(self) -> str:
         """Human-readable conjugation description."""
-        types = {
-            1: "Non-past", 2: "Past", 3: "Te-form", 4: "Provisional",
-            5: "Potential", 6: "Passive", 7: "Causative", 8: "Causative-passive",
-            9: "Volitional", 10: "Imperative", 11: "Conditional",
-            12: "Alternative", 13: "Continuative"
-        }
-        desc = types.get(self.conj_type, f"Type-{self.conj_type}")
+        from himotoki.conjugations import get_conj_description
+        desc = get_conj_description(self.conj_type)
         if self.neg:
             desc += " Negative"
         if self.fml:
@@ -534,6 +529,51 @@ def find_word(word: str, root_only: bool = False) -> List[SimpleText]:
     return [text_class.from_row(row) for row in rows]
 
 
+def get_conjugation_info_for_seq(seq: int) -> Optional[Dict]:
+    """
+    Look up conjugation info for a given seq.
+    
+    This finds if a dictionary entry is derived from another entry
+    (e.g., で particle is te-form of だ copula).
+    
+    Args:
+        seq: Sequence number to look up.
+        
+    Returns:
+        Dictionary with conjugation info, or None if not a conjugated form.
+    """
+    from himotoki.conjugations import get_conj_description as get_conj_desc
+    
+    # Check conjugation table for this seq
+    rows = query(
+        """
+        SELECT c.from_seq, cp.conj_type, cp.pos, cp.neg, cp.fml,
+               ka.text as source_text, ka.text as source_reading
+        FROM conjugation c
+        JOIN conj_prop cp ON cp.conj_id = c.id
+        JOIN kana_text ka ON ka.seq = c.from_seq
+        WHERE c.seq = ?
+        ORDER BY cp.conj_type
+        LIMIT 1
+        """,
+        (seq,)
+    )
+    
+    if not rows:
+        return None
+    
+    row = rows[0]
+    return {
+        'type': get_conj_desc(row['conj_type']),
+        'conj_type': row['conj_type'],
+        'pos': row['pos'],
+        'neg': bool(row['neg']) if row['neg'] is not None else False,
+        'fml': bool(row['fml']) if row['fml'] is not None else False,
+        'source_text': row['source_text'],
+        'source_reading': row['source_reading'],
+    }
+
+
 def find_word_as_hiragana(word: str, exclude: Optional[List[int]] = None,
                           finder=None) -> List[ProxyText]:
     """
@@ -623,9 +663,37 @@ def find_counter_words(word: str, counter) -> List:
     """
     Find counter word combinations.
     
-    This is a simplified version - full implementation in dict_counters.py.
+    Args:
+        word: The word to check for counter patterns
+        counter: Counter mode ('auto' or offset value)
+        
+    Returns:
+        List of CounterText objects if a counter pattern is detected
     """
-    # Placeholder - full implementation in dict_counters.py
+    from himotoki.dict_counters import detect_counter, init_counters, CounterText
+    
+    # Make sure counters are initialized
+    init_counters()
+    
+    result = detect_counter(word)
+    if result:
+        num_value, counter_text, reading = result
+        
+        # Try to get the seq for the counter from the dictionary
+        counter_seq = None
+        counter_entry = find_word(counter_text)
+        if counter_entry:
+            # Use the first matching entry's seq
+            counter_seq = counter_entry[0].seq
+        
+        # Create a CounterText object
+        return [CounterText(
+            text=word,
+            reading=reading,
+            number=num_value,
+            counter_text=counter_text,
+            seq=counter_seq
+        )]
     return []
 
 
@@ -854,6 +922,43 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
     Returns:
         Tuple of (score, info_dict).
     """
+    # Import CounterText for type checking
+    from himotoki.dict_counters import CounterText
+    
+    # Handle counter words - they get high score since they're valid semantic units
+    if isinstance(reading, CounterText):
+        text = reading.get_text()
+        length = max(1, mora_length(text))
+        n_kanji = count_char_class(text, 'kanji')
+        kanji_p = n_kanji > 0
+        
+        # Counter words get a high base score - higher than the sum of individual kanji
+        # For 三匹: individual kanji would score about 216 each = 432 total
+        # Counter should score higher to prefer the combined form
+        prop_score = 25  # Base score for counters
+        
+        # Length bonus - longer is better (三匹 > 三 + 匹)
+        score = prop_score * length_multiplier_coeff(length, 'strong')
+        
+        # Add significant bonus for kanji counters (favors combined form)
+        if kanji_p:
+            score += 20 * n_kanji
+        
+        # Extra bonus for being a semantic unit (not just multiple chars)
+        score += 50  # Bonus for counter being a recognized unit
+        
+        info = {
+            'posi': [],
+            'seq_set': [],
+            'conj': None,
+            'common': reading.common,
+            'score_info': [prop_score, [], 0, None],
+            'kpcl': [kanji_p, True, True, length > 3],
+            'counter': (reading.number, reading.counter_text),
+        }
+        
+        return score, info
+    
     # Handle compound words
     if isinstance(reading, CompoundText):
         base = reading.score_base or reading.primary
@@ -891,13 +996,32 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
             prop_score += 5
         
         # Conjugated form bonus - prefer recognized conjugations over fragments
-        # BUT: stem forms (50-53) are incomplete without a suffix
         conj_type = reading.conj_type
+        pos = reading.pos
+        source_text = reading.source_text
         STEM_TYPES = {50, 51, 52, 53}  # ADVERBIAL, ADJ_STEM, NEG_STEM, CAUSATIVE_SU
+        
+        # Check for problematic suru-verb (vs-i/vs-s) conjugations
+        # Suru-verb potential/passive/causative should be できる/される/させる
+        # NOT kanji forms like 帰る (potential of 帰化)
+        is_suru_verb = pos in ('vs-i', 'vs-s')
+        is_suru_special_conj = conj_type in (5, 6, 7, 8)  # potential, passive, causative, caus-pass
+        is_bad_suru_conj = (is_suru_verb and is_suru_special_conj and 
+                           kanji_p and  # The conjugated form has kanji
+                           source_text and text != source_text and
+                           not text.endswith('できる') and 
+                           not text.endswith('される') and
+                           not text.endswith('させる'))
+        
         if conj_type in STEM_TYPES:
             # Stems don't get the full bonus unless followed by something
             prop_score += 2  # Reduced bonus
+        elif is_bad_suru_conj:
+            # Likely a database bug - suru-verb conjugation with wrong kanji form
+            # e.g., 帰化 -> 帰る (should be 帰化できる)
+            prop_score += 1  # Minimal bonus
         else:
+            # Normal conjugation bonus
             prop_score += 8
         
         # Kanji/katakana bonus
@@ -1155,18 +1279,42 @@ def find_substring_words(text: str, sticky: Optional[List[int]] = None) -> Dict[
     all_keys = list(set(kana_keys + kanji_keys))
     if all_keys:
         placeholders = ','.join('?' * len(all_keys))
-        # Join with kanji_text to get commonness score for ranking
+        # Use window function to pick only the best entry per (text, seq, conj_type, neg, fml)
+        # Prefer kanji source_text over kana
+        # Get common score from the entry's kana form (most reliable) or the source_text's common
         rows = query(
-            f"""SELECT c.*, COALESCE(k.common, n.common) as common
+            f"""SELECT * FROM (
+                SELECT c.*, 
+                       COALESCE(entry_kana.common, k.common, n.common) as common,
+                       CASE WHEN k.text IS NOT NULL THEN 0 ELSE 1 END as kanji_priority,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY c.text, c.seq, c.conj_type, c.neg, c.fml
+                           ORDER BY CASE WHEN k.text IS NOT NULL THEN 0 ELSE 1 END
+                       ) as rn
                 FROM conj_lookup c
                 LEFT JOIN kanji_text k ON c.seq = k.seq AND c.source_text = k.text
                 LEFT JOIN kana_text n ON c.seq = n.seq AND c.source_text = n.text
-                WHERE c.text IN ({placeholders})""",
+                LEFT JOIN kana_text entry_kana ON c.seq = entry_kana.seq AND entry_kana.ord = 0
+                WHERE c.text IN ({placeholders})
+            ) WHERE rn = 1""",
             tuple(all_keys)
         )
         for row in rows:
             text_key = row['text']
             if text_key in substring_hash:
+                # Skip conjugated forms when there's already a good dictionary entry
+                # The dictionary entry will get conjugation info via get_conjugation_info_for_seq()
+                existing = substring_hash[text_key]
+                has_good_dict_entry = any(
+                    not isinstance(e, ConjugatedText) and 
+                    getattr(e, 'common', None) is not None and
+                    getattr(e, 'common', 999) <= 10
+                    for e in existing
+                )
+                
+                if has_good_dict_entry:
+                    continue
+                    
                 conj = ConjugatedText.from_row(row)
                 substring_hash[text_key].append(conj)
     
@@ -1241,6 +1389,12 @@ def join_substring_words(text: str) -> List[SegmentList]:
                 )
                 words.extend(hira_matches)
             
+            # Add counter matches if this spans a number + counter
+            # Ichiran adds counter matches alongside dictionary matches, not as fallback
+            if counter and end > number_end:
+                counter_matches = find_counter_words(part, counter)
+                words.extend(counter_matches)
+            
             if not words:
                 continue
             
@@ -1278,9 +1432,10 @@ def join_substring_words(text: str) -> List[SegmentList]:
                 scored_segments.append(seg)
         
         if scored_segments:
-            # Sort by score descending, then by common
+            # Sort by score descending, then by common (lower is better),
+            # then by seq (lower seq = more fundamental word, e.g. する vs キスする)
             scored_segments.sort(
-                key=lambda s: (s.score, -(s.word.common or 999)),
+                key=lambda s: (s.score, -(s.word.common or 999), -(s.word.seq or 0)),
                 reverse=True
             )
             
@@ -1515,13 +1670,35 @@ def word_info_from_segment(segment: Segment) -> WordInfo:
     """Create WordInfo from a Segment."""
     word = segment.word
     
+    # Build conjugation info for ConjugatedText
+    conjugations = None
+    if isinstance(word, ConjugatedText):
+        conjugations = [{
+            'type': word.get_conj_description(),
+            'conj_type': word.conj_type,
+            'pos': word.pos,
+            'neg': word.neg,
+            'fml': word.fml,
+            'source_text': word.source_text,
+            'source_reading': word.source_reading,
+        }]
+    elif hasattr(word, 'conjugations') and word.conjugations:
+        conjugations = word.conjugations
+    
+    # If no conjugation info yet, check if this seq is derived from another entry
+    # (e.g., で particle is te-form of だ copula)
+    if conjugations is None and word.seq:
+        conj_info = get_conjugation_info_for_seq(word.seq)
+        if conj_info:
+            conjugations = [conj_info]
+    
     return WordInfo(
         type=word.word_type(),
         text=segment.text,
         kana=word.get_kana(),
         seq=word.seq,
         true_text=word.get_text() if hasattr(word, 'true_text') else None,
-        conjugations=word.conjugations if hasattr(word, 'conjugations') else None,
+        conjugations=conjugations,
         score=segment.score,
         start=segment.start,
         end=segment.end,

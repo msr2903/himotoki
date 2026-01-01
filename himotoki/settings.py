@@ -7,16 +7,15 @@ Mirrors settings.lisp from the original Ichiran.
 import os
 from pathlib import Path
 
-# Database path - defaults to ~/.himotoki/himotoki.db
-DEFAULT_DB_DIR = Path.home() / ".himotoki"
-DEFAULT_DB_PATH = DEFAULT_DB_DIR / "himotoki.db"
-
-# Environment variable for custom database path
-DB_PATH = Path(os.environ.get("HIMOTOKI_DB_PATH", DEFAULT_DB_PATH))
-
 # Data directory paths
 PACKAGE_DIR = Path(__file__).parent
 DATA_DIR = PACKAGE_DIR / "data"
+
+# Database path - defaults to data/himotoki.db
+DEFAULT_DB_PATH = DATA_DIR / "himotoki.db"
+
+# Environment variable for custom database path
+DB_PATH = Path(os.environ.get("HIMOTOKI_DB_PATH", DEFAULT_DB_PATH))
 
 # External dictionary paths (user must download these)
 JMDICT_PATH = Path(os.environ.get("JMDICT_PATH", DATA_DIR / "JMdict_e.xml"))
@@ -51,6 +50,5 @@ SEGMENT_SCORE_CUTOFF = 2/3
 
 def ensure_data_dirs():
     """Create necessary data directories if they don't exist."""
-    DEFAULT_DB_DIR.mkdir(parents=True, exist_ok=True)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     SOURCES_DIR.mkdir(parents=True, exist_ok=True)

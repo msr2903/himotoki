@@ -678,6 +678,10 @@ def _normalize_pos(pos_text: str) -> Optional[str]:
     if 'kuru' in pos_text:
         return 'vk'
     
+    # Copula
+    if 'copula' in pos_text:
+        return 'copula'
+    
     # Adjectives
     if 'adjective' in pos_text:
         if '-i' in pos_text or 'keiyoushi' in pos_text:

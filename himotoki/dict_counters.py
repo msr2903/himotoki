@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Tuple
 
 from himotoki.numbers import (
     parse_number, number_to_kana, number_to_kanji,
-    is_digit_kanji
+    DIGIT_KANJI_DEFAULT
 )
 from himotoki.characters import as_hiragana
 
@@ -28,6 +28,35 @@ class Counter:
     kanji: Optional[str] = None  # Kanji form if any
     ranges: Optional[Dict[int, str]] = None  # Special readings for numbers
     seq: Optional[int] = None  # Dictionary sequence number
+
+
+@dataclass
+class CounterText:
+    """Represents a number+counter text."""
+    text: str  # Full text (e.g., "三匹")
+    reading: str  # Full reading (e.g., "さんびき")
+    number: int  # Numeric value
+    counter_text: str  # Counter portion (e.g., "匹")
+    seq: Optional[int] = None  # Source counter dict seq
+    common: int = 5  # Default common score
+    ord: int = 0  # Ordinal for compatibility
+    
+    def get_text(self) -> str:
+        return self.text
+    
+    def get_kana(self) -> str:
+        return self.reading
+    
+    def word_type(self) -> str:
+        return 'counter'
+    
+    @property
+    def nokanji(self) -> bool:
+        return False
+    
+    @property
+    def conjugate_p(self) -> bool:
+        return False
 
 
 # Built-in counter registry
@@ -175,10 +204,13 @@ def detect_counter(text: str) -> Optional[Tuple[int, str, str]]:
     if not text:
         return None
     
+    # Number characters: digits + large numbers (百, 千, 万, 億, 兆)
+    NUMBER_CHARS = DIGIT_KANJI_DEFAULT + "百千万億兆"
+    
     # Try to find a number prefix
     num_end = 0
     for i, char in enumerate(text):
-        if is_digit_kanji(char) or char.isdigit():
+        if char in NUMBER_CHARS or char.isdigit():
             num_end = i + 1
         else:
             break
@@ -197,16 +229,21 @@ def detect_counter(text: str) -> Optional[Tuple[int, str, str]]:
     if num_value is None:
         return None
     
-    # Get counter reading
+    # Get counter reading - only return if it's a KNOWN counter
     counter = get_counter(counter_text)
     if counter:
         reading = counter_reading(num_value, counter.reading)
         return (num_value, counter_text, reading)
     
-    # Unknown counter - just use hiragana
-    counter_hira = as_hiragana(counter_text)
-    reading = counter_reading(num_value, counter_hira)
-    return (num_value, counter_text, reading)
+    # For unknown counters, only accept single-character kanji counters
+    # (e.g., 個, 本, 人) - not arbitrary text
+    if len(counter_text) == 1 and ord(counter_text[0]) >= 0x4E00 and ord(counter_text[0]) <= 0x9FFF:
+        counter_hira = as_hiragana(counter_text)
+        reading = counter_reading(num_value, counter_hira)
+        return (num_value, counter_text, reading)
+    
+    # Not a valid counter pattern
+    return None
 
 
 # ============================================================================

@@ -61,22 +61,22 @@ class ConjType(IntEnum):
 
 CONJ_DESCRIPTIONS = {
     ConjType.NON_PAST: "Non-past",
-    ConjType.PAST: "Past (~た)",
-    ConjType.CONJUNCTIVE: "Conjunctive (~て)",
-    ConjType.PROVISIONAL: "Provisional (~ば)",
+    ConjType.PAST: "Past (~ta)",
+    ConjType.CONJUNCTIVE: "Conjunctive (~te)",
+    ConjType.PROVISIONAL: "Provisional (~eba)",
     ConjType.POTENTIAL: "Potential",
     ConjType.PASSIVE: "Passive",
     ConjType.CAUSATIVE: "Causative",
     ConjType.CAUSATIVE_PASSIVE: "Causative-Passive",
-    ConjType.VOLITIONAL: "Volitional (~う)",
+    ConjType.VOLITIONAL: "Volitional",
     ConjType.IMPERATIVE: "Imperative",
-    ConjType.CONDITIONAL: "Conditional (~たら)",
-    ConjType.ALTERNATIVE: "Alternative (~たり)",
-    ConjType.CONTINUATIVE: "Continuative",
-    ConjType.ADVERBIAL: "Adverbial (~く)",
+    ConjType.CONDITIONAL: "Conditional (~tara)",
+    ConjType.ALTERNATIVE: "Alternative (~tari)",
+    ConjType.CONTINUATIVE: "Continuative (~i)",
+    ConjType.ADVERBIAL: "Adverbial (~ku)",
     ConjType.ADJ_STEM: "Adjective Stem",
-    ConjType.NEG_STEM: "Negative Stem",
-    ConjType.CAUSATIVE_SU: "Causative (~す)",
+    ConjType.NEG_STEM: "Negative Stem (~nai)",
+    ConjType.CAUSATIVE_SU: "Causative (~su)",
     ConjType.LITERARY: "Old/literary form",
     ConjType.DESIDERATIVE: "Desiderative (~たい)",
 }
@@ -688,7 +688,7 @@ def generate_i_adjective_rules(pos: str = "adj-i") -> List[ConjugationRule]:
 def generate_da_rules() -> List[ConjugationRule]:
     """Generate conjugation rules for the copula だ."""
     rules = []
-    pos = "cop-da"
+    pos = "copula"  # Match JMdict POS tag
     
     # Non-past
     rules.append(ConjugationRule(pos, ConjType.NON_PAST, False, False, 0, ""))
@@ -763,6 +763,7 @@ CONJUGATABLE_POS = {
     # Copula
     'cop-da': 'copula',
     'cop': 'copula',
+    'copula': 'copula',  # JMdict uses 'copula' POS tag
 }
 
 # Godan verb ending characters
