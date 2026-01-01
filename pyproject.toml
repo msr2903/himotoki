@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "himotoki"
+version = "0.1.0"
+description = "Japanese morphological analyzer and romanization tool - Python port of Ichiran"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Himotoki Contributors"}
+]
+keywords = ["japanese", "nlp", "morphological-analysis", "romanization", "dictionary"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Text Processing :: Linguistic",
+    "Natural Language :: Japanese",
+]
+
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+]
+
+[project.scripts]
+himotoki = "himotoki.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/himotoki/himotoki"
+Repository = "https://github.com/himotoki/himotoki"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["himotoki*"]
+
+[tool.setuptools.package-data]
+himotoki = ["data/*.csv", "data/*.xml", "data/sources/*.csv", "data/sources/*.xml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
