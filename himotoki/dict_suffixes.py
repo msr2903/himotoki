@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple, Any, Set, Callable
 from functools import lru_cache
 
-from himotoki.conn import query, query_single
+from himotoki.conn import query, query_one
 from himotoki.characters import as_hiragana, is_kana
 
 
@@ -155,7 +155,7 @@ def get_kana_form(seq: int, text: str, conj: Any = None) -> Optional[dict]:
     
     Matches Ichiran's get-kana-form function.
     """
-    row = query_single(
+    row = query_one(
         "SELECT seq, text, common FROM kana_text WHERE seq = ? AND text = ?",
         (seq, text)
     )
@@ -504,6 +504,25 @@ def get_suffixes(word: str) -> List[Tuple[str, str, Optional[dict]]]:
 _suffix_handlers: Dict[str, Callable] = {}
 
 
+def _kf_to_kana_text(kf: Optional[dict]):
+    """Convert a kana_form dict to a KanaText object."""
+    if kf is None:
+        return None
+    from himotoki.dict import KanaText
+    return KanaText(
+        id=0,  # No actual id for suffix forms
+        seq=kf['seq'],
+        text=kf['text'],
+        ord=0,
+        common=kf.get('common'),
+        common_tags="",
+        conjugate_p=True,
+        nokanji=False,
+        conjugations=kf.get('conjugations'),
+        best_kanji=None,
+    )
+
+
 def _te_check(root: str) -> bool:
     """Check if root is a valid te-form stem."""
     if not root or root == 'で':
@@ -521,14 +540,17 @@ def _find_word_with_conj_type(word: str, *conj_types: int):
     """
     Find words that are conjugations of the given types.
     
-    Matches Ichiran's find-word-with-conj-type.
+    Matches Ichiran's find-word-with-conj-type which uses find-word-full.
+    This means we need to check conjugated forms, not just dictionary entries.
     """
-    from himotoki.dict import find_word
+    from himotoki.dict import find_word, ConjugatedText
     
     results = []
+    
+    # First check dictionary entries that might be conjugated forms
     for w in find_word(word):
         seq = w.seq
-        # Check if this word has the given conjugation types
+        # Check if this word has the given conjugation types in conjugation table
         rows = query(
             """
             SELECT DISTINCT cp.conj_type, c.from_seq
@@ -545,66 +567,97 @@ def _find_word_with_conj_type(word: str, *conj_types: int):
                     'conj_type': row['conj_type'],
                     'from_seq': row['from_seq'],
                 })
+    
+    # Also look for ConjugatedText entries in conj_lookup
+    # This matches what find_substring_words does
+    placeholders = ','.join('?' * len(conj_types))
+    rows = query(
+        f"""
+        SELECT c.*, 
+               COALESCE(entry_kana.common, k.common, n.common) as common
+        FROM conj_lookup c
+        LEFT JOIN kanji_text k ON c.seq = k.seq AND c.source_text = k.text
+        LEFT JOIN kana_text n ON c.seq = n.seq AND c.source_text = n.text
+        LEFT JOIN kana_text entry_kana ON c.seq = entry_kana.seq AND entry_kana.ord = 0
+        WHERE c.text = ? AND c.conj_type IN ({placeholders})
+        """,
+        (word,) + conj_types
+    )
+    
+    for row in rows:
+        # Create ConjugatedText for this entry
+        # sqlite3.Row doesn't have .get(), so use try/except or check keys
+        try:
+            reading = row['reading']
+        except (KeyError, IndexError):
+            reading = row['text']
+        
+        try:
+            pos = row['pos']
+        except (KeyError, IndexError):
+            pos = ''
+            
+        try:
+            neg = bool(row['neg'])
+        except (KeyError, IndexError):
+            neg = False
+            
+        try:
+            fml = bool(row['fml'])
+        except (KeyError, IndexError):
+            fml = False
+            
+        try:
+            from_seq = row['from_seq']
+        except (KeyError, IndexError):
+            from_seq = row['seq']
+            
+        try:
+            source_reading = row['source_reading']
+        except (KeyError, IndexError):
+            source_reading = row['source_text']
+        
+        conj = ConjugatedText(
+            id=row['id'],
+            seq=row['seq'],
+            text=row['text'],
+            reading=reading,
+            conj_type=row['conj_type'],
+            pos=pos,
+            neg=neg,
+            fml=fml,
+            common=row['common'],
+            source_text=row['source_text'],
+            source_reading=source_reading,
+        )
+        results.append({
+            'word': conj,
+            'conj_type': row['conj_type'],
+            'from_seq': from_seq,
+        })
+    
     return results
 
 
 # ============================================================================
-# Compound Text (matches Ichiran's compound-text class)
+# Compound Text - Use the one from dict.py to avoid type mismatches
 # ============================================================================
 
-@dataclass
-class CompoundText:
-    """
-    Represents a compound word made from primary + suffix.
-    
-    Matches Ichiran's compound-text class.
-    """
-    text: str  # Combined text
-    kana: str  # Combined kana
-    primary: Any  # Primary word object
-    words: List[Any]  # List of component words
-    score_mod: int = 0  # Score modifier
-    suffix_class: Optional[str] = None  # Suffix class for description
-    
-    @property
-    def seq(self):
-        """Sequence numbers of component words."""
-        return [getattr(w, 'seq', None) for w in self.words if hasattr(w, 'seq')]
-    
-    @property
-    def common(self):
-        """Common score from primary word."""
-        return getattr(self.primary, 'common', None)
-    
-    @property
-    def ord(self):
-        """Ord from primary word."""
-        return getattr(self.primary, 'ord', 0)
-    
-    def get_text(self) -> str:
-        return self.text
-    
-    def get_kana(self) -> str:
-        return self.kana
-    
-    def word_type(self) -> str:
-        if hasattr(self.primary, 'word_type'):
-            return self.primary.word_type()
-        return 'compound'
-    
-    def get_suffix_description(self) -> Optional[str]:
-        if self.suffix_class:
-            return SUFFIX_DESCRIPTIONS.get(self.suffix_class)
-        return None
+def _get_compound_text_class():
+    """Get CompoundText class from dict.py (late import to avoid circular import)."""
+    from himotoki.dict import CompoundText
+    return CompoundText
 
 
 def adjoin_word(word1, word2, text: str = None, kana: str = None, 
-                score_mod: int = 0, suffix_class: str = None) -> CompoundText:
+                score_mod: int = 0, suffix_class: str = None):
     """
     Create a compound word from two words.
     
     Matches Ichiran's adjoin-word method.
     """
+    CompoundText = _get_compound_text_class()
+    
     if text is None:
         text = getattr(word1, 'get_text', lambda: str(word1))() + \
                getattr(word2, 'get_text', lambda: str(word2))()
@@ -637,7 +690,7 @@ def adjoin_word(word1, word2, text: str = None, kana: str = None,
 # Suffix Handlers Implementation
 # ============================================================================
 
-def suffix_te(root: str, suffix_text: str, kf: Optional[dict]) -> List[CompoundText]:
+def suffix_te(root: str, suffix_text: str, kf: Optional[dict]) -> List:
     """Handle te-form suffix (て + auxiliary verb)."""
     if not _te_check(root):
         return []
@@ -645,12 +698,16 @@ def suffix_te(root: str, suffix_text: str, kf: Optional[dict]) -> List[CompoundT
     matches = _find_word_with_conj_type(root, 3)  # Conjunctive (te-form)
     results = []
     
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
     for m in matches:
         word = m['word']
         suffix_class = _suffix_class.get(kf['seq']) if kf else None
         compound = adjoin_word(
             word, 
-            kf,
+            suffix_word,
             text=root + suffix_text,
             kana=word.get_kana() + suffix_text,
             score_mod=0,
@@ -661,7 +718,7 @@ def suffix_te(root: str, suffix_text: str, kf: Optional[dict]) -> List[CompoundT
     return results
 
 
-def suffix_teiru(root: str, suffix_text: str, kf: Optional[dict]) -> List[CompoundText]:
+def suffix_teiru(root: str, suffix_text: str, kf: Optional[dict]) -> List:
     """Handle teiru suffix (て + いる progressive)."""
     if not _teiru_check(root):
         return []
@@ -669,11 +726,15 @@ def suffix_teiru(root: str, suffix_text: str, kf: Optional[dict]) -> List[Compou
     matches = _find_word_with_conj_type(root, 3)  # Conjunctive (te-form)
     results = []
     
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
     for m in matches:
         word = m['word']
         compound = adjoin_word(
             word,
-            kf,
+            suffix_word,
             text=root + suffix_text,
             kana=word.get_kana() + suffix_text,
             score_mod=3,
@@ -684,7 +745,7 @@ def suffix_teiru(root: str, suffix_text: str, kf: Optional[dict]) -> List[Compou
     return results
 
 
-def suffix_teiru_plus(root: str, suffix_text: str, kf: Optional[dict]) -> List[CompoundText]:
+def suffix_teiru_plus(root: str, suffix_text: str, kf: Optional[dict]) -> List:
     """Handle teiru+ suffix (て + longer いる forms like います)."""
     if not _teiru_check(root):
         return []
@@ -692,11 +753,15 @@ def suffix_teiru_plus(root: str, suffix_text: str, kf: Optional[dict]) -> List[C
     matches = _find_word_with_conj_type(root, 3)  # Conjunctive (te-form)
     results = []
     
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
     for m in matches:
         word = m['word']
         compound = adjoin_word(
             word,
-            kf,
+            suffix_word,
             text=root + suffix_text,
             kana=word.get_kana() + suffix_text,
             score_mod=6,  # Higher score for longer forms

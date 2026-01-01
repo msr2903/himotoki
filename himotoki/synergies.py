@@ -736,15 +736,24 @@ PENALTY_FUNCTIONS = [
 # ============================================================================
 
 def _get_seq(seg: Any) -> Optional[int]:
-    """Extract seq from a segment or word object."""
+    """Extract seq from a segment or word object.
+    
+    For compound words, returns the primary (first) seq.
+    """
     # Direct seq attribute
     seq = getattr(seg, 'seq', None)
-    if seq:
+    if seq is not None:
+        # Handle list of seqs (CompoundText)
+        if isinstance(seq, list):
+            return seq[0] if seq else None
         return seq
     # Try segment.word.seq
     word = getattr(seg, 'word', None)
     if word:
-        return getattr(word, 'seq', None)
+        seq = getattr(word, 'seq', None)
+        if isinstance(seq, list):
+            return seq[0] if seq else None
+        return seq
     return None
 
 

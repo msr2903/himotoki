@@ -211,6 +211,7 @@ class CompoundText:
     words: List[SimpleText]
     score_base: Optional[SimpleText] = None
     score_mod: int = 0
+    suffix_class: Optional[str] = None  # Suffix class for description (e.g., 'iru', 'aru')
     
     def word_type(self) -> str:
         return self.primary.word_type()
@@ -614,14 +615,19 @@ def find_word_as_hiragana(word: str, exclude: Optional[List[int]] = None,
 
 
 def find_word_full(word: str, as_hiragana_flag: bool = False,
-                   counter=None) -> List[SimpleText]:
+                   counter=None, suffix_map: Optional[Dict] = None,
+                   suffix_next_end: Optional[int] = None) -> List[SimpleText]:
     """
     Extended word search including suffixes and hiragana conversion.
+    
+    Matches Ichiran's find-word-full function.
     
     Args:
         word: Word to search.
         as_hiragana_flag: If True, also search as hiragana.
         counter: Counter mode ('auto' or offset value).
+        suffix_map: Pre-computed suffix map for the full text.
+        suffix_next_end: End position for suffix lookup.
         
     Returns:
         List of matching text objects.
@@ -629,8 +635,10 @@ def find_word_full(word: str, as_hiragana_flag: bool = False,
     simple_words = find_word(word)
     results = list(simple_words)
     
-    # Add suffix matches
-    suffix_matches = find_word_suffix(word, matches=simple_words)
+    # Add suffix matches (passing through suffix_map and suffix_next_end)
+    suffix_matches = find_word_suffix(word, matches=simple_words,
+                                      suffix_map=suffix_map,
+                                      suffix_next_end=suffix_next_end)
     results.extend(suffix_matches)
     
     # Add hiragana matches
@@ -649,14 +657,27 @@ def find_word_full(word: str, as_hiragana_flag: bool = False,
     return results
 
 
-def find_word_suffix(word: str, matches: Optional[List[SimpleText]] = None) -> List:
+def find_word_suffix(word: str, matches: Optional[List[SimpleText]] = None,
+                     suffix_map: Optional[Dict] = None,
+                     suffix_next_end: Optional[int] = None) -> List:
     """
     Find words that are root + suffix combinations.
     
-    This is a simplified version - full implementation in dict_grammar.py.
+    Calls the implementation in dict_suffixes.py.
+    
+    Args:
+        word: Word to analyze.
+        matches: Existing matches to check uniqueness against.
+        suffix_map: Pre-computed suffix map (from get_suffix_map).
+        suffix_next_end: Position for suffix lookup in suffix_map.
+        
+    Returns:
+        List of CompoundText objects.
     """
-    # Placeholder - full implementation requires suffix cache
-    return []
+    from himotoki.dict_suffixes import find_word_suffix as _find_word_suffix
+    return _find_word_suffix(word, suffix_map=suffix_map, 
+                             suffix_next_end=suffix_next_end,
+                             matches=matches)
 
 
 def find_counter_words(word: str, counter) -> List:
@@ -1038,6 +1059,12 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
             (5 * (n_kanji - 1) if n_kanji > 1 else 0)
         )
         
+        # Apply use_length bonus for compound words
+        if use_length and use_length > length:
+            tail_class = 'ltail' if length > 3 and (kanji_p or katakana_p) else 'tail'
+            score += prop_score * length_multiplier_coeff(use_length - length, tail_class)
+            score += score_mod * prop_score * (use_length - length)
+        
         # Conjugation info
         conj_info = {
             'type': reading.conj_type,
@@ -1329,18 +1356,25 @@ def join_substring_words(text: str) -> List[SegmentList]:
     """
     Find all possible word segments in text.
     
+    Matches Ichiran's join-substring-words* function.
+    
     Args:
         text: Text to segment.
         
     Returns:
         List of SegmentLists at each position.
     """
+    from himotoki.dict_suffixes import get_suffix_map
+    
     sticky = find_sticky_positions(text)
     substring_hash = find_substring_words(text, sticky)
     sticky_set = set(sticky)
     
     katakana_groups = consecutive_char_groups(text, 'katakana')
     number_groups = consecutive_char_groups(text, 'number')
+    
+    # Create suffix map for the full text (matches Ichiran's get-suffix-map)
+    suffix_map = get_suffix_map(text)
     
     # Find kanji break positions
     kanji_break = []
@@ -1381,6 +1415,13 @@ def join_substring_words(text: str) -> List[SegmentList]:
             
             # Get matches from hash
             words = list(substring_hash.get(part, []))
+            
+            # Add suffix matches (te+iru compounds, etc.)
+            # This matches Ichiran's call to find-word-suffix in find-word-full
+            suffix_matches = find_word_suffix(part, matches=words,
+                                              suffix_map=suffix_map,
+                                              suffix_next_end=end)
+            words.extend(suffix_matches)
             
             # Add hiragana matches for katakana
             if as_hira:
@@ -1434,8 +1475,15 @@ def join_substring_words(text: str) -> List[SegmentList]:
         if scored_segments:
             # Sort by score descending, then by common (lower is better),
             # then by seq (lower seq = more fundamental word, e.g. する vs キスする)
+            # For CompoundText, seq is a list, so use the first seq
+            def get_seq(word):
+                seq = word.seq
+                if isinstance(seq, list):
+                    return seq[0] if seq else 0
+                return seq or 0
+            
             scored_segments.sort(
-                key=lambda s: (s.score, -(s.word.common or 999), -(s.word.seq or 0)),
+                key=lambda s: (s.score, -(s.word.common or 999), -get_seq(s.word)),
                 reverse=True
             )
             
@@ -1533,7 +1581,10 @@ def find_best_path(segment_lists: List[SegmentList], str_length: int,
         use_segfilters = False
     
     def _get_seg_info(seg):
-        """Extract seq and text from segment for segfilter checks."""
+        """Extract seq and text from segment for segfilter checks.
+        
+        For CompoundText, returns the primary (first) seq.
+        """
         if seg is None:
             return None, ""
         seq = getattr(seg, 'seq', None)
@@ -1541,6 +1592,9 @@ def find_best_path(segment_lists: List[SegmentList], str_length: int,
             word = getattr(seg, 'word', None)
             if word:
                 seq = getattr(word, 'seq', None)
+        # Handle list seq (from CompoundText)
+        if isinstance(seq, list):
+            seq = seq[0] if seq else None
         text = getattr(seg, 'text', None) or ""
         if not text:
             word = getattr(seg, 'word', None)
