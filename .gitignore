@@ -191,6 +191,7 @@ himotoki/data/*.gz
 
 # Test/Benchmark Results
 comparison_results.json
+ichiran_cache.json
 *.json.bak
 benchmark_*.txt
 node_benchmarks/

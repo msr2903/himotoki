@@ -788,7 +788,7 @@ def get_phrase_length_penalty(word) -> int:
     
     Following Ichiran's def-simple-hint system, expressions and 
     interjections ending with は (and other particles) get their
-    effective length reduced by 1.
+    effective length reduced.
     
     This ensures 今日は天気がいい segments as 今日 | は | 天気 | が...
     rather than treating 今日は as a greeting.
@@ -797,7 +797,7 @@ def get_phrase_length_penalty(word) -> int:
         word: Word object to check.
         
     Returns:
-        Length penalty (0 or 1).
+        Length penalty (0, 1, or 2).
     """
     text = word.get_text() if hasattr(word, 'get_text') else str(word)
     seq = word.seq if hasattr(word, 'seq') else None
@@ -822,10 +822,10 @@ def get_phrase_length_penalty(word) -> int:
             # Penalize expressions/phrases that absorb particles
             if 'expression' in pos_text:
                 return 1  # Reduce effective length by 1
-            # Interjections ending with は also get penalized (per Ichiran)
-            # This handles greetings like こんにちは, こんばんは
+            # Interjections ending with は get a stronger penalty (greetings)
+            # This handles greetings like こんにちは, こんばんは, 今日は
             if 'interjection' in pos_text and last_char == 'は':
-                return 1
+                return 2  # Stronger penalty for greeting patterns
     
     return 0
 
@@ -834,7 +834,7 @@ def get_phrase_length_penalty(word) -> int:
 EMBEDDED_PARTICLES = {'が', 'を', 'に', 'で', 'と', 'も'}
 
 
-def get_embedded_particle_penalty(word) -> int:
+def get_embedded_particle_penalty(reading, seq: Optional[int] = None) -> int:
     """
     Get penalty for expressions with embedded particles.
     
@@ -843,35 +843,40 @@ def get_embedded_particle_penalty(word) -> int:
     preceded by words like 天気 (weather).
     
     Args:
-        word: Word object to check.
+        reading: The reading (kana) of the word (string or KanjiText).
+        seq: The JMdict sequence number for POS lookup.
         
     Returns:
         Penalty score (0 or positive value).
     """
-    text = word.get_text() if hasattr(word, 'get_text') else str(word)
-    seq = word.seq if hasattr(word, 'seq') else None
+    # Convert to string if needed
+    text = reading.get_text() if hasattr(reading, 'get_text') else str(reading)
     
     if len(text) < 3:
         return 0
     
     # Check if first character is followed by an embedded particle
-    # This catches patterns like 気が..., 物を..., etc.
-    first_char = text[0]
+    # This catches patterns like き+が..., もの+を..., etc.
     second_char = text[1] if len(text) > 1 else ''
     
     if second_char in EMBEDDED_PARTICLES:
-        # Get POS - only penalize expressions
+        # Get POS from this entry or its conjugation root
+        seqs_to_check = [seq] if seq else []
+        
+        # Check for conjugation root
         if seq:
-            pos_rows = list(query("SELECT text FROM sense_prop WHERE seq = ? AND tag = 'pos'", (seq,)))
+            from_seq = query_single(
+                "SELECT from_seq FROM conjugation WHERE seq = ?", (seq,)
+            )
+            if from_seq:
+                seqs_to_check.append(from_seq)
+        
+        for check_seq in seqs_to_check:
+            pos_rows = list(query("SELECT text FROM sense_prop WHERE seq = ? AND tag = 'pos'", (check_seq,)))
             for row in pos_rows:
                 pos_text = (row['text'] or '').lower()
                 if 'expression' in pos_text:
-                    return 10  # Significant penalty
-        # Also penalize conjugated forms from expressions
-        if hasattr(word, 'source_text'):
-            source = word.source_text
-            if len(source) > 1 and source[1] in EMBEDDED_PARTICLES:
-                return 10
+                    return 10  # Significant penalty for expressions with embedded particles
     
     return 0
 
@@ -1099,6 +1104,15 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
             'source': reading.source_text,
         }
         
+        # ====================================================================
+        # EMBEDDED PARTICLE PENALTY (for conjugated forms)
+        # Same check as in the main branch - penalize expressions that 
+        # contain embedded particles like が, を, に
+        # ====================================================================
+        embedded_penalty = get_embedded_particle_penalty(reading, seq)
+        if embedded_penalty > 0:
+            score = max(1, score - embedded_penalty * prop_score)
+        
         info = {
             'posi': [],
             'seq_set': [seq] if seq else [],
@@ -1124,28 +1138,125 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
     entry = Entry.get(seq) if seq else None
     root_p = entry.root_p if entry else False
     
+    # ========================================================================
+    # SKIP WORD CHECK (from Ichiran's calc-score, dict.lisp:853-856)
+    # Return score 0 for words that shouldn't appear as standalone segments
+    # ========================================================================
+    if seq in SKIP_WORDS:
+        return 0, {'posi': [], 'seq_set': [seq] if seq else [], 'conj': None,
+                   'common': common, 'score_info': [0, None, 0, None],
+                   'kpcl': [kanji_p or katakana_p, ordinal == 0, common is not None, length > 3]}
+    
+    # ========================================================================
+    # FINAL PARTICLE CHECK (from Ichiran's calc-score)
+    # Final-only particles score 0 when not at sentence end
+    # ========================================================================
+    if not final and seq in FINAL_PRT:
+        return 0, {'posi': [], 'seq_set': [seq] if seq else [], 'conj': None,
+                   'common': common, 'score_info': [0, None, 0, None],
+                   'kpcl': [kanji_p or katakana_p, ordinal == 0, common is not None, length > 3]}
+    
     # Base scoring
     score = 1
     prop_score = 0
     
     # Common word bonus
     common_p = common is not None
+    
+    # ========================================================================
+    # EXPRESSION BOOST (addresses database issue)
+    # Many common expressions (exp) like どうやって are not marked as common
+    # in JMdict. To prevent them from losing to random word combinations,
+    # we treat kana-only expressions with length >= 4 as if they're common.
+    # ========================================================================
+    posi = []
+    if seq:
+        from himotoki.synergies import get_pos_tags
+        posi = list(get_pos_tags(seq))
+        # For conjugated forms, also check the base form's POS
+        if not posi:
+            from_seq = query_single(
+                "SELECT from_seq FROM conjugation WHERE seq = ?", (seq,)
+            )
+            if from_seq:
+                posi = list(get_pos_tags(from_seq))
+    
+    is_expression = any('expression' in p.lower() for p in posi)
+    if not common_p and is_expression and not kanji_p and length >= 4:
+        # Treat as moderately common (equivalent to common=8)
+        common = 8
+        common_p = True
+    
+    # ========================================================================
+    # LONG-P CALCULATION (from Ichiran dict.lisp:837-845)
+    # Determines if word is "long" for scoring purposes
+    # Long words get special bonuses to prefer them over splits
+    # ========================================================================
+    # Threshold calculation (mirrors Ichiran's cond)
+    if kanji_p and root_p:
+        long_threshold = 2
+    elif common_p and 0 < common < 10:
+        long_threshold = 2
+    else:
+        long_threshold = 3
+    long_p = length > long_threshold
+    
     if common_p:
         if common == 0:
             prop_score += 10
+        elif long_p:
+            # Long common words get special bonus: max(20-common, 10)
+            prop_score += max(10, 20 - common)
         else:
             prop_score += max(1, 20 - common)
     
-    # Primary reading bonus
+    # Primary reading bonus - Ichiran gives +10 for long_p, +5 otherwise
     if ordinal == 0:
-        prop_score += 5
+        if long_p:
+            prop_score += 10
+        else:
+            prop_score += 5
     
     # Kanji/katakana bonus
     if kanji_p or katakana_p:
         prop_score += 3
     
-    # Length-based scoring
+    # ========================================================================
+    # KANJI MINIMUM SCORE (from Ichiran dict.lisp:921-922)
+    # Kanji words get minimum prop_score of 5
+    # This ensures kanji dictionary entries are preferred
+    # ========================================================================
+    if kanji_p:
+        prop_score = max(5, prop_score)
+    
+    # ========================================================================
+    # LONG KANJI BONUS (from Ichiran dict.lisp:923-924)
+    # Long kanji words with multiple kanji OR length > 4 get +2
+    # This helps compound kanji words beat splits
+    # ========================================================================
     n_kanji = count_char_class(text, 'kanji')
+    if kanji_p and long_p and (n_kanji > 1 or length > 4):
+        prop_score += 2
+    
+    # ========================================================================
+    # SHORT KANA NON-ROOT PENALTY (matches Ichiran's behavior)
+    # Single-mora pure-kana words that aren't root entries get severely penalized
+    # This ensures この beats こ+の, とても beats と+て+も, etc.
+    # ========================================================================
+    if length == 1 and not kanji_p and not katakana_p and not root_p:
+        # Check POS - only penalty for non-particle single kana
+        # Particles like の, に, を need to keep reasonable scores
+        from himotoki.synergies import get_pos_tags
+        word_posi = get_pos_tags(seq) if seq else set()
+        is_real_particle = any('particle' in p.lower() or 'prt' == p.lower() for p in word_posi)
+        
+        if not is_real_particle:
+            # Non-particle single-kana non-root word - likely a fragment
+            # Give it minimal score so combined forms win
+            prop_score = max(1, prop_score // 4)  # Reduce to 1/4
+    
+    # Length-based scoring
+    # n_kanji already calculated above
     class_type = 'strong' if (kanji_p or katakana_p) else 'weak'
     
     # Apply phrase length penalty for expressions that absorb particles
@@ -1153,6 +1264,15 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
     effective_length = max(1, length - phrase_penalty)
     
     prop_score = max(1, prop_score)
+    
+    # ========================================================================
+    # LONG-P SCORE BOOST (from Ichiran dict.lisp:918-919)
+    # When long-p, score is at least the length value
+    # This ensures long compound words beat splits of shorter words
+    # ========================================================================
+    if long_p:
+        prop_score = max(length, prop_score)
+    
     score = prop_score * (
         length_multiplier_coeff(effective_length, class_type) +
         (5 * (n_kanji - 1) if n_kanji > 1 else 0)
@@ -1166,10 +1286,7 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
     
     # Particle scoring - matches Ichiran's calc-score (dict.lisp:896-902)
     # Particles get a boost to ensure they're selected over homophone nouns/verbs
-    posi = []
-    if seq:
-        from himotoki.synergies import get_pos_tags
-        posi = list(get_pos_tags(seq))
+    # posi was already fetched earlier for expression boost
     
     # Check for actual particle POS tags - be specific to avoid false positives
     # like "nouns which may take the genitive case particle 'no'"
@@ -1187,15 +1304,26 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
     
     if particle_p:
         # Ichiran: (when (and particle-p (or final (not semi-final-particle-p)))
+        # Note: These are ADDITIVE bonuses, not multiplicative
         if final or not semi_final_particle_p:
-            score += 2 * prop_score  # Scale by prop_score for consistency
+            score += 2  # +2 (not *prop_score)
             if common_p:
-                score += (2 + length) * prop_score
+                score += 2 + length  # +(2+len)
             if final and not non_final_particle_p:
                 if ordinal == 0:  # primary-p
-                    score += 5 * prop_score
+                    score += 5  # +5
                 elif semi_final_particle_p:
-                    score += 2 * prop_score
+                    score += 2  # +2
+    
+    # ========================================================================
+    # EMBEDDED PARTICLE PENALTY
+    # Penalize expressions that contain particles like が, を, に
+    # This helps prevent expressions like 気がいい from absorbing the particle
+    # ========================================================================
+    embedded_penalty = get_embedded_particle_penalty(reading, seq)
+    if embedded_penalty > 0:
+        # Apply penalty proportional to score
+        score = max(1, score - embedded_penalty * prop_score)
     
     info = {
         'posi': posi,
