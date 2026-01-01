@@ -101,11 +101,35 @@ SKIP_WORDS: Set[int] = {
 # Copula and polite copula
 COPULA_DA: int = 2089020    # だ
 COPULA_DESU: int = 1628500  # です
+COPULA_DAROU: int = 1928670 # だろう
+COPULA_DESU_ALT: int = 1007370  # です (alternate)
 
 # Special entries
-SEQ_TOORI: int = 1607710    # 通り (following pattern)
-SEQ_NO: int = 2029130       # の (particle)
-SEQ_SHIKA: int = 2034520    # しか (only when followed by negative)
+SEQ_TOORI: int = 1432920    # 通り (following pattern) - corrected
+SEQ_NO: int = 1469800       # の (particle) - corrected seq
+SEQ_N: int = 2139720        # ん (contraction of の)
+SEQ_SHIKA: int = 1005460    # しか (only when followed by negative) - corrected
+SEQ_TO: int = 1008490       # と (quotative/adverb particle)
+
+# Suffix sequences
+SEQ_CHU: Set[int] = {1620400, 2083570}  # 中
+SEQ_TACHI: int = 1416220    # たち
+SEQ_BURI: int = 1361140     # ぶり
+SEQ_SEI: int = 1375260      # 性
+SEQ_O_PREFIX: int = 1270190 # お (polite prefix)
+SEQ_KANJI_PREFIX: Set[int] = {2242840, 1922780, 2423740}  # 未, 不, 無
+SEQ_OKI: Set[int] = {2854117, 2084550}  # 置き
+
+# Synergy-specific sequences
+SEQ_IKENAI: Set[int] = {1000730, 1612750, 1409110, 2829697, 1587610}  # いけない, いけません, だめ, etc.
+SEQ_SOU: int = 2137720      # そう
+SEQ_NANDA: int = 2140410    # なんだ
+SEQ_OMOU: Set[int] = {1589350, 1587040}  # 思う, 言う
+SEQ_NAI: int = 1529520      # ない
+SEQ_ARU: int = 1296400      # ある
+SEQ_HA: int = 2028920       # は
+SEQ_NA_PARTICLE: int = 2029110  # な (attributive)
+SEQ_NI_PARTICLE: int = 2028990  # に
 
 
 # ============================================================================
@@ -163,6 +187,27 @@ def is_na_adjective(seq: int) -> bool:
     """Check if entry is a na-adjective."""
     pos_tags = get_pos_tags(seq)
     return any('adj-na' in p or 'adjectival' in p for p in pos_tags)
+
+
+@lru_cache(maxsize=10000)
+def is_no_adjective(seq: int) -> bool:
+    """Check if entry is a の-adjective (adj-no)."""
+    pos_tags = get_pos_tags(seq)
+    return any('adj-no' in p for p in pos_tags)
+
+
+@lru_cache(maxsize=10000)
+def is_to_adverb(seq: int) -> bool:
+    """Check if entry is a と-adverb (adv-to)."""
+    pos_tags = get_pos_tags(seq)
+    return any('adv-to' in p for p in pos_tags)
+
+
+@lru_cache(maxsize=10000)
+def is_counter(seq: int) -> bool:
+    """Check if entry is a counter."""
+    pos_tags = get_pos_tags(seq)
+    return any('ctr' in p or 'counter' in p for p in pos_tags)
 
 
 @lru_cache(maxsize=10000)
@@ -273,11 +318,323 @@ def synergy_no_toori(left_seq: int, left_text: str,
     return None
 
 
+def synergy_noun_da(left_seq: int, left_text: str,
+                    right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: noun + だ
+    
+    From Ichiran (dict-grammar.lisp:838-842):
+        (def-generic-synergy synergy-noun-da (l r)
+          #'filter-is-noun
+          (filter-in-seq-set 2089020) ;; だ
+          :description "noun+da"
+          :score 10
+          :connector " ")
+    
+    Score: 10
+    """
+    if is_noun(left_seq) and right_seq == COPULA_DA:
+        return Synergy(score=10, name="noun+da")
+    return None
+
+
+def synergy_noun_desu(left_seq: int, left_text: str,
+                      right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: noun/na-adj + です
+    
+    This is a himotoki addition to handle です properly.
+    Ichiran handles this through compound words, but we need synergy.
+    
+    Score: 15 (same as na-adjective synergy)
+    """
+    if (is_noun(left_seq) or is_na_adjective(left_seq)) and right_seq == COPULA_DESU:
+        return Synergy(score=15, name="noun+desu")
+    return None
+
+
+def synergy_no_da(left_seq: int, left_text: str,
+                  right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: の/ん + だ/です/だろう
+    
+    From Ichiran (dict-grammar.lisp:844-848):
+        (def-generic-synergy synergy-no-da (l r)
+          (filter-in-seq-set 1469800 2139720)  ;; の, ん
+          (filter-in-seq-set 2089020 1007370 1928670)  ;; だ, です, だろう
+          :description "no da/desu"
+          :score 15
+          :connector " ")
+    
+    Score: 15
+    """
+    left_is_no_or_n = left_seq in {SEQ_NO, SEQ_N}
+    right_is_copula = right_seq in {COPULA_DA, COPULA_DESU, COPULA_DAROU, COPULA_DESU_ALT}
+    if left_is_no_or_n and right_is_copula:
+        return Synergy(score=15, name="no-da/desu")
+    return None
+
+
+def synergy_sou_nanda(left_seq: int, left_text: str,
+                      right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: そう + なんだ
+    
+    From Ichiran (dict-grammar.lisp:851-855):
+        (def-generic-synergy synergy-sou-nanda (l r)
+          (filter-in-seq-set 2137720)  ;; そう
+          (filter-in-seq-set 2140410)  ;; なんだ
+          :description "sou na n da"
+          :score 50
+          :connector " ")
+    
+    Score: 50
+    """
+    if left_seq == SEQ_SOU and right_seq == SEQ_NANDA:
+        return Synergy(score=50, name="sou-nanda")
+    return None
+
+
+def synergy_no_adjectives(left_seq: int, left_text: str,
+                          right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: adj-no + の
+    
+    From Ichiran (dict-grammar.lisp:858-862):
+        (def-generic-synergy synergy-no-adjectives (l r)
+          (filter-is-pos ("adj-no") ...)
+          (filter-in-seq-set 1469800) ;; の
+          :description "no-adjective"
+          :score 15
+          :connector " ")
+    
+    Score: 15
+    """
+    if is_no_adjective(left_seq) and right_seq == SEQ_NO:
+        return Synergy(score=15, name="no-adjective")
+    return None
+
+
+def synergy_to_adverbs(left_seq: int, left_text: str,
+                       right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: adv-to + と
+    
+    From Ichiran (dict-grammar.lisp:877-881):
+        (def-generic-synergy synergy-to-adverbs (l r)
+          (filter-is-pos ("adv-to") ...)
+          (filter-in-seq-set 1008490)  ;; と
+          :description "to-adverb"
+          :score (+ 10 (* 10 (- (segment-list-end l) (segment-list-start l))))
+          :connector " ")
+    
+    Score: 10 + 10 * len(adverb)
+    """
+    if is_to_adverb(left_seq) and right_seq == SEQ_TO:
+        score = 10 + 10 * len(left_text)
+        return Synergy(score=score, name="to-adverb")
+    return None
+
+
+def synergy_suffix_chu(left_seq: int, left_text: str,
+                       right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: noun + 中
+    
+    From Ichiran (dict-grammar.lisp:883-887):
+        (def-generic-synergy synergy-suffix-chu (l r)
+          #'filter-is-noun
+          (filter-in-seq-set 1620400 2083570)
+          :description "suffix-chu"
+          :score 12
+          :connector "-")
+    
+    Score: 12
+    """
+    if is_noun(left_seq) and right_seq in SEQ_CHU:
+        return Synergy(score=12, name="suffix-chu")
+    return None
+
+
+def synergy_suffix_tachi(left_seq: int, left_text: str,
+                         right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: noun + たち
+    
+    From Ichiran (dict-grammar.lisp:889-893):
+        (def-generic-synergy synergy-suffix-tachi (l r)
+          #'filter-is-noun
+          (filter-in-seq-set 1416220)
+          :description "suffix-tachi"
+          :score 10
+          :connector "-")
+    
+    Score: 10
+    """
+    if is_noun(left_seq) and right_seq == SEQ_TACHI:
+        return Synergy(score=10, name="suffix-tachi")
+    return None
+
+
+def synergy_suffix_buri(left_seq: int, left_text: str,
+                        right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: noun + ぶり
+    
+    From Ichiran (dict-grammar.lisp:895-899):
+        (def-generic-synergy synergy-suffix-buri (l r)
+          #'filter-is-noun
+          (filter-in-seq-set 1361140)
+          :description "suffix-buri"
+          :score 40
+          :connector "")
+    
+    Score: 40
+    """
+    if is_noun(left_seq) and right_seq == SEQ_BURI:
+        return Synergy(score=40, name="suffix-buri")
+    return None
+
+
+def synergy_suffix_sei(left_seq: int, left_text: str,
+                       right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: noun + 性
+    
+    From Ichiran (dict-grammar.lisp:901-905):
+        (def-generic-synergy synergy-suffix-sei (l r)
+          #'filter-is-noun
+          (filter-in-seq-set 1375260)
+          :description "suffix-sei"
+          :score 12
+          :connector "")
+    
+    Score: 12
+    """
+    if is_noun(left_seq) and right_seq == SEQ_SEI:
+        return Synergy(score=12, name="suffix-sei")
+    return None
+
+
+def synergy_o_prefix(left_seq: int, left_text: str,
+                     right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: お + noun
+    
+    From Ichiran (dict-grammar.lisp:907-911):
+        (def-generic-synergy synergy-o-prefix (l r)
+          (filter-in-seq-set 1270190)  ;; お
+          (filter-is-pos ("n") ...)
+          :description "o+noun"
+          :score 10
+          :connector "")
+    
+    Score: 10
+    """
+    if left_seq == SEQ_O_PREFIX and is_noun(right_seq):
+        return Synergy(score=10, name="o+noun")
+    return None
+
+
+def synergy_kanji_prefix(left_seq: int, left_text: str,
+                         right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: 未/不/無 + noun
+    
+    From Ichiran (dict-grammar.lisp:913-917):
+        (def-generic-synergy synergy-kanji-prefix (l r)
+          (filter-in-seq-set 2242840 1922780 2423740) ;; 未 不 無
+          (filter-is-pos ("n") ...)
+          :description "kanji prefix+noun"
+          :score 15
+          :connector "")
+    
+    Score: 15
+    """
+    if left_seq in SEQ_KANJI_PREFIX and is_noun(right_seq):
+        return Synergy(score=15, name="kanji-prefix+noun")
+    return None
+
+
+def synergy_oki(left_seq: int, left_text: str,
+                right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: counter + 置き
+    
+    From Ichiran (dict-grammar.lisp:944-948):
+        (def-generic-synergy synergy-oki (l r)
+          (filter-is-pos ("ctr") ...)
+          (filter-in-seq-set 2854117 2084550)
+          :score 20
+          :connector "")
+    
+    Score: 20
+    """
+    if is_counter(left_seq) and right_seq in SEQ_OKI:
+        return Synergy(score=20, name="counter-oki")
+    return None
+
+
+# Particle GA seq (subject marker が)
+SEQ_GA_PARTICLE: int = 2028930
+
+
+def synergy_ga_adjective(left_seq: int, left_text: str,
+                         right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: が + i-adjective/na-adjective
+    
+    This is a himotoki addition to handle patterns like:
+    - 天気がいい (weather is good)
+    - 本が面白い (book is interesting)
+    
+    When the particle が is followed by an adjective, this is a very
+    common pattern in Japanese indicating the subject + predicate.
+    
+    Score: 30 (high enough to beat がい+い pattern)
+    """
+    if left_seq == SEQ_GA_PARTICLE:
+        if is_i_adjective(right_seq) or is_na_adjective(right_seq):
+            return Synergy(score=30, name="ga+adjective")
+    return None
+
+
+def synergy_particle_adjective(left_seq: int, left_text: str,
+                               right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: particle + adjective
+    
+    General pattern for particles followed by adjectives.
+    Common patterns: が/は/も + adjective
+    
+    Score: 15
+    """
+    if is_particle(left_seq) and left_seq in NOUN_PARTICLES:
+        if is_i_adjective(right_seq) or is_na_adjective(right_seq):
+            return Synergy(score=15, name=f"prt({left_text})+adj")
+    return None
+
+
 # List of all synergy functions
 SYNERGY_FUNCTIONS = [
     synergy_noun_particle,
+    synergy_ga_adjective,
+    synergy_particle_adjective,
     synergy_na_adjective,
     synergy_no_toori,
+    synergy_noun_da,
+    synergy_noun_desu,
+    synergy_no_da,
+    synergy_sou_nanda,
+    synergy_no_adjectives,
+    synergy_to_adverbs,
+    synergy_suffix_chu,
+    synergy_suffix_tachi,
+    synergy_suffix_buri,
+    synergy_suffix_sei,
+    synergy_o_prefix,
+    synergy_kanji_prefix,
+    synergy_oki,
 ]
 
 

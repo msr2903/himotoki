@@ -1331,6 +1331,29 @@ def find_best_path(segment_lists: List[SegmentList], str_length: int,
         except ImportError:
             use_synergies = False
     
+    # Import segfilters
+    try:
+        from himotoki.dict_grammar import apply_segfilters
+        use_segfilters = True
+    except ImportError:
+        use_segfilters = False
+    
+    def _get_seg_info(seg):
+        """Extract seq and text from segment for segfilter checks."""
+        if seg is None:
+            return None, ""
+        seq = getattr(seg, 'seq', None)
+        if not seq:
+            word = getattr(seg, 'word', None)
+            if word:
+                seq = getattr(word, 'seq', None)
+        text = getattr(seg, 'text', None) or ""
+        if not text:
+            word = getattr(seg, 'word', None)
+            if word:
+                text = getattr(word, 'text', None) or ""
+        return seq, text
+    
     top = TopArray(limit=limit)
     top.register(gap_penalty(0, str_length), [])
     
@@ -1367,6 +1390,13 @@ def find_best_path(segment_lists: List[SegmentList], str_length: int,
                 
                 for seg_right in seg2.segments:
                     score_right = seg_right.score
+                    
+                    # Apply segfilters to block bad combinations
+                    if use_segfilters and seg1.end == seg2.start:
+                        left_seq, left_text = _get_seg_info(seg_left)
+                        right_seq, right_text = _get_seg_info(seg_right)
+                        if apply_segfilters(left_seq, left_text, right_seq, right_text):
+                            continue  # Skip this combination
                     
                     # Calculate synergy bonus/penalty between adjacent segments
                     synergy_score = 0

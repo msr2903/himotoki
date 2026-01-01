@@ -906,6 +906,261 @@ def should_prune_path(score: int) -> bool:
 
 
 # ============================================================================
+# Segfilters (1:1 from Ichiran's dict-grammar.lisp)
+# ============================================================================
+
+"""
+Segfilters prevent certain combinations of adjacent segments.
+They return True if the combination should be BLOCKED.
+
+From Ichiran:
+    (defmacro def-segfilter-must-follow (name (segment-list-left segment-list-right)
+                                         filter-left filter-right &key allow-first)
+      "This segfilter is for when segments that satisfy filter-right MUST follow segments that
+       satisfy filter-left")
+"""
+
+from typing import Set
+
+# Sequences used by segfilters (from Ichiran)
+SEGFILTER_AUX_VERBS: Set[int] = {1342560}  # 初める/そめる
+SEGFILTER_N_SEQS: Set[int] = {2139720, 2849370, 2849387}  # ん, んだ
+SEGFILTER_SURU_SEQS: Set[int] = {1157170, 2424740, 1305070}  # する, して, しまう
+SEGFILTER_IRU_SEQ: int = 1577980  # いる
+SEGFILTER_KURU_SEQS: Set[int] = {2830009, 1547720}  # 来る conjugations
+SEGFILTER_OMOU_SEQS: Set[int] = {1589350, 1587040}  # 思う, 言う
+SEGFILTER_NAI_SEQS: Set[int] = {1529520, 1296400, 2139720}  # ない, ある, ん
+SEGFILTER_HAYAMETE_SEQ: int = 1601080  # 早めて
+SEGFILTER_NO_SEQ: int = 1469800  # の
+SEGFILTER_TO_SEQ: int = 1008490  # と
+SEGFILTER_NANDATO_SEQ: int = 2837117  # 何だと
+SEGFILTER_TTE_SEQ: int = 2086960  # って
+SEGFILTER_DE_SEQ: int = 2896380  # 出
+SEGFILTER_DE_ALT: Set[int] = {1896380, 2422860}  # 出 forms
+SEGFILTER_DA_SEQ: int = 2089020  # だ
+SEGFILTER_DE_PARTICLE_SEQ: int = 2028980  # で (particle)
+SEGFILTER_HONORIFICS: Set[int] = {1247260}  # 君
+
+# Bad compound endings (from Ichiran's segfilter-badend)
+BAD_COMPOUND_ENDINGS: Set[str] = {'ちゃい', 'いか', 'とか', 'とき', 'い'}
+
+
+def _is_kana_only(text: str) -> bool:
+    """Check if text contains only hiragana/katakana."""
+    for c in text:
+        cp = ord(c)
+        if not ((0x3040 <= cp <= 0x309F) or (0x30A0 <= cp <= 0x30FF)):
+            return False
+    return True
+
+
+def _ends_with_compound(seg_text: str, seqs: Set[int]) -> bool:
+    """
+    Check if a compound word ends with one of the given sequences.
+    This is a simplified version - full implementation would check actual compound structure.
+    """
+    # For now, check common patterns
+    return False  # Will be refined based on actual compound tracking
+
+
+def segfilter_n(left_seq: Optional[int], left_text: str,
+                right_seq: int, right_text: str) -> bool:
+    """
+    Segfilter: ん/んだ must not follow simple noun particles.
+    
+    From Ichiran (dict-grammar.lisp:1072-1075):
+        (def-segfilter-must-follow segfilter-n (l r)
+          (complement (apply 'filter-in-seq-set-simple *noun-particles*))
+          (filter-in-seq-set 2139720 2849370 2849387) ;; ん んだ
+          :allow-first t)
+    
+    Returns True if this combination should be BLOCKED.
+    """
+    if right_seq in SEGFILTER_N_SEQS:
+        # Block if left is a simple noun particle
+        from .synergies import NOUN_PARTICLES
+        if left_seq and left_seq in NOUN_PARTICLES:
+            return True
+    return False
+
+
+def segfilter_badend(left_seq: Optional[int], left_text: str,
+                     right_seq: int, right_text: str) -> bool:
+    """
+    Segfilter: Prevent bad compound endings.
+    
+    From Ichiran (dict-grammar.lisp:1081-1083):
+        (def-segfilter-must-follow segfilter-badend (l r)
+          (constantly nil)
+          (filter-is-compound-end-text "ちゃい" "いか" "とか" "とき" "い"))
+    
+    IMPORTANT: In Ichiran, filter-is-compound-end-text only applies to
+    COMPOUND words (words with multiple parts/seqs). It checks if the
+    LAST PART of a compound ends with the given text.
+    
+    We don't have compound tracking here, so we disable this filter.
+    The compound system handles these cases differently.
+    
+    Returns True if the right segment ends with a bad compound pattern.
+    """
+    # NOTE: This filter was incorrectly blocking standalone words like いい
+    # In Ichiran, this only applies to compound words (words with listp seq)
+    # Since we don't track compounds the same way, we disable this filter
+    # for now to avoid false positives.
+    return False
+
+
+def segfilter_janai(left_seq: Optional[int], left_text: str,
+                    right_seq: int, right_text: str) -> bool:
+    """
+    Segfilter: じゃ + ない/ある/ん pattern.
+    
+    From Ichiran (dict-grammar.lisp:1118-1121):
+        (def-segfilter-must-follow segfilter-janai (l r)
+          (complement (filter-is-compound-end 2028920))  ;; は
+          (filter-in-seq-set 1529520 1296400 2139720)  ;; ない ある ん
+          :allow-first t)
+    
+    ない/ある/ん must follow something ending with は (as じゃ = では)
+    """
+    if right_seq in SEGFILTER_NAI_SEQS:
+        # Allow at sentence start
+        if left_seq is None:
+            return False
+        # Must follow は-ending compound
+        # For now, simplified check
+        return False
+    return False
+
+
+def segfilter_toomou(left_seq: Optional[int], left_text: str,
+                     right_seq: int, right_text: str) -> bool:
+    """
+    Segfilter: と before 思う/言う must be split.
+    
+    From Ichiran (dict-grammar.lisp:1128-1133):
+        (def-segfilter-must-follow segfilter-toomou (l r)
+          (complement (filter-in-seq-set 2837117)) ;; 何だと
+          (filter-in-seq-set 1589350 1587040)  ;; 思う 言う
+          :allow-first t)
+    
+    思う/言う should be preceded by と quote particle, not compound.
+    """
+    if right_seq in SEGFILTER_OMOU_SEQS:
+        # Block if left is 何だと
+        if left_seq == SEGFILTER_NANDATO_SEQ:
+            return True
+    return False
+
+
+def segfilter_dashi(left_seq: Optional[int], left_text: str,
+                    right_seq: int, right_text: str) -> bool:
+    """
+    Segfilter: だ not followed by する/して.
+    
+    From Ichiran (dict-grammar.lisp:1140-1147):
+        (def-segfilter-must-follow segfilter-dashi (l r)
+          (lambda (segment &aux (seq-set (getf (segment-info segment) :seq-set)))
+            (or (not (find 2089020 seq-set)) ;; だ
+                (find 2028980 seq-set))) ;; で
+          (filter-in-seq-set 1157170 2424740 1305070) ;; する　して
+          :allow-first t)
+    
+    When right is する/して, left should not be standalone だ.
+    """
+    if right_seq in SEGFILTER_SURU_SEQS:
+        if left_seq == SEGFILTER_DA_SEQ:
+            # Block だ + する (should be だする compound or different parse)
+            return True
+    return False
+
+
+def segfilter_dekiru(left_seq: Optional[int], left_text: str,
+                     right_seq: int, right_text: str) -> bool:
+    """
+    Segfilter: 出 followed by 来る.
+    
+    From Ichiran (dict-grammar.lisp:1149-1153):
+        (def-segfilter-must-follow segfilter-dekiru (l r)
+          (complement (filter-in-seq-set 1896380 2422860))  ;; 出
+          (filter-in-seq-set 2830009 1547720)  ;; 来る conjugations
+          :allow-first t)
+    
+    来る conjugations must follow 出 to form できる.
+    """
+    if right_seq in SEGFILTER_KURU_SEQS:
+        if left_seq and left_seq in SEGFILTER_DE_ALT:
+            return False  # Allow 出 + 来る
+        # Block 来る without proper 出 prefix at start
+        if left_seq is None:
+            return True
+    return False
+
+
+def segfilter_desu_split(left_seq: Optional[int], left_text: str,
+                         right_seq: int, right_text: str) -> bool:
+    """
+    Segfilter: Prevent standalone す after で when です is intended.
+    
+    This is a himotoki addition to handle the で|す vs です issue.
+    
+    When we have で followed by single hiragana す that matches a noun,
+    block it because です is more likely.
+    """
+    # After で particle, single す should not match nouns like 酢/巣
+    if left_seq == SEGFILTER_DE_PARTICLE_SEQ:
+        if right_text == 'す' and _is_kana_only(right_text):
+            # Check if right_seq is a standalone noun (not verb する)
+            from .synergies import is_noun, is_verb
+            if is_noun(right_seq) and not is_verb(right_seq):
+                return True  # Block nouns like 酢, 巣 after で
+    return False
+
+
+def segfilter_honorific(left_seq: Optional[int], left_text: str,
+                        right_seq: int, right_text: str) -> bool:
+    """
+    Segfilter: Honorifics like 君 not after particles.
+    
+    From Ichiran (dict-grammar.lisp:1159-1162):
+        (def-segfilter-must-follow segfilter-honorific (l r)
+          (complement (apply 'filter-in-seq-set *noun-particles*))
+          (apply 'filter-in-seq-set *honorifics*))
+    """
+    if right_seq in SEGFILTER_HONORIFICS:
+        from .synergies import NOUN_PARTICLES
+        if left_seq and left_seq in NOUN_PARTICLES:
+            return True  # Block particle + honorific
+    return False
+
+
+# List of all segfilter functions
+SEGFILTERS = [
+    segfilter_n,
+    segfilter_badend,
+    segfilter_janai,
+    segfilter_toomou,
+    segfilter_dashi,
+    segfilter_dekiru,
+    segfilter_desu_split,
+    segfilter_honorific,
+]
+
+
+def apply_segfilters(left_seq: Optional[int], left_text: str,
+                     right_seq: int, right_text: str) -> bool:
+    """
+    Apply all segfilters to a pair of segments.
+    
+    Returns True if the combination should be BLOCKED.
+    """
+    for segfilter in SEGFILTERS:
+        if segfilter(left_seq, left_text, right_seq, right_text):
+            return True
+    return False
+
+
+# ============================================================================
 # Module Initialization
 # ============================================================================
 
