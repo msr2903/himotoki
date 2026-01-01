@@ -809,18 +809,24 @@ def length_multiplier_coeff(length: int, class_type: str) -> int:
 
 
 # Words to skip in segmentation
-SKIP_WORDS: Set[int] = set()
+from himotoki.constants import (
+    SKIP_WORDS as _SKIP_WORDS,
+    FINAL_PRT as _FINAL_PRT,
+    SEMI_FINAL_PRT as _SEMI_FINAL_PRT,
+    COPULA_DA,
+)
+SKIP_WORDS: Set[int] = _SKIP_WORDS
 
 # Final-only particles
-FINAL_PRT: Set[int] = set()
-SEMI_FINAL_PRT: Set[int] = set()
-NON_FINAL_PRT: Set[int] = set()
+FINAL_PRT: Set[int] = _FINAL_PRT
+SEMI_FINAL_PRT: Set[int] = _SEMI_FINAL_PRT
+NON_FINAL_PRT: Set[int] = set()  # Currently empty in Ichiran too
 
 # Words with no kanji break penalty
 NO_KANJI_BREAK_PENALTY: Set[int] = set()
 
 # Copulae
-COPULAE: Set[int] = {2089020}  # だ
+COPULAE: Set[int] = {COPULA_DA}  # だ
 
 # Force kanji break words
 FORCE_KANJI_BREAK: Set[str] = set()
@@ -982,8 +988,41 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
         score += prop_score * length_multiplier_coeff(use_length - length, tail_class)
         score += score_mod * prop_score * (use_length - length)
     
+    # Particle scoring - matches Ichiran's calc-score (dict.lisp:896-902)
+    # Particles get a boost to ensure they're selected over homophone nouns/verbs
+    posi = []
+    if seq:
+        from himotoki.synergies import get_pos_tags
+        posi = list(get_pos_tags(seq))
+    
+    # Check for actual particle POS tags - be specific to avoid false positives
+    # like "nouns which may take the genitive case particle 'no'"
+    PARTICLE_POS_PATTERNS = {
+        'particle', 'prt', 'case-marking particle', 'conjunction particle',
+        'adverbial particle', 'sentence-ending particle', 'final particle'
+    }
+    particle_p = any(
+        any(pattern == p or p.startswith(pattern + ' ') or p.endswith(' ' + pattern) 
+            for pattern in PARTICLE_POS_PATTERNS)
+        for p in posi
+    )
+    semi_final_particle_p = seq in SEMI_FINAL_PRT if seq else False
+    non_final_particle_p = seq in NON_FINAL_PRT if seq else False
+    
+    if particle_p:
+        # Ichiran: (when (and particle-p (or final (not semi-final-particle-p)))
+        if final or not semi_final_particle_p:
+            score += 2 * prop_score  # Scale by prop_score for consistency
+            if common_p:
+                score += (2 + length) * prop_score
+            if final and not non_final_particle_p:
+                if ordinal == 0:  # primary-p
+                    score += 5 * prop_score
+                elif semi_final_particle_p:
+                    score += 2 * prop_score
+    
     info = {
-        'posi': [],
+        'posi': posi,
         'seq_set': [seq] if seq else [],
         'conj': None,
         'common': common,

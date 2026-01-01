@@ -165,3 +165,18 @@ Thumbs.db
 ichiran-source-code/
 *.db
 *.sqlite
+*.db-shm
+*.db-wal
+
+# Security / Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Documentation builds
+site/
+_build/
