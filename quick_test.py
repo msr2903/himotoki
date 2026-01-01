@@ -41,7 +41,7 @@ def get_ichiran_result(text: str) -> list:
     try:
         result = subprocess.run(
             ["docker", "exec", "ichiran-main-1", "ichiran-cli", "-f", text],
-            capture_output=True, text=True, timeout=10
+            capture_output=True, text=True, timeout=30
         )
         if result.returncode == 0:
             data = json.loads(result.stdout)

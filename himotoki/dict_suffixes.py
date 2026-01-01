@@ -23,6 +23,16 @@ from himotoki.characters import as_hiragana, is_kana
 
 
 # ============================================================================
+# Suffix Context (matches Ichiran's *suffix-map-temp* and *suffix-next-end*)
+# ============================================================================
+
+# These module-level variables are used to pass context to recursive suffix matching
+# Like Ichiran's dynamic variables *suffix-map-temp* and *suffix-next-end*
+_suffix_map_temp: Optional[Dict] = None
+_suffix_next_end: Optional[int] = None
+
+
+# ============================================================================
 # Suffix Cache (matches Ichiran's *suffix-cache* and *suffix-class*)
 # ============================================================================
 
@@ -536,21 +546,251 @@ def _teiru_check(root: str) -> bool:
     return root != 'いて' and _te_check(root)
 
 
+# ============================================================================
+# POS Abbreviation Mapping (from Ichiran)
+# ============================================================================
+
+# Maps POS abbreviations to their full text equivalents in JMdict
+POS_ABBREV_MAP = {
+    'vs': 'noun or participle which takes the aux. verb suru',
+    'vs-s': 'suru verb - special class',
+    'vs-i': 'suru verb - included',
+    'adj-i': 'adjective (keiyoushi)',
+    'adj-ix': 'adjective (keiyoushi) - yoi/ii class',
+    'adj-na': 'adjectival nouns or quasi-adjectives (keiyodoshi)',
+    'adj-no': "nouns which may take the genitive case particle 'no'",
+    'adj-pn': 'pre-noun adjectival (rentaishi)',
+    'adj-t': "'taru' adjective",
+    'adj-f': 'noun or verb acting prenominally',
+    'adj-nari': 'archaic/formal form of na-adjective',
+    'adj-kari': "'kari' adjective (archaic)",
+    'adj-ku': "'ku' adjective (archaic)",
+    'adj-shiku': "'shiku' adjective (archaic)",
+    'adv': 'adverb (fukushi)',
+    'aux': 'auxiliary',
+    'aux-adj': 'auxiliary adjective',
+    'aux-v': 'auxiliary verb',
+    'conj': 'conjunction',
+    'cop': 'copula',
+    'ctr': 'counter',
+    'exp': 'expressions (phrases, clauses, etc.)',
+    'int': 'interjection (kandoushi)',
+    'n': 'noun (common) (futsuumeishi)',
+    'n-adv': 'adverbial noun (fukushitekimeishi)',
+    'n-pr': 'proper noun',
+    'n-pref': 'noun, used as a prefix',
+    'n-suf': 'noun, used as a suffix',
+    'n-t': 'noun (temporal) (jisoumeishi)',
+    'num': 'numeric',
+    'pn': 'pronoun',
+    'pref': 'prefix',
+    'prt': 'particle',
+    'suf': 'suffix',
+    'unc': 'unclassified',
+    'v-unspec': 'verb unspecified',
+    'v1': 'Ichidan verb',
+    'v1-s': 'Ichidan verb - kureru special class',
+    'v2a-s': "Nidan verb with 'u' ending (archaic)",
+    'v2b-k': "Nidan verb (upper class) with 'bu' ending (archaic)",
+    'v2b-s': "Nidan verb (lower class) with 'bu' ending (archaic)",
+    'v2d-k': "Nidan verb (upper class) with 'dzu' ending (archaic)",
+    'v2d-s': "Nidan verb (lower class) with 'dzu' ending (archaic)",
+    'v2g-k': "Nidan verb (upper class) with 'gu' ending (archaic)",
+    'v2g-s': "Nidan verb (lower class) with 'gu' ending (archaic)",
+    'v2h-k': "Nidan verb (upper class) with 'hu/fu' ending (archaic)",
+    'v2h-s': "Nidan verb (lower class) with 'hu/fu' ending (archaic)",
+    'v2k-k': "Nidan verb (upper class) with 'ku' ending (archaic)",
+    'v2k-s': "Nidan verb (lower class) with 'ku' ending (archaic)",
+    'v2m-k': "Nidan verb (upper class) with 'mu' ending (archaic)",
+    'v2m-s': "Nidan verb (lower class) with 'mu' ending (archaic)",
+    'v2n-s': "Nidan verb (lower class) with 'nu' ending (archaic)",
+    'v2r-k': "Nidan verb (upper class) with 'ru' ending (archaic)",
+    'v2r-s': "Nidan verb (lower class) with 'ru' ending (archaic)",
+    'v2s-s': "Nidan verb (lower class) with 'su' ending (archaic)",
+    'v2t-k': "Nidan verb (upper class) with 'tsu' ending (archaic)",
+    'v2t-s': "Nidan verb (lower class) with 'tsu' ending (archaic)",
+    'v2w-s': "Nidan verb (lower class) with 'u' ending and 'we' conjugation (archaic)",
+    'v2y-k': "Nidan verb (upper class) with 'yu' ending (archaic)",
+    'v2y-s': "Nidan verb (lower class) with 'yu' ending (archaic)",
+    'v2z-s': "Nidan verb (lower class) with 'zu' ending (archaic)",
+    'v4b': "Yodan verb with 'bu' ending (archaic)",
+    'v4g': "Yodan verb with 'gu' ending (archaic)",
+    'v4h': "Yodan verb with 'hu/fu' ending (archaic)",
+    'v4k': "Yodan verb with 'ku' ending (archaic)",
+    'v4m': "Yodan verb with 'mu' ending (archaic)",
+    'v4n': "Yodan verb with 'nu' ending (archaic)",
+    'v4r': "Yodan verb with 'ru' ending (archaic)",
+    'v4s': "Yodan verb with 'su' ending (archaic)",
+    'v4t': "Yodan verb with 'tsu' ending (archaic)",
+    'v5aru': 'Godan verb - -aru special class',
+    'v5b': "Godan verb with 'bu' ending",
+    'v5g': "Godan verb with 'gu' ending",
+    'v5k': "Godan verb with 'ku' ending",
+    'v5k-s': 'Godan verb - Iku/Yuku special class',
+    'v5m': "Godan verb with 'mu' ending",
+    'v5n': "Godan verb with 'nu' ending",
+    'v5r': "Godan verb with 'ru' ending",
+    'v5r-i': "Godan verb with 'ru' ending (irregular verb)",
+    'v5s': "Godan verb with 'su' ending",
+    'v5t': "Godan verb with 'tsu' ending",
+    'v5u': "Godan verb with 'u' ending",
+    'v5u-s': "Godan verb with 'u' ending (special class)",
+    'v5uru': 'Godan verb - Uru old class verb (old form of Eru)',
+    'vi': 'intransitive verb',
+    'vk': 'Kuru verb - special class',
+    'vn': 'irregular nu verb',
+    'vr': 'irregular ru verb, plain form ends with -ri',
+    'vs-c': 'su verb - precursor to the modern suru',
+    'vt': 'transitive verb',
+    'vz': 'Ichidan verb - zuru verb (alternative form of -jiru verbs)',
+}
+
+
+def _expand_pos(posi: tuple) -> tuple:
+    """Expand POS abbreviations to their full text equivalents."""
+    expanded = []
+    for pos in posi:
+        if pos in POS_ABBREV_MAP:
+            expanded.append(POS_ABBREV_MAP[pos])
+        else:
+            expanded.append(pos)
+    return tuple(expanded)
+
+
+def _find_word_with_pos(word: str, *posi: str):
+    """
+    Find words with specific part-of-speech tags.
+    
+    Matches Ichiran's find-word-with-pos from dict-grammar.lisp line 89.
+    Finds entries where the text matches and has one of the given POS tags.
+    
+    Args:
+        word: Word text to match.
+        posi: POS tags to filter by (e.g., "vs", "adj-i", "adj-na", "pn").
+        
+    Returns:
+        List of matching word entries.
+    """
+    from himotoki.dict import KanaText, KanjiText
+    
+    if not posi:
+        return []
+    
+    # Expand POS abbreviations
+    expanded_posi = _expand_pos(posi)
+    
+    # Check if word is kana
+    table = "kana_text" if is_kana(word) else "kanji_text"
+    
+    placeholders = ','.join('?' * len(expanded_posi))
+    rows = query(
+        f"""
+        SELECT DISTINCT kt.*
+        FROM {table} kt
+        INNER JOIN sense_prop sp ON sp.seq = kt.seq AND sp.tag = 'pos'
+        WHERE kt.text = ? AND sp.text IN ({placeholders})
+        """,
+        (word,) + expanded_posi
+    )
+    
+    result = []
+    TextClass = KanaText if table == "kana_text" else KanjiText
+    for row in rows:
+        if table == "kana_text":
+            obj = KanaText(
+                id=row['id'],
+                seq=row['seq'],
+                text=row['text'],
+                ord=row.get('ord', 0) if hasattr(row, 'get') else row['ord'],
+                common=row['common'],
+                common_tags='',
+                conjugate_p=True,
+                nokanji=row.get('nokanji', False) if hasattr(row, 'get') else False,
+                conjugations=None,
+                best_kanji=None,
+            )
+        else:
+            obj = KanjiText(
+                id=row['id'],
+                seq=row['seq'],
+                text=row['text'],
+                ord=row.get('ord', 0) if hasattr(row, 'get') else row['ord'],
+                common=row['common'],
+                common_tags='',
+                conjugate_p=True,
+                nokanji=False,
+                conjugations=None,
+                best_kana=None,
+            )
+        result.append(obj)
+    
+    return result
+
+
 def _find_word_with_conj_type(word: str, *conj_types: int):
     """
     Find words that are conjugations of the given types.
     
     Matches Ichiran's find-word-with-conj-type which uses find-word-full.
-    This means we need to check conjugated forms, not just dictionary entries.
+    This enables recursive suffix matching - e.g., 勉強して can be found
+    as a compound (勉強 + して) with te-form conjugation.
+    
+    Uses module-level _suffix_map_temp and _suffix_next_end for recursive matching.
     """
-    from himotoki.dict import find_word, ConjugatedText
+    from himotoki.dict import find_word_full, ConjugatedText, CompoundText
+    
+    global _suffix_map_temp, _suffix_next_end
     
     results = []
+    seen_seqs = set()
     
-    # First check dictionary entries that might be conjugated forms
-    for w in find_word(word):
+    # Call find_word_full with suffix context to enable recursive suffix matching
+    # This is the key to matching compound forms like 勉強して
+    words = find_word_full(word, as_hiragana_flag=False, counter=None,
+                          suffix_map=_suffix_map_temp,
+                          suffix_next_end=_suffix_next_end)
+    
+    for w in words:
+        # Handle CompoundText - check if the suffix part has the conjugation type
+        if isinstance(w, CompoundText):
+            # For compounds, check the suffix word's conjugation
+            # The suffix (e.g., して) should have the conjugation type
+            if w.words and len(w.words) > 1:
+                suffix_word = w.words[-1]  # Last word is the suffix
+                suffix_conj = getattr(suffix_word, 'conjugations', None)
+                
+                # Check if suffix conjugations indicate the right conj_type
+                if suffix_conj:
+                    # Get conj_type for the suffix
+                    if isinstance(suffix_conj, list):
+                        for conj_id in suffix_conj:
+                            conj_rows = query(
+                                """
+                                SELECT cp.conj_type
+                                FROM conj_prop cp
+                                WHERE cp.conj_id = ?
+                                """,
+                                (conj_id,)
+                            )
+                            for row in conj_rows:
+                                if row['conj_type'] in conj_types:
+                                    seq_key = tuple(w.seq) if isinstance(w.seq, list) else w.seq
+                                    if seq_key not in seen_seqs:
+                                        seen_seqs.add(seq_key)
+                                        results.append({
+                                            'word': w,
+                                            'conj_type': row['conj_type'],
+                                            'from_seq': w.primary.seq if w.primary else None,
+                                        })
+                                    break
+            continue
+        
+        # Handle regular words
         seq = w.seq
-        # Check if this word has the given conjugation types in conjugation table
+        if seq in seen_seqs:
+            continue
+            
+        # Check if this word has the given conjugation types
         rows = query(
             """
             SELECT DISTINCT cp.conj_type, c.from_seq
@@ -562,14 +802,15 @@ def _find_word_with_conj_type(word: str, *conj_types: int):
         )
         for row in rows:
             if row['conj_type'] in conj_types:
+                seen_seqs.add(seq)
                 results.append({
                     'word': w,
                     'conj_type': row['conj_type'],
                     'from_seq': row['from_seq'],
                 })
+                break
     
     # Also look for ConjugatedText entries in conj_lookup
-    # This matches what find_substring_words does
     placeholders = ','.join('?' * len(conj_types))
     rows = query(
         f"""
@@ -585,8 +826,11 @@ def _find_word_with_conj_type(word: str, *conj_types: int):
     )
     
     for row in rows:
-        # Create ConjugatedText for this entry
-        # sqlite3.Row doesn't have .get(), so use try/except or check keys
+        seq = row['seq']
+        if seq in seen_seqs:
+            continue
+        seen_seqs.add(seq)
+        
         try:
             reading = row['reading']
         except (KeyError, IndexError):
@@ -772,10 +1016,902 @@ def suffix_teiru_plus(root: str, suffix_text: str, kf: Optional[dict]) -> List:
     return results
 
 
+def suffix_suru(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle suru suffix (noun + する makes verb).
+    
+    Matches Ichiran's suffix-suru: finds words with "vs" POS (suru verbs).
+    Example: 勉強 + しています = 勉強しています
+    """
+    matches = _find_word_with_pos(root, "vs")
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    suffix_class = _suffix_class.get(kf['seq']) if kf else 'suru'
+    
+    for word in matches:
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=5,  # :score 5 in Ichiran
+            suffix_class=suffix_class,
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_tai(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle tai suffix (want to do).
+    
+    Matches Ichiran's suffix-tai: conj_type 13 (masu stem).
+    Excludes い as root.
+    """
+    if root == 'い':
+        return []
+    
+    matches = _find_word_with_conj_type(root, 13)  # Ren'youkei/masu stem
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=5,
+            suffix_class='tai',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_ren(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle ren suffix (generic ren'youkei/masu stem suffix).
+    
+    Matches Ichiran's suffix-ren: conj_type 13.
+    """
+    matches = _find_word_with_conj_type(root, 13)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    suffix_class = _suffix_class.get(kf['seq']) if kf else 'ren'
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=5,
+            suffix_class=suffix_class,
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_ren_minus(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle ren- suffix (ren'youkei with score 0).
+    
+    Matches Ichiran's suffix-ren-: conj_type 13 with score 0.
+    """
+    matches = _find_word_with_conj_type(root, 13)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    suffix_class = _suffix_class.get(kf['seq']) if kf else None
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=0,
+            suffix_class=suffix_class,
+        )
+        results.append(compound)
+    
+    return results
+
+
+# Conjugation constants (from Ichiran)
+CONJ_NEGATIVE_STEM = 25  # +conj-negative-stem+
+CONJ_ADJECTIVE_STEM = 26  # +conj-adjective-stem+
+CONJ_ADVERBIAL = 2  # +conj-adverbial+
+
+
+def suffix_neg(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle neg suffix (negative stem).
+    
+    Matches Ichiran's suffix-neg: conj_type 13 with CONJ_NEGATIVE_STEM.
+    """
+    # Find words with conj_type 13 and negative property
+    matches = _find_word_with_conj_type(root, 13)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=5,
+            suffix_class='neg',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_te_space(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle te+space suffix (te-form + auxiliary with space connector).
+    
+    Matches Ichiran's suffix-te+space.
+    """
+    if not _te_check(root):
+        return []
+    
+    matches = _find_word_with_conj_type(root, 3)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    suffix_class = _suffix_class.get(kf['seq']) if kf else None
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=3,
+            suffix_class=suffix_class,
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_kudasai(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle kudasai suffix (please do...).
+    
+    Matches Ichiran's suffix-kudasai: te-form check with constant score 360.
+    """
+    if not _te_check(root):
+        return []
+    
+    matches = _find_word_with_conj_type(root, 3)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for m in matches:
+        word = m['word']
+        # Score is (constantly 360) in Ichiran - high fixed score
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=360,
+            suffix_class='kudasai',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_teren(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle teren suffix (te or ren'youkei).
+    
+    Matches Ichiran's suffix-te-ren.
+    """
+    if root == 'で':
+        return []
+    
+    results = []
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    suffix_class = _suffix_class.get(kf['seq']) if kf else None
+    
+    # Check te-form
+    if root and root[-1] in 'てで':
+        matches = _find_word_with_conj_type(root, 3)
+        for m in matches:
+            word = m['word']
+            compound = adjoin_word(
+                word,
+                suffix_word,
+                text=root + suffix_text,
+                kana=word.get_kana() + suffix_text,
+                score_mod=4,
+                suffix_class=suffix_class,
+            )
+            results.append(compound)
+    elif root != 'い':
+        # Try ren'youkei
+        matches = _find_word_with_conj_type(root, 13)
+        for m in matches:
+            word = m['word']
+            compound = adjoin_word(
+                word,
+                suffix_word,
+                text=root + suffix_text,
+                kana=word.get_kana() + suffix_text,
+                score_mod=4,
+                suffix_class=suffix_class,
+            )
+            results.append(compound)
+    
+    return results
+
+
+def suffix_teii(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle teii suffix (te-form + いい - it's ok if...).
+    
+    Matches Ichiran's suffix-teii.
+    """
+    if not root or root[-1] not in 'てで':
+        return []
+    
+    matches = _find_word_with_conj_type(root, 3)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=1,
+            suffix_class='ii',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_chau(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle chau suffix (completion - ちゃう/ちまう).
+    
+    Matches Ichiran's suffix-chau: stem 1, needs to reconstruct te-form.
+    """
+    if not suffix_text:
+        return []
+    
+    # Determine te-form ending based on suffix start
+    first_char = suffix_text[0]
+    if first_char == 'じ':  # ぢ→じ
+        te = 'で'
+    elif first_char == 'ち':
+        te = 'て'
+    else:
+        return []
+    
+    te_root = root + te
+    matches = _find_word_with_conj_type(te_root, 3)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    suffix_class = _suffix_class.get(kf['seq']) if kf else 'chau'
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana()[:-1] + suffix_text if word.get_kana().endswith(te[-1]) else word.get_kana() + suffix_text,
+            score_mod=5,
+            suffix_class=suffix_class,
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_to(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle to suffix (とく - ておく contraction).
+    
+    Matches Ichiran's suffix-to: stem 1, needs to reconstruct te-form.
+    """
+    if not suffix_text:
+        return []
+    
+    first_char = suffix_text[0]
+    if first_char == 'と':
+        te = 'て'
+    elif first_char == 'ど':
+        te = 'で'
+    else:
+        return []
+    
+    te_root = root + te
+    matches = _find_word_with_conj_type(te_root, 3)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    suffix_class = _suffix_class.get(kf['seq']) if kf else 'oku'
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=0,
+            suffix_class=suffix_class,
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_sou(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle sou suffix (seeming - そう).
+    
+    Matches Ichiran's suffix-sou.
+    """
+    # Special score based on root
+    if root == 'から':
+        score = 40
+    elif root == 'い':
+        score = 0
+    elif root == '出来':
+        score = 100
+    else:
+        score = 60
+    
+    # Check for なさ ending (negative stem)
+    if root.endswith('なさ'):
+        # Negative stem → find negative form
+        patched_root = root[:-1] + 'い'  # なさ → ない
+        # TODO: implement negative stem matching
+        return []
+    elif root in ('な', 'よ', 'よさ', 'に', 'き'):
+        return []
+    else:
+        # Look for adjective stem or ren'youkei
+        matches = _find_word_with_conj_type(root, 13, CONJ_ADJECTIVE_STEM, CONJ_ADVERBIAL)
+    
+    results = []
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=score,
+            suffix_class='sou',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_sou_plus(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle sou+ suffix (そうにない).
+    
+    Matches Ichiran's suffix-sou+.
+    """
+    if root.endswith('なさ'):
+        return []
+    elif root in ('な', 'よ', 'よさ', 'に', 'き'):
+        return []
+    
+    matches = _find_word_with_conj_type(root, 13, CONJ_ADJECTIVE_STEM, CONJ_ADVERBIAL)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=1,
+            suffix_class='sou',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_rou(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle rou suffix (probably/volitional - ろう).
+    
+    Matches Ichiran's suffix-rou: conj_type 2 (terminal).
+    """
+    matches = _find_word_with_conj_type(root, 2)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=1,
+            suffix_class='rou',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_adv(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle adv suffix (adverbial form + なる etc).
+    
+    Matches Ichiran's suffix-adv: conj_type +conj-adverbial+ (2).
+    """
+    matches = _find_word_with_conj_type(root, CONJ_ADVERBIAL)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    suffix_class = _suffix_class.get(kf['seq']) if kf else 'naru'
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=1,
+            suffix_class=suffix_class,
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_sugiru(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle sugiru suffix (too much - すぎる).
+    
+    Matches Ichiran's suffix-sugiru.
+    """
+    if root == 'い':
+        return []
+    
+    # Check for なさ/無さ ending (negative stem)
+    if root.endswith('なさ') or root.endswith('無さ'):
+        # Negative stem → find negative form
+        return []  # TODO: implement negative stem matching
+    
+    # Add い to root to form adjective
+    adj_root = root + 'い'
+    matches = _find_word_with_pos(adj_root, "adj-i")
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for word in matches:
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana()[:-1] + suffix_text,  # Remove い from kana
+            score_mod=5,
+            suffix_class='sugiru',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_sa(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle sa suffix (adjective nominalization - さ).
+    
+    Matches Ichiran's suffix-sa.
+    """
+    results = []
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    # Try adjective stem
+    matches = _find_word_with_conj_type(root, CONJ_ADJECTIVE_STEM)
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=2,
+            suffix_class='sa',
+        )
+        results.append(compound)
+    
+    # Also try na-adjectives
+    na_matches = _find_word_with_pos(root, "adj-na")
+    for word in na_matches:
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=2,
+            suffix_class='sa',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_iadj(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle iadj suffix (i-adjective stem + suffix like げ, め).
+    
+    Matches Ichiran's suffix-iadj.
+    """
+    matches = _find_word_with_conj_type(root, CONJ_ADJECTIVE_STEM)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    suffix_class = _suffix_class.get(kf['seq']) if kf else None
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=1,
+            suffix_class=suffix_class,
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_garu(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle garu suffix (to feel - がる).
+    
+    Matches Ichiran's suffix-garu.
+    """
+    if root in ('な', 'い', 'よ'):
+        return []
+    
+    results = []
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    # Try adjective stem
+    matches = _find_word_with_conj_type(root, CONJ_ADJECTIVE_STEM)
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=0,
+            suffix_class='garu',
+        )
+        results.append(compound)
+    
+    # Check for そ ending (sou form)
+    if root.endswith('そ'):
+        # TODO: find-word-with-suffix for :sou
+        pass
+    
+    return results
+
+
+def suffix_rashii(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle rashii suffix (seems like - らしい).
+    
+    Matches Ichiran's suffix-rashii.
+    """
+    results = []
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    # conj_type 2 (terminal)
+    matches = _find_word_with_conj_type(root, 2)
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=3,
+            suffix_class='rashii',
+        )
+        results.append(compound)
+    
+    # Also check root + ら with conj_type 11
+    ra_root = root + 'ら'
+    ra_matches = _find_word_with_conj_type(ra_root, 11)
+    for m in ra_matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=3,
+            suffix_class='rashii',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_desu(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle desu suffix (formal copula after negative forms).
+    
+    Matches Ichiran's suffix-desu.
+    """
+    # Only applies to ない/なかった endings
+    if not (root.endswith('ない') or root.endswith('なかった')):
+        return []
+    
+    # TODO: find negative conjugation prop matches
+    # For now, simple check
+    results = []
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    # Score is (constantly 200)
+    from himotoki.dict import find_word
+    for word in find_word(root):
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=200,
+            suffix_class='desu',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_desho(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle desho suffix (seems/perhaps).
+    
+    Matches Ichiran's suffix-desho.
+    """
+    if not root.endswith('ない'):
+        return []
+    
+    results = []
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    # Score is (constantly 300)
+    from himotoki.dict import find_word
+    for word in find_word(root):
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=300,
+            suffix_class='desho',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_tosuru(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle tosuru suffix (try to/about to - とする).
+    
+    Matches Ichiran's suffix-tosuru: conj_type 9 (conditional).
+    """
+    matches = _find_word_with_conj_type(root, 9)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=3,
+            suffix_class='tosuru',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_kurai(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle kurai suffix (about/approximately - くらい/ぐらい).
+    
+    Matches Ichiran's suffix-kurai: conj_type 2 (terminal).
+    """
+    matches = _find_word_with_conj_type(root, 2)
+    results = []
+    
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    for m in matches:
+        word = m['word']
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=3,
+            suffix_class='kurai',
+        )
+        results.append(compound)
+    
+    return results
+
+
+def suffix_ra(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle ra suffix (plural marker - ら).
+    
+    Matches Ichiran's suffix-ra.
+    """
+    if root.endswith('ら'):
+        return []
+    
+    results = []
+    suffix_word = _kf_to_kana_text(kf)
+    if suffix_word is None:
+        return []
+    
+    # Try pronouns (pn)
+    matches = _find_word_with_pos(root, "pn")
+    
+    # Also check hiragana version
+    hiragana_root = as_hiragana(root)
+    if hiragana_root != root:
+        matches.extend(_find_word_with_pos(hiragana_root, "pn"))
+    
+    for word in matches:
+        compound = adjoin_word(
+            word,
+            suffix_word,
+            text=root + suffix_text,
+            kana=word.get_kana() + suffix_text,
+            score_mod=1,
+            suffix_class='ra',
+        )
+        results.append(compound)
+    
+    return results
+
+
 # Register handlers
 _suffix_handlers['te'] = suffix_te
 _suffix_handlers['teiru'] = suffix_teiru
 _suffix_handlers['teiru+'] = suffix_teiru_plus
+_suffix_handlers['suru'] = suffix_suru
+_suffix_handlers['tai'] = suffix_tai
+_suffix_handlers['ren'] = suffix_ren
+_suffix_handlers['ren-'] = suffix_ren_minus
+_suffix_handlers['neg'] = suffix_neg
+_suffix_handlers['te+space'] = suffix_te_space
+_suffix_handlers['kudasai'] = suffix_kudasai
+_suffix_handlers['teren'] = suffix_teren
+_suffix_handlers['teii'] = suffix_teii
+_suffix_handlers['chau'] = suffix_chau
+_suffix_handlers['to'] = suffix_to
+_suffix_handlers['sou'] = suffix_sou
+_suffix_handlers['sou+'] = suffix_sou_plus
+_suffix_handlers['rou'] = suffix_rou
+_suffix_handlers['adv'] = suffix_adv
+_suffix_handlers['sugiru'] = suffix_sugiru
+_suffix_handlers['sa'] = suffix_sa
+_suffix_handlers['iadj'] = suffix_iadj
+_suffix_handlers['garu'] = suffix_garu
+_suffix_handlers['rashii'] = suffix_rashii
+_suffix_handlers['desu'] = suffix_desu
+_suffix_handlers['desho'] = suffix_desho
+_suffix_handlers['tosuru'] = suffix_tosuru
+_suffix_handlers['kurai'] = suffix_kurai
+_suffix_handlers['ra'] = suffix_ra
 
 
 # ============================================================================
@@ -799,6 +1935,11 @@ def find_word_suffix(word: str, suffix_map: Dict = None,
     Returns:
         List of CompoundText objects.
     """
+    global _suffix_map_temp, _suffix_next_end
+    
+    # Set context for recursive matching
+    _suffix_map_temp = suffix_map
+    
     if suffix_map is not None and suffix_next_end is not None:
         suffixes = suffix_map.get(suffix_next_end, [])
     else:
@@ -816,7 +1957,17 @@ def find_word_suffix(word: str, suffix_map: Dict = None,
             continue
         
         root = word[:offset]
-        compounds = handler(root, suffix_text, kf)
-        results.extend(compounds)
+        
+        # Update suffix_next_end for recursive matching (like Ichiran's let binding)
+        old_suffix_next_end = _suffix_next_end
+        if suffix_next_end is not None:
+            _suffix_next_end = suffix_next_end - len(suffix_text)
+        
+        try:
+            compounds = handler(root, suffix_text, kf)
+            results.extend(compounds)
+        finally:
+            # Restore previous value
+            _suffix_next_end = old_suffix_next_end
     
     return results

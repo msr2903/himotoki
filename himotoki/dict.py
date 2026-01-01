@@ -924,6 +924,31 @@ FORCE_KANJI_BREAK: Set[str] = set()
 WEAK_CONJ_FORMS = []
 
 
+def apply_score_mod(score_mod, prop_score: int, length: int) -> int:
+    """
+    Apply score modifier to base score.
+    
+    Matches Ichiran's apply-score-mod generic function (dict.lisp:735-742).
+    
+    Args:
+        score_mod: Score modifier - can be int, callable, or list.
+        prop_score: Property-based score.
+        length: Length delta (use_length - length).
+        
+    Returns:
+        Score modification value to add.
+    """
+    if isinstance(score_mod, list):
+        # For list: reduce with + by applying each element
+        return sum(apply_score_mod(sm, prop_score, length) for sm in score_mod)
+    elif callable(score_mod):
+        # For function: call it with prop_score
+        return score_mod(prop_score)
+    else:
+        # For integer: multiply by prop_score and length
+        return int(score_mod) * prop_score * length
+
+
 def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
                score_mod: int = 0, kanji_break: Optional[List[int]] = None) -> Tuple[int, Dict]:
     """
@@ -1063,7 +1088,7 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
         if use_length and use_length > length:
             tail_class = 'ltail' if length > 3 and (kanji_p or katakana_p) else 'tail'
             score += prop_score * length_multiplier_coeff(use_length - length, tail_class)
-            score += score_mod * prop_score * (use_length - length)
+            score += apply_score_mod(score_mod, prop_score, use_length - length)
         
         # Conjugation info
         conj_info = {
@@ -1137,7 +1162,7 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
     if use_length and use_length > length:
         tail_class = 'ltail' if length > 3 and (kanji_p or katakana_p) else 'tail'
         score += prop_score * length_multiplier_coeff(use_length - length, tail_class)
-        score += score_mod * prop_score * (use_length - length)
+        score += apply_score_mod(score_mod, prop_score, use_length - length)
     
     # Particle scoring - matches Ichiran's calc-score (dict.lisp:896-902)
     # Particles get a boost to ensure they're selected over homophone nouns/verbs
