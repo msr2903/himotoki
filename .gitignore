@@ -183,6 +183,12 @@ _build/
 # Database (generated, too large for git)
 himotoki/data/himotoki.db
 
+# External Data (Users should download these)
+himotoki/data/JMdict_e.xml
+himotoki/data/kanjidic2.xml
+himotoki/data/*.xml
+himotoki/data/*.gz
+
 # Test/Benchmark Results
 comparison_results.json
 *.json.bak
