@@ -7,7 +7,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python Version"></a>
-  <a href="https://github.com/himotoki/himotoki/issues"><img src="https://img.shields.io/github/issues/himotoki/himotoki" alt="Issues"></a>
+  <a href="https://github.com/msr2903/himotoki/issues"><img src="https://img.shields.io/github/issues/msr2903/himotoki" alt="Issues"></a>
 </p>
 
 ---
