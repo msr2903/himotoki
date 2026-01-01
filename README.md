@@ -1,4 +1,4 @@
-<h1 align="center">Himotoki (紐解)</h1>
+<h1 align="center">Himotoki (紐解き)</h1>
 
 <p align="center">
   <strong>A high-performance Japanese Morphological Analyzer and Romanization Tool.</strong>
