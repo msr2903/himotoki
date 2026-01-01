@@ -180,3 +180,5 @@ logs/
 # Documentation builds
 site/
 _build/
+# Database (generated, too large for git)
+himotoki/data/himotoki.db
