@@ -14,7 +14,7 @@
 
 ## 📖 Overview
 
-**Himotoki** (meaning "to unravel" or "to untie a knot") is a Python port of the renowned [Ichiran](https://github.com/alps-nina/ichiran) morphological analyzer. It provides sophisticated Japanese text segmentation, romanization, and linguistic analysis without the heavy dependency on PostgreSQL, using a lightweight **SQLite3** backend instead.
+**Himotoki** (meaning "to unravel" or "to untie a knot") is a Python port of the renowned [Ichiran](https://github.com/tshatrov/ichiran) morphological analyzer. It provides sophisticated Japanese text segmentation, romanization, and linguistic analysis without the heavy dependency on PostgreSQL, using a lightweight **SQLite3** backend instead.
 
 Whether you're building a language learning app, a search engine, or just need to romanize Japanese text with high accuracy, Himotoki is designed to be your go-to library.
 
@@ -97,7 +97,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## 🙏 Acknowledgments
 
-- **Alps Nina** for the original [Ichiran](https://github.com/alps-nina/ichiran) project.
+- **tshatrov** for the original [Ichiran](https://github.com/tshatrov/ichiran) project.
 - **EDRDG** for the JMdict and KANJIDIC projects.
 
 ---
