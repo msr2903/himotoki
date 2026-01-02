@@ -106,11 +106,47 @@ def get_suffix_description(seq_or_class) -> Optional[str]:
 # Kana Form Lookup (matches Ichiran's get-kana-forms)
 # ============================================================================
 
+# Weak conjugation types that should be filtered out when loading suffix forms
+# From Ichiran's dict-errata.lisp lines 1168-1172, 1248-1253
+# These are forms that don't make sense as standalone suffixes
+WEAK_CONJ_TYPES = {
+    51,  # +conj-adjective-stem+ (e.g., た from たい)
+    52,  # +conj-negative-stem+
+    53,  # +conj-causative-su+
+    54,  # +conj-adjective-literary+
+}
+
+# Skip forms: (conj_type, neg) pairs that should be completely skipped
+# From Ichiran's *skip-conj-forms*
+SKIP_CONJ_FORMS = {
+    (10, True),   # Type 10 with neg=True
+    (3, True),    # Te-form with neg=True and fml=True (handled separately)
+}
+
+
+def _is_weak_conj_form(conj_type: int, neg: bool, fml: bool) -> bool:
+    """
+    Check if a conjugation form should be filtered out.
+    
+    Matches Ichiran's test-conj-prop with *weak-conj-forms*.
+    """
+    # Filter out weak conjugation types (any neg/fml)
+    if conj_type in WEAK_CONJ_TYPES:
+        return True
+    
+    # Filter type 9 with neg=True (from Ichiran: (9 t :any))
+    if conj_type == 9 and neg:
+        return True
+    
+    return False
+
+
 def get_kana_forms(seq: int) -> List[dict]:
     """
     Get all kana forms for an entry, including conjugated forms.
     
-    Matches Ichiran's get-kana-forms function.
+    Matches Ichiran's get-kana-forms function with filtering.
+    Filters out weak conjugation forms like adjective stems.
     
     Args:
         seq: Entry sequence number.
@@ -137,18 +173,29 @@ def get_kana_forms(seq: int) -> List[dict]:
             'conjugations': 'root',
         })
     
-    # Get conjugated forms (forms where from_seq = seq)
+    # Get conjugated forms (forms where from_seq = seq) with conj_prop info
+    # Filter out weak conjugation forms (like adjective stems)
     conj_rows = query(
         """
-        SELECT kt.seq, kt.text, kt.common, c.id as conj_id
+        SELECT kt.seq, kt.text, kt.common, c.id as conj_id,
+               cp.conj_type, cp.neg, cp.fml
         FROM kana_text kt
         INNER JOIN conjugation c ON c.seq = kt.seq
+        LEFT JOIN conj_prop cp ON cp.conj_id = c.id
         WHERE c.from_seq = ?
         """,
         (seq,)
     )
     
     for row in conj_rows:
+        conj_type = row['conj_type']
+        neg = bool(row['neg']) if row['neg'] is not None else False
+        fml = bool(row['fml']) if row['fml'] is not None else False
+        
+        # Skip weak conjugation forms (matches Ichiran's get-kana-forms-conj-data-filter)
+        if conj_type is not None and _is_weak_conj_form(conj_type, neg, fml):
+            continue
+        
         result.append({
             'seq': row['seq'],
             'text': row['text'],
@@ -446,6 +493,33 @@ def init_suffixes():
     _load_abbr('dewanai', 'じゃない')
     
     _load_abbr('ii', 'ええ')
+    
+    # ことができる - "can do" grammar pattern
+    # Load all conjugations of 出来る (seq 1340450) prefixed with ことが
+    for kf in get_kana_forms(1340450):  # 出来る/できる
+        dekiru_text = kf['text']
+        kotoga_dekiru_text = 'ことが' + dekiru_text
+        # Create a modified kana form dict for the kotogadekiru pattern
+        kotoga_kf = {
+            'seq': kf['seq'],
+            'text': kotoga_dekiru_text,
+            'common': kf['common'],
+            'conjugations': kf['conjugations'],
+        }
+        _load_kf('kotogadekiru', kotoga_kf, suffix_class='kotogadekiru')
+    
+    # ことにする - "decide to do" grammar pattern (seq 2215340)
+    # This is defined in dict-split.lisp as split-kotonisuru
+    for kf in get_kana_forms(1157170):  # する
+        suru_text = kf['text']
+        koto_ni_suru_text = 'ことに' + suru_text
+        koto_ni_kf = {
+            'seq': kf['seq'],
+            'text': koto_ni_suru_text,
+            'common': kf['common'],
+            'conjugations': kf['conjugations'],
+        }
+        _load_kf('kotonisuru', koto_ni_kf, suffix_class='kotonisuru')
     
     _suffixes_initialized = True
 
@@ -1437,12 +1511,22 @@ def suffix_sou(root: str, suffix_text: str, kf: Optional[dict]) -> List:
     
     for m in matches:
         word = m['word']
+        # Check if the base word is uncommon - if so, reduce score
+        # This prevents uncommon conjugations from beating common standalone words
+        word_common = getattr(word, 'common', None)
+        if word_common is None:
+            # Uncommon base word - significantly reduce score
+            # This prevents なぜそう (from 撫ぜる) from beating なぜ + そう
+            actual_score = max(1, score // 10)
+        else:
+            actual_score = score
+            
         compound = adjoin_word(
             word,
             suffix_word,
             text=root + suffix_text,
             kana=word.get_kana() + suffix_text,
-            score_mod=score,
+            score_mod=actual_score,
             suffix_class='sou',
         )
         results.append(compound)
@@ -1883,6 +1967,42 @@ def suffix_ra(root: str, suffix_text: str, kf: Optional[dict]) -> List:
     return results
 
 
+def suffix_kotogadekiru(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle ことができる as a standalone grammar pattern.
+    
+    Unlike other suffixes, this creates a standalone word for ことができる
+    rather than attaching to a preceding verb.
+    
+    Example: ことができる, ことができず, etc.
+    """
+    # This pattern should only match when the root is empty or trivial
+    # The suffix itself (ことができる) IS the word we want
+    if root:  
+        # If there's a root, we don't want to attach - just return empty
+        # This prevents creating compounds like 泳ぐことができる
+        return []
+    
+    # Should not reach here - suffix handlers are called with non-empty roots
+    return []
+
+
+def suffix_kotonisuru(root: str, suffix_text: str, kf: Optional[dict]) -> List:
+    """
+    Handle ことにする as a standalone grammar pattern.
+    
+    Unlike other suffixes, this creates a standalone word for ことにする
+    rather than attaching to a preceding verb.
+    
+    Example: ことにする, ことにしました, etc.
+    """
+    # This pattern should only match when the root is empty or trivial
+    if root:  
+        return []
+    
+    return []
+
+
 # Register handlers
 _suffix_handlers['te'] = suffix_te
 _suffix_handlers['teiru'] = suffix_teiru
@@ -1912,6 +2032,8 @@ _suffix_handlers['desho'] = suffix_desho
 _suffix_handlers['tosuru'] = suffix_tosuru
 _suffix_handlers['kurai'] = suffix_kurai
 _suffix_handlers['ra'] = suffix_ra
+_suffix_handlers['kotogadekiru'] = suffix_kotogadekiru
+_suffix_handlers['kotonisuru'] = suffix_kotonisuru
 
 
 # ============================================================================

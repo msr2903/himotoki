@@ -940,6 +940,8 @@ SEGFILTER_DE_ALT: Set[int] = {1896380, 2422860}  # 出 forms
 SEGFILTER_DA_SEQ: int = 2089020  # だ
 SEGFILTER_DE_PARTICLE_SEQ: int = 2028980  # で (particle)
 SEGFILTER_HONORIFICS: Set[int] = {1247260}  # 君
+# Polite auxiliary expressions that require specific preceding forms
+SEGFILTER_GOZAIMASU_SEQS: Set[int] = {1612690, 2253080}  # ございます, でございます
 
 # Bad compound endings (from Ichiran's segfilter-badend)
 BAD_COMPOUND_ENDINGS: Set[str] = {'ちゃい', 'いか', 'とか', 'とき', 'い'}
@@ -1097,6 +1099,36 @@ def segfilter_dekiru(left_seq: Optional[int], left_text: str,
     return False
 
 
+def segfilter_gozaimasu(left_seq: Optional[int], left_text: str,
+                        right_seq: int, right_text: str) -> bool:
+    """
+    Segfilter: ございます requires specific preceding forms.
+    
+    ございます and でございます are polite expressions that typically
+    follow specific patterns like ありがとう, お+noun, or で.
+    
+    When ございます appears after a word that doesn't form a valid 
+    expression with it, we should block this combination to prefer
+    compound dictionary entries like ありがとうございます.
+    
+    This is a himotoki addition based on observed Ichiran behavior.
+    """
+    if right_seq in SEGFILTER_GOZAIMASU_SEQS:
+        # ございます should NOT follow most standalone words
+        # It should be part of a compound expression
+        if left_seq is not None:
+            # Check if this is a valid preceding word
+            # Valid patterns: でございます (で particle + ございます)
+            if left_seq == SEGFILTER_DE_PARTICLE_SEQ:
+                return False  # Allow で + ございます
+            # Check if left word can validly precede ございます
+            # Typically: お + noun (like お元気でございます)
+            # For now, block most standalone combinations
+            # The full expression should be in the dictionary
+            return True  # Block most patterns - prefer compound entries
+    return False
+
+
 def segfilter_desu_split(left_seq: Optional[int], left_text: str,
                          right_seq: int, right_text: str) -> bool:
     """
@@ -1142,6 +1174,7 @@ SEGFILTERS = [
     segfilter_toomou,
     segfilter_dashi,
     segfilter_dekiru,
+    segfilter_gozaimasu,  # Block standalone ございます
     segfilter_desu_split,
     segfilter_honorific,
 ]

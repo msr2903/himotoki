@@ -833,6 +833,14 @@ def get_phrase_length_penalty(word) -> int:
 # Embedded particles that expressions shouldn't absorb
 EMBEDDED_PARTICLES = {'が', 'を', 'に', 'で', 'と', 'も'}
 
+# Exceptions: expressions that legitimately contain these particles
+# as part of fixed grammar patterns (not absorbing standalone particles)
+EMBEDDED_PARTICLE_EXCEPTIONS = {
+    1004550,   # ことができる - "to be able to do"
+    1640290,   # ことにする (異にする - to differ)
+    2215340,   # ことにする (事にする - to decide to do)
+}
+
 
 def get_embedded_particle_penalty(reading, seq: Optional[int] = None) -> int:
     """
@@ -849,6 +857,10 @@ def get_embedded_particle_penalty(reading, seq: Optional[int] = None) -> int:
     Returns:
         Penalty score (0 or positive value).
     """
+    # Check for exceptions first
+    if seq in EMBEDDED_PARTICLE_EXCEPTIONS:
+        return 0
+    
     # Convert to string if needed
     text = reading.get_text() if hasattr(reading, 'get_text') else str(reading)
     
@@ -872,6 +884,9 @@ def get_embedded_particle_penalty(reading, seq: Optional[int] = None) -> int:
                 seqs_to_check.append(from_seq)
         
         for check_seq in seqs_to_check:
+            # Also check if root is in exceptions
+            if check_seq in EMBEDDED_PARTICLE_EXCEPTIONS:
+                return 0
             pos_rows = list(query("SELECT text FROM sense_prop WHERE seq = ? AND tag = 'pos'", (check_seq,)))
             for row in pos_rows:
                 pos_text = (row['text'] or '').lower()
@@ -1043,8 +1058,9 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
             else:
                 prop_score += max(1, 20 - common)
         else:
-            # Default reasonable score for conjugated forms
-            prop_score += 5
+            # Uncommon conjugated forms should score lower than common standalone words
+            # This prevents e.g. なぜ (from 撫ぜる) from beating なぜ (why)
+            prop_score += 2
         
         # Conjugated form bonus - prefer recognized conjugations over fragments
         conj_type = reading.conj_type

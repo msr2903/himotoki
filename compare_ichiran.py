@@ -182,27 +182,39 @@ def parse_ichiran_output(data: Any) -> SegmentationResult:
             
             # Handle compound words (like 食べています)
             if "compound" in info:
-                # Compound word - extract components
+                # Compound word - treat as single segment with the full text
                 component_texts = info.get("compound", [])
                 components_info = info.get("components", [])
                 
-                # Create segment for each component
-                for i, comp_text in enumerate(component_texts):
-                    comp_info = components_info[i] if i < len(components_info) else {}
-                    
-                    conj_type, neg, fml, source = extract_conj_info(comp_info)
-                    
-                    seg_info = SegmentInfo(
-                        text=comp_text,
-                        kana=comp_info.get("kana", ""),
-                        seq=comp_info.get("seq"),
-                        score=comp_info.get("score", 0),
-                        conj_type=conj_type,
-                        conj_neg=neg,
-                        conj_fml=fml,
-                        source_text=source,
-                    )
-                    segments.append(seg_info)
+                # Join component texts to get the full compound text
+                full_text = "".join(component_texts)
+                
+                # Get conjugation info from the last component
+                conj_type = None
+                neg = False
+                fml = False
+                source = None
+                if components_info:
+                    last_comp = components_info[-1] if components_info else {}
+                    conj_type, neg, fml, source = extract_conj_info(last_comp)
+                
+                # Get kana by joining component kanas
+                kana_parts = [c.get("kana", "") for c in components_info]
+                full_kana = "".join(kana_parts)
+                
+                seg_info = SegmentInfo(
+                    text=full_text,
+                    kana=full_kana,
+                    seq=components_info[0].get("seq") if components_info else None,
+                    score=info.get("score", 0),
+                    is_compound=True,
+                    components=component_texts,
+                    conj_type=conj_type,
+                    conj_neg=neg,
+                    conj_fml=fml,
+                    source_text=source,
+                )
+                segments.append(seg_info)
             else:
                 # Regular word - check for 'alternative' field (multiple readings)
                 # Use the first alternative or the main info
