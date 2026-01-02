@@ -93,6 +93,52 @@ SUFFIX_DESCRIPTIONS = {
 }
 
 
+# ============================================================================
+# Suffix Unique Only (from Ichiran's *suffix-unique-only*)
+# ============================================================================
+
+# These suffix classes should NOT generate compounds when a dictionary entry
+# already exists for the full text. This prevents suffix-generated compounds
+# from overriding actual dictionary entries.
+# Reference: ichiran-source-code/dict-grammar.lisp lines 327, 506, 540-542, 607, 618, 647-655, 660
+SUFFIX_UNIQUE_ONLY: Set[str] = {
+    'ii',       # e.g., なくてもいい - dictionary entry exists
+    'mo',       # e.g., ても forms
+    'ra',       # pluralizing suffix
+    'nikui',    # difficult to
+    'gai',      # worth it to
+    'nai_n',    # abbreviated negative
+    'dewanai',  # abbreviated ではない
+    'eba',      # conditional abbreviations
+    'teba',
+    'reba',
+    'keba',
+    'geba',
+    'neba',
+    'beba',
+    'meba',
+    'seba',
+}
+
+
+def match_unique(suffix_class: Optional[str], matches: List) -> bool:
+    """
+    Check if suffix should be skipped due to existing dictionary matches.
+    
+    Matches Ichiran's match-unique function.
+    
+    Args:
+        suffix_class: The class of the suffix (e.g., 'ii', 'mo')
+        matches: List of existing dictionary matches for this text
+        
+    Returns:
+        True if suffix should be skipped (matches exist and class is unique-only)
+    """
+    if not suffix_class:
+        return False
+    return suffix_class in SUFFIX_UNIQUE_ONLY
+
+
 def get_suffix_description(seq_or_class) -> Optional[str]:
     """Get description for a suffix by seq or class."""
     if isinstance(seq_or_class, int):
@@ -2100,6 +2146,15 @@ def find_word_suffix(word: str, suffix_map: Dict = None,
         
         offset = len(word) - len(suffix_text)
         if offset <= 0:
+            continue
+        
+        # Get suffix class - from kf if available, otherwise use keyword
+        # Matches Ichiran: (if kf (gethash (seq kf) *suffix-class*) keyword)
+        suffix_class = _suffix_class.get(kf['seq']) if kf else keyword
+        
+        # Skip if dictionary matches exist and this is a unique-only suffix class
+        # Matches Ichiran: (not (and matches (match-unique suffix-class matches)))
+        if matches and match_unique(suffix_class, matches):
             continue
         
         root = word[:offset]
