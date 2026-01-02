@@ -353,7 +353,17 @@ def init_suffixes():
     kf_ii = get_kana_form(2820690, 'いい')
     if kf_ii:
         _load_kf('teii', kf_ii, suffix_class='ii')
+    # もいい - synthetic entry (seq 900001 is in extra.xml in Ichiran)
+    # Create a synthetic kana form since we don't have this in our database
     kf_moii = get_kana_form(900001, 'もいい')
+    if not kf_moii:
+        # Create synthetic entry for もいい
+        kf_moii = {
+            'seq': 900001,
+            'text': 'もいい',
+            'common': 0,  # Treat as common
+            'conjugations': None,
+        }
     if kf_moii:
         _load_kf('teii', kf_moii, text='もいい', suffix_class='ii')
     
@@ -934,6 +944,20 @@ def _find_word_with_conj_type(word: str, *conj_types: int):
             source_reading = row['source_reading']
         except (KeyError, IndexError):
             source_reading = row['source_text']
+        
+        # FILTER: Reject partial suru-verb matches
+        # Suru-verb conjugations should have text starting with source_reading
+        # E.g., なくて should NOT match なま返事する (source_reading = なまへんじ)
+        # because なまへんじしなくて != なくて
+        # BUT: Exempt standalone する (seq 1157170) and other base verbs
+        if pos in ('vs-i', 'vs-s') and source_reading:
+            # Exempt standalone する, いたす, される, させる (base suru-verbs)
+            base_suru_seqs = {1157170, 1421900, 2269820, 1005160}
+            if seq not in base_suru_seqs:
+                text_hira = as_hiragana(row['text'])
+                source_hira = as_hiragana(source_reading)
+                if source_hira and not text_hira.startswith(source_hira):
+                    continue  # Skip this partial match
         
         conj = ConjugatedText(
             id=row['id'],

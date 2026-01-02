@@ -806,6 +806,25 @@ def get_phrase_length_penalty(word) -> int:
     if seq and seq in PARTICLE_ENDING_EXCEPTIONS:
         return 0
     
+    # ========================================================================
+    # NO-SPLIT SEQUENCES (from Ichiran's def-simple-hint in dict-split.lisp)
+    # These are fixed expressions where the trailing particle is integral.
+    # Do NOT penalize them - let them score their full length.
+    #
+    # Special case: seq=1289400 (こんにちは/今日は)
+    # - Kana forms (こんにちは) - skip penalty
+    # - Kanji form (今日は) - APPLY penalty (ambiguous: greeting vs today+topic)
+    # ========================================================================
+    if seq and seq in NO_SPLIT_BOOST_SEQS:
+        if seq == 1289400:  # こんにちは/今日は
+            # Check if it's the kanji form
+            word_type = word.word_type() if hasattr(word, 'word_type') else None
+            if word_type != 'kanji':
+                return 0  # Skip penalty for kana forms
+            # Fall through to apply penalty for kanji form
+        else:
+            return 0
+    
     # Check if text ends with a common particle
     if len(text) < 2:
         return 0
@@ -839,6 +858,35 @@ EMBEDDED_PARTICLE_EXCEPTIONS = {
     1004550,   # ことができる - "to be able to do"
     1640290,   # ことにする (異にする - to differ)
     2215340,   # ことにする (事にする - to decide to do)
+}
+
+# ============================================================================
+# NO-SPLIT PREFERENCES (from Ichiran's def-simple-hint in dict-split.lisp)
+# These expressions should be kept as single words, not split into parts.
+# We boost their score by (length - 1) to match Ichiran's (:mod (- l 1))
+# ============================================================================
+NO_SPLIT_BOOST_SEQS = {
+    # Greetings ending with は (Ichiran dict-split.lisp:1013-1021)
+    1289400,   # こんにちは - hello
+    1289480,   # こんばんは - good evening
+    1008450,   # では - well then
+    2215430,   # には - in/at (contraction)
+    2028950,   # とは - as for
+    # Expressions ending with は (dict-split.lisp:1024-1088)
+    1008500,   # というのは - that is to say
+    1307530,   # はじめは - at first
+    1320830,   # じつは - actually
+    1586850,   # あるいは - or / possibly
+    2134680,   # それは - as for that
+    2136300,   # ということは - that means
+    2176280,   # これは - as for this
+    1406050,   # それでは - well then
+    # Other fixed expressions
+    2119870,   # 静かに - quietly (adverb)
+    2304550,   # スマートフォン - smartphone
+    1270520,   # ごちそうさま - thank you for the meal
+    # Grammar patterns
+    2215340,   # ことにする - to decide to (should not split into こと + にする)
 }
 
 
@@ -1034,6 +1082,53 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
             score_mod=reading.score_mod
         )
         info['conj'] = None  # TODO: get_conj_data
+        
+        # COMPOUND VERB BOOST:
+        # Give a bonus when the compound derives from a multi-morpheme dictionary entry
+        # (e.g., 走り続けています from 走り続ける should beat 走り + 続けています)
+        # This handles compound verbs like V+続ける, V+始める, V+終わる, etc.
+        # 
+        # The boost needs to be significant because splits of common words can score high:
+        # - Split: 走り(552) + 続けています(2460) = 3012
+        # - Compound: 走り続けています base score ~1586
+        # We need to make the compound score > 3012
+        if isinstance(base, ConjugatedText) and base.source_text:
+            from himotoki.synergies import get_pos_tags
+            source_text = base.source_text
+            source_len = mora_length(source_text)
+            
+            # Multi-morpheme entries (length >= 4) get a significant boost
+            if source_len >= 4:
+                # Check if the source entry is a compound verb (has auxiliary verb POS)
+                pos_tags = get_pos_tags(base.seq) if base.seq else set()
+                is_aux_compound = any('auxiliary' in p.lower() for p in pos_tags)
+                
+                # Strong boost for dictionary compound verbs
+                # Base boost + length bonus + auxiliary verb bonus
+                length_boost = 1000 + (source_len - 3) * 400  # Base 1000 + 400 per extra mora
+                if is_aux_compound:
+                    # Extra boost for confirmed compound verbs
+                    length_boost += 500
+                
+                score += length_boost
+        
+        # TE-FORM SUFFIX COMPOUND BOOST:
+        # Te-form + auxiliary verb compounds (してもらう, してくれる, etc.) should score
+        # higher than their splits. The suffix_class identifies these patterns.
+        # 
+        # The issue is that the base word is a conjugated te-form (low score) while
+        # splits use standalone words (higher scores).
+        # E.g., してもらう compound: 210 vs split して(180) + もらう(464) = 644
+        # 
+        # Give a significant boost to te-form suffix compounds.
+        suffix_class = getattr(reading, 'suffix_class', None)
+        if suffix_class in ('morau', 'kureru', 'itadaku', 'ageru', 'iru', 'aru', 
+                           'oku', 'kuru', 'iku', 'chau', 'ii', 'mo'):
+            # Boost based on compound length - longer compounds deserve more boost
+            compound_len = mora_length(reading.text)
+            suffix_boost = 300 + (compound_len - 3) * 100  # Base 300 + 100 per mora
+            score += suffix_boost
+        
         return score, info
     
     # Handle conjugated forms
@@ -1080,6 +1175,25 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
                            not text.endswith('される') and
                            not text.endswith('させる'))
         
+        # Check for PARTIAL SURU-VERB MATCH
+        # When a suru-verb conjugates, the conjugated reading should start with
+        # the full source reading. E.g., 認可 (にんか) + しました = にんかしました
+        # If we have text "にしました" matching 認可する, the source_reading is "にんか"
+        # but the conjugated text "にしました" only has "に" before "しました" - that's a mismatch!
+        # This prevents spurious matches where random suru-verbs match partial conjugations.
+        is_partial_suru_match = False
+        source_reading = getattr(reading, 'source_reading', None)
+        if is_suru_verb and source_reading and not kanji_p:
+            # For kana-only conjugated forms, check if the text starts with source_reading
+            # E.g., にしました should start with にんか (it doesn't - partial match!)
+            # But ことにしました should start with ことに (it does - OK!)
+            text_hira = as_hiragana(text)
+            source_hira = as_hiragana(source_reading)
+            # The conjugated text should start with the source reading (minus する/suru suffix)
+            # For vs-i verbs, the source is like 認可する but source_reading is 認可's reading
+            if source_hira and not text_hira.startswith(source_hira):
+                is_partial_suru_match = True
+        
         if conj_type in STEM_TYPES:
             # Stems don't get the full bonus unless followed by something
             prop_score += 2  # Reduced bonus
@@ -1087,6 +1201,13 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
             # Likely a database bug - suru-verb conjugation with wrong kanji form
             # e.g., 帰化 -> 帰る (should be 帰化できる)
             prop_score += 1  # Minimal bonus
+        elif is_partial_suru_match:
+            # PARTIAL SURU-VERB MATCH: Return score 0 to reject this match
+            # E.g., にしました shouldn't match 認可する because にんかしました != にしました
+            # This prevents spurious suru-verb conjugations from matching partial text
+            return 0, {'posi': [], 'seq_set': [seq] if seq else [], 'conj': None,
+                       'common': common, 'score_info': [0, None, 0, None],
+                       'kpcl': [kanji_p or katakana_p, ordinal == 0, common is not None, length > 3]}
         else:
             # Normal conjugation bonus
             prop_score += 8
@@ -1340,6 +1461,38 @@ def calc_score(reading, final: bool = False, use_length: Optional[int] = None,
     if embedded_penalty > 0:
         # Apply penalty proportional to score
         score = max(1, score - embedded_penalty * prop_score)
+    
+    # ========================================================================
+    # NO-SPLIT BOOST (from Ichiran's def-simple-hint in dict-split.lisp)
+    # Fixed expressions that should not be split get a score boost.
+    # These expressions are often not marked as common in JMdict, so they
+    # lose to splits of common component words. We apply a significant
+    # boost to overcome this.
+    #
+    # Special case: seq=1289400 (こんにちは/今日は greeting)
+    # - Kana forms (こんにちは) should be boosted (unambiguous greeting)
+    # - Kanji form (今日は) should NOT be boosted (ambiguous: greeting vs today+topic)
+    # ========================================================================
+    apply_no_split_boost = False
+    if seq and seq in NO_SPLIT_BOOST_SEQS:
+        if seq == 1289400:  # こんにちは/今日は
+            # Only boost kana forms, not kanji forms
+            # Kanji form "今日は" is ambiguous - could be "today" + topic marker
+            if not kanji_p:
+                apply_no_split_boost = True
+        else:
+            apply_no_split_boost = True
+    
+    if apply_no_split_boost:
+        # For words not marked as common, apply a common-equivalent boost
+        # This treats them as if they were common=0 (most common)
+        if not common_p:
+            # Apply equivalent of common=0 bonus: 10 points * length_multiplier
+            no_split_boost = 10 * length_multiplier_coeff(length, class_type)
+        else:
+            # Already common, just apply the standard boost
+            no_split_boost = prop_score * (length - 1)
+        score += no_split_boost
     
     info = {
         'posi': posi,
@@ -1911,7 +2064,9 @@ def word_info_from_segment(segment: Segment) -> WordInfo:
     # If no conjugation info yet, check if this seq is derived from another entry
     # (e.g., で particle is te-form of だ copula)
     if conjugations is None and word.seq:
-        conj_info = get_conjugation_info_for_seq(word.seq)
+        # Handle case where seq is a list (compound words)
+        seq_to_check = word.seq[0] if isinstance(word.seq, list) else word.seq
+        conj_info = get_conjugation_info_for_seq(seq_to_check)
         if conj_info:
             conjugations = [conj_info]
     

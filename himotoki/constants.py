@@ -146,6 +146,7 @@ SEQ_MO: int = 2028940       # も
 SEQ_NO: int = 1469800       # の
 SEQ_YA: int = 2028960       # や
 SEQ_KA: int = 2028970       # か (or / questioning particle)
+SEQ_KARA: int = 1002980     # から (causal/from particle)
 
 SEQ_N: int = 2139720        # ん (contraction of の)
 SEQ_NDA: int = 2849370      # んだ

@@ -622,6 +622,43 @@ def synergy_te_auxiliary(left_seq: int, left_text: str,
     return None
 
 
+def synergy_verb_kara(left_seq: int, left_text: str,
+                      right_seq: int, right_text: str) -> Optional[Synergy]:
+    """
+    Synergy: verb/adjective + から (causal particle)
+    
+    The から particle commonly follows verbs and adjectives to mean "because".
+    Examples:
+    - 行くから (iku kara) - because [I] go
+    - ないから (nai kara) - because there isn't
+    - 暑いから (atsui kara) - because it's hot
+    
+    This synergy prevents misparses like ないか+ら (internal medicine + plural)
+    which should be ない+から (not exist + because).
+    
+    Score: 100 (high to overcome misparses like ないか+ら which score ~484
+    vs correct ない+から which scores ~402 - we need +82 minimum)
+    """
+    from .constants import SEQ_KARA
+    
+    # Check if right word is から (particle)
+    if right_seq != SEQ_KARA:
+        return None
+    
+    # Check if left word is a verb or adjective
+    # Verbs typically have "verb" in POS, adjectives have "adjective"
+    pos_tags = get_pos_tags(left_seq) if left_seq else set()
+    is_verb_or_adj = any(
+        'verb' in p.lower() or 'adjective' in p.lower() or 'auxiliary' in p.lower()
+        for p in pos_tags
+    )
+    
+    if is_verb_or_adj:
+        return Synergy(score=100, name="v/adj+から")
+    
+    return None
+
+
 # ============================================================================
 # Synergy Function List
 # ============================================================================
@@ -651,6 +688,7 @@ SYNERGY_FUNCTIONS = [
     synergy_ga_adjective,       # が + adjective
     synergy_particle_adjective, # particle + adjective
     synergy_te_auxiliary,       # te-form + auxiliary (いる/ある/しまう/etc.)
+    synergy_verb_kara,          # verb/adj + から (because)
 ]
 
 
