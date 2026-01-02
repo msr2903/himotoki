@@ -11,8 +11,10 @@ import os
 import csv
 import gzip
 import xml.etree.ElementTree as ET
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Set
 from pathlib import Path
+from collections import defaultdict
+import time
 
 from himotoki.settings import (
     DB_PATH, DATA_DIR, JMDICT_PATH, KANJIDIC_PATH,
@@ -168,6 +170,12 @@ CREATE INDEX IF NOT EXISTS idx_kanji_char ON kanji(character);
 CREATE INDEX IF NOT EXISTS idx_kanji_reading_kanji ON kanji_reading(kanji_id);
 """
 
+# Starting seq for conjugated forms (Ichiran uses 10000000+)
+CONJ_SEQ_START = 10000000
+
+# Secondary conjugation types (from Ichiran)
+# 5: Potential, 6: Passive, 7: Causative, 8: Causative-Passive, 53: Causative-su
+SECONDARY_CONJ_TYPES_FROM = {5, 6, 7, 8, 53}
 
 def create_schema():
     """Create the database schema."""
@@ -488,7 +496,182 @@ def _load_kanjidic_entry(conn, char_elem):
 
 
 # ============================================================================
-# Conjugation Loading
+# Conjugation Helpers
+# ============================================================================
+
+def is_kana_only(text: str) -> bool:
+    """Check if text is kana-only (no kanji)."""
+    for char in text:
+        code = ord(char)
+        # CJK Unified Ideographs
+        if 0x4E00 <= code <= 0x9FFF:
+            return False
+        # CJK Extension A
+        if 0x3400 <= code <= 0x4DBF:
+            return False
+    return True
+
+
+def _migrate_conj_lookup(conn, next_seq: int) -> int:
+    """
+    Migrate data from conj_lookup to main tables.
+    Returns the next available seq number.
+    """
+    print(f"Migrating conjugations starting at seq {next_seq}...")
+
+    # Get all conjugation entries
+    cursor = conn.execute("""
+        SELECT text, reading, seq, conj_type, pos, neg, fml, source_text, source_reading
+        FROM conj_lookup
+        ORDER BY text, reading, seq
+    """)
+    rows = cursor.fetchall()
+
+    # Group by (text, reading)
+    form_groups: Dict[Tuple[str, str], List[dict]] = defaultdict(list)
+    for row in rows:
+        key = (row['text'], row['reading'])
+        form_groups[key].append({
+            'source_seq': row['seq'],
+            'conj_type': row['conj_type'],
+            'pos': row['pos'],
+            'neg': row['neg'],
+            'fml': row['fml'],
+            'source_text': row['source_text'],
+            'source_reading': row['source_reading'],
+        })
+
+    # Prepare batches
+    entries_batch = []
+    kana_batch = []
+    kanji_batch = []
+    conj_batch = []
+    prop_batch = []
+
+    # Cache intermediate roots
+    intermediate_roots = {}
+
+    for (text, reading), sources in form_groups.items():
+        new_seq = next_seq
+        next_seq += 1
+
+        # Create entry
+        entries_batch.append((new_seq, '', 0, 0, 1, 0))
+
+        # Create text entries
+        if is_kana_only(text):
+            kana_batch.append((new_seq, text, 0, None, '', 0, 0))
+        else:
+            kana_batch.append((new_seq, reading, 0, None, '', 0, 0))
+            kanji_batch.append((new_seq, text, 0, None, '', 0, 0, reading))
+
+        seen_props = set()
+
+        for src in sources:
+            source_seq = src['source_seq']
+            prop_key = (source_seq, src['conj_type'], src['pos'],
+                       src['neg'], src['fml'])
+
+            if prop_key in seen_props:
+                continue
+            seen_props.add(prop_key)
+
+            # Determine root and via
+            if source_seq >= CONJ_SEQ_START:
+                if source_seq not in intermediate_roots:
+                    row = conn.execute("SELECT from_seq FROM conjugation WHERE seq=?", (source_seq,)).fetchone()
+                    intermediate_roots[source_seq] = row[0] if row else source_seq
+
+                root_seq = intermediate_roots[source_seq]
+                via_seq = source_seq
+            else:
+                root_seq = source_seq
+                via_seq = None
+
+            # Create conjugation link
+            # Note: id is AUTOINCREMENT, so we don't specify it in batch
+            # But we need id for conj_prop link.
+            # We must execute ONE BY ONE or get IDs somehow.
+            # SQLite doesn't support returning IDs from executemany easily.
+            # So we will do single inserts for conjugation/prop.
+            pass
+
+    # Batch insert entries and text
+    conn.executemany(
+        "INSERT INTO entry (seq, content, root_p, n_kanji, n_kana, primary_nokanji) VALUES (?, ?, ?, ?, ?, ?)",
+        entries_batch
+    )
+    conn.executemany(
+        "INSERT INTO kana_text (seq, text, ord, common, common_tags, conjugate_p, nokanji) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        kana_batch
+    )
+    if kanji_batch:
+        conn.executemany(
+            "INSERT INTO kanji_text (seq, text, ord, common, common_tags, conjugate_p, nokanji, best_kana) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            kanji_batch
+        )
+
+    # Insert conjugation links one by one to get IDs
+    # Re-iterate to preserve order
+    for (text, reading), sources in form_groups.items():
+        # Find the seq we assigned earlier
+        # Since we iterated form_groups in same order, we could map it
+        # But let's look it up by text/reading to be safe?
+        # Actually we computed new_seq linearly.
+        # Let's rebuild the map or just re-do the logic in a cleaner way.
+        pass
+
+    # To avoid double iteration, let's do it properly:
+    # We assigned seqs sequentially starting from input next_seq.
+    current_seq_idx = 0
+    start_seq = next_seq - len(form_groups)
+
+    for (text, reading), sources in form_groups.items():
+        new_seq = start_seq + current_seq_idx
+        current_seq_idx += 1
+
+        seen_props = set()
+        for src in sources:
+            source_seq = src['source_seq']
+            prop_key = (source_seq, src['conj_type'], src['pos'],
+                       src['neg'], src['fml'])
+
+            if prop_key in seen_props:
+                continue
+            seen_props.add(prop_key)
+
+            if source_seq >= CONJ_SEQ_START:
+                if source_seq not in intermediate_roots:
+                    row = conn.execute("SELECT from_seq FROM conjugation WHERE seq=?", (source_seq,)).fetchone()
+                    intermediate_roots[source_seq] = row[0] if row else source_seq
+                root_seq = intermediate_roots[source_seq]
+                via_seq = source_seq
+            else:
+                root_seq = source_seq
+                via_seq = None
+
+            cursor = conn.execute(
+                "INSERT INTO conjugation (seq, from_seq, via) VALUES (?, ?, ?)",
+                (new_seq, root_seq, via_seq)
+            )
+            conj_id = cursor.lastrowid
+
+            conn.execute(
+                "INSERT INTO conj_prop (conj_id, conj_type, pos, neg, fml) VALUES (?, ?, ?, ?, ?)",
+                (conj_id, src['conj_type'], src['pos'], 1 if src['neg'] else 0, 1 if src['fml'] else 0)
+            )
+
+            # Also insert source map
+            conn.execute(
+                "INSERT INTO conj_source_map (conj_id, text, reading) VALUES (?, ?, ?)",
+                (conj_id, src['source_text'], src['source_reading'])
+            )
+
+    return next_seq
+
+
+# ============================================================================
+# Conjugation Loading (Main)
 # ============================================================================
 
 def generate_conjugations(progress_callback=None):
@@ -496,15 +679,10 @@ def generate_conjugations(progress_callback=None):
     Generate all conjugated forms from dictionary entries.
     
     For each verb and adjective entry, generates all possible
-    conjugations and stores them in the database for reverse lookup.
-    
-    This allows looking up a conjugated form (e.g., 食べた) and
-    finding its dictionary form (食べる).
+    conjugations and stores them in the database.
+    Also handles secondary conjugations (recursive).
     """
-    from himotoki.conjugations import (
-        get_conjugation_rules, is_conjugatable, conjugate_word,
-        ConjType, should_conjugate, fix_iku_conjugation
-    )
+    from himotoki.conjugations import is_conjugatable
     
     conn = get_connection()
     
@@ -514,7 +692,7 @@ def generate_conjugations(progress_callback=None):
         ON conj_source_map(text)
     """)
     
-    # Also create a simple conjugation lookup table
+    # Create temp lookup table
     conn.execute("""
         CREATE TABLE IF NOT EXISTS conj_lookup (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -531,184 +709,162 @@ def generate_conjugations(progress_callback=None):
         )
     """)
     conn.execute("CREATE INDEX IF NOT EXISTS idx_conj_lookup_text ON conj_lookup(text)")
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_conj_lookup_reading ON conj_lookup(reading)")
     
     # Clear existing conjugation data
+    print("Clearing existing conjugation tables...")
     conn.execute("DELETE FROM conj_lookup")
     conn.execute("DELETE FROM conj_source_map")
     conn.execute("DELETE FROM conj_prop")
     conn.execute("DELETE FROM conjugation")
+    conn.execute(f"DELETE FROM kana_text WHERE seq >= {CONJ_SEQ_START}")
+    conn.execute(f"DELETE FROM kanji_text WHERE seq >= {CONJ_SEQ_START}")
+    conn.execute(f"DELETE FROM entry WHERE seq >= {CONJ_SEQ_START}")
+
+    # -------------------------------------------------------------------------
+    # Level 1: Primary Conjugations (from root entries)
+    # -------------------------------------------------------------------------
+    print("Generating primary conjugations...")
     
-    # Get all entries with their POS
     # Group entries by seq and collect all POS tags for that entry
     entries = query("""
         SELECT DISTINCT e.seq, sp.text as pos
         FROM entry e
         JOIN sense_prop sp ON sp.seq = e.seq
-        WHERE sp.tag = 'pos'
-    """)
+        WHERE sp.tag = 'pos' AND e.seq < ?
+    """, (CONJ_SEQ_START,))
     
-    # Build a mapping of seq -> list of POS tags
-    pos_map = {}
+    pos_map = defaultdict(set)
     for row in entries:
         seq = row[0]
         pos = _normalize_pos(row[1])
-        if pos:
-            if seq not in pos_map:
-                pos_map[seq] = set()
+        if pos and is_conjugatable(pos):
             pos_map[seq].add(pos)
     
     total_entries = len(pos_map)
     processed = 0
-    conjugations_added = 0
     
     for seq, pos_tags in pos_map.items():
         for pos in pos_tags:
-            if not is_conjugatable(pos):
-                continue
+            # Get forms
+            kanji_forms = query("SELECT text FROM kanji_text WHERE seq = ? ORDER BY ord", (seq,))
+            kana_forms = query("SELECT text FROM kana_text WHERE seq = ? ORDER BY ord", (seq,))
             
-            # Get kanji and kana forms for this entry
-            kanji_forms = query(
-                "SELECT text FROM kanji_text WHERE seq = ? ORDER BY ord",
-                (seq,)
-            )
-            kana_forms = query(
-                "SELECT text FROM kana_text WHERE seq = ? ORDER BY ord",
-                (seq,)
-            )
-            
-            # Generate conjugations for each form
+            # Generate for kanji
             for kf in kanji_forms:
                 kanji_text = kf[0]
-                # Find best kana for this kanji
-                kana_reading = None
-                if kana_forms:
-                    kana_reading = kana_forms[0][0]
-                
-                # Generate all conjugations
-                count = _generate_entry_conjugations(
-                    conn, seq, kanji_text, kana_reading, pos
-                )
-                conjugations_added += count
+                kana_reading = kana_forms[0][0] if kana_forms else None
+                _generate_entry_conjugations(conn, seq, kanji_text, kana_reading, pos)
             
-            # Also generate for kana-only forms
+            # Generate for kana
             for rf in kana_forms:
                 kana_text = rf[0]
-                count = _generate_entry_conjugations(
-                    conn, seq, kana_text, kana_text, pos
-                )
-                conjugations_added += count
+                _generate_entry_conjugations(conn, seq, kana_text, kana_text, pos)
         
         processed += 1
         if progress_callback and processed % 5000 == 0:
             progress_callback(processed, total_entries)
     
+    # Migrate Level 1
+    next_seq = _migrate_conj_lookup(conn, CONJ_SEQ_START)
+
+    # -------------------------------------------------------------------------
+    # Level 2: Secondary Conjugations (recursive)
+    # -------------------------------------------------------------------------
+    print("Generating secondary conjugations...")
+
+    # Clear lookup for next pass
+    conn.execute("DELETE FROM conj_lookup")
+
+    # Find Level 1 entries that can be conjugated further
+    # These are entries in the conjugation table whose conj_type is in SECONDARY_CONJ_TYPES_FROM
+    cursor = conn.execute(f"""
+        SELECT DISTINCT c.seq, kt.text, kt_kana.text, cp.conj_type
+        FROM conjugation c
+        JOIN conj_prop cp ON c.id = cp.conj_id
+        LEFT JOIN kanji_text kt ON c.seq = kt.seq AND kt.ord = 0
+        LEFT JOIN kana_text kt_kana ON c.seq = kt_kana.seq AND kt_kana.ord = 0
+        WHERE cp.conj_type IN ({','.join(map(str, SECONDARY_CONJ_TYPES_FROM))})
+          AND c.via IS NULL
+    """)
+
+    rows = cursor.fetchall()
+    print(f"Found {len(rows)} entries for secondary conjugation")
+
+    for row in rows:
+        seq = row[0]
+        text = row[1] or row[2]  # Prefer kanji, fallback to kana
+        reading = row[2] or row[1]
+        conj_type = row[3]
+
+        # Determine POS for the conjugated form
+        # Causative-su (53) -> v5s, others -> v1
+        new_pos = 'v5s' if conj_type == 53 else 'v1'
+
+        _generate_entry_conjugations(conn, seq, text, reading, new_pos)
+
+    # Migrate Level 2
+    next_seq = _migrate_conj_lookup(conn, next_seq)
+
     conn.commit()
     
     if progress_callback:
         progress_callback(total_entries, total_entries)
     
-    return conjugations_added
+    return next_seq - CONJ_SEQ_START
 
 
 def _normalize_pos(pos_text: str) -> Optional[str]:
-    """
-    Convert JMdict POS description to short tag.
-    
-    Args:
-        pos_text: Full POS description from JMdict.
-        
-    Returns:
-        Short POS tag (e.g., 'v1', 'v5k') or None.
-    """
+    """Convert JMdict POS description to short tag."""
     pos_text = pos_text.lower() if pos_text else ''
     
-    # Normalize quotes - JMdict uses various quote styles
+    # Pass through valid short tags if already normalized
+    if pos_text in {
+        'v1', 'v1-s', 'v5k', 'v5k-s', 'v5g', 'v5s', 'v5t', 'v5n', 'v5b', 'v5m',
+        'v5r', 'v5r-i', 'v5aru', 'v5u', 'v5u-s', 'vk', 'vs-i', 'vs-s', 'copula',
+        'adj-i', 'adj-ix'
+    }:
+        return pos_text
+
     pos_text = pos_text.replace("'", "'").replace("'", "'").replace('"', "'")
     
-    # Ichidan verbs
     if 'ichidan' in pos_text:
-        if 'kureru' in pos_text:
-            return 'v1-s'
-        return 'v1'
+        return 'v1-s' if 'kureru' in pos_text else 'v1'
     
-    # Special handling for Iku/Yuku verb
     if 'iku' in pos_text and 'yuku' in pos_text and 'special' in pos_text:
         return 'v5k-s'
     
-    # Godan verbs - check for specific endings
     if 'godan' in pos_text:
-        # Check for specific consonant endings first (before general 'u ending')
-        if "'ku'" in pos_text or "ku ending" in pos_text or "'ku' ending" in pos_text:
-            if 'iku' in pos_text or 'special' in pos_text:
-                return 'v5k-s'
-            return 'v5k'
-        elif "'gu'" in pos_text or "gu ending" in pos_text or "'gu' ending" in pos_text:
-            return 'v5g'
-        elif "'su'" in pos_text or "su ending" in pos_text or "'su' ending" in pos_text:
-            return 'v5s'
-        elif "'tsu'" in pos_text or "tsu ending" in pos_text or "'tsu' ending" in pos_text:
-            return 'v5t'
-        elif "'nu'" in pos_text or "nu ending" in pos_text or "'nu' ending" in pos_text:
-            return 'v5n'
-        elif "'bu'" in pos_text or "bu ending" in pos_text or "'bu' ending" in pos_text:
-            return 'v5b'
-        elif "'mu'" in pos_text or "mu ending" in pos_text or "'mu' ending" in pos_text:
-            return 'v5m'
-        elif "'ru'" in pos_text or "ru ending" in pos_text or "'ru' ending" in pos_text:
-            if 'irregular' in pos_text:
-                return 'v5r-i'
-            return 'v5r'
-        elif 'aru' in pos_text:
-            return 'v5aru'
-        # General 'u' ending last (most general pattern)
-        elif "'u'" in pos_text or "u ending" in pos_text or "'u' ending" in pos_text:
-            if 'special' in pos_text:
-                return 'v5u-s'
-            return 'v5u'
+        if "'ku'" in pos_text or "ku ending" in pos_text:
+            return 'v5k-s' if ('iku' in pos_text or 'special' in pos_text) else 'v5k'
+        elif "'gu'" in pos_text or "gu ending" in pos_text: return 'v5g'
+        elif "'su'" in pos_text or "su ending" in pos_text: return 'v5s'
+        elif "'tsu'" in pos_text or "tsu ending" in pos_text: return 'v5t'
+        elif "'nu'" in pos_text or "nu ending" in pos_text: return 'v5n'
+        elif "'bu'" in pos_text or "bu ending" in pos_text: return 'v5b'
+        elif "'mu'" in pos_text or "mu ending" in pos_text: return 'v5m'
+        elif "'ru'" in pos_text or "ru ending" in pos_text:
+            return 'v5r-i' if 'irregular' in pos_text else 'v5r'
+        elif 'aru' in pos_text: return 'v5aru'
+        elif "'u'" in pos_text or "u ending" in pos_text:
+            return 'v5u-s' if 'special' in pos_text else 'v5u'
     
-    # Irregular verbs
     if 'suru' in pos_text:
-        if 'included' in pos_text or 'special' in pos_text:
-            return 'vs-i'
-        if '-suru' in pos_text:
-            return 'vs-s'
+        if 'included' in pos_text or 'special' in pos_text: return 'vs-i'
+        if '-suru' in pos_text: return 'vs-s'
         return 'vs-i'
     
-    if 'kuru' in pos_text:
-        return 'vk'
-    
-    # Copula
-    if 'copula' in pos_text:
-        return 'copula'
-    
-    # Adjectives
+    if 'kuru' in pos_text: return 'vk'
+    if 'copula' in pos_text: return 'copula'
     if 'adjective' in pos_text:
         if '-i' in pos_text or 'keiyoushi' in pos_text:
-            if 'yoi' in pos_text or 'ii' in pos_text:
-                return 'adj-ix'
-            return 'adj-i'
+            return 'adj-ix' if ('yoi' in pos_text or 'ii' in pos_text) else 'adj-i'
     
     return None
 
 
 def _generate_entry_conjugations(conn, seq: int, text: str, reading: str, pos: str) -> int:
-    """
-    Generate all conjugations for a single dictionary entry.
-    
-    Args:
-        conn: Database connection.
-        seq: Entry sequence number.
-        text: Dictionary form (kanji or kana).
-        reading: Kana reading.
-        pos: Part of speech tag.
-        
-    Returns:
-        Number of conjugations generated.
-    """
-    from himotoki.conjugations import (
-        get_conjugation_rules, fix_iku_conjugation
-    )
+    """Generate all conjugations for a single dictionary entry."""
+    from himotoki.conjugations import get_conjugation_rules, fix_iku_conjugation
     
     rules = get_conjugation_rules(pos)
     if not rules:
@@ -718,25 +874,20 @@ def _generate_entry_conjugations(conn, seq: int, text: str, reading: str, pos: s
     reading = reading or text
     
     for rule in rules:
-        # Skip dictionary form (non-past affirmative plain)
         if (rule.conj_type == 1 and rule.neg == False and 
             rule.fml == False and rule.stem_chars == 0):
             continue
         
-        # Apply rule to get conjugated form
         conj_text = rule.apply(text, is_kana=(text == reading))
         conj_reading = rule.apply(reading, is_kana=True)
         
-        # Special handling for 行く - ONLY for v5k-s (iku/yuku special class)
         if pos == 'v5k-s' and text.endswith('く'):
             conj_text = fix_iku_conjugation(text, conj_text, rule)
             conj_reading = fix_iku_conjugation(reading, conj_reading, rule)
         
-        # Skip if conjugation produces same form as source
         if conj_text == text and conj_reading == reading:
             continue
         
-        # Insert the kana form (always)
         conn.execute("""
             INSERT INTO conj_lookup 
             (text, reading, seq, conj_type, pos, neg, fml, source_text, source_reading)
@@ -750,15 +901,7 @@ def _generate_entry_conjugations(conn, seq: int, text: str, reading: str, pos: s
         ))
         count += 1
         
-        # For kanji words, also insert kanji+kana mixed forms
-        # This handles cases like 来る -> 来た (kanji + kana okurigana)
         if text != reading:
-            # Calculate okurigana length by comparing text and reading
-            # E.g., 来る (くる) -> okurigana is る (1 char), kanji is 来
-            #       食べる (たべる) -> okurigana is べる (2 chars), kanji is 食
-            #       書く (かく) -> okurigana is く (1 char), kanji is 書
-            
-            # Find common kana suffix between text and reading (the okurigana)
             okurigana_len = 0
             for i in range(1, min(len(text), len(reading)) + 1):
                 if text[-i] == reading[-i]:
@@ -766,29 +909,13 @@ def _generate_entry_conjugations(conn, seq: int, text: str, reading: str, pos: s
                 else:
                     break
             
-            # Kanji stem is the non-okurigana part
-            if okurigana_len > 0:
-                kanji_stem = text[:-okurigana_len]
-            else:
-                # No matching okurigana - entire text is kanji
-                # Use the first character as kanji stem
-                kanji_stem = text[0] if text else ''
+            kanji_stem = text[:-okurigana_len] if okurigana_len > 0 else (text[0] if text else '')
             
             if kanji_stem:
-                # Calculate okurigana in the conjugated reading
-                # Reading stem length = reading length - okurigana_len
                 reading_stem_len = len(reading) - okurigana_len
-                
-                # Okurigana for conjugated form = conjugated reading minus the reading stem
-                if len(conj_reading) > reading_stem_len:
-                    new_okurigana = conj_reading[reading_stem_len:]
-                else:
-                    new_okurigana = conj_reading
-                
-                # Build kanji+kana form
+                new_okurigana = conj_reading[reading_stem_len:] if len(conj_reading) > reading_stem_len else conj_reading
                 kanji_form = kanji_stem + new_okurigana
                 
-                # Only insert if different from the kana form
                 if kanji_form != conj_reading and kanji_form != text:
                     conn.execute("""
                         INSERT INTO conj_lookup 
@@ -807,18 +934,7 @@ def _generate_entry_conjugations(conn, seq: int, text: str, reading: str, pos: s
 
 
 def load_conjugations(path: Optional[str] = None):
-    """
-    Load conjugation data.
-    
-    This is a wrapper that calls generate_conjugations() to
-    build conjugations from the JMdict entries.
-    
-    Args:
-        path: Unused (kept for API compatibility).
-        
-    Returns:
-        Number of conjugation entries generated.
-    """
+    """Legacy wrapper."""
     return generate_conjugations()
 
 
@@ -827,15 +943,8 @@ def load_conjugations(path: Optional[str] = None):
 # ============================================================================
 
 def update_best_readings():
-    """
-    Update best_kana and best_kanji fields in text tables.
-    
-    Links kanji entries to their most common kana reading
-    and vice versa.
-    """
+    """Update best_kana and best_kanji fields."""
     conn = get_connection()
-    
-    # Update best_kana for kanji entries
     conn.execute("""
         UPDATE kanji_text 
         SET best_kana = (
@@ -845,8 +954,6 @@ def update_best_readings():
             LIMIT 1
         )
     """)
-    
-    # Update best_kanji for kana entries
     conn.execute("""
         UPDATE kana_text
         SET best_kanji = (
@@ -857,7 +964,6 @@ def update_best_readings():
         )
         WHERE nokanji = 0
     """)
-    
     conn.commit()
 
 
@@ -866,7 +972,6 @@ def update_best_readings():
 # ============================================================================
 
 def is_gzip_file(path: str) -> bool:
-    """Check if a file is gzip compressed by reading magic bytes."""
     try:
         with open(path, 'rb') as f:
             return f.read(2) == b'\x1f\x8b'
@@ -875,23 +980,11 @@ def is_gzip_file(path: str) -> bool:
 
 
 def download_jmdict(target_path: Optional[str] = None):
-    """
-    Download JMdict from the official source.
-    
-    Args:
-        target_path: Where to save the file.
-    """
     import urllib.request
-    
     url = "http://ftp.edrdg.org/pub/Nihongo/JMdict_e.gz"
     target = str(target_path or JMDICT_PATH)
-    
-    # Ensure target ends with .gz since we're downloading compressed
-    if not target.endswith('.gz'):
-        target = target + '.gz'
-    
+    if not target.endswith('.gz'): target = target + '.gz'
     os.makedirs(os.path.dirname(target), exist_ok=True)
-    
     print(f"Downloading JMdict from {url}...")
     urllib.request.urlretrieve(url, target)
     print(f"Saved to {target}")
@@ -899,23 +992,11 @@ def download_jmdict(target_path: Optional[str] = None):
 
 
 def download_kanjidic(target_path: Optional[str] = None):
-    """
-    Download KANJIDIC2 from the official source.
-    
-    Args:
-        target_path: Where to save the file.
-    """
     import urllib.request
-    
     url = "http://www.edrdg.org/kanjidic/kanjidic2.xml.gz"
     target = str(target_path or KANJIDIC_PATH)
-    
-    # Ensure target ends with .gz since we're downloading compressed
-    if not target.endswith('.gz'):
-        target = target + '.gz'
-    
+    if not target.endswith('.gz'): target = target + '.gz'
     os.makedirs(os.path.dirname(target), exist_ok=True)
-    
     print(f"Downloading KANJIDIC2 from {url}...")
     urllib.request.urlretrieve(url, target)
     print(f"Saved to {target}")
@@ -930,29 +1011,16 @@ def init_database(jmdict_path: Optional[str] = None,
                   kanjidic_path: Optional[str] = None,
                   download: bool = False,
                   progress_callback=None):
-    """
-    Initialize the database with all required data.
-    
-    Args:
-        jmdict_path: Path to JMdict file.
-        kanjidic_path: Path to KANJIDIC2 file.
-        download: If True, download missing files.
-        progress_callback: Optional callback for progress.
-    """
+    """Initialize the database with all required data."""
     jmdict_path = jmdict_path or JMDICT_PATH
     kanjidic_path = kanjidic_path or KANJIDIC_PATH
     
-    # Download if needed
     if download:
-        if not os.path.exists(jmdict_path):
-            download_jmdict(jmdict_path)
-        if not os.path.exists(kanjidic_path):
-            download_kanjidic(kanjidic_path)
+        if not os.path.exists(jmdict_path): download_jmdict(jmdict_path)
+        if not os.path.exists(kanjidic_path): download_kanjidic(kanjidic_path)
     
-    # Create schema
     create_schema()
     
-    # Load data
     print("Loading JMdict...")
     jmdict_count = load_jmdict(jmdict_path, progress_callback)
     print(f"Loaded {jmdict_count} entries")
@@ -969,7 +1037,6 @@ def init_database(jmdict_path: Optional[str] = None,
     print(f"Loaded {conj_count} conjugation rules")
     
     print("Database initialization complete!")
-    
     return {
         'jmdict_entries': jmdict_count,
         'kanji_count': kanjidic_count,
@@ -978,10 +1045,7 @@ def init_database(jmdict_path: Optional[str] = None,
 
 
 def database_exists() -> bool:
-    """Check if the database exists and has data."""
-    if not os.path.exists(DB_PATH):
-        return False
-    
+    if not os.path.exists(DB_PATH): return False
     try:
         count = query_single("SELECT COUNT(*) FROM entry")
         return count is not None and count > 0
