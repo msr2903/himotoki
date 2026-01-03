@@ -1,801 +1,548 @@
 """
-Character handling and kana conversion for Himotoki.
+Character utilities for himotoki.
+Ports ichiran's characters.lisp functionality.
 
-Provides character classification, hiragana/katakana conversion, 
-normalization, rendaku (sequential voicing), and text splitting.
-
-Mirrors characters.lisp from the original Ichiran.
+Provides character class determination, kana conversion,
+text normalization, and basic Japanese text splitting.
 """
 
 import re
-import unicodedata
-from typing import Dict, List, Optional, Tuple, Set, Union
+from typing import Optional, List, Tuple, Dict, Set
+from functools import lru_cache
+
 
 # ============================================================================
-# Kana Character Tables
+# Kana Character Mappings
 # ============================================================================
 
-# Sokuon (gemination marker)
-SOKUON_CHARACTERS = {"sokuon": "っッ"}
+# Sokuon (small tsu for gemination)
+SOKUON_CHARS = "っッ"
 
 # Iteration marks
-ITERATION_CHARACTERS = {
-    "iter": "ゝヽ",
-    "iter_v": "ゞヾ"
+ITERATION_CHARS = "ゝヽ"
+ITERATION_VOICED_CHARS = "ゞヾ"
+
+# Modifier characters (small kana, long vowel mark)
+MODIFIER_CHARS = {
+    '+a': "ぁァ", '+i': "ぃィ", '+u': "ぅゥ", '+e': "ぇェ", '+o': "ぉォ",
+    '+ya': "ゃャ", '+yu': "ゅュ", '+yo': "ょョ", '+wa': "ゎヮ",
+    'long_vowel': "ー"
 }
 
-# Small kana modifiers and long vowel marker
-MODIFIER_CHARACTERS = {
-    "+a": "ぁァ", "+i": "ぃィ", "+u": "ぅゥ", "+e": "ぇェ", "+o": "ぉォ",
-    "+ya": "ゃャ", "+yu": "ゅュ", "+yo": "ょョ", "+wa": "ゎヮ",
-    "long_vowel": "ー"
+# Main kana character mappings (hiragana, katakana pairs)
+KANA_CHARS = {
+    'a': "あア", 'i': "いイ", 'u': "うウ", 'e': "えエ", 'o': "おオ",
+    'ka': "かカ", 'ki': "きキ", 'ku': "くク", 'ke': "けケ", 'ko': "こコ",
+    'sa': "さサ", 'shi': "しシ", 'su': "すス", 'se': "せセ", 'so': "そソ",
+    'ta': "たタ", 'chi': "ちチ", 'tsu': "つツ", 'te': "てテ", 'to': "とト",
+    'na': "なナ", 'ni': "にニ", 'nu': "ぬヌ", 'ne': "ねネ", 'no': "のノ",
+    'ha': "はハ", 'hi': "ひヒ", 'fu': "ふフ", 'he': "へヘ", 'ho': "ほホ",
+    'ma': "まマ", 'mi': "みミ", 'mu': "むム", 'me': "めメ", 'mo': "もモ",
+    'ya': "やヤ", 'yu': "ゆユ", 'yo': "よヨ",
+    'ra': "らラ", 'ri': "りリ", 'ru': "るル", 're': "れレ", 'ro': "ろロ",
+    'wa': "わワ", 'wi': "ゐヰ", 'we': "ゑヱ", 'wo': "をヲ",
+    'n': "んン",
+    # Voiced (dakuten)
+    'ga': "がガ", 'gi': "ぎギ", 'gu': "ぐグ", 'ge': "げゲ", 'go': "ごゴ",
+    'za': "ざザ", 'ji': "じジ", 'zu': "ずズ", 'ze': "ぜゼ", 'zo': "ぞゾ",
+    'da': "だダ", 'dji': "ぢヂ", 'dzu': "づヅ", 'de': "でデ", 'do': "どド",
+    'ba': "ばバ", 'bi': "びビ", 'bu': "ぶブ", 'be': "べベ", 'bo': "ぼボ",
+    # Semi-voiced (handakuten)
+    'pa': "ぱパ", 'pi': "ぴピ", 'pu': "ぷプ", 'pe': "ぺペ", 'po': "ぽポ",
+    # Special
+    'vu': "ゔヴ",
 }
 
-# Main kana table
-KANA_CHARACTERS = {
-    "a": "あア",     "i": "いイ",     "u": "うウ",     "e": "えエ",     "o": "おオ",
-    "ka": "かカ",    "ki": "きキ",    "ku": "くク",    "ke": "けケ",    "ko": "こコ",
-    "sa": "さサ",    "shi": "しシ",   "su": "すス",    "se": "せセ",    "so": "そソ",
-    "ta": "たタ",    "chi": "ちチ",   "tsu": "つツ",   "te": "てテ",    "to": "とト",
-    "na": "なナ",    "ni": "にニ",    "nu": "ぬヌ",    "ne": "ねネ",    "no": "のノ",
-    "ha": "はハ",    "hi": "ひヒ",    "fu": "ふフ",    "he": "へヘ",    "ho": "ほホ",
-    "ma": "まマ",    "mi": "みミ",    "mu": "むム",    "me": "めメ",    "mo": "もモ",
-    "ya": "やヤ",                     "yu": "ゆユ",                     "yo": "よヨ",
-    "ra": "らラ",    "ri": "りリ",    "ru": "るル",    "re": "れレ",    "ro": "ろロ",
-    "wa": "わワ",    "wi": "ゐヰ",                     "we": "ゑヱ",    "wo": "をヲ",
-    "n": "んン",
-    # Voiced consonants (dakuten)
-    "ga": "がガ",    "gi": "ぎギ",    "gu": "ぐグ",    "ge": "げゲ",    "go": "ごゴ",
-    "za": "ざザ",    "ji": "じジ",    "zu": "ずズ",    "ze": "ぜゼ",    "zo": "ぞゾ",
-    "da": "だダ",    "dji": "ぢヂ",   "dzu": "づヅ",   "de": "でデ",    "do": "どド",
-    "ba": "ばバ",    "bi": "びビ",    "bu": "ぶブ",    "be": "べベ",    "bo": "ぼボ",
-    "pa": "ぱパ",    "pi": "ぴピ",    "pu": "ぷプ",    "pe": "ぺペ",    "po": "ぽポ",
-    "vu": "ゔヴ",
-}
-
-# Combined character table
-ALL_CHARACTERS = {
-    **SOKUON_CHARACTERS,
-    **ITERATION_CHARACTERS, 
-    **MODIFIER_CHARACTERS,
-    **KANA_CHARACTERS
-}
-
-# ============================================================================
-# Character Class Mapping
-# ============================================================================
-
-# Build character -> class mapping
-CHAR_CLASS_HASH: Dict[str, str] = {}
-for char_class, chars in ALL_CHARACTERS.items():
+# Build reverse lookup: char -> class name
+_CHAR_CLASS_MAP: Dict[str, str] = {}
+for name, chars in KANA_CHARS.items():
     for char in chars:
-        CHAR_CLASS_HASH[char] = char_class
+        _CHAR_CLASS_MAP[char] = name
+for name, chars in MODIFIER_CHARS.items():
+    for char in chars:
+        _CHAR_CLASS_MAP[char] = name
+for char in SOKUON_CHARS:
+    _CHAR_CLASS_MAP[char] = 'sokuon'
+for char in ITERATION_CHARS:
+    _CHAR_CLASS_MAP[char] = 'iter'
+for char in ITERATION_VOICED_CHARS:
+    _CHAR_CLASS_MAP[char] = 'iter_v'
 
 
-def get_char_class(char: str) -> str:
-    """
-    Get the character class for a kana character.
-    
-    Args:
-        char: A single character.
-        
-    Returns:
-        Character class name (e.g., 'ka', 'shi', 'sokuon') or the character itself.
-    """
-    return CHAR_CLASS_HASH.get(char, char)
-
-
-# ============================================================================
-# Dakuten (Voicing) Tables
-# ============================================================================
-
-# Unvoiced -> voiced mappings
-DAKUTEN_HASH = {
-    "ka": "ga", "ki": "gi", "ku": "gu", "ke": "ge", "ko": "go",
-    "sa": "za", "shi": "ji", "su": "zu", "se": "ze", "so": "zo",
-    "ta": "da", "chi": "dji", "tsu": "dzu", "te": "de", "to": "do",
-    "ha": "ba", "hi": "bi", "fu": "bu", "he": "be", "ho": "bo",
-    "u": "vu",
+# Voicing mappings (dakuten)
+DAKUTEN_MAP = {
+    'ka': 'ga', 'ki': 'gi', 'ku': 'gu', 'ke': 'ge', 'ko': 'go',
+    'sa': 'za', 'shi': 'ji', 'su': 'zu', 'se': 'ze', 'so': 'zo',
+    'ta': 'da', 'chi': 'dji', 'tsu': 'dzu', 'te': 'de', 'to': 'do',
+    'ha': 'ba', 'hi': 'bi', 'fu': 'bu', 'he': 'be', 'ho': 'bo',
+    'u': 'vu'
 }
 
-# Unvoiced -> semi-voiced (handakuten) mappings
-HANDAKUTEN_HASH = {
-    "ha": "pa", "hi": "pi", "fu": "pu", "he": "pe", "ho": "po",
+# Unvoicing (reverse dakuten)
+UNDAKUTEN_MAP = {v: k for k, v in DAKUTEN_MAP.items()}
+
+# Handakuten (semi-voicing)
+HANDAKUTEN_MAP = {
+    'ha': 'pa', 'hi': 'pi', 'fu': 'pu', 'he': 'pe', 'ho': 'po'
 }
-
-# Voiced/semi-voiced -> unvoiced mappings
-UNDAKUTEN_HASH = {
-    "ga": "ka", "gi": "ki", "gu": "ku", "ge": "ke", "go": "ko",
-    "za": "sa", "ji": "shi", "zu": "su", "ze": "se", "zo": "so",
-    "da": "ta", "dji": "chi", "dzu": "tsu", "de": "te", "do": "to",
-    "ba": "ha", "bi": "hi", "bu": "fu", "be": "he", "bo": "ho",
-    "pa": "ha", "pi": "hi", "pu": "fu", "pe": "he", "po": "ho",
-    "vu": "u",
-}
-
-
-def voice_char(cc: str) -> str:
-    """Returns the voiced form of a character class, or the same class."""
-    return DAKUTEN_HASH.get(cc, cc)
 
 
 # ============================================================================
 # Character Width Normalization
 # ============================================================================
 
-# Half-width to full-width kana mapping
+# Half-width katakana to full-width
 HALF_WIDTH_KANA = "･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ"
 FULL_WIDTH_KANA = "・ヲァィゥェォャュョッーアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン゛゜"
 
 # Full-width alphanumeric to half-width
 ABNORMAL_CHARS = (
-    "０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ"
+    "０１２３４５６７８９"
+    "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ"
     "ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ"
     "＃＄％＆（）＊＋／〈＝〉？＠［］＾＿'｛｜｝～"
     + HALF_WIDTH_KANA
 )
 
 NORMAL_CHARS = (
-    "0123456789abcdefghijklmnopqrstuvwxyz"
+    "0123456789"
+    "abcdefghijklmnopqrstuvwxyz"
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "#$%&()*+/<=>?@[]^_`{|}~"
     + FULL_WIDTH_KANA
 )
 
-# Build normalization mapping
-_CHAR_NORM_MAP = {}
-for i, c in enumerate(ABNORMAL_CHARS):
-    if i < len(NORMAL_CHARS):
-        _CHAR_NORM_MAP[c] = NORMAL_CHARS[i]
-
-# Dakuten combining character mappings
-DAKUTEN_JOIN = {}
-for (cc, ccd) in DAKUTEN_HASH.items():
-    kc = KANA_CHARACTERS.get(cc, "")
-    kcd = KANA_CHARACTERS.get(ccd, "")
-    if kc and kcd:
-        for i, char in enumerate(kc):
-            if i < len(kcd):
-                DAKUTEN_JOIN[char + "゛"] = kcd[i]
-
-for (cc, ccd) in HANDAKUTEN_HASH.items():
-    kc = KANA_CHARACTERS.get(cc, "")
-    kcd = KANA_CHARACTERS.get(ccd, "")
-    if kc and kcd:
-        for i, char in enumerate(kc):
-            if i < len(kcd):
-                DAKUTEN_JOIN[char + "゜"] = kcd[i]
-
 # Punctuation normalization
-PUNCTUATION_MARKS = {
+PUNCTUATION_MAP = {
     "【": " [", "】": "] ",
     "、": ", ", "，": ", ",
     "。": ". ", "・・・": "... ", "・": " ", "　": " ",
-    "「": ' "', "」": '" ', "゛": '"',
+    "「": " \"", "」": "\" ", "゛": "\"",
     "『": " «", "』": "» ",
     "〜": " - ", "：": ": ", "！": "! ", "？": "? ", "；": "; "
 }
 
+
 # ============================================================================
-# Regular Expressions
+# Regex Patterns
 # ============================================================================
 
-KATAKANA_REGEX = r"[ァ-ヺヽヾー]"
-KATAKANA_UNIQ_REGEX = r"[ァ-ヺヽヾ]"
-HIRAGANA_REGEX = r"[ぁ-ゔゝゞー]"
-KANJI_REGEX = r"[々ヶ〆一-龯]"
-KANJI_CHAR_REGEX = r"[一-龯]"
-NONWORD_REGEX = r"[^々ヶ〆一-龯ァ-ヺヽヾぁ-ゔゝゞー〇]"
-NUMERIC_REGEX = r"[0-9０-９〇一二三四五六七八九零壱弐参拾十百千万億兆京]"
-NUM_WORD_REGEX = r"[0-9０-９〇々ヶ〆一-龯ァ-ヺヽヾぁ-ゔゝゞー]"
-WORD_REGEX = r"[々ヶ〆一-龯ァ-ヺヽヾぁ-ゔゝゞー〇]"
-DIGIT_REGEX = r"[0-9０-９〇]"
-DECIMAL_POINT_REGEX = r"[.,]"
-KANA_REGEX = f"({KATAKANA_REGEX}|{HIRAGANA_REGEX})"
+# Character class patterns
+KATAKANA_PATTERN = r'[ァ-ヺヽヾー]'
+KATAKANA_UNIQ_PATTERN = r'[ァ-ヺヽヾ]'  # Without long vowel mark
+HIRAGANA_PATTERN = r'[ぁ-ゔゝゞー]'
+KANJI_PATTERN = r'[々ヶ〆一-龯]'
+KANJI_CHAR_PATTERN = r'[一-龯]'  # Only kanji itself, no repeater marks
+KANA_PATTERN = f'({KATAKANA_PATTERN}|{HIRAGANA_PATTERN})'
+TRADITIONAL_PATTERN = f'({HIRAGANA_PATTERN}|{KANJI_PATTERN})'
 
-# Compiled regex patterns
-_KATAKANA_PATTERN = re.compile(KATAKANA_REGEX)
-_KATAKANA_UNIQ_PATTERN = re.compile(KATAKANA_UNIQ_REGEX)
-_HIRAGANA_PATTERN = re.compile(HIRAGANA_REGEX)
-_KANJI_PATTERN = re.compile(KANJI_REGEX)
-_KANJI_CHAR_PATTERN = re.compile(KANJI_CHAR_REGEX)
-_KANA_PATTERN = re.compile(KANA_REGEX)
-_NONWORD_PATTERN = re.compile(NONWORD_REGEX)
-_NUMERIC_PATTERN = re.compile(NUMERIC_REGEX)
-_WORD_PATTERN = re.compile(WORD_REGEX)
+# Non-word characters (not Japanese text)
+NONWORD_PATTERN = r'[^々ヶ〆一-龯ァ-ヺヽヾぁ-ゔゝゞー〇]'
 
-# Basic split regex for separating Japanese from non-Japanese text
-BASIC_SPLIT_REGEX = (
-    rf"((?:(?<!{DECIMAL_POINT_REGEX}|{DIGIT_REGEX}){DIGIT_REGEX}+|{WORD_REGEX})"
-    rf"{NUM_WORD_REGEX}*{WORD_REGEX}|{WORD_REGEX})"
-)
-_BASIC_SPLIT_PATTERN = re.compile(BASIC_SPLIT_REGEX)
+# Numeric patterns
+NUMERIC_PATTERN = r'[0-9０-９〇一二三四五六七八九零壱弐参拾十百千万億兆京]'
+DIGIT_PATTERN = r'[0-9０-９〇]'
+DECIMAL_POINT_PATTERN = r'[.,]'
 
-# Sequential kanji pattern for finding kanji boundaries
-_SEQUENTIAL_KANJI_PATTERN = re.compile(r"(?=[々一-龯][々一-龯])")
+# Word pattern (any Japanese word character)
+WORD_PATTERN = r'[々ヶ〆一-龯ァ-ヺヽヾぁ-ゔゝゞー〇]'
+NUM_WORD_PATTERN = r'[0-9０-９〇々ヶ〆一-龯ァ-ヺヽヾぁ-ゔゝゞー]'
+
+# Compiled regex objects
+_KATAKANA_RE = re.compile(f'^{KATAKANA_PATTERN}+$')
+_HIRAGANA_RE = re.compile(f'^{HIRAGANA_PATTERN}+$')
+_KANJI_RE = re.compile(f'^{KANJI_PATTERN}+$')
+_KANA_RE = re.compile(f'^{KANA_PATTERN}+$')
+_NONWORD_RE = re.compile(f'^{NONWORD_PATTERN}+$')
 
 
 # ============================================================================
-# Character Testing Functions
+# Character Classification Functions
 # ============================================================================
 
-def test_word(word: str, char_class: str) -> bool:
+def get_char_class(char: str) -> Optional[str]:
     """
-    Test if a word consists entirely of a specific character class.
+    Get the character class for a kana character.
+    Returns the kana class name (e.g., 'ka', 'shi', 'n') or None.
+    """
+    return _CHAR_CLASS_MAP.get(char)
+
+
+def word_matches_class(word: str, char_class: str) -> bool:
+    """
+    Test if word consists entirely of a particular character class.
     
     Args:
-        word: The word to test.
-        char_class: One of 'katakana', 'hiragana', 'kanji', 'kana', 'nonword', 'number'.
-        
+        word: The word to test
+        char_class: One of 'katakana', 'hiragana', 'kanji', 'kana', 'nonword'
+    
     Returns:
-        True if the word matches the character class entirely.
+        True if word matches the character class
     """
     if not word:
         return False
-        
+    
     patterns = {
-        'katakana': rf"^{KATAKANA_REGEX}+$",
-        'katakana_uniq': rf"^{KATAKANA_UNIQ_REGEX}+$",
-        'hiragana': rf"^{HIRAGANA_REGEX}+$",
-        'kanji': rf"^{KANJI_REGEX}+$",
-        'kanji_char': rf"^{KANJI_CHAR_REGEX}+$",
-        'kana': rf"^{KANA_REGEX}+$",
-        'traditional': rf"^({HIRAGANA_REGEX}|{KANJI_REGEX})+$",
-        'nonword': rf"^{NONWORD_REGEX}+$",
-        'number': rf"^{NUMERIC_REGEX}+$",
+        'katakana': _KATAKANA_RE,
+        'hiragana': _HIRAGANA_RE,
+        'kanji': _KANJI_RE,
+        'kana': _KANA_RE,
+        'nonword': _NONWORD_RE,
     }
     
-    pattern = patterns.get(char_class)
-    if pattern:
-        return bool(re.match(pattern, word))
-    return False
-
-
-def is_kana(word: str) -> bool:
-    """Check if word consists entirely of kana (hiragana or katakana)."""
-    return test_word(word, 'kana')
-
-
-def is_kanji(char: str) -> bool:
-    """Check if a character is kanji."""
-    return bool(_KANJI_CHAR_PATTERN.match(char))
-
-
-def is_hiragana(word: str) -> bool:
-    """Check if word consists entirely of hiragana."""
-    return test_word(word, 'hiragana')
-
-
-def is_katakana(word: str) -> bool:
-    """Check if word consists entirely of katakana."""
-    return test_word(word, 'katakana')
+    regex = patterns.get(char_class)
+    if regex is None:
+        return False
+    
+    return bool(regex.match(word))
 
 
 def count_char_class(word: str, char_class: str) -> int:
-    """
-    Count characters matching a specific class in a word.
-    
-    Args:
-        word: The word to analyze.
-        char_class: Character class to count.
-        
-    Returns:
-        Number of matching characters.
-    """
+    """Count occurrences of a character class in word."""
     patterns = {
-        'katakana': _KATAKANA_PATTERN,
-        'katakana_uniq': _KATAKANA_UNIQ_PATTERN,
-        'hiragana': _HIRAGANA_PATTERN,
-        'kanji': _KANJI_PATTERN,
-        'kanji_char': _KANJI_CHAR_PATTERN,
-        'kana': _KANA_PATTERN,
-        'nonword': _NONWORD_PATTERN,
-        'number': _NUMERIC_PATTERN,
+        'katakana': KATAKANA_PATTERN,
+        'hiragana': HIRAGANA_PATTERN,
+        'kanji': KANJI_PATTERN,
+        'kana': KANA_PATTERN,
     }
     
     pattern = patterns.get(char_class)
-    if pattern:
-        return len(pattern.findall(word))
-    return 0
+    if pattern is None:
+        return 0
+    
+    return len(re.findall(pattern, word))
 
 
-def collect_char_class(word: str, char_class: str) -> List[str]:
-    """
-    Collect all characters matching a specific class.
-    
-    Args:
-        word: The word to analyze.
-        char_class: Character class to collect.
-        
-    Returns:
-        List of matching characters.
-    """
-    patterns = {
-        'katakana': _KATAKANA_PATTERN,
-        'hiragana': _HIRAGANA_PATTERN,
-        'kanji': _KANJI_PATTERN,
-        'kanji_char': _KANJI_CHAR_PATTERN,
-        'kana': _KANA_PATTERN,
-    }
-    
-    pattern = patterns.get(char_class)
-    if pattern:
-        return pattern.findall(word)
-    return []
+def is_katakana(word: str) -> bool:
+    """Check if word is entirely katakana."""
+    return word_matches_class(word, 'katakana')
 
 
-def sequential_kanji_positions(word: str, offset: int = 0) -> List[int]:
-    """
-    Find positions where two kanji appear consecutively.
-    
-    Used for detecting kanji compound boundaries.
-    
-    Args:
-        word: The word to analyze.
-        offset: Offset to add to positions.
-        
-    Returns:
-        List of positions (1-indexed relative to offset).
-    """
-    positions = []
-    for match in _SEQUENTIAL_KANJI_PATTERN.finditer(word):
-        positions.append(match.start() + 1 + offset)
-    return positions
+def is_hiragana(word: str) -> bool:
+    """Check if word is entirely hiragana."""
+    return word_matches_class(word, 'hiragana')
 
 
-def consecutive_char_groups(word: str, char_class: str, start: int = 0, end: Optional[int] = None) -> List[Tuple[int, int]]:
-    """
-    Find consecutive groups of a character class.
-    
-    Args:
-        word: The word to analyze.
-        char_class: Character class to find.
-        start: Start position.
-        end: End position.
-        
-    Returns:
-        List of (start, end) tuples for each group.
-    """
-    if end is None:
-        end = len(word)
-    
-    patterns = {
-        'katakana': rf"{KATAKANA_REGEX}+",
-        'hiragana': rf"{HIRAGANA_REGEX}+",
-        'kanji': rf"{KANJI_REGEX}+",
-        'number': rf"{NUMERIC_REGEX}+",
-        'kana': rf"{KANA_REGEX}+",
-    }
-    
-    pattern = patterns.get(char_class)
-    if not pattern:
-        return []
-    
-    regex = re.compile(pattern)
-    groups = []
-    for match in regex.finditer(word, start, end):
-        groups.append((match.start(), match.end()))
-    return groups
+def is_kanji(word: str) -> bool:
+    """Check if word contains only kanji characters."""
+    return word_matches_class(word, 'kanji')
+
+
+def is_kana(word: str) -> bool:
+    """Check if word is entirely kana (hiragana or katakana)."""
+    return word_matches_class(word, 'kana')
+
+
+def has_kanji(word: str) -> bool:
+    """Check if word contains any kanji."""
+    return bool(re.search(KANJI_PATTERN, word))
+
+
+def has_kana(word: str) -> bool:
+    """Check if word contains any kana."""
+    return bool(re.search(KANA_PATTERN, word))
 
 
 # ============================================================================
-# Text Normalization
-# ============================================================================
-
-def to_normal_char(char: str, context: Optional[str] = None) -> Optional[str]:
-    """
-    Convert an abnormal character to its normal form.
-    
-    Args:
-        char: Character to normalize.
-        context: Context for normalization ('kana' uses different mapping).
-        
-    Returns:
-        Normalized character or None if no normalization needed.
-    """
-    if context == 'kana':
-        pos = HALF_WIDTH_KANA.find(char)
-        if pos >= 0 and pos < len(FULL_WIDTH_KANA):
-            return FULL_WIDTH_KANA[pos]
-    else:
-        return _CHAR_NORM_MAP.get(char)
-    return None
-
-
-def simplify_ngrams(text: str, mapping: Dict[str, str]) -> str:
-    """
-    Apply n-gram replacements to text.
-    
-    Args:
-        text: Text to process.
-        mapping: Dictionary of patterns to replacements.
-        
-    Returns:
-        Processed text.
-    """
-    if not mapping:
-        return text
-    
-    # Sort by length (longest first) to handle overlapping patterns
-    patterns = sorted(mapping.keys(), key=len, reverse=True)
-    result = text
-    for pattern in patterns:
-        result = result.replace(pattern, mapping[pattern])
-    return result
-
-
-def normalize(text: str, context: Optional[str] = None) -> str:
-    """
-    Normalize text for processing.
-    
-    - Converts full-width alphanumeric to half-width
-    - Converts half-width kana to full-width
-    - Combines dakuten/handakuten with base characters
-    - Normalizes punctuation
-    
-    Args:
-        text: Text to normalize.
-        context: Optional context ('kana' for kana-specific normalization).
-        
-    Returns:
-        Normalized text.
-    """
-    # Character normalization
-    result = []
-    for char in text:
-        normal = to_normal_char(char, context)
-        result.append(normal if normal else char)
-    text = ''.join(result)
-    
-    # Apply dakuten joining
-    text = simplify_ngrams(text, DAKUTEN_JOIN)
-    
-    # Apply punctuation normalization (unless in kana context)
-    if context != 'kana':
-        text = simplify_ngrams(text, PUNCTUATION_MARKS)
-    
-    return text
-
-
-# ============================================================================
-# Kana Conversion
+# Kana Conversion Functions
 # ============================================================================
 
 def as_hiragana(text: str) -> str:
     """
     Convert katakana to hiragana.
-    
-    Args:
-        text: Text to convert.
-        
-    Returns:
-        Text with katakana converted to hiragana.
+    Equivalent to ichiran's as-hiragana function.
     """
     result = []
     for char in text:
-        # First normalize the character
-        normal = to_normal_char(char)
-        if normal:
-            char = normal
-        
-        # Get character class and convert
-        char_class = CHAR_CLASS_HASH.get(char)
-        if char_class and char_class in ALL_CHARACTERS:
-            # Get the hiragana (first character in the pair)
-            chars = ALL_CHARACTERS[char_class]
-            result.append(chars[0])
+        char_class = get_char_class(char)
+        if char_class and char_class in KANA_CHARS:
+            # Get hiragana (first char of the pair)
+            result.append(KANA_CHARS[char_class][0])
+        elif char_class and char_class in MODIFIER_CHARS:
+            result.append(MODIFIER_CHARS[char_class][0])
+        elif char == 'ッ':
+            result.append('っ')
+        elif char == 'ー':
+            result.append('ー')
+        elif char in ITERATION_CHARS:
+            result.append('ゝ')
+        elif char in ITERATION_VOICED_CHARS:
+            result.append('ゞ')
         else:
             result.append(char)
-    
     return ''.join(result)
 
 
 def as_katakana(text: str) -> str:
     """
     Convert hiragana to katakana.
-    
-    Args:
-        text: Text to convert.
-        
-    Returns:
-        Text with hiragana converted to katakana.
+    Equivalent to ichiran's as-katakana function.
     """
     result = []
     for char in text:
-        # First normalize the character
-        normal = to_normal_char(char)
-        if normal:
-            char = normal
-        
-        # Get character class and convert
-        char_class = CHAR_CLASS_HASH.get(char)
-        if char_class and char_class in ALL_CHARACTERS:
-            # Get the katakana (last character in the pair)
-            chars = ALL_CHARACTERS[char_class]
-            result.append(chars[-1])
+        char_class = get_char_class(char)
+        if char_class and char_class in KANA_CHARS:
+            # Get katakana (second/last char of the pair)
+            result.append(KANA_CHARS[char_class][-1])
+        elif char_class and char_class in MODIFIER_CHARS:
+            result.append(MODIFIER_CHARS[char_class][-1])
+        elif char == 'っ':
+            result.append('ッ')
+        elif char == 'ー':
+            result.append('ー')
+        elif char in ITERATION_CHARS:
+            result.append('ヽ')
+        elif char in ITERATION_VOICED_CHARS:
+            result.append('ヾ')
         else:
             result.append(char)
-    
     return ''.join(result)
 
 
 # ============================================================================
-# Rendaku (Sequential Voicing)
+# Voicing Functions (Rendaku/Unrendaku)
 # ============================================================================
 
 def rendaku(text: str, handakuten: bool = False) -> str:
     """
     Apply rendaku (sequential voicing) to the first character.
     
-    Rendaku converts unvoiced consonants to voiced (e.g., か→が).
-    
     Args:
-        text: Text to modify.
-        handakuten: If True, apply handakuten (semi-voicing) instead.
-        
+        text: Text to modify
+        handakuten: If True, apply handakuten (p-sounds) instead of dakuten
+    
     Returns:
-        Text with rendaku applied.
+        Text with first character voiced, or original if not applicable
     """
     if not text:
         return text
     
     first_char = text[0]
-    cc = CHAR_CLASS_HASH.get(first_char)
+    char_class = get_char_class(first_char)
     
-    if not cc:
+    if not char_class:
         return text
     
-    use_hash = HANDAKUTEN_HASH if handakuten else DAKUTEN_HASH
-    voiced = use_hash.get(cc)
+    voice_map = HANDAKUTEN_MAP if handakuten else DAKUTEN_MAP
+    voiced_class = voice_map.get(char_class)
     
-    if not voiced:
+    if not voiced_class:
         return text
     
-    # Find the character position in the original class
-    orig_chars = KANA_CHARACTERS.get(cc, "")
-    pos = orig_chars.find(first_char)
+    # Find position of char in original class
+    orig_chars = KANA_CHARS.get(char_class, "")
+    if first_char not in orig_chars:
+        return text
+    pos = orig_chars.index(first_char)
     
-    if pos >= 0:
-        voiced_chars = KANA_CHARACTERS.get(voiced, "")
-        if pos < len(voiced_chars):
-            return voiced_chars[pos] + text[1:]
+    # Get corresponding voiced char
+    voiced_chars = KANA_CHARS.get(voiced_class, "")
+    if pos < len(voiced_chars):
+        return voiced_chars[pos] + text[1:]
     
     return text
 
 
 def unrendaku(text: str) -> str:
     """
-    Remove rendaku (voicing) from the first character.
+    Remove rendaku (unvoice) the first character.
     
-    Args:
-        text: Text to modify.
-        
     Returns:
-        Text with rendaku removed.
+        Text with first character unvoiced, or original if not applicable
     """
     if not text:
         return text
     
     first_char = text[0]
-    cc = CHAR_CLASS_HASH.get(first_char)
+    char_class = get_char_class(first_char)
     
-    if not cc:
+    if not char_class:
         return text
     
-    unvoiced = UNDAKUTEN_HASH.get(cc)
+    unvoiced_class = UNDAKUTEN_MAP.get(char_class)
     
-    if not unvoiced:
+    if not unvoiced_class:
         return text
     
-    # Find the character position in the original class
-    orig_chars = KANA_CHARACTERS.get(cc, "")
-    pos = orig_chars.find(first_char)
+    # Find position of char in voiced class
+    voiced_chars = KANA_CHARS.get(char_class, "")
+    if first_char not in voiced_chars:
+        return text
+    pos = voiced_chars.index(first_char)
     
-    if pos >= 0:
-        unvoiced_chars = KANA_CHARACTERS.get(unvoiced, "")
-        if pos < len(unvoiced_chars):
-            return unvoiced_chars[pos] + text[1:]
+    # Get corresponding unvoiced char
+    unvoiced_chars = KANA_CHARS.get(unvoiced_class, "")
+    if pos < len(unvoiced_chars):
+        return unvoiced_chars[pos] + text[1:]
     
     return text
 
 
 def geminate(text: str) -> str:
     """
-    Apply gemination (sokuon) to the last character.
-    
-    Replaces the last character with っ/ッ.
-    
-    Args:
-        text: Text to modify.
-        
-    Returns:
-        Text with gemination applied.
+    Replace the last character with small tsu (gemination marker).
     """
     if not text:
         return text
     
-    # Check if the text ends with katakana
-    last_char = text[-1]
-    if last_char in FULL_WIDTH_KANA or is_katakana(last_char):
-        return text[:-1] + "ッ"
+    return text[:-1] + 'っ'
+
+
+# ============================================================================
+# Text Normalization Functions
+# ============================================================================
+
+def normalize_char(char: str, context: str = None) -> str:
+    """
+    Normalize a single character (e.g., half-width to full-width).
+    
+    Args:
+        char: Single character to normalize
+        context: 'kana' for kana-only normalization
+    
+    Returns:
+        Normalized character or original if not found
+    """
+    if context == 'kana':
+        abnormal = HALF_WIDTH_KANA
+        normal = FULL_WIDTH_KANA
     else:
-        return text[:-1] + "っ"
+        abnormal = ABNORMAL_CHARS
+        normal = NORMAL_CHARS
+    
+    pos = abnormal.find(char)
+    if pos >= 0 and pos < len(normal):
+        return normal[pos]
+    return char
+
+
+def normalize(text: str, context: str = None) -> str:
+    """
+    Normalize text by converting abnormal characters to normal form.
+    
+    This includes:
+    - Full-width alphanumeric to half-width
+    - Half-width katakana to full-width
+    - Combined dakuten characters to single characters
+    - Punctuation normalization
+    
+    Args:
+        text: Text to normalize
+        context: 'kana' for kana-only context
+    
+    Returns:
+        Normalized text
+    """
+    # Character-by-character normalization
+    chars = [normalize_char(c, context) for c in text]
+    text = ''.join(chars)
+    
+    # Punctuation replacement (if not kana-only context)
+    if context != 'kana':
+        for old, new in PUNCTUATION_MAP.items():
+            text = text.replace(old, new)
+    
+    return text
 
 
 # ============================================================================
-# Text Splitting
+# Text Splitting Functions
 # ============================================================================
+
+# Basic split pattern for Japanese text
+_BASIC_SPLIT_PATTERN = rf'({WORD_PATTERN}(?:{NUM_WORD_PATTERN})*{WORD_PATTERN}?|{WORD_PATTERN})'
+_BASIC_SPLIT_RE = re.compile(_BASIC_SPLIT_PATTERN)
+
 
 def basic_split(text: str) -> List[Tuple[str, str]]:
     """
-    Split text into segments of Japanese and non-Japanese characters.
+    Split text into segments of Japanese words and misc characters.
     
-    Args:
-        text: Text to split.
-        
+    Equivalent to ichiran's basic-split function.
+    
     Returns:
-        List of (type, text) tuples where type is 'word' or 'misc'.
+        List of (type, segment) tuples where type is 'word' or 'misc'
     """
-    if not text:
-        return []
-    
-    segments = []
+    result = []
     last_end = 0
     
-    for match in _BASIC_SPLIT_PATTERN.finditer(text):
-        start, end = match.span()
+    for match in _BASIC_SPLIT_RE.finditer(text):
+        # Add any preceding non-word text
+        if match.start() > last_end:
+            misc = text[last_end:match.start()]
+            if misc:
+                result.append(('misc', misc))
         
-        # Add any non-matching text before this match
-        if start > last_end:
-            misc_text = text[last_end:start]
-            if misc_text:
-                segments.append(('misc', misc_text))
-        
-        # Add the matching Japanese text
-        segments.append(('word', match.group()))
-        last_end = end
+        # Add the word
+        result.append(('word', match.group()))
+        last_end = match.end()
     
-    # Add any remaining non-matching text
+    # Add any trailing non-word text
     if last_end < len(text):
-        misc_text = text[last_end:]
-        if misc_text:
-            segments.append(('misc', misc_text))
+        misc = text[last_end:]
+        if misc:
+            result.append(('misc', misc))
     
-    return segments
+    return result
 
 
 def mora_length(text: str) -> int:
     """
-    Calculate the mora length of text.
-    
-    Modifier characters (small kana, long vowel marker) don't count as separate mora.
-    
-    Args:
-        text: Text to measure.
-        
-    Returns:
-        Mora count.
+    Calculate mora length (doesn't count modifier characters).
+    Equivalent to ichiran's mora-length function.
     """
-    modifiers = set("っッぁァぃィぅゥぇェぉォゃャゅュょョー")
-    return sum(1 for char in text if char not in modifiers)
+    modifiers = "っッぁァぃィぅゥぇェぉォゃャゅュょョー"
+    return sum(1 for c in text if c not in modifiers)
 
 
 # ============================================================================
-# Kanji Pattern Matching
+# Kanji Utilities
 # ============================================================================
 
-def kanji_mask(word: str) -> str:
+def sequential_kanji_positions(word: str, offset: int = 0) -> List[int]:
     """
-    Create a SQL LIKE mask for a word with kanji replaced by %.
-    
-    Args:
-        word: Word containing kanji.
-        
-    Returns:
-        Mask string with % for each kanji sequence.
+    Find positions where kanji characters are adjacent.
+    Used for identifying potential word boundaries.
     """
-    return re.sub(KANJI_REGEX + "+", "%", word)
-
-
-def kanji_regex(word: str) -> re.Pattern:
-    """
-    Create a regex pattern for matching kanji readings.
-    
-    Kanji are replaced with .+ patterns.
-    
-    Args:
-        word: Word containing kanji.
-        
-    Returns:
-        Compiled regex pattern.
-    """
-    mask = kanji_mask(word)
-    pattern_parts = []
-    for char in mask:
-        if char == '%':
-            pattern_parts.append('.+')
-        else:
-            pattern_parts.append(re.escape(char))
-    
-    return re.compile('^' + ''.join(pattern_parts) + '$')
-
-
-def kanji_match(word: str, reading: str) -> bool:
-    """
-    Check if a reading matches a word with kanji.
-    
-    Args:
-        word: Word containing kanji.
-        reading: Proposed reading.
-        
-    Returns:
-        True if the reading could match the word.
-    """
-    pattern = kanji_regex(word)
-    return bool(pattern.match(reading))
+    positions = []
+    pattern = re.compile(r'(?=[々一-龯][々一-龯])')
+    for match in pattern.finditer(word):
+        positions.append(match.start() + 1 + offset)
+    return positions
 
 
 def kanji_prefix(word: str) -> str:
     """
-    Get the prefix of a word up to and including the last kanji.
-    
-    Args:
-        word: Word to analyze.
-        
-    Returns:
-        Kanji prefix or empty string.
+    Get the kanji prefix of a word (everything up to and including last kanji).
     """
-    match = re.match(rf"^.*{KANJI_REGEX}", word)
+    match = re.search(rf'^.*{KANJI_PATTERN}', word)
     return match.group() if match else ""
+
+
+def kanji_mask(word: str) -> str:
+    """
+    Create SQL LIKE mask for word by replacing kanji sequences with %.
+    """
+    return re.sub(rf'{KANJI_PATTERN}+', '%', word)
+
+
+def kanji_match(word: str, reading: str) -> bool:
+    """
+    Check if a reading matches a word pattern (kanji as wildcards).
+    """
+    mask = kanji_mask(word)
+    # Convert LIKE pattern to regex
+    pattern = '^' + mask.replace('%', '.+') + '$'
+    return bool(re.match(pattern, reading))
 
 
 # ============================================================================
 # Utility Functions
 # ============================================================================
 
-def destem(word: str, stem: int, char_class: str = 'kana') -> str:
+def safe_subseq(sequence: str, start: int, end: int = None) -> Optional[str]:
     """
-    Remove characters from the end of a word.
-    
-    Args:
-        word: Word to destem.
-        stem: Number of characters to remove.
-        char_class: Character class to count for stemming.
-        
-    Returns:
-        Destemmed word.
-    """
-    if stem == 0:
-        return word
-    
-    # Find positions of matching characters from the end
-    patterns = {
-        'kana': KANA_REGEX,
-        'hiragana': HIRAGANA_REGEX,
-        'katakana': KATAKANA_REGEX,
-    }
-    
-    pattern = patterns.get(char_class, KANA_REGEX)
-    positions = [m.start() for m in re.finditer(pattern, word)]
-    
-    if len(positions) >= stem:
-        cut_pos = positions[-(stem)]
-        return word[:cut_pos]
-    
-    return ""
-
-
-def safe_subseq(sequence: str, start: int, end: Optional[int] = None) -> Optional[str]:
-    """
-    Safely get a subsequence of a string.
-    
-    Args:
-        sequence: String to slice.
-        start: Start index.
-        end: End index (optional).
-        
-    Returns:
-        Substring or None if indices are invalid.
+    Safe substring that returns None if indices are out of bounds.
     """
     length = len(sequence)
     if start < 0 or start > length:
@@ -805,195 +552,132 @@ def safe_subseq(sequence: str, start: int, end: Optional[int] = None) -> Optiona
     return sequence[start:end]
 
 
-def join_with_separator(separator: str, items: List, key=None) -> str:
+def join(separator: str, items: List, key=None) -> str:
     """
-    Join items with a separator.
-    
-    Args:
-        separator: Separator string.
-        items: Items to join.
-        key: Optional function to extract string from each item.
-        
-    Returns:
-        Joined string.
+    Join items with separator, optionally applying a key function.
     """
     if key:
-        return separator.join(key(item) for item in items)
+        items = [key(item) for item in items]
     return separator.join(str(item) for item in items)
 
 
-def long_vowel_modifier_p(modifier: str, prev_char: str) -> bool:
-    """
-    Check if a modifier extends a previous vowel.
-    
-    Args:
-        modifier: Modifier character class.
-        prev_char: Previous character.
-        
-    Returns:
-        True if the modifier extends the vowel.
-    """
-    vowel_map = {
-        '+a': 'A', '+i': 'I', '+u': 'U', '+e': 'E', '+o': 'O'
-    }
-    
-    vowel = vowel_map.get(modifier)
-    if not vowel:
-        return False
-    
-    char_class = get_char_class(prev_char)
-    if not isinstance(char_class, str):
-        return False
-    
-    # Check if the character class ends with this vowel
-    return char_class.upper().endswith(vowel)
-
-
 # ============================================================================
-# Sentence Splitting
+# Romanization
 # ============================================================================
 
-# Sentence-ending punctuation marks (Japanese and Western)
-SENTENCE_ENDINGS = "。．.！!？?"
-SENTENCE_ENDING_QUOTES = "」』】）)\"'»›"
+# Basic kana to romaji mapping
+ROMAJI_MAP = {
+    'a': 'a', 'i': 'i', 'u': 'u', 'e': 'e', 'o': 'o',
+    'ka': 'ka', 'ki': 'ki', 'ku': 'ku', 'ke': 'ke', 'ko': 'ko',
+    'sa': 'sa', 'shi': 'shi', 'su': 'su', 'se': 'se', 'so': 'so',
+    'ta': 'ta', 'chi': 'chi', 'tsu': 'tsu', 'te': 'te', 'to': 'to',
+    'na': 'na', 'ni': 'ni', 'nu': 'nu', 'ne': 'ne', 'no': 'no',
+    'ha': 'ha', 'hi': 'hi', 'fu': 'fu', 'he': 'he', 'ho': 'ho',
+    'ma': 'ma', 'mi': 'mi', 'mu': 'mu', 'me': 'me', 'mo': 'mo',
+    'ya': 'ya', 'yu': 'yu', 'yo': 'yo',
+    'ra': 'ra', 'ri': 'ri', 'ru': 'ru', 're': 're', 'ro': 'ro',
+    'wa': 'wa', 'wi': 'wi', 'we': 'we', 'wo': 'wo',
+    'n': 'n',
+    # Voiced
+    'ga': 'ga', 'gi': 'gi', 'gu': 'gu', 'ge': 'ge', 'go': 'go',
+    'za': 'za', 'ji': 'ji', 'zu': 'zu', 'ze': 'ze', 'zo': 'zo',
+    'da': 'da', 'dji': 'di', 'dzu': 'du', 'de': 'de', 'do': 'do',
+    'ba': 'ba', 'bi': 'bi', 'bu': 'bu', 'be': 'be', 'bo': 'bo',
+    'pa': 'pa', 'pi': 'pi', 'pu': 'pu', 'pe': 'pe', 'po': 'po',
+    'vu': 'vu',
+    # Small kana (modifiers)
+    '+a': 'a', '+i': 'i', '+u': 'u', '+e': 'e', '+o': 'o',
+    '+ya': 'ya', '+yu': 'yu', '+yo': 'yo', '+wa': 'wa',
+    'sokuon': '',  # Handled specially
+    'long_vowel': '',  # Handled specially
+    'iter': '',
+    'iter_v': '',
+}
 
-# Pattern to match sentence boundaries
-# Matches sentence-ending punctuation optionally followed by closing quotes
-_SENTENCE_SPLIT_PATTERN = re.compile(
-    rf"([{re.escape(SENTENCE_ENDINGS)}][{re.escape(SENTENCE_ENDING_QUOTES)}]*)"
-)
 
-
-def split_sentences(text: str, keep_punctuation: bool = True) -> List[str]:
+def romanize_word(text: str) -> str:
     """
-    Split Japanese text into sentences.
+    Convert kana text to romaji.
     
-    Splits on sentence-ending punctuation marks (。！？etc.) while handling
-    quotation marks and parentheses properly.
+    This is a simplified romanization function. For full ichiran
+    compatibility, a more complex system would be needed.
     
     Args:
-        text: Text to split into sentences.
-        keep_punctuation: Whether to keep the punctuation at the end of each sentence.
-                         Default True.
+        text: Kana text to romanize
         
     Returns:
-        List of sentences.
-        
-    Examples:
-        >>> split_sentences("今日は晴れです。明日は雨かもしれません。")
-        ['今日は晴れです。', '明日は雨かもしれません。']
-        
-        >>> split_sentences("「こんにちは！」と言った。")
-        ['「こんにちは！」と言った。']
-        
-        >>> split_sentences("何ですか？分かりません。")
-        ['何ですか？', '分かりません。']
+        Romanized text
     """
     if not text:
-        return []
+        return text
     
-    text = text.strip()
-    if not text:
-        return []
-    
-    # Track quote depth to avoid splitting inside quotes
-    sentences = []
-    current = []
-    quote_depth = 0
-    
-    # Opening/closing quote pairs
-    open_quotes = "「『【（(\"'«‹"
-    close_quotes = "」』】）)\"'»›"
-    
+    result = []
+    prev_char_class = None
     i = 0
+    
     while i < len(text):
         char = text[i]
-        current.append(char)
+        char_class = get_char_class(char)
         
-        # Track quote depth
-        if char in open_quotes:
-            quote_depth += 1
-        elif char in close_quotes:
-            quote_depth = max(0, quote_depth - 1)
-        
-        # Check for sentence boundary
-        if char in SENTENCE_ENDINGS and quote_depth == 0:
-            # Look ahead for closing quotes that belong to this sentence
-            j = i + 1
-            while j < len(text) and text[j] in SENTENCE_ENDING_QUOTES:
-                current.append(text[j])
-                if text[j] in close_quotes:
-                    quote_depth = max(0, quote_depth - 1)
-                j += 1
-            
-            # Complete the sentence
-            sentence = ''.join(current)
-            if not keep_punctuation:
-                # Remove trailing punctuation
-                sentence = sentence.rstrip(SENTENCE_ENDINGS + SENTENCE_ENDING_QUOTES)
-            
-            if sentence.strip():
-                sentences.append(sentence)
-            
-            current = []
-            i = j
+        if char_class is None:
+            # Non-kana character, pass through
+            result.append(char)
+            prev_char_class = None
+            i += 1
             continue
         
+        # Handle sokuon (small tsu) - double next consonant
+        if char_class == 'sokuon':
+            if i + 1 < len(text):
+                next_class = get_char_class(text[i + 1])
+                if next_class and next_class in ROMAJI_MAP:
+                    romaji = ROMAJI_MAP[next_class]
+                    if romaji and romaji[0] not in 'aeioun':
+                        result.append(romaji[0])
+            prev_char_class = char_class
+            i += 1
+            continue
+        
+        # Handle long vowel mark
+        if char_class == 'long_vowel':
+            if result:
+                # Extend the previous vowel
+                last = result[-1]
+                if last in 'aeiou':
+                    result.append(last)
+                else:
+                    result.append('ō')
+            else:
+                result.append('ō')
+            prev_char_class = char_class
+            i += 1
+            continue
+        
+        # Handle small kana (ya, yu, yo)
+        if char_class.startswith('+'):
+            base_romaji = ROMAJI_MAP.get(char_class, char)
+            # Combine with previous consonant
+            if result and result[-1].endswith('i'):
+                # Replace 'i' with small kana sound
+                result[-1] = result[-1][:-1] + base_romaji
+            else:
+                result.append(base_romaji)
+            prev_char_class = char_class
+            i += 1
+            continue
+        
+        # Regular kana
+        romaji = ROMAJI_MAP.get(char_class, char)
+        
+        # Handle 'n' before certain sounds
+        if char_class == 'n' and i + 1 < len(text):
+            next_char = text[i + 1]
+            next_class = get_char_class(next_char)
+            if next_class and next_class.startswith(('+', 'a', 'i', 'u', 'e', 'o', 'ya', 'yu', 'yo')):
+                romaji = "n'"
+        
+        result.append(romaji)
+        prev_char_class = char_class
         i += 1
     
-    # Handle any remaining text (sentence without ending punctuation)
-    if current:
-        sentence = ''.join(current)
-        if sentence.strip():
-            sentences.append(sentence)
-    
-    return sentences
-
-
-def split_paragraphs(text: str) -> List[str]:
-    """
-    Split text into paragraphs.
-    
-    Splits on newlines while preserving non-empty paragraphs.
-    
-    Args:
-        text: Text to split.
-        
-    Returns:
-        List of paragraphs.
-    """
-    if not text:
-        return []
-    
-    # Split on one or more newlines
-    paragraphs = re.split(r'\n+', text)
-    
-    # Filter out empty paragraphs
-    return [p.strip() for p in paragraphs if p.strip()]
-
-
-def count_sentences(text: str) -> int:
-    """
-    Count the number of sentences in text.
-    
-    Args:
-        text: Text to count sentences in.
-        
-    Returns:
-        Number of sentences.
-    """
-    return len(split_sentences(text))
-
-
-def get_first_sentence(text: str) -> str:
-    """
-    Get the first sentence from text.
-    
-    Args:
-        text: Text to extract from.
-        
-    Returns:
-        First sentence, or empty string if no sentences found.
-    """
-    sentences = split_sentences(text)
-    return sentences[0] if sentences else ""
+    return ''.join(result)

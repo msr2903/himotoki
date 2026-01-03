@@ -1,0 +1,94 @@
+id	kw	descr
+1	adj-f	noun or verb acting prenominally
+2	adj-i	adjective (keiyoushi)
+3	adj-ix	adjective (keiyoushi) - yoi/ii class
+4	adj-kari	'kari' adjective (archaic)
+5	adj-ku	'ku' adjective (archaic)
+6	adj-na	adjectival nouns or quasi-adjectives (keiyodoshi)
+7	adj-nari	archaic/formal form of na-adjective
+8	adj-no	nouns which may take the genitive case particle 'no'
+9	adj-pn	pre-noun adjectival (rentaishi)
+10	adj-shiku	'shiku' adjective (archaic)
+11	adj-t	'taru' adjective
+12	adv	adverb (fukushi)
+13	adv-to	adverb taking the 'to' particle
+14	aux	auxiliary
+15	aux-adj	auxiliary adjective
+16	aux-v	auxiliary verb
+17	conj	conjunction
+18	cop	copula
+19	cop-da	copula
+20	ctr	counter
+21	exp	expressions (phrases, clauses, etc.)
+22	int	interjection (kandoushi)
+23	n	noun (common) (futsuumeishi)
+24	n-adv	adverbial noun (fukushitekimeishi)
+25	n-pr	proper noun
+26	n-pref	noun, used as a prefix
+27	n-suf	noun, used as a suffix
+28	n-t	noun (temporal) (jisoumeishi)
+29	num	numeric
+30	pn	pronoun
+31	pref	prefix
+32	prt	particle
+33	suf	suffix
+34	unc	unclassified
+35	v-unspec	verb unspecified
+36	v1	Ichidan verb
+37	v1-s	Ichidan verb - kureru special class
+38	v2a-s	Nidan verb with 'u' ending (archaic)
+39	v2b-k	Nidan verb (upper class) with 'bu' ending (archaic)
+40	v2b-s	Nidan verb (lower class) with 'bu' ending (archaic)
+41	v2d-k	Nidan verb (upper class) with 'dzu' ending (archaic)
+42	v2d-s	Nidan verb (lower class) with 'dzu' ending (archaic)
+43	v2g-k	Nidan verb (upper class) with 'gu' ending (archaic)
+44	v2g-s	Nidan verb (lower class) with 'gu' ending (archaic)
+45	v2h-k	Nidan verb (upper class) with 'hu/fu' ending (archaic)
+46	v2h-s	Nidan verb (lower class) with 'hu/fu' ending (archaic)
+47	v2k-k	Nidan verb (upper class) with 'ku' ending (archaic)
+48	v2k-s	Nidan verb (lower class) with 'ku' ending (archaic)
+49	v2m-k	Nidan verb (upper class) with 'mu' ending (archaic)
+50	v2m-s	Nidan verb (lower class) with 'mu' ending (archaic)
+51	v2n-s	Nidan verb (lower class) with 'nu' ending (archaic)
+52	v2r-k	Nidan verb (upper class) with 'ru' ending (archaic)
+53	v2r-s	Nidan verb (lower class) with 'ru' ending (archaic)
+54	v2s-s	Nidan verb (lower class) with 'su' ending (archaic)
+55	v2t-k	Nidan verb (upper class) with 'tsu' ending (archaic)
+56	v2t-s	Nidan verb (lower class) with 'tsu' ending (archaic)
+57	v2w-s	Nidan verb (lower class) with 'u' ending and 'we' conjugation (archaic)
+58	v2y-k	Nidan verb (upper class) with 'yu' ending (archaic)
+59	v2y-s	Nidan verb (lower class) with 'yu' ending (archaic)
+60	v2z-s	Nidan verb (lower class) with 'zu' ending (archaic)
+61	v4b	Yodan verb with 'bu' ending (archaic)
+62	v4g	Yodan verb with 'gu' ending (archaic)
+63	v4h	Yodan verb with 'hu/fu' ending (archaic)
+64	v4k	Yodan verb with 'ku' ending (archaic)
+65	v4m	Yodan verb with 'mu' ending (archaic)
+66	v4n	Yodan verb with 'nu' ending (archaic)
+67	v4r	Yodan verb with 'ru' ending (archaic)
+68	v4s	Yodan verb with 'su' ending (archaic)
+69	v4t	Yodan verb with 'tsu' ending (archaic)
+70	v5aru	Godan verb - -aru special class
+71	v5b	Godan verb with 'bu' ending
+72	v5g	Godan verb with 'gu' ending
+73	v5k	Godan verb with 'ku' ending
+74	v5k-s	Godan verb - Iku/Yuku special class
+75	v5m	Godan verb with 'mu' ending
+76	v5n	Godan verb with 'nu' ending
+77	v5r	Godan verb with 'ru' ending
+78	v5r-i	Godan verb with 'ru' ending (irregular verb)
+79	v5s	Godan verb with 'su' ending
+80	v5t	Godan verb with 'tsu' ending
+81	v5u	Godan verb with 'u' ending
+82	v5u-s	Godan verb with 'u' ending (special class)
+83	v5uru	Godan verb - Uru old class verb (old form of Eru)
+84	vi	intransitive verb
+85	vk	Kuru verb - special class
+86	vn	irregular nu verb
+87	vr	irregular ru verb, plain form ends with -ri
+88	vs	noun or participle which takes the aux. verb suru
+89	vs-c	su verb - precursor to the modern suru
+90	vs-i	suru verb - included
+91	vs-s	suru verb - special class
+92	vt	transitive verb
+93	vz	Ichidan verb - zuru verb (alternative form of -jiru verbs)

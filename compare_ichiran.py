@@ -29,6 +29,33 @@ import time
 ICHIRAN_CONTAINER = "ichiran-main-1"
 ICHIRAN_TIMEOUT = 30  # seconds
 
+# Cache a single Himotoki DB session and suffix initialization so repeated
+# comparisons don't pay the startup cost each time.
+_himotoki_session = None
+_himotoki_suffixes_ready = False
+
+
+def get_himotoki_session():
+    """Return a ready-to-use Himotoki DB session with suffixes initialized."""
+    global _himotoki_session, _himotoki_suffixes_ready
+    from himotoki.db.connection import get_session, get_db_path
+    from himotoki.suffixes import init_suffixes
+    
+    db_path = get_db_path()
+    if not db_path:
+        raise RuntimeError(
+            "Himotoki database not found. Set HIMOTOKI_DB or run init_db.py to build it."
+        )
+    
+    if _himotoki_session is None:
+        _himotoki_session = get_session(db_path)
+    
+    if not _himotoki_suffixes_ready:
+        init_suffixes(_himotoki_session)
+        _himotoki_suffixes_ready = True
+    
+    return _himotoki_session
+
 
 # ============================================================================
 # Data Classes
@@ -257,68 +284,33 @@ def parse_ichiran_output(data: Any) -> SegmentationResult:
 # ============================================================================
 
 def run_himotoki(sentence: str) -> SegmentationResult:
-    """
-    Run Himotoki segmentation.
-    
-    Args:
-        sentence: Japanese text to segment.
-        
-    Returns:
-        SegmentationResult with parsed segments.
-    """
+    """Run Himotoki and adapt its JSON to the Ichiran parser."""
     try:
-        from himotoki.dict import simple_segment
-        
-        result = simple_segment(sentence)
-        
-        segments = []
-        for word in result:
-            # Handle kana as string or list
-            kana = word.kana
-            if isinstance(kana, list):
-                kana = kana[0] if kana else ""
-            
-            # Get conjugation info if available
-            conj_type = None
-            conj_neg = False
-            conj_fml = False
-            source_text = None
-            
-            if word.conjugations and isinstance(word.conjugations, list) and word.conjugations:
-                conj_info = word.conjugations[0]
-                if isinstance(conj_info, dict):
-                    # New format: {'type': 'Past', 'conj_type': 2, 'neg': False, 'fml': False, ...}
-                    conj_type = conj_info.get('type')
-                    conj_neg = conj_info.get('neg', False)
-                    conj_fml = conj_info.get('fml', False)
-                    source_text = conj_info.get('source_text')
-                else:
-                    conj_type = str(conj_info)
-            
-            seg_info = SegmentInfo(
-                text=word.text,
-                kana=kana,
-                seq=word.seq if isinstance(word.seq, int) else None,
-                score=word.score,
-                conj_type=conj_type,
-                conj_neg=conj_neg,
-                conj_fml=conj_fml,
-                source_text=source_text,
-            )
-            segments.append(seg_info)
-        
-        total_score = sum(s.score for s in segments)
-        
-        return SegmentationResult(
-            segments=segments,
-            total_score=total_score,
-        )
-        
+        from himotoki.output import segment_to_json
+        session = get_himotoki_session()
     except Exception as e:
         import traceback
         return SegmentationResult(
             segments=[],
-            error=f"Himotoki error: {e}\n{traceback.format_exc()}"
+            error=f"Himotoki setup error: {e}\n{traceback.format_exc()}",
+        )
+
+    try:
+        results = segment_to_json(session, sentence, limit=1)
+        if not results:
+            return SegmentationResult(segments=[], error="No segmentation")
+
+        # segment_to_json returns [[segments, score], ...]; wrap to match
+        # Ichiran's [[[segments, score]]] shape expected by parse_ichiran_output.
+        parsed = parse_ichiran_output([[results[0]]])
+        parsed.raw_output = results
+        return parsed
+
+    except Exception as e:
+        import traceback
+        return SegmentationResult(
+            segments=[],
+            error=f"Himotoki error: {e}\n{traceback.format_exc()}",
         )
 
 
@@ -584,7 +576,20 @@ QUICK_SENTENCES = [
 # Reporting
 # ============================================================================
 
-def print_result(result: ComparisonResult, verbose: bool = False):
+def _format_segment(seg: SegmentInfo) -> str:
+    """Readable one-liner for a segment with dictionary ID and features."""
+    pos = ",".join(seg.pos) if seg.pos else "-"
+    return (
+        f"{seg.text} "
+        f"[seq={seg.seq if seg.seq is not None else '-'} "
+        f"kana={seg.kana or '-'} "
+        f"conj={seg.conj_type or '-'} "
+        f"neg={seg.conj_neg} fml={seg.conj_fml} "
+        f"src={seg.source_text or '-'} pos={pos}]"
+    )
+
+
+def print_result(result: ComparisonResult, verbose: bool = False, show_details: bool = False):
     """Print a single comparison result."""
     status_symbols = {
         MatchStatus.MATCH: "✓",
@@ -595,22 +600,38 @@ def print_result(result: ComparisonResult, verbose: bool = False):
     }
     
     symbol = status_symbols.get(result.status, "?")
+    details = verbose or show_details
     
     if result.status == MatchStatus.MATCH:
-        if verbose:
+        if details:
             print(f"  {symbol} {result.sentence}: {result.ichiran_texts}")
+            for seg in result.ichiran.segments:
+                print(f"      Ichiran  {_format_segment(seg)}")
+                print(f"      Himotoki {_format_segment(seg)}")
     elif result.status == MatchStatus.PARTIAL:
         print(f"  {symbol} {result.sentence}: same split, different details")
-        if verbose:
-            for diff in result.differences:
-                print(f"      {diff}")
+        if details:
+            print(f"      Ichiran:")
+            for seg in result.ichiran.segments:
+                print(f"        {_format_segment(seg)}")
+            print(f"      Himotoki:")
+            for seg in result.himotoki.segments:
+                print(f"        {_format_segment(seg)}")
+        for diff in result.differences:
+            print(f"      {diff}")
     else:
         print(f"  {symbol} {result.sentence}")
         print(f"      Ichiran:  {result.ichiran_texts}")
         print(f"      Himotoki: {result.himotoki_texts}")
-        if verbose:
-            for diff in result.differences:
-                print(f"      {diff}")
+        if details:
+            print(f"      Ichiran segments:")
+            for seg in result.ichiran.segments:
+                print(f"        {_format_segment(seg)}")
+            print(f"      Himotoki segments:")
+            for seg in result.himotoki.segments:
+                print(f"        {_format_segment(seg)}")
+        for diff in result.differences:
+            print(f"      {diff}")
 
 
 def print_summary(results: List[ComparisonResult]):
@@ -639,8 +660,25 @@ def print_summary(results: List[ComparisonResult]):
     print(f"Avg time Himotoki:  {avg_himotoki*1000:.1f}ms")
 
 
+def _segmentinfo_to_dict(seg: SegmentInfo) -> Dict[str, Any]:
+    """Convert SegmentInfo to a JSON-friendly dict with dictionary IDs."""
+    return {
+        "text": seg.text,
+        "kana": seg.kana,
+        "seq": seg.seq,
+        "score": seg.score,
+        "is_compound": seg.is_compound,
+        "components": seg.components,
+        "conj_type": seg.conj_type,
+        "conj_neg": seg.conj_neg,
+        "conj_fml": seg.conj_fml,
+        "source_text": seg.source_text,
+        "pos": seg.pos,
+    }
+
+
 def export_results(results: List[ComparisonResult], filename: str):
-    """Export results to JSON file."""
+    """Export results to JSON file with detailed segment data."""
     data = []
     for r in results:
         data.append({
@@ -648,6 +686,8 @@ def export_results(results: List[ComparisonResult], filename: str):
             "status": r.status.value,
             "ichiran_texts": r.ichiran_texts,
             "himotoki_texts": r.himotoki_texts,
+            "ichiran_segments": [_segmentinfo_to_dict(s) for s in r.ichiran.segments],
+            "himotoki_segments": [_segmentinfo_to_dict(s) for s in r.himotoki.segments],
             "differences": r.differences,
             "time_ichiran": r.time_ichiran,
             "time_himotoki": r.time_himotoki,
@@ -663,7 +703,7 @@ def export_results(results: List[ComparisonResult], filename: str):
 # Main
 # ============================================================================
 
-def run_tests(sentences: List[str], verbose: bool = False) -> List[ComparisonResult]:
+def run_tests(sentences: List[str], verbose: bool = False, show_details: bool = False) -> List[ComparisonResult]:
     """Run comparison tests on a list of sentences."""
     results = []
     
@@ -673,7 +713,7 @@ def run_tests(sentences: List[str], verbose: bool = False) -> List[ComparisonRes
         
         result = compare_segmentations(sentence)
         results.append(result)
-        print_result(result, verbose)
+        print_result(result, verbose, show_details)
     
     return results
 
@@ -709,6 +749,11 @@ def main():
         help="Verbose output"
     )
     parser.add_argument(
+        "--details", "-d",
+        action="store_true",
+        help="Show per-segment details including dictionary IDs"
+    )
+    parser.add_argument(
         "--mismatches-only", "-m",
         action="store_true",
         help="Only show mismatches"
@@ -735,7 +780,7 @@ def main():
     print(f"Testing {len(sentences)} sentences...\n")
     
     # Run tests
-    results = run_tests(sentences, args.verbose)
+    results = run_tests(sentences, args.verbose, args.details)
     
     # Filter if needed
     if args.mismatches_only:

@@ -1,10 +1,12 @@
 """
-Entry point for running Himotoki as a module.
+Main entry point for running himotoki as a module.
 
-Usage: python -m himotoki [command] [args]
+Usage:
+    python -m himotoki "日本語テキスト"
 """
 
+import sys
 from himotoki.cli import main
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

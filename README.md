@@ -1,105 +1,125 @@
-<h1 align="center">Himotoki (紐解き)</h1>
+# 🧶 Himotoki (紐解き)
 
-<p align="center">
-  <strong>A high-performance Japanese Morphological Analyzer and Romanization Tool.</strong>
-</p>
+[![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-<p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
-  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python Version"></a>
-  <a href="https://github.com/msr2903/himotoki/issues"><img src="https://img.shields.io/github/issues/msr2903/himotoki" alt="Issues"></a>
-</p>
+**Himotoki** (紐解き, "unraveling" or "untying strings") is a high-performance Python port of [ichiran](https://github.com/tshatrov/ichiran), the comprehensive Japanese morphological analyzer. It provides sophisticated text segmentation, dictionary lookup, and conjugation analysis, all powered by a portable SQLite backend.
 
 ---
 
-## 📖 Overview
-
-**Himotoki** (meaning "to unravel" or "to untie a knot") is a Python remake of the renowned [Ichiran](https://github.com/tshatrov/ichiran) morphological analyzer. It provides sophisticated Japanese text segmentation, romanization, and linguistic analysis using a lightweight **SQLite3** backend instead.
-
-Whether you're building a language learning app, a search engine, or just need to romanize Japanese text with high accuracy, Himotoki is designed to be your go-to library.
-
 ## ✨ Key Features
 
-- 🧩 **Advanced Segmentation**: Accurate word boundary detection using Viterbi-based pathfinding and Ichiran's synergy scoring.
-- 🔡 **Romanization**: Supports multiple systems including Hepburn, Kunrei, and Passport.
-- 🔄 **Kana Conversion**: Fluidly convert between Hiragana, Katakana, and Romaji.
-- 🔢 **Number Parsing**: Robust handling of Japanese numerals and counters.
-- 📚 **Dictionary Integration**: Full support for JMdict and KANJIDIC data.
-- 📊 **Text Analysis**: Estimate text difficulty (JLPT levels) and extract detailed kanji information.
-- 🚀 **CLI Interface**: Powerful command-line tools for quick text analysis.
+- 🚀 **Fast & Portable**: Uses SQLite for rapid dictionary lookups without the need for a complex PostgreSQL setup.
+- 🧠 **Smart Segmentation**: Employs dynamic programming (Viterbi-style) to find the most linguistically plausible segmentation.
+- 📚 **Deep Dictionary Integration**: Built on JMDict, providing rich metadata, glosses, and part-of-speech information.
+- 🔄 **Advanced Deconjugation**: Recursively traces conjugated verbs and adjectives back to their dictionary forms.
+- 📊 **Scoring Engine**: Implements the "synergy" and penalty rules from ichiran to ensure high-quality results.
+- 🛠️ **Developer Friendly**: Clean Python API and a robust CLI for quick analysis.
+
+---
 
 ## 🚀 Getting Started
 
 ### Installation
 
 ```bash
-pip install himotoki
+# Clone the repository
+git clone https://github.com/himotoki/himotoki.git
+cd himotoki
+
+# Install in development mode with all dependencies
+pip install -e ".[dev]"
 ```
 
-### Database Initialization
+### Quick CLI Usage
 
-Himotoki requires dictionary data to function. You can automatically download and initialize the database with a single command:
+Analyze Japanese text directly from your terminal:
 
 ```bash
-himotoki init --download
+# Basic segmentation and romanization
+himotoki "学校で勉強しています"
+
+# Detailed analysis with dictionary info
+himotoki -i "学校で勉強しています"
+
+# Full JSON output for integration
+himotoki -f "学校で勉強しています"
 ```
 
-## 🛠 Usage
+### Python API Example
 
-### Command Line Interface
-
-Himotoki comes with a comprehensive CLI:
-
-```bash
-# Analyze a sentence
-himotoki analyze "日本語の勉強は楽しいです。"
-
-# Romanize text
-himotoki romanize "こんにちは" --method hepburn
-
-# Segment text into words (JSON output)
-himotoki segment "走っています" --json
-
-# Get kanji details
-himotoki kanji "学習"
-```
-
-### Python API
+Integrate Himotoki into your own projects with ease:
 
 ```python
-from himotoki import romanize, simple_segment, WordInfo
+from himotoki.db.connection import get_session
+from himotoki.output import dict_segment
 
-# Romanization
-print(romanize("学校に行きます")) 
-# Output: gakkou ni ikimasu
+# Initialize session
+session = get_session()
 
-# Segmentation
-words = simple_segment("美味しい料理を食べた")
-for word in words:
-    print(f"{word.text} ({word.kana})")
+# Analyze a sentence
+results = dict_segment(session, "日本語を勉強しています", limit=1)
+
+for word_infos, score in results:
+    print(f"Path Score: {score}")
+    for wi in word_infos:
+        print(f"Result: {wi.text} 【{wi.kana}】 - {wi.gloss[:50]}...")
 ```
-
-## 🏗 Architecture
-
-Himotoki is built with performance and portability in mind:
-
-- **Engine**: Ported from Ichiran's Lisp implementation to modern Python.
-- **Database**: Uses SQLite3 for efficient, single-file dictionary lookups.
-- **Scoring**: Implements Ichiran's complex scoring rules to ensure the most natural segmentation.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please check our [Contributing Guidelines](CONTRIBUTING.md) to get started.
-
-## 📜 License
-
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **tshatrov** for the original [Ichiran](https://github.com/tshatrov/ichiran) project.
-- **EDRDG** for the JMdict and KANJIDIC projects.
 
 ---
 
-<p align="center">Made with ❤️ for Japanese learners and developers.</p>
+## 🏗️ Project Architecture
+
+Himotoki is designed with modularity in mind, keeping the database, logic, and output layers distinct.
+
+```text
+himotoki/
+├── 🧠 segment.py    # Pathfinding and segmentation logic
+├── 📖 lookup.py     # Dictionary retrieval and scoring
+├── 🔄 deconjugate/  # Conjugation rules and engine
+├── 🗄️ db/           # SQLAlchemy models and connection management
+├── 🔤 characters.py # Kana/Kanji classification and conversion
+└── 🖥️ cli.py        # Command line interface
+```
+
+---
+
+## 📊 Evaluation & Correctness
+
+Himotoki aims for 1:1 parity with the original `ichiran` implementation. We use a comprehensive evaluation suite to track accuracy:
+
+```bash
+# Run the comparison script against ichiran results
+python compare_ichiran.py
+```
+
+Check out `ARCHITECTURE.md` for a deep dive into the internal mechanics and scoring algorithms.
+
+---
+
+## 🛠️ Development
+
+We welcome contributions! To get started:
+
+1. **Tests**: `pytest`
+2. **Coverage**: `pytest --cov=himotoki`
+3. **Linting**: `ruff check .`
+4. **Formatting**: `black .`
+
+---
+
+## 📜 License
+
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+## 🙏 Acknowledgments
+
+- **[tshatrov](https://github.com/tshatrov)** for the original [ichiran](https://github.com/tshatrov/ichiran) implementation.
+- **[EDRDG](https://www.edrdg.org/)** for the invaluable JMDict resource.
+
+---
+
+<p align="center">
+  <i>"Unraveling the complexities of the Japanese language, one string at a time."</i>
+</p>

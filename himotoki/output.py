@@ -1,0 +1,860 @@
+"""
+Output formatting module for himotoki.
+Ports ichiran's word-info and JSON output functionality.
+
+This module provides:
+- WordInfo: Data class for word information output
+- get_senses_json: Generate sense/gloss JSON output
+- word_info_gloss_json: Generate complete word info JSON
+- dict_segment: Main entry point for segmentation with output
+"""
+
+from dataclasses import dataclass, field
+from typing import Optional, List, Dict, Any, Union
+from enum import Enum
+import json
+
+from sqlalchemy import select, and_, func
+from sqlalchemy.orm import Session
+
+from himotoki.db.models import (
+    Entry, KanjiText, KanaText, Sense, Gloss, SenseProp,
+    Conjugation, ConjProp, ConjSourceReading,
+)
+from himotoki.lookup import (
+    Segment, SegmentList, WordMatch, ConjData,
+    get_conj_data, find_word,
+)
+
+
+# ============================================================================
+# Enums and Constants
+# ============================================================================
+
+class WordType(Enum):
+    """Word type classification."""
+    KANJI = 'kanji'
+    KANA = 'kana'
+    GAP = 'gap'
+
+
+# ============================================================================
+# Data Classes
+# ============================================================================
+
+@dataclass
+class WordInfo:
+    """
+    Word information for output.
+    Mirrors ichiran's word-info class.
+    """
+    type: WordType  # :kanji, :kana, or :gap
+    text: str  # Surface text
+    kana: Union[str, List[str]]  # Reading(s)
+    
+    # Optional fields
+    true_text: Optional[str] = None  # Original text (for proxy text)
+    seq: Optional[Union[int, List[int]]] = None  # JMdict sequence number(s)
+    conjugations: Optional[Union[List[int], str]] = None  # Conjugation IDs or 'root'
+    score: int = 0
+    components: List['WordInfo'] = field(default_factory=list)  # For compound words
+    alternative: bool = False  # True if multiple readings available
+    primary: bool = True  # Is this the primary reading
+    start: Optional[int] = None
+    end: Optional[int] = None
+    counter: Optional[List[Any]] = None  # [value, ordinal] for counter words
+    skipped: int = 0  # Number of skipped alternatives
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary (for JSON serialization)."""
+        return {
+            'type': self.type.value.upper(),
+            'text': self.text,
+            'truetext': self.true_text,
+            'kana': self.kana,
+            'seq': self.seq,
+            'conjugations': 'ROOT' if self.conjugations == 'root' else self.conjugations,
+            'score': self.score,
+            'components': [c.to_dict() for c in self.components] if self.components else [],
+            'alternative': self.alternative,
+            'primary': self.primary,
+            'start': self.start,
+            'end': self.end,
+            'counter': self.counter,
+            'skipped': self.skipped,
+        }
+
+
+# ============================================================================
+# Reading Formatting
+# ============================================================================
+
+def reading_str(kanji: Optional[str], kana: str) -> str:
+    """
+    Format reading as 'kanji 【kana】' or just 'kana'.
+    
+    Args:
+        kanji: Kanji text (may be None)
+        kana: Kana reading
+        
+    Returns:
+        Formatted reading string
+    """
+    if kanji:
+        return f"{kanji} 【{kana}】"
+    return kana
+
+
+def get_entry_reading(session: Session, seq: int) -> str:
+    """Get formatted reading for an entry by seq."""
+    kanji_text = session.execute(
+        select(KanjiText.text)
+        .where(and_(KanjiText.seq == seq, KanjiText.ord == 0))
+    ).scalars().first()
+    
+    kana_text = session.execute(
+        select(KanaText.text)
+        .where(and_(KanaText.seq == seq, KanaText.ord == 0))
+    ).scalars().first()
+    
+    return reading_str(kanji_text, kana_text or '')
+
+
+def get_kana_for_entry(session: Session, seq: int) -> str:
+    """Get the primary kana reading for an entry by seq."""
+    kana_text = session.execute(
+        select(KanaText.text)
+        .where(and_(KanaText.seq == seq, KanaText.ord == 0))
+    ).scalars().first()
+    
+    return kana_text or ''
+
+
+def word_info_reading_str(word_info: WordInfo) -> str:
+    """Get formatted reading string for WordInfo."""
+    if word_info.type == WordType.KANJI or word_info.counter:
+        kana = word_info.kana
+        if isinstance(kana, list):
+            kana = '/'.join(kana)
+        return reading_str(word_info.text, kana)
+    return reading_str(None, word_info.text)
+
+
+# ============================================================================
+# Sense/Gloss Functions
+# ============================================================================
+
+def get_senses_raw(session: Session, seq: Union[int, List[int]]) -> List[Dict[str, Any]]:
+    """
+    Get raw sense data for an entry.
+    
+    Args:
+        session: Database session
+        seq: Entry sequence number or list of sequence numbers (for compound words)
+        
+    Returns:
+        List of sense dicts with ord, gloss, and props
+    """
+    tags = ['pos', 's_inf', 'stagk', 'stagr', 'field']
+    
+    # Handle list of seqs (compound words) - use first seq for senses
+    if isinstance(seq, list):
+        if not seq:
+            return []
+        seq = seq[0]
+    
+    # Get glosses grouped by sense
+    glosses_query = (
+        select(Sense.ord, func.group_concat(Gloss.text, '; '))
+        .join(Gloss, Gloss.sense_id == Sense.id, isouter=True)
+        .where(Sense.seq == seq)
+        .group_by(Sense.id)
+        .order_by(Sense.ord)
+    )
+    glosses = session.execute(glosses_query).all()
+    
+    # Get properties
+    props_query = (
+        select(Sense.ord, SenseProp.tag, SenseProp.text)
+        .join(SenseProp, SenseProp.sense_id == Sense.id)
+        .where(and_(Sense.seq == seq, SenseProp.tag.in_(tags)))
+        .order_by(Sense.ord, SenseProp.tag, SenseProp.ord)
+    )
+    props = session.execute(props_query).all()
+    
+    # Build sense list
+    sense_list = [
+        {'ord': ord_val, 'gloss': gloss or '', 'props': {}}
+        for ord_val, gloss in glosses
+    ]
+    
+    # Organize props by sense and tag
+    for sord, tag, text in props:
+        for sense in sense_list:
+            if sense['ord'] == sord:
+                if tag not in sense['props']:
+                    sense['props'][tag] = []
+                sense['props'][tag].append(text)
+                break
+    
+    return sense_list
+
+
+def get_senses(session: Session, seq: Union[int, List[int]]) -> List[Dict[str, Any]]:
+    """
+    Get senses formatted for output.
+    
+    Args:
+        session: Database session
+        seq: Entry sequence number or list (for compound words)
+    
+    Returns list of dicts with pos_str, gloss, and props.
+    """
+    result = []
+    for sense in get_senses_raw(session, seq):
+        props = sense['props']
+        pos = props.get('pos', [])
+        pos_str = f"[{','.join(pos)}]" if pos else '[]'
+        result.append({
+            'pos': pos_str,
+            'gloss': sense['gloss'],
+            'props': props,
+        })
+    return result
+
+
+def get_senses_str(session: Session, seq: Union[int, List[int]]) -> str:
+    """Get senses as formatted string.
+    
+    Args:
+        session: Database session
+        seq: Entry sequence number or list (for compound words)
+    """
+    lines = []
+    rpos = '[]'
+    
+    for i, sense in enumerate(get_senses(session, seq), 1):
+        pos = sense['pos']
+        if pos != '[]':
+            rpos = pos
+        
+        gloss = sense['gloss']
+        props = sense['props']
+        
+        info = props.get('s_inf', [])
+        rinf = '; '.join(info) if info else None
+        
+        fields = props.get('field', [])
+        rfield = ','.join(fields) if fields else None
+        
+        parts = [f"{i}. {rpos}"]
+        if rfield:
+            parts.append(f"{{{rfield}}}")
+        if rinf:
+            parts.append(f"《{rinf}》")
+        parts.append(gloss)
+        
+        lines.append(' '.join(parts))
+    
+    return '\n'.join(lines)
+
+
+def get_senses_json(
+    session: Session,
+    seq: int,
+    pos_list: Optional[List[str]] = None,
+    reading: Optional[Any] = None,
+) -> List[Dict[str, Any]]:
+    """
+    Get senses as JSON-compatible dicts.
+    
+    Args:
+        session: Database session
+        seq: Entry sequence number
+        pos_list: Filter to these POS tags
+        reading: Filter to senses matching this reading
+        
+    Returns:
+        List of sense dicts for JSON output
+    """
+    result = []
+    rpos = '[]'
+    
+    for sense in get_senses(session, seq):
+        pos = sense['pos']
+        if pos != '[]':
+            rpos = pos
+        
+        # POS filtering
+        if pos_list:
+            lpos = pos[1:-1].split(',') if pos != '[]' else []
+            if not any(p in pos_list for p in lpos):
+                continue
+        
+        gloss = sense['gloss']
+        props = sense['props']
+        
+        js = {'pos': rpos, 'gloss': gloss}
+        
+        # Add field info
+        fields = props.get('field', [])
+        if fields:
+            js['field'] = f"{{{','.join(fields)}}}"
+        
+        # Add sense info
+        info = props.get('s_inf', [])
+        if info:
+            js['info'] = '; '.join(info)
+        
+        result.append(js)
+    
+    return result
+
+
+# ============================================================================
+# Conjugation Info Functions
+# ============================================================================
+
+def get_conj_description(conj_type: int) -> str:
+    """Get human-readable description for conjugation type."""
+    descriptions = {
+        1: 'Non-past',
+        2: 'Past (~ta)',
+        3: 'Conjunctive (~te)',
+        4: 'Provisional (~eba)',
+        5: 'Potential',
+        6: 'Passive',
+        7: 'Causative',
+        8: 'Causative-Passive',
+        9: 'Volitional',
+        10: 'Imperative',
+        11: 'Conditional (~tara)',
+        12: 'Alternative (~tari)',
+        13: 'Continuative (~i)',
+    }
+    return descriptions.get(conj_type, f'Type {conj_type}')
+
+
+def conj_prop_json(prop: ConjProp) -> Dict[str, Any]:
+    """Convert conjugation property to JSON dict."""
+    js = {
+        'pos': prop.pos,
+        'type': get_conj_description(prop.conj_type),
+    }
+    if prop.neg:
+        js['neg'] = True
+    if prop.fml:
+        js['fml'] = True
+    return js
+
+
+def conj_info_json(
+    session: Session,
+    seq: int,
+    conjugations: Optional[List[int]] = None,
+    text: Optional[str] = None,
+) -> List[Dict[str, Any]]:
+    """
+    Get conjugation info as JSON.
+    
+    Args:
+        session: Database session
+        seq: Entry sequence number
+        conjugations: Specific conjugation IDs to include
+        text: Filter by text
+        
+    Returns:
+        List of conjugation info dicts
+    """
+    result = []
+    
+    # Get conjugations
+    query = select(Conjugation).where(Conjugation.seq == seq)
+    if conjugations and conjugations != 'root':
+        query = query.where(Conjugation.id.in_(conjugations))
+    
+    conjs = session.execute(query).scalars().all()
+    
+    for conj in conjs:
+        # Get properties
+        props = session.execute(
+            select(ConjProp).where(ConjProp.conj_id == conj.id)
+        ).scalars().all()
+        
+        if not props:
+            continue
+        
+        js = {
+            'prop': [conj_prop_json(p) for p in props],
+            'reading': get_entry_reading(session, conj.from_seq),
+            'gloss': get_senses_json(session, conj.from_seq),
+            'readok': True,
+        }
+        
+        result.append(js)
+    
+    return result
+
+
+# ============================================================================
+# WordInfo Creation Functions
+# ============================================================================
+
+def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
+    """
+    Create WordInfo from a segment.
+    
+    Args:
+        session: Database session
+        segment: Segment with word match
+        
+    Returns:
+        WordInfo object
+    """
+    from himotoki.lookup import CompoundWord
+    
+    word = segment.word
+    
+    # Handle CompoundWord specially
+    if isinstance(word, CompoundWord):
+        word_type = WordType.KANA if word.word_type == 'kana' else WordType.KANJI
+        return WordInfo(
+            type=word_type,
+            text=segment.get_text(),
+            kana=word.kana,  # Use compound's full kana
+            true_text=word.text,
+            seq=word.seq,  # This is a list for compound words
+            conjugations=word.conjugations,
+            score=int(segment.score),
+            start=segment.start,
+            end=segment.end,
+        )
+    
+    reading = word.reading
+    
+    # Determine kana reading
+    if isinstance(reading, KanjiText):
+        word_type = WordType.KANJI
+        # Get best kana for kanji text - try cached, then look up from DB
+        kana = reading.best_kana
+        if not kana:
+            kana = get_kana_for_entry(session, word.seq)
+    else:
+        word_type = WordType.KANA
+        kana = reading.text
+    
+    return WordInfo(
+        type=word_type,
+        text=segment.get_text(),
+        kana=kana,
+        true_text=word.text,
+        seq=word.seq,
+        conjugations=word.conjugations,
+        score=int(segment.score),
+        start=segment.start,
+        end=segment.end,
+    )
+
+
+def word_info_from_segment_list(session: Session, segment_list: SegmentList) -> WordInfo:
+    """
+    Create WordInfo from a segment list (multiple interpretations).
+    
+    Args:
+        session: Database session
+        segment_list: SegmentList with multiple segments
+        
+    Returns:
+        WordInfo object (possibly with alternatives)
+    """
+    segments = segment_list.segments
+    
+    if not segments:
+        return WordInfo(
+            type=WordType.GAP,
+            text='',
+            kana='',
+            start=segment_list.start,
+            end=segment_list.end,
+        )
+    
+    # Create WordInfo for each segment
+    wi_list = [word_info_from_segment(session, seg) for seg in segments]
+    wi1 = wi_list[0]
+    max_score = wi1.score
+    
+    # Filter out low-scoring alternatives
+    cutoff = max_score * 0.67  # SEGMENT_SCORE_CUTOFF
+    wi_list = [wi for wi in wi_list if wi.score >= cutoff]
+    
+    matches = segment_list.matches
+    
+    if len(wi_list) == 1:
+        wi1.skipped = matches - 1
+        return wi1
+    
+    # Multiple alternatives
+    kana_list = []
+    seq_list = []
+    for wi in wi_list:
+        if isinstance(wi.kana, list):
+            kana_list.extend(wi.kana)
+        else:
+            kana_list.append(wi.kana)
+        if wi.seq:
+            if isinstance(wi.seq, list):
+                seq_list.extend(wi.seq)
+            else:
+                seq_list.append(wi.seq)
+    
+    # Remove duplicates while preserving order
+    seen_kana = set()
+    unique_kana = []
+    for k in kana_list:
+        if k not in seen_kana:
+            unique_kana.append(k)
+            seen_kana.add(k)
+    
+    return WordInfo(
+        type=wi1.type,
+        text=wi1.text,
+        kana=unique_kana if len(unique_kana) > 1 else (unique_kana[0] if unique_kana else ''),
+        seq=seq_list if len(seq_list) > 1 else (seq_list[0] if seq_list else None),
+        components=wi_list,
+        alternative=True,
+        score=wi1.score,
+        start=segment_list.start,
+        end=segment_list.end,
+        skipped=matches - len(wi_list),
+    )
+
+
+def word_info_from_text(text: str) -> WordInfo:
+    """Create gap WordInfo for unmatched text."""
+    return WordInfo(
+        type=WordType.GAP,
+        text=text,
+        kana=text,
+    )
+
+
+# ============================================================================
+# WordInfo JSON Output
+# ============================================================================
+
+def word_info_gloss_json(
+    session: Session,
+    word_info: WordInfo,
+    root_only: bool = False,
+) -> Dict[str, Any]:
+    """
+    Generate JSON output for WordInfo.
+    
+    Args:
+        session: Database session
+        word_info: WordInfo to convert
+        root_only: If True, skip conjugation info
+        
+    Returns:
+        Dict ready for JSON serialization
+    """
+    js = {
+        'reading': word_info_reading_str(word_info),
+        'text': word_info.text,
+        'kana': word_info.kana,
+    }
+    
+    if word_info.score:
+        js['score'] = word_info.score
+    
+    if word_info.alternative:
+        # Multiple interpretations
+        js['alternative'] = [
+            word_info_gloss_json(session, wi, root_only)
+            for wi in word_info.components
+        ]
+        return js
+    
+    if word_info.components:
+        # Compound word
+        js['compound'] = [wi.text for wi in word_info.components]
+        js['components'] = [
+            word_info_gloss_json(session, wi, root_only)
+            for wi in word_info.components
+        ]
+        return js
+    
+    if word_info.counter:
+        # Counter word
+        value, ordinal = word_info.counter
+        js['counter'] = {'value': value, 'ordinal': ordinal}
+        if word_info.seq:
+            js['seq'] = word_info.seq
+            gloss = get_senses_json(session, word_info.seq, pos_list=['ctr'])
+            if gloss:
+                js['gloss'] = gloss
+        return js
+    
+    # Regular word
+    seq = word_info.seq
+    if seq:
+        js['seq'] = seq
+        
+        if root_only or word_info.conjugations is None or word_info.conjugations == 'root':
+            gloss = get_senses_json(session, seq)
+            if gloss:
+                js['gloss'] = gloss
+        
+        # Get conjugation info
+        if seq and word_info.conjugations and word_info.conjugations != 'root':
+            conj = conj_info_json(
+                session, seq,
+                conjugations=word_info.conjugations,
+                text=word_info.true_text,
+            )
+            js['conj'] = conj
+    
+    return js
+
+
+# ============================================================================
+# Main Entry Points
+# ============================================================================
+
+def fill_segment_path(
+    session: Session,
+    text: str,
+    path: List[SegmentList],
+) -> List[WordInfo]:
+    """
+    Fill gaps in segment path and convert to WordInfo list.
+    
+    Args:
+        session: Database session
+        text: Original text
+        path: List of SegmentLists or Segments from find_best_path
+        
+    Returns:
+        List of WordInfo objects covering the entire text
+    """
+    result = []
+    idx = 0
+    
+    for item in path:
+        if isinstance(item, SegmentList):
+            segment_list = item
+            # Add gap before this segment if needed
+            if segment_list.start > idx:
+                gap_text = text[idx:segment_list.start]
+                result.append(WordInfo(
+                    type=WordType.GAP,
+                    text=gap_text,
+                    kana=gap_text,
+                    start=idx,
+                    end=segment_list.start,
+                ))
+            
+            # Add the segment
+            result.append(word_info_from_segment_list(session, segment_list))
+            idx = segment_list.end
+        elif isinstance(item, Segment):
+            segment = item
+            # Add gap before this segment if needed
+            if segment.start > idx:
+                gap_text = text[idx:segment.start]
+                result.append(WordInfo(
+                    type=WordType.GAP,
+                    text=gap_text,
+                    kana=gap_text,
+                    start=idx,
+                    end=segment.start,
+                ))
+            
+            # Add the segment
+            result.append(word_info_from_segment(session, segment))
+            idx = segment.end
+    
+    # Add trailing gap if needed
+    if idx < len(text):
+        gap_text = text[idx:]
+        result.append(WordInfo(
+            type=WordType.GAP,
+            text=gap_text,
+            kana=gap_text,
+            start=idx,
+            end=len(text),
+        ))
+    
+    return result
+
+
+def dict_segment(
+    session: Session,
+    text: str,
+    limit: int = 5,
+) -> List[tuple]:
+    """
+    Segment text and return WordInfo results.
+    
+    This is the main entry point, equivalent to ichiran's dict-segment.
+    
+    Args:
+        session: Database session
+        text: Text to segment
+        limit: Maximum number of segmentation results
+        
+    Returns:
+        List of (word_info_list, score) tuples
+    """
+    from himotoki.segment import segment_text
+    
+    results = segment_text(session, text, limit=limit)
+    
+    return [
+        (fill_segment_path(session, text, path), score)
+        for path, score in results
+    ]
+
+
+def simple_segment(session: Session, text: str, limit: int = 5) -> List[WordInfo]:
+    """
+    Simple segmentation returning just the best path.
+    
+    Args:
+        session: Database session
+        text: Text to segment
+        limit: Maximum paths to consider
+        
+    Returns:
+        List of WordInfo for the best segmentation
+    """
+    results = dict_segment(session, text, limit=limit)
+    if results:
+        return results[0][0]
+    return []
+
+
+def segment_to_json(
+    session: Session,
+    text: str,
+    limit: int = 5,
+) -> List[List[Any]]:
+    """
+    Segment text and return ichiran-compatible JSON.
+    
+    This matches the output format of ichiran-cli -f.
+    
+    Args:
+        session: Database session
+        text: Text to segment
+        limit: Maximum segmentation results
+        
+    Returns:
+        JSON-compatible nested list structure
+    """
+    from himotoki.characters import romanize_word
+    
+    results = dict_segment(session, text, limit=limit)
+    
+    output = []
+    for word_infos, score in results:
+        segments = []
+        for wi in word_infos:
+            # [romanized, {word_info_json}, []]
+            # The third element is for split info (not yet implemented)
+            romanized = romanize_word(wi.kana if isinstance(wi.kana, str) else wi.kana[0] if wi.kana else wi.text)
+            segment_json = word_info_gloss_json(session, wi)
+            segments.append([romanized, segment_json, []])
+        
+        output.append([segments, score])
+    
+    return output
+
+
+def segment_to_text(
+    session: Session,
+    text: str,
+    limit: int = 1,
+) -> str:
+    """
+    Segment text and return formatted text output.
+    
+    This matches the output format of ichiran-cli -i.
+    
+    Args:
+        session: Database session
+        text: Text to segment
+        limit: Maximum segmentation results
+        
+    Returns:
+        Formatted text output
+    """
+    from himotoki.characters import romanize_word
+    
+    results = dict_segment(session, text, limit=limit)
+    
+    if not results:
+        return text
+    
+    word_infos, score = results[0]
+    
+    lines = []
+    
+    # Romanized line
+    romanized_parts = []
+    for wi in word_infos:
+        kana = wi.kana if isinstance(wi.kana, str) else wi.kana[0] if wi.kana else wi.text
+        romanized_parts.append(romanize_word(kana))
+    lines.append(' '.join(romanized_parts))
+    
+    # Word info lines
+    for wi in word_infos:
+        if wi.type == WordType.GAP:
+            continue
+        
+        lines.append('')
+        
+        romanized = romanize_word(wi.kana if isinstance(wi.kana, str) else wi.kana[0] if wi.kana else wi.text)
+        lines.append(f"* {romanized}  {word_info_reading_str(wi)}")
+        
+        if wi.seq:
+            senses = get_senses_str(session, wi.seq)
+            lines.append(senses)
+        
+        # Conjugation info
+        if wi.conjugations and wi.conjugations != 'root' and wi.seq:
+            conj_strs = format_conjugation_info(session, wi.seq, wi.conjugations)
+            for cs in conj_strs:
+                lines.append(cs)
+    
+    return '\n'.join(lines)
+
+
+def format_conjugation_info(
+    session: Session,
+    seq: int,
+    conjugations: List[int],
+) -> List[str]:
+    """Format conjugation info as text lines."""
+    result = []
+    
+    query = select(Conjugation).where(Conjugation.seq == seq)
+    if conjugations:
+        query = query.where(Conjugation.id.in_(conjugations))
+    
+    conjs = session.execute(query).scalars().all()
+    
+    for conj in conjs:
+        props = session.execute(
+            select(ConjProp).where(ConjProp.conj_id == conj.id)
+        ).scalars().all()
+        
+        for prop in props:
+            neg_str = ' Negative' if prop.neg else ' Affirmative'
+            fml_str = ' Formal' if prop.fml else ' Plain'
+            type_desc = get_conj_description(prop.conj_type)
+            
+            result.append(f"[ Conjugation: [{prop.pos}] {type_desc}{neg_str}{fml_str}")
+            result.append(f"  {get_entry_reading(session, conj.from_seq)} ]")
+    
+    return result

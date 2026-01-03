@@ -1,0 +1,4 @@
+# This directory contains:
+# - himotoki.db: SQLite database
+# - JMdict_e: JMDict XML file (download from https://www.edrdg.org/jmdict/j_jmdict.html)
+# - jmdict-data/: JMdictDB CSV files (kwpos.csv, conj.csv, conjo.csv)
