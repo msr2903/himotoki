@@ -715,17 +715,42 @@ def build_archaic_cache(session: Session) -> Set[int]:
     From ichiran's *is-arch-cache*.
     
     Words where ALL senses are marked arch/obsc/rare are considered archaic.
+    A word with even one non-archaic sense is NOT considered archaic.
     """
     arch_misc = {'arch', 'obsc', 'rare'}
     
-    # Find seqs that have arch/obsc/rare in any sense
-    query = (
-        select(SenseProp.seq)
+    # Find seqs where EVERY sense has an arch/obsc/rare tag
+    # This is the ichiran logic: 
+    # SELECT sense.seq FROM sense
+    # LEFT JOIN sense_prop sp ON (... AND sp.text IN ('arch', 'obsc', 'rare'))
+    # GROUP BY sense.seq HAVING EVERY(sp.id IS NOT NULL)
+    #
+    # In SQLAlchemy, we do this by:
+    # 1. Get all (seq, sense_id) pairs with their arch tag status
+    # 2. Group by seq and check that all senses have the arch tag
+    
+    from sqlalchemy import func, case, literal_column
+    from himotoki.db.models import Sense
+    
+    # Subquery: for each sense, is it archaic?
+    arch_tag_subq = (
+        select(SenseProp.sense_id)
         .where(and_(
             SenseProp.tag == 'misc',
             SenseProp.text.in_(arch_misc)
         ))
-        .distinct()
+    )
+    
+    # Main query: find seqs where ALL senses are in arch_tag_subq
+    # We count total senses and archaic senses per seq, keep only where they match
+    query = (
+        select(Sense.seq)
+        .group_by(Sense.seq)
+        .having(
+            func.count(Sense.id) == func.sum(
+                case((Sense.id.in_(arch_tag_subq), 1), else_=0)
+            )
+        )
     )
     arch_seqs = set(session.execute(query).scalars().all())
     

@@ -28,11 +28,16 @@ import time
 
 ICHIRAN_CONTAINER = "ichiran-main-1"
 ICHIRAN_TIMEOUT = 30  # seconds
+ICHIRAN_CACHE_FILE = "results-detail.json"
 
 # Cache a single Himotoki DB session and suffix initialization so repeated
 # comparisons don't pay the startup cost each time.
 _himotoki_session = None
 _himotoki_suffixes_ready = False
+
+# Cache for ichiran results loaded from file (initialized after dataclass definitions)
+_ichiran_cache = {}  # Dict[str, SegmentationResult]
+_ichiran_cache_loaded = False
 
 
 def get_himotoki_session():
@@ -109,12 +114,87 @@ class ComparisonResult:
 
 
 # ============================================================================
+# Ichiran Cache Functions
+# ============================================================================
+
+def load_ichiran_cache(cache_file: str = ICHIRAN_CACHE_FILE) -> Dict[str, Any]:
+    """
+    Load cached ichiran results from a previous run.
+    
+    Returns:
+        Dict mapping sentence -> ichiran SegmentationResult
+    """
+    global _ichiran_cache, _ichiran_cache_loaded
+    
+    if _ichiran_cache_loaded:
+        return _ichiran_cache
+    
+    try:
+        with open(cache_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        for entry in data:
+            sentence = entry.get('sentence', '')
+            if not sentence:
+                continue
+            
+            # Reconstruct SegmentationResult from cached data
+            ichiran_segments = entry.get('ichiran_segments', [])
+            segments = []
+            total_score = 0
+            
+            for seg_data in ichiran_segments:
+                seg = SegmentInfo(
+                    text=seg_data.get('text', ''),
+                    kana=seg_data.get('kana', ''),
+                    seq=seg_data.get('seq'),
+                    score=seg_data.get('score', 0),
+                    is_compound=seg_data.get('is_compound', False),
+                    components=seg_data.get('components', []),
+                    conj_type=seg_data.get('conj_type'),
+                    conj_neg=seg_data.get('conj_neg', False),
+                    conj_fml=seg_data.get('conj_fml', False),
+                    source_text=seg_data.get('source_text'),
+                    pos=seg_data.get('pos', [])
+                )
+                segments.append(seg)
+                total_score += seg.score
+            
+            _ichiran_cache[sentence] = SegmentationResult(
+                segments=segments,
+                total_score=total_score
+            )
+        
+        _ichiran_cache_loaded = True
+        print(f"Loaded {len(_ichiran_cache)} cached ichiran results from {cache_file}", file=sys.stderr)
+        
+    except FileNotFoundError:
+        print(f"Cache file {cache_file} not found, will call ichiran directly", file=sys.stderr)
+    except Exception as e:
+        print(f"Error loading cache: {e}", file=sys.stderr)
+    
+    return _ichiran_cache
+
+
+def get_ichiran_cached(sentence: str) -> Optional[SegmentationResult]:
+    """Get ichiran result from cache if available."""
+    if not _ichiran_cache_loaded:
+        load_ichiran_cache()
+    return _ichiran_cache.get(sentence)
+
+
+# ============================================================================
 # Ichiran Interface
 # ============================================================================
+
+# Global flag to control whether to use cache
+_use_ichiran_cache = False
+
 
 def run_ichiran(sentence: str) -> SegmentationResult:
     """
     Run Ichiran CLI and parse the JSON output.
+    Uses cache if available and --use-cache flag is set.
     
     Args:
         sentence: Japanese text to segment.
@@ -122,6 +202,12 @@ def run_ichiran(sentence: str) -> SegmentationResult:
     Returns:
         SegmentationResult with parsed segments.
     """
+    # Check cache first if enabled
+    if _use_ichiran_cache:
+        cached = get_ichiran_cached(sentence)
+        if cached is not None:
+            return cached
+    
     try:
         cmd = [
             "docker", "exec", "-i", ICHIRAN_CONTAINER,
@@ -758,8 +844,25 @@ def main():
         action="store_true",
         help="Only show mismatches"
     )
+    parser.add_argument(
+        "--use-cache", "-u",
+        action="store_true",
+        help="Use cached ichiran results from results-detail.json instead of calling Docker"
+    )
+    parser.add_argument(
+        "--cache-file",
+        type=str,
+        default=ICHIRAN_CACHE_FILE,
+        help=f"Cache file to use (default: {ICHIRAN_CACHE_FILE})"
+    )
     
     args = parser.parse_args()
+    
+    # Enable cache if requested
+    global _use_ichiran_cache
+    if args.use_cache:
+        _use_ichiran_cache = True
+        load_ichiran_cache(args.cache_file)
     
     # Determine which sentences to test
     if args.sentence:

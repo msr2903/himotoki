@@ -57,8 +57,9 @@ class ConjugationRule:
 
 
 # Parts of speech that have conjugation rules
+# Note: JMdict uses "cop" (not "cop-da") for copula since ~2023
 POS_WITH_CONJ_RULES = [
-    "adj-i", "adj-ix", "cop-da", "v1", "v1-s", "v5aru",
+    "adj-i", "adj-ix", "cop", "v1", "v1-s", "v5aru",
     "v5b", "v5g", "v5k", "v5k-s", "v5m", "v5n", "v5r", "v5r-i", "v5s",
     "v5t", "v5u", "v5u-s", "vk", "vs-s", "vs-i"
 ]
