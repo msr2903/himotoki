@@ -22,11 +22,11 @@ DEFAULT_DB_PATH = Path(__file__).parent.parent.parent / "data" / "himotoki.db"
 # Module-level state
 _engine: Optional[Engine] = None
 _session_factory: Optional[sessionmaker] = None
-_lock = threading.Lock()
+_lock = threading.RLock()  # Use RLock to allow reentrant locking (get_session_factory -> get_engine)
 
 # Cache for frequently accessed data
 _cache: dict = {}
-_cache_lock = threading.Lock()
+_cache_lock = threading.RLock()
 
 
 def get_engine(db_path: Optional[str] = None, echo: bool = False) -> Engine:
