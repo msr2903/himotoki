@@ -59,8 +59,8 @@ POS_WITH_CONJ_RULES = frozenset([
     'vs-i', 'vs-s', 'vz', 'adj-i', 'adj-ix', 'adj-na', 'adj-no',
 ])
 
-# Copulae seqs (だ, etc.) - from ichiran's *copulae*
-COPULAE: Set[int] = {2089020}  # だ
+# Copulae seqs (だ, です, etc.) - from ichiran's *copulae*
+COPULAE: Set[int] = {2089020, 1628500}  # だ, です
 
 # Skip words - seq of words that aren't really words, like suffixes etc.
 # From ichiran's *skip-words*

@@ -28,7 +28,7 @@ import time
 
 ICHIRAN_CONTAINER = "ichiran-main-1"
 ICHIRAN_TIMEOUT = 30  # seconds
-ICHIRAN_CACHE_FILE = "results-detail.json"
+ICHIRAN_CACHE_FILE = "results.json"
 
 # Cache a single Himotoki DB session and suffix initialization so repeated
 # comparisons don't pay the startup cost each time.
@@ -847,7 +847,7 @@ def main():
     parser.add_argument(
         "--use-cache", "-u",
         action="store_true",
-        help="Use cached ichiran results from results-detail.json instead of calling Docker"
+        help="Use cached ichiran results from results.json instead of calling Docker"
     )
     parser.add_argument(
         "--cache-file",
@@ -892,9 +892,12 @@ def main():
     # Print summary
     print_summary(results)
     
-    # Export if requested
-    if args.export:
-        export_results(results, args.export)
+    # Export results - default to results.json when not using cache
+    export_file = args.export
+    if export_file is None and not args.use_cache:
+        export_file = ICHIRAN_CACHE_FILE
+    if export_file:
+        export_results(results, export_file)
     
     # Return exit code based on results
     mismatches = sum(1 for r in results if r.status == MatchStatus.MISMATCH)

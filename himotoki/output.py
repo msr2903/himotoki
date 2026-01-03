@@ -38,6 +38,14 @@ class WordType(Enum):
     GAP = 'gap'
 
 
+# Special conjugation info for entries that are standalone but represent
+# conjugated forms of other entries (like です being formal non-past of だ)
+# Format: seq -> (from_seq, conj_type, pos, neg, fml)
+SPECIAL_CONJ_INFO: Dict[int, tuple] = {
+    1628500: (2089020, 1, 'cop', False, True),  # です = non-past formal of だ
+}
+
+
 # ============================================================================
 # Data Classes
 # ============================================================================
@@ -393,6 +401,22 @@ def conj_info_json(
         
         result.append(js)
     
+    # Check for special conj info for standalone entries that represent conjugated forms
+    if not result and seq in SPECIAL_CONJ_INFO:
+        from_seq, conj_type, pos, neg, fml = SPECIAL_CONJ_INFO[seq]
+        js = {
+            'prop': [{
+                'pos': pos,
+                'type': get_conj_description(conj_type),
+                'neg': neg,
+                'fml': fml,
+            }],
+            'reading': get_entry_reading(session, from_seq),
+            'gloss': get_senses_json(session, from_seq),
+            'readok': True,
+        }
+        result.append(js)
+    
     return result
 
 
@@ -459,13 +483,23 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
         word_type = WordType.KANA
         kana = reading.text
     
+    # Get conjugation IDs from segment info or word
+    # The conj_data is stored in segment.info['conj'] by calc_score
+    conjugations = word.conjugations
+    if conjugations is None and segment.info:
+        conj_data = segment.info.get('conj', [])
+        if conj_data:
+            # Extract conjugation prop IDs from ConjData objects
+            conj_ids = [cd.prop.id for cd in conj_data if cd.prop]
+            conjugations = conj_ids if conj_ids else None
+    
     return WordInfo(
         type=word_type,
         text=segment.get_text(),
         kana=kana,
         true_text=word.text,
         seq=word.seq,
-        conjugations=word.conjugations,
+        conjugations=conjugations,
         score=int(segment.score),
         start=segment.start,
         end=segment.end,
@@ -622,13 +656,19 @@ def word_info_gloss_json(
                 js['gloss'] = gloss
         
         # Get conjugation info
-        if seq and word_info.conjugations and word_info.conjugations != 'root':
+        # Check for regular conjugations OR special conj info for standalone copulae
+        # Note: seq can be a list for compound words, so we need to check for hashability
+        has_conjugations = word_info.conjugations and word_info.conjugations != 'root'
+        has_special_conj = isinstance(seq, int) and seq in SPECIAL_CONJ_INFO
+        
+        if seq and (has_conjugations or has_special_conj):
             conj = conj_info_json(
                 session, seq,
-                conjugations=word_info.conjugations,
+                conjugations=word_info.conjugations if has_conjugations else None,
                 text=word_info.true_text,
             )
-            js['conj'] = conj
+            if conj:
+                js['conj'] = conj
     
     return js
 

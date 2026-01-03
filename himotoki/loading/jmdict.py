@@ -441,10 +441,17 @@ def load_jmdict(
     # Load extras (conjugations, etc.)
     if load_extras:
         from himotoki.loading.conjugations import load_conjugations, load_secondary_conjugations
+        from himotoki.loading.errata import add_errata
+        from himotoki.db.connection import get_session
+        
         logger.info("Loading conjugations...")
         load_conjugations()
         logger.info("Loading secondary conjugations...")
         load_secondary_conjugations()
+        
+        logger.info("Applying errata corrections...")
+        with get_session() as session:
+            add_errata(session)
     
     return count
 
