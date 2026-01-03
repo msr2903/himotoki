@@ -1264,6 +1264,11 @@ def determine_primary_full(
         # Check nokanji flag on reading
         if hasattr(word.reading, 'nokanji') and word.reading.nokanji:
             return True
+        # Additional case: common hiragana word with ord=0 should be primary
+        # This handles words like きれい that are commonly written in kana
+        # but don't have the nokanji flag on the hiragana reading
+        if word.ord == 0 and common_p and (word.common == 0 or (word.common is not None and word.common < 10)):
+            return True
     
     # Primary if ord=0 or copula
     if word.ord == 0 or cop_da_p:
@@ -1438,6 +1443,11 @@ def gen_score(
     kanji_break: Optional[List[int]] = None,
 ) -> Segment:
     """Generate score for a segment."""
+    # Check if this is a counter segment (already scored)
+    if segment.info and segment.info.get('counter'):
+        # Counter segments are pre-scored, just return
+        return segment
+    
     score, info = calc_score(
         session, segment.word,
         final=final, kanji_break=kanji_break

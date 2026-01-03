@@ -412,8 +412,24 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
         WordInfo object
     """
     from himotoki.lookup import CompoundWord
+    from himotoki.counters import CounterText
     
     word = segment.word
+    
+    # Handle CounterText specially
+    if isinstance(word, CounterText):
+        word_type = WordType.KANJI  # Counters are typically kanji
+        return WordInfo(
+            type=word_type,
+            text=segment.get_text(),
+            kana=word.kana,
+            true_text=word.text,
+            seq=word.seq,
+            conjugations=[],
+            score=int(segment.score),
+            start=segment.start,
+            end=segment.end,
+        )
     
     # Handle CompoundWord specially
     if isinstance(word, CompoundWord):

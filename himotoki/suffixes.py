@@ -279,9 +279,17 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         ii_kf = get_kana_form(session, 2820690, 'いい')
         if ii_kf:
             _load_kf('teii', ii_kf, suffix_class='ii')
+        
+        # もいい - "it's ok if" (て form + もいい)
+        # This creates the compound ～てもいい pattern
+        # Try to load from database first, otherwise register directly
         moii_kf = get_kana_form(session, 900001, 'もいい')
         if moii_kf:
-            _load_kf('te', moii_kf, suffix_class='ii', text='もいい')
+            _load_kf('teii', moii_kf, suffix_class='ii', text='もいい')
+        else:
+            # If the custom entry doesn't exist, register abbreviation for もいい
+            # This allows ～てもいい to be recognized
+            _load_abbr('teii', 'もいい')
         
         # も (mo) - even if
         mo_kf = get_kana_form(session, 2028940, 'も')
@@ -576,8 +584,17 @@ def find_word_suffix(
             if kf:
                 suffix_word = WordMatch(reading=kf)
             else:
-                # Create a placeholder for the suffix
-                continue
+                # Create a placeholder for the suffix (abbreviation case)
+                # For abbreviations like もいい, we create a minimal placeholder
+                # that looks like a KanaText but without a database entry
+                class PlaceholderReading:
+                    def __init__(self, text):
+                        self.text = text
+                        self.seq = None
+                        self.ord = 0
+                        self.common = None
+                placeholder = PlaceholderReading(suffix)
+                suffix_word = WordMatch(reading=placeholder)
             
             # Use adjoin_word to create compound (following ichiran's pattern)
             # Score is determined by the suffix handler configuration

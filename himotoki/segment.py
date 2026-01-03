@@ -28,6 +28,9 @@ from himotoki.synergies import (
     get_synergies, get_penalties, apply_segfilters,
     get_segment_score_synergy, Synergy,
 )
+from himotoki.counters import (
+    find_counter_in_text, CounterText, calc_counter_score,
+)
 
 
 # ============================================================================
@@ -296,6 +299,15 @@ def join_substring_words_impl(
     katakana_groups = consecutive_char_groups('katakana', text)
     number_groups = consecutive_char_groups('number', text)
     
+    # Find counter expressions in the text
+    counter_matches = find_counter_in_text(session, text)
+    counter_map: Dict[Tuple[int, int], List[CounterText]] = {}
+    for start, end, counter in counter_matches:
+        key = (start, end)
+        if key not in counter_map:
+            counter_map[key] = []
+        counter_map[key].append(counter)
+    
     kanji_break: List[int] = []
     ends: Set[int] = set()
     results: List[Tuple[int, int, List[Segment]]] = []
@@ -340,13 +352,32 @@ def join_substring_words_impl(
                 # This would need hiragana lookup - simplified for now
                 pass
             
+            # Check for counter expressions at this position
+            counter_key = (start, end)
+            counters = counter_map.get(counter_key, [])
+            
             # Create segments
-            if all_words:
-                segments = [
-                    Segment(start=start, end=end, word=word)
-                    for word in all_words
-                ]
-                
+            segments = []
+            
+            # Add word-based segments
+            for word in all_words:
+                segments.append(Segment(start=start, end=end, word=word))
+            
+            # Add counter-based segments
+            for counter in counters:
+                # Create a segment with counter as word
+                # We need to wrap the counter in a format compatible with Segment
+                counter_score = calc_counter_score(counter)
+                seg = Segment(
+                    start=start,
+                    end=end,
+                    word=counter,  # CounterText acts as word
+                    score=counter_score,
+                    info={'posi': ['ctr'], 'counter': True, 'seq_set': {counter.seq} if counter.seq else set()},
+                )
+                segments.append(seg)
+            
+            if segments:
                 # Track kanji break positions
                 if start == 0 or start in ends:
                     kanji_positions = sequential_kanji_positions(part, start)
