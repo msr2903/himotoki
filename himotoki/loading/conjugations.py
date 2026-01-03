@@ -70,6 +70,10 @@ DO_NOT_CONJUGATE_POS = ["n", "vs", "adj-na"]
 # Specific sequences to not conjugate
 DO_NOT_CONJUGATE_SEQ = [2765070, 2835284]
 
+# For cop POS, only conjugate these specific entries (matches ichiran's cop-da behavior)
+# Other cop entries like や (2028960), です (1628500), etc. should NOT be conjugated
+COP_CONJUGATE_SEQ = {2089020}  # だ
+
 # Conjugation types that trigger secondary conjugation
 # These are forms that can be further conjugated (e.g., causative, passive)
 SECONDARY_CONJUGATION_TYPES_FROM = [5, 6, 7, 8, 14]  # 14 is causative-su
@@ -375,6 +379,11 @@ def conjugate_entry_inner(
         if pos in DO_NOT_CONJUGATE_POS:
             continue
         
+        # For cop POS, only conjugate specific entries (like だ)
+        # This matches ichiran's cop-da behavior - other cop entries like や shouldn't be conjugated
+        if pos == 'cop' and seq not in COP_CONJUGATE_SEQ:
+            continue
+        
         pos_id = get_pos_index(pos)
         if pos_id is None:
             continue
@@ -582,6 +591,99 @@ def get_next_seq(session) -> int:
 # Global counter for fast sequence allocation during loading
 _next_seq_counter: int = 0
 
+# Global index mapping (frozenset(kanji_readings), frozenset(kana_readings)) -> seq
+# Used to find existing entries that match conjugated forms (ichiran-compatible behavior)
+_reading_to_seq_index: Optional[Dict[Tuple[frozenset, frozenset], int]] = None
+
+
+def _build_reading_to_seq_index(session) -> Dict[Tuple[frozenset, frozenset], int]:
+    """
+    Build an index mapping reading sets to seq numbers.
+    
+    This is used to match ichiran's behavior where conjugated forms
+    that match existing dictionary entries reuse that entry's seq
+    instead of creating a new one.
+    
+    For example, で from だ should map to seq=2028980 (the particle で entry)
+    rather than creating a new conjugation-specific seq.
+    """
+    global _reading_to_seq_index
+    
+    if _reading_to_seq_index is not None:
+        return _reading_to_seq_index
+    
+    logger.info("Building reading-to-seq index for conjugation matching...")
+    
+    # Get all kanji readings grouped by seq
+    kanji_by_seq = {}
+    for seq, text in session.query(KanjiText.seq, KanjiText.text).all():
+        if seq not in kanji_by_seq:
+            kanji_by_seq[seq] = set()
+        kanji_by_seq[seq].add(text)
+    
+    # Get all kana readings grouped by seq
+    kana_by_seq = {}
+    for seq, text in session.query(KanaText.seq, KanaText.text).all():
+        if seq not in kana_by_seq:
+            kana_by_seq[seq] = set()
+        kana_by_seq[seq].add(text)
+    
+    # Build the index
+    _reading_to_seq_index = {}
+    all_seqs = set(kanji_by_seq.keys()) | set(kana_by_seq.keys())
+    
+    for seq in all_seqs:
+        kanji_set = frozenset(kanji_by_seq.get(seq, set()))
+        kana_set = frozenset(kana_by_seq.get(seq, set()))
+        key = (kanji_set, kana_set)
+        
+        # If multiple seqs have the same readings, prefer lower (original) seq
+        if key not in _reading_to_seq_index or seq < _reading_to_seq_index[key]:
+            _reading_to_seq_index[key] = seq
+    
+    logger.info(f"Built reading-to-seq index with {len(_reading_to_seq_index)} unique reading combinations")
+    return _reading_to_seq_index
+
+
+def _find_existing_seq_for_readings(
+    kanji_readings: List[str],
+    kana_readings: List[str],
+    exclude_seqs: Set[int]
+) -> Optional[int]:
+    """
+    Find an existing entry that has exactly the same readings.
+    
+    This matches ichiran's behavior in insert-conjugation where it checks
+    if an existing entry has all the same kanji and kana readings.
+    
+    Args:
+        kanji_readings: List of kanji reading texts
+        kana_readings: List of kana reading texts  
+        exclude_seqs: Set of seqs to exclude (e.g., from_seq, via_seq)
+    
+    Returns:
+        Existing seq if found, None otherwise
+    """
+    global _reading_to_seq_index
+    
+    if _reading_to_seq_index is None:
+        return None
+    
+    key = (frozenset(kanji_readings), frozenset(kana_readings))
+    existing_seq = _reading_to_seq_index.get(key)
+    
+    # Don't match if it's the source entry or via entry
+    if existing_seq is not None and existing_seq not in exclude_seqs:
+        return existing_seq
+    
+    return None
+
+
+def _clear_reading_index():
+    """Clear the reading-to-seq index (used between loading phases)."""
+    global _reading_to_seq_index
+    _reading_to_seq_index = None
+
 
 def _prefetch_entry_data(session, seqs: List[int]) -> Dict[int, Dict]:
     """
@@ -657,6 +759,11 @@ def _generate_conjugations_for_entry(seq: int, entry_data: Dict, pos_index: Dict
     
     for pos in posi:
         if pos in DO_NOT_CONJUGATE_POS:
+            continue
+        
+        # For cop POS, only conjugate specific entries (like だ)
+        # This matches ichiran's cop-da behavior - other cop entries like や shouldn't be conjugated
+        if pos == 'cop' and seq not in COP_CONJUGATE_SEQ:
             continue
         
         entry = pos_index.get(pos)
@@ -763,6 +870,11 @@ def _generate_secondary_conjugations_for_entry(
     
     for pos in posi:
         if pos in DO_NOT_CONJUGATE_POS:
+            continue
+        
+        # For cop POS, only conjugate specific entries (like だ)
+        # This matches ichiran's cop-da behavior - other cop entries like や shouldn't be conjugated
+        if pos == 'cop' and via_seq not in COP_CONJUGATE_SEQ:
             continue
         
         entry = pos_index.get(pos)
@@ -893,6 +1005,11 @@ def load_conjugations(progress_callback=None, num_workers: int = None):
         
         _next_seq_counter = get_next_seq(session)
         
+        # Build reading-to-seq index for matching conjugations to existing entries
+        # This matches ichiran's behavior where conjugated forms like で from だ
+        # reuse the existing particle で entry (seq=2028980)
+        _build_reading_to_seq_index(session)
+        
         # Get sequences with conjugatable POS
         seqs = session.query(SenseProp.seq).filter(
             SenseProp.tag == 'pos',
@@ -928,10 +1045,17 @@ def load_conjugations(progress_callback=None, num_workers: int = None):
         
         logger.info(f"Inserting {len(all_conj_data)} conjugation records...")
         
+        # Track stats
+        reused_entries = 0
+        new_entries = 0
+        
         # Bulk insert all conjugations
         for i, conj_data in enumerate(all_conj_data):
             if _insert_conjugation_from_data(session, conj_data, _next_seq_counter):
                 _next_seq_counter += 1
+                new_entries += 1
+            else:
+                reused_entries += 1
             
             if (i + 1) % 10000 == 0:
                 session.commit()
@@ -939,12 +1063,20 @@ def load_conjugations(progress_callback=None, num_workers: int = None):
         
         session.commit()
         set_bulk_loading_mode(session, enabled=False)
-        logger.info(f"Conjugations complete. {len(all_conj_data)} conjugations inserted.")
+        logger.info(f"Conjugations complete. {len(all_conj_data)} conjugations inserted "
+                   f"({new_entries} new entries, {reused_entries} reused existing entries).")
 
 
-def _insert_conjugation_from_data(session, conj_data: Dict, seq: int) -> bool:
+def _insert_conjugation_from_data(session, conj_data: Dict, new_seq: int) -> bool:
     """
     Insert a conjugation from pre-computed data.
+    
+    Matches ichiran's behavior: if the conjugated form matches an existing
+    dictionary entry's readings, we reuse that entry's seq instead of creating
+    a new one. This ensures で from だ maps to the particle で (seq=2028980)
+    rather than a new generated seq.
+    
+    Returns True if a new entry was created, False if we reused an existing one.
     """
     readings = conj_data['readings']
     
@@ -972,32 +1104,92 @@ def _insert_conjugation_from_data(session, conj_data: Dict, seq: int) -> bool:
     if not kanji_readings and not kana_readings:
         return False
     
-    conjugate_p = conj_data['conj_type'] in SECONDARY_CONJUGATION_TYPES_FROM
-    entry = Entry(seq=seq, content='', root_p=False)
-    session.add(entry)
+    # Remove duplicates while preserving order
+    kanji_readings = list(dict.fromkeys(kanji_readings))
+    kana_readings = list(dict.fromkeys(kana_readings))
     
-    for ord_num, text in enumerate(kanji_readings):
-        session.add(KanjiText(seq=seq, text=text, ord=ord_num, common=None, conjugate_p=conjugate_p))
-    
-    for ord_num, text in enumerate(kana_readings):
-        session.add(KanaText(seq=seq, text=text, ord=ord_num, common=None, conjugate_p=conjugate_p))
-    
+    # Check if an existing entry has these exact readings (ichiran-compatible)
+    from_seq = conj_data['from_seq']
     via = conj_data.get('via')
-    conj = Conjugation(seq=seq, from_seq=conj_data['from_seq'], via=via)
-    session.add(conj)
+    exclude_seqs = {from_seq}
+    if via:
+        exclude_seqs.add(via)
     
-    prop = ConjProp(conj_type=conj_data['conj_type'], pos=conj_data['pos'], neg=conj_data['neg'], fml=conj_data['fml'])
-    conj.props.append(prop)
+    existing_seq = _find_existing_seq_for_readings(kanji_readings, kana_readings, exclude_seqs)
     
+    if existing_seq is not None:
+        # Reuse existing entry - don't create new entry/readings
+        seq = existing_seq
+        created_new = False
+    else:
+        # Create new entry for conjugated form
+        seq = new_seq
+        created_new = True
+        
+        conjugate_p = conj_data['conj_type'] in SECONDARY_CONJUGATION_TYPES_FROM
+        entry = Entry(seq=seq, content='', root_p=False)
+        session.add(entry)
+        
+        for ord_num, text in enumerate(kanji_readings):
+            session.add(KanjiText(seq=seq, text=text, ord=ord_num, common=None, conjugate_p=conjugate_p))
+        
+        for ord_num, text in enumerate(kana_readings):
+            session.add(KanaText(seq=seq, text=text, ord=ord_num, common=None, conjugate_p=conjugate_p))
+        
+        # Update the reading index with this new entry
+        global _reading_to_seq_index
+        if _reading_to_seq_index is not None:
+            key = (frozenset(kanji_readings), frozenset(kana_readings))
+            _reading_to_seq_index[key] = seq
+    
+    # Create or find conjugation record
+    # Check if this conjugation already exists (for existing entries)
+    existing_conj = None
+    if not created_new:
+        existing_conj = session.query(Conjugation).filter(
+            Conjugation.seq == seq,
+            Conjugation.from_seq == from_seq,
+            Conjugation.via == via if via else Conjugation.via.is_(None)
+        ).first()
+    
+    if existing_conj:
+        conj = existing_conj
+    else:
+        conj = Conjugation(seq=seq, from_seq=from_seq, via=via)
+        session.add(conj)
+        session.flush()  # Need to flush to get conj.id
+    
+    # Add conjugation property if not exists
+    existing_prop = session.query(ConjProp).filter(
+        ConjProp.conj_id == conj.id,
+        ConjProp.conj_type == conj_data['conj_type'],
+        ConjProp.pos == conj_data['pos'],
+        ConjProp.neg == conj_data['neg'],
+        ConjProp.fml == conj_data['fml']
+    ).first()
+    
+    if not existing_prop:
+        prop = ConjProp(conj_type=conj_data['conj_type'], pos=conj_data['pos'], 
+                       neg=conj_data['neg'], fml=conj_data['fml'])
+        conj.props.append(prop)
+    
+    # Add source readings
     seen = set()
     for text, source_text in source_readings:
         key = (text, source_text)
         if key not in seen:
             seen.add(key)
-            sr = ConjSourceReading(text=text, source_text=source_text)
-            conj.source_readings.append(sr)
+            # Check if already exists
+            existing_sr = session.query(ConjSourceReading).filter(
+                ConjSourceReading.conj_id == conj.id,
+                ConjSourceReading.text == text,
+                ConjSourceReading.source_text == source_text
+            ).first()
+            if not existing_sr:
+                sr = ConjSourceReading(text=text, source_text=source_text)
+                conj.source_readings.append(sr)
     
-    return True
+    return created_new
 
 
 def conjugate_entry_outer_fast(
@@ -1244,6 +1436,10 @@ def load_secondary_conjugations(from_seqs: Optional[List[int]] = None, progress_
         if _next_seq_counter == 0:
             _next_seq_counter = get_next_seq(session)
         
+        # Rebuild the reading-to-seq index to include newly created conjugation entries
+        # This ensures secondary conjugations can also reuse existing entries
+        _build_reading_to_seq_index(session)
+        
         # Build query for conjugations that can have secondary forms
         query = session.query(
             Conjugation.from_seq,
@@ -1294,10 +1490,17 @@ def load_secondary_conjugations(from_seqs: Optional[List[int]] = None, progress_
         
         logger.info(f"Inserting {len(all_conj_data)} secondary conjugation records...")
         
+        # Track stats
+        reused_entries = 0
+        new_entries = 0
+        
         # Bulk insert
         for i, conj_data in enumerate(all_conj_data):
             if _insert_conjugation_from_data(session, conj_data, _next_seq_counter):
                 _next_seq_counter += 1
+                new_entries += 1
+            else:
+                reused_entries += 1
             
             if (i + 1) % 10000 == 0:
                 session.commit()
@@ -1305,7 +1508,8 @@ def load_secondary_conjugations(from_seqs: Optional[List[int]] = None, progress_
         
         session.commit()
         set_bulk_loading_mode(session, enabled=False)
-        logger.info(f"Secondary conjugations complete. {len(all_conj_data)} conjugations inserted.")
+        logger.info(f"Secondary conjugations complete. {len(all_conj_data)} conjugations inserted "
+                   f"({new_entries} new entries, {reused_entries} reused existing entries).")
 
 
 # Errata hooks (for custom modifications to loaded data)

@@ -571,7 +571,9 @@ def find_word_with_conj_prop(
     for match in find_word_full(session, word):
         conj_data = get_word_conj_data(session, match)
         conj_data_filtered = [cd for cd in conj_data if filter_fn(cd)]
-        conj_ids = [cd.prop.id if cd.prop else None for cd in conj_data_filtered]
+        # Use conj_id (foreign key to Conjugation.id), not prop.id
+        # This matches ichiran's (conj-id (conj-data-prop cdata))
+        conj_ids = [cd.prop.conj_id if cd.prop else None for cd in conj_data_filtered]
         conj_ids = [cid for cid in conj_ids if cid is not None]
         
         if conj_data_filtered or (not conj_data and allow_root):
