@@ -24,6 +24,8 @@ from himotoki.db.models import (
 from himotoki.lookup import (
     Segment, SegmentList, WordMatch, ConjData,
     get_conj_data, find_word,
+    get_conj_type_name, get_conj_neg, get_conj_fml, get_source_text,
+    CONJ_TYPE_NAMES,
 )
 
 
@@ -73,6 +75,13 @@ class WordInfo:
     counter: Optional[List[Any]] = None  # [value, ordinal] for counter words
     skipped: int = 0  # Number of skipped alternatives
     
+    # Conjugation info fields
+    is_compound: bool = False  # True if this is a compound word
+    conj_type: Optional[str] = None  # Human-readable conjugation type
+    conj_neg: bool = False  # True if negative form
+    conj_fml: bool = False  # True if formal/polite form
+    source_text: Optional[str] = None  # Dictionary form for conjugated words
+    
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary (for JSON serialization)."""
         return {
@@ -90,6 +99,11 @@ class WordInfo:
             'end': self.end,
             'counter': self.counter,
             'skipped': self.skipped,
+            'is_compound': self.is_compound,
+            'conj_type': self.conj_type,
+            'conj_neg': self.conj_neg,
+            'conj_fml': self.conj_fml,
+            'source_text': self.source_text,
         }
 
 
@@ -458,16 +472,68 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
     # Handle CompoundWord specially
     if isinstance(word, CompoundWord):
         word_type = WordType.KANA if word.word_type == 'kana' else WordType.KANJI
+        
+        # Get conjugation data from segment.info (computed by calc_score)
+        # This is the authoritative source for conjugation info
+        conj_data = segment.info.get('conj', []) if segment.info else []
+        
+        # Extract conjugation IDs from conj_data
+        # Use conj_id (foreign key to Conjugation.id), not prop.id
+        conjugations = None
+        if conj_data:
+            conj_ids = [cd.prop.conj_id if cd.prop else None for cd in conj_data]
+            conj_ids = [cid for cid in conj_ids if cid is not None]
+            conjugations = conj_ids if conj_ids else None
+        
+        # Extract conjugation info directly from conj_data
+        conj_type_name = None
+        conj_neg = False
+        conj_fml = False
+        source_text = None
+        
+        if conj_data:
+            # Get the first conjugation data entry (primary conjugation)
+            cd = conj_data[0]
+            if cd.prop:
+                # Get conj_type name from the mapping
+                conj_type_name = CONJ_TYPE_NAMES.get(cd.prop.conj_type)
+                conj_neg = bool(cd.prop.neg)
+                conj_fml = bool(cd.prop.fml)
+            
+            # Get source_text - prefer kanji form from from_seq, fall back to src_map
+            # This matches ichiran's behavior of showing the dictionary form
+            if cd.from_seq:
+                # Try to get kanji form first
+                kanji_text = session.execute(
+                    select(KanjiText.text)
+                    .where(and_(KanjiText.seq == cd.from_seq, KanjiText.ord == 0))
+                ).scalars().first()
+                if kanji_text:
+                    source_text = kanji_text
+                else:
+                    # Fall back to kana form
+                    kana_text = session.execute(
+                        select(KanaText.text)
+                        .where(and_(KanaText.seq == cd.from_seq, KanaText.ord == 0))
+                    ).scalars().first()
+                    if kana_text:
+                        source_text = kana_text
+        
         return WordInfo(
             type=word_type,
             text=segment.get_text(),
             kana=word.kana,  # Use compound's full kana
             true_text=word.text,
-            seq=word.seq,  # This is a list for compound words
-            conjugations=word.conjugations,
+            seq=word.seq,  # This is an int for compound words (primary's seq)
+            conjugations=conjugations,
             score=int(segment.score),
             start=segment.start,
             end=segment.end,
+            is_compound=True,
+            conj_type=conj_type_name,
+            conj_neg=conj_neg,
+            conj_fml=conj_fml,
+            source_text=source_text,
         )
     
     reading = word.reading
@@ -483,15 +549,53 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
         word_type = WordType.KANA
         kana = reading.text
     
-    # Get conjugation IDs from segment info or word
-    # The conj_data is stored in segment.info['conj'] by calc_score
+    # Get conjugation data from segment.info (computed by calc_score)
+    # This is the authoritative source for conjugation info
+    conj_data = segment.info.get('conj', []) if segment.info else []
+    
+    # Extract conjugation IDs for the conjugations field
     conjugations = word.conjugations
-    if conjugations is None and segment.info:
-        conj_data = segment.info.get('conj', [])
-        if conj_data:
-            # Extract conjugation prop IDs from ConjData objects
-            conj_ids = [cd.prop.id for cd in conj_data if cd.prop]
-            conjugations = conj_ids if conj_ids else None
+    if conjugations is None and conj_data:
+        # Use conj_id (foreign key to Conjugation.id), not prop.id
+        # This matches ichiran's (conj-id (conj-data-prop cdata))
+        conj_ids = [cd.prop.conj_id if cd.prop else None for cd in conj_data]
+        conj_ids = [cid for cid in conj_ids if cid is not None]
+        conjugations = conj_ids if conj_ids else None
+    
+    # Extract conjugation info directly from conj_data
+    # This avoids re-querying the database and ensures we use the same data
+    conj_type_name = None
+    conj_neg = False
+    conj_fml = False
+    source_text = None
+    
+    if conj_data:
+        # Get the first conjugation data entry (primary conjugation)
+        cd = conj_data[0]
+        if cd.prop:
+            # Get conj_type name from the mapping
+            conj_type_name = CONJ_TYPE_NAMES.get(cd.prop.conj_type)
+            conj_neg = bool(cd.prop.neg)
+            conj_fml = bool(cd.prop.fml)
+        
+        # Get source_text - prefer kanji form from from_seq, fall back to src_map
+        # This matches ichiran's behavior of showing the dictionary form
+        if cd.from_seq:
+            # Try to get kanji form first
+            kanji_text = session.execute(
+                select(KanjiText.text)
+                .where(and_(KanjiText.seq == cd.from_seq, KanjiText.ord == 0))
+            ).scalars().first()
+            if kanji_text:
+                source_text = kanji_text
+            else:
+                # Fall back to kana form
+                kana_text = session.execute(
+                    select(KanaText.text)
+                    .where(and_(KanaText.seq == cd.from_seq, KanaText.ord == 0))
+                ).scalars().first()
+                if kana_text:
+                    source_text = kana_text
     
     return WordInfo(
         type=word_type,
@@ -503,6 +607,11 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
         score=int(segment.score),
         start=segment.start,
         end=segment.end,
+        is_compound=False,
+        conj_type=conj_type_name,
+        conj_neg=conj_neg,
+        conj_fml=conj_fml,
+        source_text=source_text,
     )
 
 
@@ -626,12 +735,43 @@ def word_info_gloss_json(
         return js
     
     if word_info.components:
-        # Compound word
+        # Compound word with component WordInfo objects
         js['compound'] = [wi.text for wi in word_info.components]
         js['components'] = [
             word_info_gloss_json(session, wi, root_only)
             for wi in word_info.components
         ]
+        return js
+    
+    # Handle compound words that don't have component WordInfo objects
+    # (e.g., from suffix-based compounds where we only have the text)
+    if word_info.is_compound:
+        seq = word_info.seq
+        if seq:
+            js['seq'] = seq
+        
+        # Build conjugation info directly from WordInfo fields
+        # (the conjugation data was already extracted in word_info_from_segment)
+        if word_info.conj_type:
+            conj_prop = {
+                'type': word_info.conj_type,
+            }
+            if word_info.conj_neg:
+                conj_prop['neg'] = True
+            if word_info.conj_fml:
+                conj_prop['fml'] = True
+            
+            conj_entry = {
+                'prop': [conj_prop],
+                'readok': True,
+            }
+            
+            # Add source reading if available
+            if word_info.source_text:
+                conj_entry['reading'] = word_info.source_text
+            
+            js['conj'] = [conj_entry]
+        
         return js
     
     if word_info.counter:

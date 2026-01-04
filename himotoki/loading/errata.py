@@ -127,6 +127,40 @@ def delete_reading(session: Session, seq: int, text: str) -> None:
     )
 
 
+def set_primary_nokanji(session: Session, seq: int, value: Optional[bool]) -> None:
+    """Set the primary_nokanji flag for an entry."""
+    session.execute(
+        update(Entry).where(Entry.seq == seq).values(primary_nokanji=value)
+    )
+
+
+def delete_conjugation(session: Session, seq: int, from_seq: int) -> None:
+    """Delete a conjugation entry and its related data."""
+    # Find the conjugation
+    conj = session.execute(
+        select(Conjugation).where(and_(
+            Conjugation.seq == seq,
+            Conjugation.from_seq == from_seq
+        ))
+    ).scalars().all()
+    
+    if not conj:
+        return
+    
+    conj_ids = [c.id for c in conj]
+    
+    # Delete related data
+    session.execute(
+        delete(ConjProp).where(ConjProp.conj_id.in_(conj_ids))
+    )
+    session.execute(
+        delete(ConjSourceReading).where(ConjSourceReading.conj_id.in_(conj_ids))
+    )
+    session.execute(
+        delete(Conjugation).where(Conjugation.id.in_(conj_ids))
+    )
+
+
 # ============================================================================
 # Conjugation Errata
 # ============================================================================
@@ -291,6 +325,460 @@ def add_deha_ja_readings(session: Session) -> None:
 
 
 # ============================================================================
+# Counter POS Adjustments (from add-errata-counters)
+# ============================================================================
+
+# Format: (seq, sense_ord, pos_tag)
+# These entries need 'ctr' (counter) POS tag added
+COUNTER_POS_ENTRIES = [
+    (1427420, 0, 'ctr'),  # 丁目
+    (1397450, 0, 'ctr'),  # 組
+    (1397450, 1, 'ctr'),  # 組
+    (1351270, 0, 'ctr'),  # 章
+    (1351270, 1, 'n'),    # 章
+    (1490430, 0, 'ctr'),  # 秒
+    (1490430, 1, 'ctr'),  # 秒
+    (2020680, 0, 'ctr'),  # 時
+    (1502840, 0, 'ctr'),  # 分
+    (1502840, 1, 'ctr'),  # 分
+    (1373990, 0, 'ctr'),  # 世紀
+    (1281690, 0, 'ctr'),  # 行
+    (1281690, 1, 'n'),    # 行
+    (1042610, 1, 'ctr'),  # キロ
+    (1042610, 2, 'ctr'),  # キロ
+    (1100610, 0, 'ctr'),  # パーセント
+    (1411070, 0, 'ctr'),  # 袋
+    (1411070, 1, 'n'),    # 袋
+    (1328810, 0, 'ctr'),  # 種
+    (1284220, 0, 'ctr'),  # 号
+    (1284220, 1, 'n'),    # 号
+    (1284220, 1, 'n-suf'),  # 号
+    (1482360, 0, 'ctr'),  # 番地
+    (2022640, 0, 'ctr'),  # 番
+    (1175570, 0, 'ctr'),  # 円
+    (1175570, 1, 'n'),    # 円
+    (1315130, 0, 'ctr'),  # 字
+    (1315130, 1, 'n'),    # 字
+    (1199640, 0, 'ctr'),  # 回転
+    (1047880, 0, 'ctr'),  # ケース
+    (1047880, 1, 'n'),    # ケース
+    (1244080, 0, 'ctr'),  # 区
+    (1244080, 1, 'ctr'),  # 区
+    (1239700, 0, 'ctr'),  # 曲
+    (1294940, 0, 'ctr'),  # 才/歳
+    (1294940, 1, 'suf'),  # 才/歳
+    (1575510, 0, 'ctr'),  # コマ
+    (1575510, 1, 'n'),    # コマ
+    (1505390, 0, 'ctr'),  # 文字
+    (1101700, 0, 'ctr'),  # パック
+    (1120410, 0, 'ctr'),  # ページ
+    (1956400, 0, 'ctr'),  # 集
+    (1333450, 0, 'ctr'),  # 週
+    (1480050, 0, 'ctr'),  # 反
+    (1480050, 1, 'ctr'),  # 反
+    (1480050, 2, 'ctr'),  # 反
+    (1956530, 0, 'ctr'),  # 寸
+    (1324110, 0, 'ctr'),  # 尺
+    (1324110, 1, 'n'),    # 尺
+    (1382450, 0, 'ctr'),  # 石
+    (1382450, 1, 'ctr'),  # 石
+    (1253800, 1, 'ctr'),  # 桁
+    (1297240, 0, 'ctr'),  # 作
+    (1368480, 0, 'ctr'),  # 人前
+    (1732510, 1, 'ctr'),  # 番手
+    (1732510, 2, 'ctr'),  # 番手
+    (2086480, 1, 'ctr'),  # 頭身
+    (1331080, 0, 'ctr'),  # 周忌
+    # From dated errata functions
+    (1445160, 0, 'ctr'),  # 度 (jan18)
+    (1468900, 0, 'ctr'),  # 年生 (mar18)
+    (1241380, 0, 'ctr'),  # 斤 (mar18)
+    (1241380, 1, 'ctr'),  # 斤 (mar18)
+    (1658480, 0, 'ctr'),  # apr19
+    (1468900, 0, 'ctr'),  # 年生 (jan20)
+    (1469050, 0, 'ctr'),  # 年度 (jan20)
+    (1469050, 1, 'ctr'),  # 年度 (jan20)
+    (1469050, 2, 'ctr'),  # 年度 (jan20)
+    (1284270, 0, 'ctr'),  # 号車 (jan20)
+    (1315920, 0, 'ctr'),  # 時間 (apr20) - added as new sense
+    (1220540, 0, 'ctr'),  # apr20
+    (1220540, 3, 'ctr'),  # apr20
+    (1220540, 4, 'ctr'),  # apr20
+    (1220540, 5, 'ctr'),  # apr20
+    (1220540, 6, 'ctr'),  # apr20
+    (2842087, 0, 'ctr'),  # パー (apr20)
+    (1613860, 0, 'ctr'),  # 回戦 (jan21)
+    (1613860, 1, 'ctr'),  # 回戦 (jan21)
+    (2145410, 0, 'ctr'),  # 間 (jan21)
+    (1138570, 1, 'ctr'),  # ラウンド (jan25)
+    (1138570, 2, 'ctr'),  # ラウンド (jan25)
+    (1138570, 3, 'ctr'),  # ラウンド (jan25)
+]
+
+# Counter POS entries to delete
+DELETE_COUNTER_POS_ENTRIES = [
+    (1215240, 'ctr'),  # jan21
+    (1240530, 'ctr'),  # 玉 (jan22)
+    (1138570, 'ctr'),  # ラウンド sense 0 (jan25)
+]
+
+
+# ============================================================================
+# Primary Nokanji Adjustments
+# ============================================================================
+
+# Entries where primary_nokanji should be set to None/False
+PRIMARY_NOKANJI_CLEAR = [
+    1538900,  # ただ
+    1580640,  # 人
+    1289030,  # いまいち
+    1374550,  # すごい (feb17)
+    1591900,  # きれい (feb17)
+    1000230,  # あかん (feb17)
+    1517810,  # もやし (feb17)
+    1585410,  # まま (feb17)
+    1258330,  # いぬ (jan18)
+    1588930,  # おかず (jan18)
+    1565440,  # mar18
+    1631830,  # くせに (jan19)
+    1409110,  # apr19
+    2081610,  # apr19 (was added by mistake)
+    1495000,  # まずい (jan20)
+    1756600,  # がんもどき (jul20)
+]
+
+
+# ============================================================================
+# Conjugation Deletions
+# ============================================================================
+
+# Format: (seq, from_seq)
+# seq = conjugated form, from_seq = source/root form
+CONJUGATION_DELETIONS = [
+    (2029110, 2257550),  # delete adj stem conjugation: な from ない
+    (2086640, 2684620),  # delete adj stem conjugation: し from しい
+]
+
+
+# ============================================================================
+# Additional Common Adjustments from Dated Errata
+# ============================================================================
+
+# These are additional common adjustments from add-errata-feb17 through add-errata-jan25
+ADDITIONAL_COMMON_ADJUSTMENTS = [
+    # feb17
+    ('kana_text', 2136890, 'とする', None),
+    ('kana_text', 2100900, 'となる', None),
+    ('kana_text', 1006200, 'すべき', None),
+    ('kana_text', 2683060, 'なのです', None),
+    ('kana_text', 2683060, 'なんです', None),
+    ('kana_text', 1001200, 'おい', None),
+    ('kana_text', 1001200, 'おおい', None),
+    ('kanji_text', 1441840, '伝い', 0),
+    ('kanji_text', 1409140, '身体', 0),
+    ('kanji_text', 2830705, '身体', None),
+    ('kana_text', 1009040, 'どきっと', 0),
+    ('kana_text', 2261300, 'するべき', None),
+    ('kana_text', 2215430, 'には', None),
+    ('kana_text', 2210140, 'まい', None),
+    ('kana_text', 2192950, 'なさい', None),
+    ('kana_text', 2143350, 'かも', None),
+    ('kana_text', 2106890, 'そのよう', None),
+    ('kana_text', 2084040, 'すれば', None),
+    ('kana_text', 2036080, 'うつ', None),
+    ('kana_text', 1922760, 'という', None),
+    ('kana_text', 1632520, 'ふん', None),
+    ('kana_text', 1631750, 'がる', None),
+    ('kana_text', 1394680, 'そういう', None),
+    ('kana_text', 1208840, 'かつ', None),
+    ('kana_text', 1011430, 'べき', None),
+    ('kana_text', 1008340, 'である', None),
+    ('kana_text', 1007960, 'ちんちん', None),
+    ('kana_text', 1301230, 'さんなん', None),
+    ('kanji_text', 1311010, '氏', 20),
+    ('kana_text', 1311010, 'うじ', 20),
+    ('kanji_text', 2101130, '氏', 21),
+    ('kana_text', 1155180, 'いない', 10),
+    ('kanji_text', 1609450, '思いきって', 0),
+    ('kanji_text', 1309320, '思いきる', 0),
+    ('kana_text', 1312880, 'メス', 15),
+    ('kana_text', 1312880, 'めす', None),
+    ('kana_text', 2061540, 'ぶっちゃける', 0),
+    ('kana_text', 2034520, 'ですら', 0),
+    ('kana_text', 1566210, 'いずれ', 9),
+    ('kanji_text', 1000420, '彼の', None),
+    ('kanji_text', 2219590, '元', 10),
+    ('kana_text', 2219590, 'もと', 10),
+    ('kana_text', 1394760, 'さほど', 0),
+    ('kana_text', 1529560, 'なし', 10),
+    ('kana_text', 1436830, 'ていない', None),
+    ('kana_text', 1057580, 'さぼる', 0),
+    ('kanji_text', 1402420, '走り', None),
+    ('kana_text', 1402420, 'はしり', None),
+    ('kana_text', 1209540, 'かる', None),
+    ('kana_text', 1244840, 'かる', None),
+    ('kana_text', 1280640, 'こうは', 0),
+    ('kana_text', 1158960, 'いほう', 0),
+    # jan18
+    ('kanji_text', 2067770, '等', None),
+    ('kana_text', 2067770, 'ら', None),
+    ('kanji_text', 1242230, '近よる', 38),
+    ('kanji_text', 1315120, '字', 0),
+    ('kana_text', 1315120, 'あざ', 0),
+    ('kanji_text', 1315130, '字', 5),
+    ('kana_text', 1315130, 'じ', 0),
+    ('kana_text', 1005530, 'しっくり', 0),
+    ('kana_text', 1554850, 'りきむ', None),
+    ('kana_text', 2812650, 'ゲー', 0),
+    ('kana_text', 2083340, 'やろう', 0),
+    ('kana_text', 2083340, 'やろ', 0),
+    ('kana_text', 1008730, 'とろ', None),
+    ('kana_text', 1457840, 'ないかい', None),
+    ('kana_text', 2829697, 'いかん', 0),
+    ('kana_text', 2157330, 'おじゃま', 9),
+    ('kana_text', 1199800, 'かいらん', None),
+    ('kana_text', 2719580, 'いらん', 0),
+    ('kana_text', 1808040, 'めちゃ', 0),
+    ('kana_text', 1277450, 'すき', 9),
+    ('kana_text', 1006460, 'ズレる', 0),
+    ('kanji_text', 1522290, '本会議', 0),
+    ('kana_text', 1522290, 'ほんかいぎ', 0),
+    ('kana_text', 1220570, 'きたい', 10),
+    ('kana_text', 1221020, 'きたい', 11),
+    ('kana_text', 2083990, 'ならん', 0),
+    ('kanji_text', 2518850, '切れ', 0),
+    ('kanji_text', 1221900, '基地外', 0),
+    ('kana_text', 1379380, 'せいと', 10),
+    ('kanji_text', 1203280, '外に', None),
+    ('kanji_text', 1383690, '後継ぎ', 0),
+    ('kana_text', 2083600, 'すまん', 0),
+    # mar18
+    ('kana_text', 1207610, 'かける', 0),
+    ('kanji_text', 1236100, '強いる', None),
+    ('kana_text', 1236100, 'しいる', None),
+    ('kana_text', 1451750, 'おんなじ', 0),
+    ('kanji_text', 2068330, '事故る', 0),
+    ('kana_text', 1579260, 'きのう', 2),
+    ('kanji_text', 2644980, '柔らかさ', 0),
+    ('kana_text', 2644980, 'やわらかさ', 0),
+    ('kana_text', 2083610, 'ベタ', 0),
+    ('kana_text', 2083610, 'べた', 0),
+    ('kana_text', 1119610, 'ベタ', None),
+    ('kana_text', 1004840, 'コロコロ', 0),
+    ('kana_text', 1257040, 'ケンカ', 0),
+    ('kana_text', 1633840, 'ごとき', 0),
+    # aug18
+    ('kana_text', 1593870, 'さらう', 0),
+    ('kana_text', 2141690, 'ふざけんな', 0),
+    ('kana_text', 1214770, 'かん', None),
+    ('kanji_text', 1214770, '観', None),
+    ('kanji_text', 2082780, '意味深', 0),
+    ('kana_text', 2209180, 'とて', 0),
+    ('kana_text', 1574640, 'ロバ', 0),
+    # jan19
+    ('kanji_text', 2017470, '塗れ', 0),
+    ('kana_text', 2722660, 'すげぇ', 0),
+    # apr19
+    ('kanji_text', 1538750, '癒やす', 0),
+    ('kanji_text', 1538750, '癒す', 0),
+    ('kana_text', 1538750, 'いやす', 0),
+    ('kana_text', 2147610, 'いなくなる', 0),
+    ('kana_text', 1346290, 'マス', 37),
+    # jan20
+    ('kana_text', 1715710, 'みたところ', None),
+    ('kana_text', 2841254, 'からって', None),
+    ('kana_text', 2028950, 'とは', None),
+    ('kanji_text', 1292400, '再開', 13),
+    ('kana_text', 1292400, 'さいかい', 13),
+    ('kana_text', 1306200, 'しよう', 10),
+    ('kana_text', 2056930, 'つまらなさそう', 0),
+    ('kanji_text', 1164710, '一段落', None),
+    ('kana_text', 1570220, 'すくむ', 0),
+    ('kana_text', 1352130, 'うえ', 1),
+    ('kana_text', 1502390, 'もん', 0),
+    ('kana_text', 2780660, 'もん', 0),
+    ('kana_text', 2653620, 'がち', 0),
+    ('kana_text', 2653620, 'ガチ', 0),
+    ('kana_text', 1135480, 'モノ', None),
+    ('kana_text', 1003000, 'カラカラ', 0),
+    # apr20
+    ('kana_text', 1225940, 'アリ', 0),
+    ('kana_text', 1568080, 'ふくろう', 0),
+    ('kana_text', 1025450, 'ウイルス', None),
+    ('kana_text', 1025450, 'ウィルス', None),
+    ('kana_text', 1004320, 'こうゆう', 0),
+    ('kana_text', 1580290, 'おとめ', 0),
+    ('kana_text', 2842087, 'パー', 0),
+    # jul20
+    ('kana_text', 2101130, 'し', None),
+    ('kanji_text', 1982860, '代', 0),
+    ('kana_text', 1367020, 'ひとけ', 0),
+    ('kana_text', 1002190, 'おしり', 0),
+    ('kana_text', 2085020, 'もどき', 0),
+    # jan21
+    ('kana_text', 2124820, 'コロナウイルス', None),
+    ('kana_text', 2846738, 'なん', None),
+    ('kana_text', 2083720, 'っぽい', None),
+    ('kanji_text', 1012980, '遣る', None),
+    # may21
+    ('kana_text', 2848303, 'てか', 0),
+    ('kanji_text', 1979920, '貴方', None),
+    # jan22
+    ('kana_text', 2008650, 'そうした', None),
+    ('kana_text', 1001840, 'おにいちゃん', 0),
+    ('kana_text', 1806840, 'がいそう', None),
+    ('kana_text', 1639750, 'こだから', None),
+    # dec23
+    ('kana_text', 1625620, 'はいかん', None),
+    ('kana_text', 1625610, 'はいかん', None),
+    ('kana_text', 1681460, 'はいかん', None),
+    ('kanji_text', 2855480, '乙女', 0),
+    ('kana_text', 2855480, 'おとめ', 0),
+    ('kana_text', 1930050, 'バラす', 0),
+    ('kana_text', 1582460, 'ないかい', None),
+    ('kana_text', 1202300, 'かいが', 0),
+    ('kanji_text', 1328740, '狩る', 0),
+    ('kana_text', 1009610, 'にも', 0),
+    # jan25
+    ('kana_text', 1001120, 'うんち', 0),
+    ('kana_text', 1511600, 'かたかな', 0),
+    ('kana_text', 1056400, 'サウンドトラック', 0),
+    ('kana_text', 1510640, 'へん', 5),
+]
+
+
+# ============================================================================
+# Additional UK Adjustments from Dated Errata
+# ============================================================================
+
+# Additional UK deletions from dated errata
+ADDITIONAL_DELETE_UK_ENTRIES = [
+    2021030,  # 摂る（とる）(feb17)
+    1586730,  # 粗 (あら) (feb17)
+    1441400,  # 点く （つく）(feb17)
+    1303400,  # 撒く/まく (jan18)
+    1434020,  # 吊る/つる (jan18)
+    1196520,  # かすむ (jan18)
+    1414190,  # 大人しい (jan18)
+    1896380,  # 出 (mar18)
+    1157000,  # 易しい (mar18)
+    1576360,  # 逸れる (mar18)
+    1598660,  # とかす (aug18)
+    1604890,  # 目 (jan19)
+    1632980,  # jan20
+    1715710,  # jan20
+    1426680,  # 虫 (jan21)
+    1547720,  # 来る (may21)
+    1495770,  # 付ける (may21)
+    2611890,  # 蒔く (may21)
+    2854117,  # おき (dec23)
+    2859257,  # あれ (dec23)
+    1198890,  # 解く (dec23)
+]
+
+# Additional UK additions from dated errata
+ADDITIONAL_ADD_UK_ENTRIES = [
+    (1569590, 0),  # 痙攣 けいれん (feb17)
+    (1590540, 0),  # 仮名 かな (feb17)
+    (1430200, 0),  # いただき (feb17)
+    (1188380, 0),  # なんでもかんでも (jan18)
+    (1258330, 0),  # いぬ (jan18)
+    (2217330, 0),  # わい (jan18)
+    (1238460, 0),  # そば (mar18)
+    (1527140, 0),  # aug18
+    (1208870, 0),  # かなう (aug18)
+    (2756830, 0),  # jan19
+    (1615340, 0),  # apr19
+    (1346290, 3),  # マス (apr19)
+    (1565100, 0),  # jan20
+    (1219510, 0),  # apr20
+    (1616370, 0),  # apr20
+    (2679820, 0),  # しっぽく (jan21)
+    (1590390, 0),  # かたどる (jan21)
+    (1586290, 0),  # あげく (jul20)
+    (1257260, 0),  # いやがらせ (jul20)
+    (2217330, 0),  # ワイ (jul20)
+    (1180540, 0),  # おっす (dec23)
+    (2826371, 0),  # いつなりと (dec23)
+]
+
+
+# ============================================================================
+# Additional Reading Adjustments from Dated Errata
+# ============================================================================
+
+ADDITIONAL_ADD_READINGS = [
+    (1029150, 'えっち', None),  # feb17
+    (1363740, 'マネ', 9),  # feb17
+    (1384840, 'キレ', 0),  # jan18
+    (1008370, 'デカい', 0),  # jan19
+    (1572760, 'クドい', None),  # jan19
+    (1003620, 'ギュっと', None),  # jan19
+    (1593170, 'コケる', None),  # jan20
+    (2722640, 'オケ', None),  # aug18
+    (1103270, 'ぱんつ', None),  # jul20
+    (1566420, 'ハメる', None),  # jan22
+    (1161240, 'いっかねん', None),  # jan22
+    (1089590, 'どんまい', None),  # may21
+    (2081610, 'タテ', None),  # counters
+]
+
+ADDITIONAL_DELETE_READINGS = [
+    (2424520, '去る者は追わず、来たる者は拒まず'),  # jan19
+    (2570040, '朝焼けは雨、夕焼けは晴れ'),  # jan19
+    (2833961, '梅は食うとも核食うな、中に天神寝てござる'),  # jan19
+    (2834318, '二人は伴侶、三人は仲間割れ'),  # jan19
+    (2834363, '墨は餓鬼に磨らせ、筆は鬼に持たせよ'),  # jan19
+    (1299960, 'さんかい'),  # counters
+    (2028930, 'ヶ'),  # jan25 (kana_text)
+    (2028930, 'ケ'),  # jan25 (kana_text)
+]
+
+
+# ============================================================================
+# Additional POS Adjustments from Dated Errata
+# ============================================================================
+
+ADDITIONAL_POS_DELETIONS = [
+    (2122310, 'pos', 'prt'),  # え (feb17)
+    (1245280, 'pos', 'adj-no'),  # 空 から (jan20)
+    (1392570, 'pos', 'adj-no'),  # 前 ぜん (jan20)
+    (2647210, 'pos', 'suf'),  # jan20
+    (1188270, 'pos', 'pn'),  # 何か (jan22)
+]
+
+ADDITIONAL_POS_ADDITIONS = [
+    (1429740, 0, 'suf'),  # 長 (jan20)
+    (1429740, 1, 'n'),  # 長 (jan20)
+    (1956530, 1, 'n'),  # 寸 (apr20)
+    (1411570, 0, 'vs'),  # 変わり映え (jan21)
+    (1188270, 0, 'n'),  # 何か (jan22)
+    (1247260, 0, 'n-suf'),  # 君 くん (jan22)
+]
+
+
+# ============================================================================
+# Misc Adjustments
+# ============================================================================
+
+# Entries to remove 'arch' (archaic) tag
+DELETE_ARCH_ENTRIES = [
+    (1270350, 'misc', 'arch'),  # ござる (jan19)
+    (2217330, 'misc', 'arch'),  # jul20
+]
+
+# Entries to add 'obsc' (obscure) tag
+ADD_OBSC_ENTRIES = [
+    (2510160, 0, 'obsc'),  # 鬱ぐ (jan20)
+]
+
+# Entries to remove 'rare' tag
+DELETE_RARE_ENTRIES = [
+    (2826371, 'misc', 'rare'),  # いつなりと (dec23)
+]
+
+
+# ============================================================================
 # UK (Usually Kana) Adjustments
 # ============================================================================
 
@@ -352,13 +840,25 @@ ADD_UK_ENTRIES = [
 
 def apply_uk_adjustments(session: Session) -> None:
     """Apply usually-kana (uk) adjustments."""
+    # Original deletions
     for seq in DELETE_UK_ENTRIES:
         delete_sense_prop(session, seq, "misc", "uk")
     
+    # Additional deletions from dated errata
+    for seq in ADDITIONAL_DELETE_UK_ENTRIES:
+        delete_sense_prop(session, seq, "misc", "uk")
+    
+    # Original additions
     for seq, sense_ord in ADD_UK_ENTRIES:
         add_sense_prop(session, seq, sense_ord, "misc", "uk")
     
-    logger.info(f"Applied {len(DELETE_UK_ENTRIES)} uk deletions and {len(ADD_UK_ENTRIES)} uk additions")
+    # Additional additions from dated errata
+    for seq, sense_ord in ADDITIONAL_ADD_UK_ENTRIES:
+        add_sense_prop(session, seq, sense_ord, "misc", "uk")
+    
+    total_deletions = len(DELETE_UK_ENTRIES) + len(ADDITIONAL_DELETE_UK_ENTRIES)
+    total_additions = len(ADD_UK_ENTRIES) + len(ADDITIONAL_ADD_UK_ENTRIES)
+    logger.info(f"Applied {total_deletions} uk deletions and {total_additions} uk additions")
 
 
 # ============================================================================
@@ -489,10 +989,16 @@ COMMON_ADJUSTMENTS = [
 
 def apply_common_adjustments(session: Session) -> None:
     """Apply commonness score adjustments."""
+    # Original adjustments
     for table, seq, text, common in COMMON_ADJUSTMENTS:
         set_common(session, table, seq, text, common)
     
-    logger.info(f"Applied {len(COMMON_ADJUSTMENTS)} common score adjustments")
+    # Additional adjustments from dated errata
+    for table, seq, text, common in ADDITIONAL_COMMON_ADJUSTMENTS:
+        set_common(session, table, seq, text, common)
+    
+    total = len(COMMON_ADJUSTMENTS) + len(ADDITIONAL_COMMON_ADJUSTMENTS)
+    logger.info(f"Applied {total} common score adjustments")
 
 
 # ============================================================================
@@ -522,13 +1028,25 @@ DELETE_READINGS = [
 
 def apply_reading_adjustments(session: Session) -> None:
     """Apply reading additions and deletions."""
+    # Original additions
     for seq, text, common in ADD_READINGS:
         add_reading(session, seq, text, common)
     
+    # Additional additions from dated errata
+    for seq, text, common in ADDITIONAL_ADD_READINGS:
+        add_reading(session, seq, text, common)
+    
+    # Original deletions
     for seq, text in DELETE_READINGS:
         delete_reading(session, seq, text)
     
-    logger.info(f"Applied {len(ADD_READINGS)} reading additions and {len(DELETE_READINGS)} deletions")
+    # Additional deletions from dated errata
+    for seq, text in ADDITIONAL_DELETE_READINGS:
+        delete_reading(session, seq, text)
+    
+    total_additions = len(ADD_READINGS) + len(ADDITIONAL_ADD_READINGS)
+    total_deletions = len(DELETE_READINGS) + len(ADDITIONAL_DELETE_READINGS)
+    logger.info(f"Applied {total_additions} reading additions and {total_deletions} deletions")
 
 
 # ============================================================================
@@ -537,6 +1055,7 @@ def apply_reading_adjustments(session: Session) -> None:
 
 def apply_pos_adjustments(session: Session) -> None:
     """Apply POS tag adjustments."""
+    # Original adjustments
     # なの -> add prt POS
     add_sense_prop(session, 2425930, 0, 'pos', 'prt')
     # わね -> add prt POS
@@ -544,7 +1063,59 @@ def apply_pos_adjustments(session: Session) -> None:
     # とん -> remove adv-to POS
     delete_sense_prop(session, 2629920, 'pos', 'adv-to')
     
+    # Additional POS deletions from dated errata
+    for seq, tag, text in ADDITIONAL_POS_DELETIONS:
+        delete_sense_prop(session, seq, tag, text)
+    
+    # Additional POS additions from dated errata
+    for seq, sense_ord, pos in ADDITIONAL_POS_ADDITIONS:
+        add_sense_prop(session, seq, sense_ord, 'pos', pos)
+    
     logger.info("Applied POS adjustments")
+
+
+def apply_counter_pos_adjustments(session: Session) -> None:
+    """Apply counter POS tag additions."""
+    for seq, sense_ord, pos in COUNTER_POS_ENTRIES:
+        add_sense_prop(session, seq, sense_ord, 'pos', pos)
+    
+    for seq, pos in DELETE_COUNTER_POS_ENTRIES:
+        delete_sense_prop(session, seq, 'pos', pos)
+    
+    logger.info(f"Applied {len(COUNTER_POS_ENTRIES)} counter POS additions")
+
+
+def apply_primary_nokanji_adjustments(session: Session) -> None:
+    """Apply primary_nokanji flag adjustments."""
+    for seq in PRIMARY_NOKANJI_CLEAR:
+        set_primary_nokanji(session, seq, None)
+    
+    logger.info(f"Applied {len(PRIMARY_NOKANJI_CLEAR)} primary_nokanji adjustments")
+
+
+def apply_conjugation_deletions(session: Session) -> None:
+    """Apply conjugation deletions."""
+    for seq, from_seq in CONJUGATION_DELETIONS:
+        delete_conjugation(session, seq, from_seq)
+    
+    logger.info(f"Applied {len(CONJUGATION_DELETIONS)} conjugation deletions")
+
+
+def apply_misc_adjustments(session: Session) -> None:
+    """Apply miscellaneous tag adjustments."""
+    # Delete 'arch' tags
+    for seq, tag, text in DELETE_ARCH_ENTRIES:
+        delete_sense_prop(session, seq, tag, text)
+    
+    # Add 'obsc' tags
+    for seq, sense_ord, text in ADD_OBSC_ENTRIES:
+        add_sense_prop(session, seq, sense_ord, 'misc', text)
+    
+    # Delete 'rare' tags
+    for seq, tag, text in DELETE_RARE_ENTRIES:
+        delete_sense_prop(session, seq, tag, text)
+    
+    logger.info("Applied misc tag adjustments")
 
 
 # ============================================================================
@@ -569,6 +1140,10 @@ def add_errata(session: Session) -> None:
     apply_common_adjustments(session)
     apply_reading_adjustments(session)
     apply_pos_adjustments(session)
+    apply_counter_pos_adjustments(session)
+    apply_primary_nokanji_adjustments(session)
+    apply_conjugation_deletions(session)
+    apply_misc_adjustments(session)
     
     session.commit()
     logger.info("Errata corrections complete")
