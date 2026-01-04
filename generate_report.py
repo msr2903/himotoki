@@ -28,7 +28,11 @@ def generate_html(data):
         .sentence {{ font-size: 1.2em; font-weight: bold; }}
         .status {{ padding: 4px 8px; border-radius: 4px; font-size: 0.8em; text-transform: uppercase; font-weight: bold; }}
         .status.match {{ background: #d4edda; color: #155724; }}
+        .status.partial {{ background: #fff3cd; color: #856404; }}
         .status.mismatch {{ background: #f8d7da; color: #721c24; }}
+        .status.uncomparable {{ background: #e2e3e5; color: #383d41; }}
+        .status.ichiran_error {{ background: #cce5ff; color: #004085; }}
+        .status.himotoki_error {{ background: #d4edda; color: #155724; }}
         .card-body {{ padding: 20px; display: none; }}
         .card.open .card-body {{ display: block; }}
         .comparison {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }}
@@ -61,8 +65,16 @@ def generate_html(data):
                 <div class="stat-label">Matches</div>
             </div>
             <div class="stat-box">
+                <div class="stat-value" id="partial-count">0</div>
+                <div class="stat-label">Partial</div>
+            </div>
+            <div class="stat-box">
                 <div class="stat-value" id="mismatch-count">0</div>
                 <div class="stat-label">Mismatches</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="uncomparable-count">0</div>
+                <div class="stat-label">Uncomparable</div>
             </div>
             <div class="stat-box">
                 <div class="stat-value" id="match-rate">0%</div>
@@ -74,7 +86,10 @@ def generate_html(data):
             <input type="text" id="search-input" placeholder="Search sentence...">
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="match">Matches</button>
+            <button class="filter-btn" data-filter="partial">Partial</button>
             <button class="filter-btn" data-filter="mismatch">Mismatches</button>
+            <button class="filter-btn" data-filter="uncomparable">Uncomparable</button>
+            <button class="filter-btn" data-filter="errors">Errors</button>
         </div>
 
         <div id="results-container"></div>
@@ -87,7 +102,9 @@ def generate_html(data):
         const container = document.getElementById('results-container');
         const totalCountEl = document.getElementById('total-count');
         const matchCountEl = document.getElementById('match-count');
+        const partialCountEl = document.getElementById('partial-count');
         const mismatchCountEl = document.getElementById('mismatch-count');
+        const uncomparableCountEl = document.getElementById('uncomparable-count');
         const matchRateEl = document.getElementById('match-rate');
         const filterBtns = document.querySelectorAll('.filter-btn');
         const searchInput = document.getElementById('search-input');
@@ -118,12 +135,20 @@ def generate_html(data):
         function updateStats() {{
             const total = data.length;
             const matches = data.filter(d => d.status === 'match').length;
-            const mismatches = total - matches;
+            const partial = data.filter(d => d.status === 'partial').length;
+            const mismatches = data.filter(d => d.status === 'mismatch').length;
+            const uncomparable = data.filter(d => d.status === 'uncomparable').length;
+            const errors = data.filter(d => d.status === 'ichiran_error' || d.status === 'himotoki_error').length;
+            
+            // Comparable = total minus uncomparable and errors
+            const comparable = total - uncomparable - errors;
             
             totalCountEl.textContent = total;
             matchCountEl.textContent = matches;
+            partialCountEl.textContent = partial;
             mismatchCountEl.textContent = mismatches;
-            matchRateEl.textContent = total > 0 ? Math.round((matches / total) * 100) + '%' : '0%';
+            uncomparableCountEl.textContent = uncomparable;
+            matchRateEl.textContent = comparable > 0 ? Math.round((matches / comparable) * 100) + '%' : '0%';
         }}
 
         function renderSegment(seg, otherSeg) {{
@@ -160,7 +185,14 @@ def generate_html(data):
             container.innerHTML = '';
             
             const filteredData = data.filter(item => {{
-                const matchesFilter = currentFilter === 'all' || item.status === currentFilter;
+                let matchesFilter = false;
+                if (currentFilter === 'all') {{
+                    matchesFilter = true;
+                }} else if (currentFilter === 'errors') {{
+                    matchesFilter = item.status === 'ichiran_error' || item.status === 'himotoki_error';
+                }} else {{
+                    matchesFilter = item.status === currentFilter;
+                }}
                 const matchesSearch = item.sentence.toLowerCase().includes(searchQuery);
                 return matchesFilter && matchesSearch;
             }});
@@ -173,29 +205,31 @@ def generate_html(data):
                 card.className = 'card';
                 
                 const isMatch = item.status === 'match';
-                const statusClass = isMatch ? 'match' : 'mismatch';
+                const isPartial = item.status === 'partial';
+                const statusClass = item.status.replace('_', '-');
                 
-                const diffHtml = !isMatch ? renderDiffs(item.differences) : '';
+                const diffHtml = (!isMatch) ? renderDiffs(item.differences) : '';
 
                 // Check for score/seq differences even in matches
                 let hasScoreDiff = false;
                 let hasSeqDiff = false;
-                if (item.ichiran_segments.length === item.himotoki_segments.length) {{
+                if (item.ichiran_segments && item.himotoki_segments && 
+                    item.ichiran_segments.length === item.himotoki_segments.length) {{
                     for (let i = 0; i < item.ichiran_segments.length; i++) {{
                         if (item.ichiran_segments[i].score !== item.himotoki_segments[i].score) hasScoreDiff = true;
                         if (item.ichiran_segments[i].seq !== item.himotoki_segments[i].seq) hasSeqDiff = true;
                     }}
                 }}
 
-                const ichiranHtml = item.ichiran_segments.map((seg, i) => {{
-                    const other = item.himotoki_segments[i];
-                    const shouldCompare = isMatch || (other && other.text === seg.text);
+                const ichiranHtml = (item.ichiran_segments || []).map((seg, i) => {{
+                    const other = item.himotoki_segments ? item.himotoki_segments[i] : null;
+                    const shouldCompare = (isMatch || isPartial) || (other && other.text === seg.text);
                     return renderSegment(seg, shouldCompare ? other : null);
                 }}).join('');
 
-                const himotokiHtml = item.himotoki_segments.map((seg, i) => {{
-                    const other = item.ichiran_segments[i];
-                    const shouldCompare = isMatch || (other && other.text === seg.text);
+                const himotokiHtml = (item.himotoki_segments || []).map((seg, i) => {{
+                    const other = item.ichiran_segments ? item.ichiran_segments[i] : null;
+                    const shouldCompare = (isMatch || isPartial) || (other && other.text === seg.text);
                     return renderSegment(seg, shouldCompare ? other : null);
                 }}).join('');
 

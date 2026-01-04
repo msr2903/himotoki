@@ -1,0 +1,8063 @@
+[
+  {
+    "sentence": "猫が",
+    "status": "match",
+    "ichiran_texts": [
+      "猫",
+      "が"
+    ],
+    "himotoki_texts": [
+      "猫",
+      "が"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "猫",
+        "kana": "ねこ",
+        "seq": 1467640,
+        "score": 19,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "が",
+        "kana": "が",
+        "seq": 2028930,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[conj,prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "猫",
+        "kana": "ねこ",
+        "seq": 1467640,
+        "score": 19,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "が",
+        "kana": "が",
+        "seq": 2028930,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[conj,prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 3.2376937866210938
+  },
+  {
+    "sentence": "犬を",
+    "status": "match",
+    "ichiran_texts": [
+      "犬",
+      "を"
+    ],
+    "himotoki_texts": [
+      "犬",
+      "を"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "犬",
+        "kana": "いぬ",
+        "seq": 1258330,
+        "score": 13,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "犬",
+        "kana": "いぬ",
+        "seq": 1258330,
+        "score": 13,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.18086910247802734
+  },
+  {
+    "sentence": "山に",
+    "status": "match",
+    "ichiran_texts": [
+      "山",
+      "に"
+    ],
+    "himotoki_texts": [
+      "山",
+      "に"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "山",
+        "kana": "やま",
+        "seq": 1302680,
+        "score": 24,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,ctr]",
+          "[n,ctr]",
+          "[n,ctr]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "山",
+        "kana": "やま",
+        "seq": 1302680,
+        "score": 24,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,ctr]",
+          "[n,ctr]",
+          "[n,ctr]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.4849827289581299
+  },
+  {
+    "sentence": "川で",
+    "status": "match",
+    "ichiran_texts": [
+      "川",
+      "で"
+    ],
+    "himotoki_texts": [
+      "川",
+      "で"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "川",
+        "kana": "かわ",
+        "seq": 1390020,
+        "score": 23,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[suf]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "川",
+        "kana": "かわ",
+        "seq": 1390020,
+        "score": 23,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[suf]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 3.2860777378082275
+  },
+  {
+    "sentence": "友達と",
+    "status": "match",
+    "ichiran_texts": [
+      "友達",
+      "と"
+    ],
+    "himotoki_texts": [
+      "友達",
+      "と"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "友達",
+        "kana": "ともだち",
+        "seq": 1540170,
+        "score": 273,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "と",
+        "kana": "と",
+        "seq": 1008490,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt,conj]",
+          "[prt,conj]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "友達",
+        "kana": "ともだち",
+        "seq": 1540170,
+        "score": 273,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "と",
+        "kana": "と",
+        "seq": 1008490,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt,conj]",
+          "[prt,conj]",
+          "[prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.27577686309814453
+  },
+  {
+    "sentence": "家から",
+    "status": "match",
+    "ichiran_texts": [
+      "家",
+      "から"
+    ],
+    "himotoki_texts": [
+      "家",
+      "から"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "家",
+        "kana": "いえ",
+        "seq": 1191730,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "から",
+        "kana": "から",
+        "seq": 1002980,
+        "score": 68,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "家",
+        "kana": "いえ",
+        "seq": 1191730,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "から",
+        "kana": "から",
+        "seq": 1002980,
+        "score": 68,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.7713379859924316
+  },
+  {
+    "sentence": "駅まで",
+    "status": "match",
+    "ichiran_texts": [
+      "駅",
+      "まで"
+    ],
+    "himotoki_texts": [
+      "駅",
+      "まで"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "駅",
+        "kana": "えき",
+        "seq": 1175140,
+        "score": 21,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[ctr]"
+        ]
+      },
+      {
+        "text": "まで",
+        "kana": "まで",
+        "seq": 1525680,
+        "score": 68,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "駅",
+        "kana": "えき",
+        "seq": 1175140,
+        "score": 21,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[ctr]"
+        ]
+      },
+      {
+        "text": "まで",
+        "kana": "まで",
+        "seq": 1525680,
+        "score": 68,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.4702720642089844
+  },
+  {
+    "sentence": "本は",
+    "status": "match",
+    "ichiran_texts": [
+      "本",
+      "は"
+    ],
+    "himotoki_texts": [
+      "本",
+      "は"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "‌は",
+        "seq": 2028920,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "は",
+        "seq": 2028920,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.41266489028930664
+  },
+  {
+    "sentence": "私も",
+    "status": "match",
+    "ichiran_texts": [
+      "私",
+      "も"
+    ],
+    "himotoki_texts": [
+      "私",
+      "も"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "私",
+        "kana": "わたし",
+        "seq": 1311110,
+        "score": 25,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pn]"
+        ]
+      },
+      {
+        "text": "も",
+        "kana": "も",
+        "seq": 2028940,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "私",
+        "kana": "わたし",
+        "seq": 1311110,
+        "score": 25,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pn]"
+        ]
+      },
+      {
+        "text": "も",
+        "kana": "も",
+        "seq": 2028940,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.6103630065917969
+  },
+  {
+    "sentence": "何か",
+    "status": "match",
+    "ichiran_texts": [
+      "何か"
+    ],
+    "himotoki_texts": [
+      "何か"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "何か",
+        "kana": "なにか",
+        "seq": 1188270,
+        "score": 184,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[adv]",
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "何か",
+        "kana": "なにか",
+        "seq": 1188270,
+        "score": 184,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pn]",
+          "[adv]",
+          "[int]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.32976484298706055
+  },
+  {
+    "sentence": "本を読む",
+    "status": "match",
+    "ichiran_texts": [
+      "本",
+      "を",
+      "読む"
+    ],
+    "himotoki_texts": [
+      "本",
+      "を",
+      "読む"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "読む",
+        "kana": "よむ",
+        "seq": 1456360,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5m,vt]",
+          "[v5m,vt]",
+          "[v5m,vt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "読む",
+        "kana": "よむ",
+        "seq": 1456360,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5m,vt]",
+          "[v5m,vt]",
+          "[v5m,vt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.5192580223083496
+  },
+  {
+    "sentence": "水を飲む",
+    "status": "match",
+    "ichiran_texts": [
+      "水",
+      "を",
+      "飲む"
+    ],
+    "himotoki_texts": [
+      "水",
+      "を",
+      "飲む"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "水",
+        "kana": "みず",
+        "seq": 1371260,
+        "score": 25,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "飲む",
+        "kana": "のむ",
+        "seq": 1169870,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5m,vt]",
+          "[v5m,vt]",
+          "[v5m,vt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "水",
+        "kana": "みず",
+        "seq": 1371260,
+        "score": 25,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "飲む",
+        "kana": "のむ",
+        "seq": 1169870,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5m,vt]",
+          "[v5m,vt]",
+          "[v5m,vt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.37236475944519043
+  },
+  {
+    "sentence": "東京に行く",
+    "status": "match",
+    "ichiran_texts": [
+      "東京",
+      "に",
+      "行く"
+    ],
+    "himotoki_texts": [
+      "東京",
+      "に",
+      "行く"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "東京",
+        "kana": "とうきょう",
+        "seq": 1447690,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "行く",
+        "kana": "いく",
+        "seq": 1578850,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5k-s,vi]",
+          "[v5k-s,vi]",
+          "[v5k-s,vi]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "東京",
+        "kana": "とうきょう",
+        "seq": 1447690,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "行く",
+        "kana": "いく",
+        "seq": 1578850,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5k-s,vi]",
+          "[v5k-s,vi]",
+          "[v5k-s,vi]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.6253297328948975
+  },
+  {
+    "sentence": "学校で勉強する",
+    "status": "match",
+    "ichiran_texts": [
+      "学校",
+      "で",
+      "勉強する"
+    ],
+    "himotoki_texts": [
+      "学校",
+      "で",
+      "勉強する"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "学校",
+        "kana": "がっこう",
+        "seq": 1206730,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "勉強する",
+        "kana": "べんきょうする",
+        "seq": 1512670,
+        "score": 736,
+        "is_compound": true,
+        "components": [
+          "勉強",
+          "する"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "学校",
+        "kana": "がっこう",
+        "seq": 1206730,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": []
+      },
+      {
+        "text": "勉強する",
+        "kana": "べんきょう する",
+        "seq": 1512670,
+        "score": 736,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.4643218517303467
+  },
+  {
+    "sentence": "友達と話す",
+    "status": "match",
+    "ichiran_texts": [
+      "友達",
+      "と",
+      "話す"
+    ],
+    "himotoki_texts": [
+      "友達",
+      "と",
+      "話す"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "友達",
+        "kana": "ともだち",
+        "seq": 1540170,
+        "score": 273,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "と",
+        "kana": "と",
+        "seq": 1008490,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt,conj]",
+          "[prt,conj]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "話す",
+        "kana": "はなす",
+        "seq": 1562350,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5s,vt]",
+          "[v5s,vt]",
+          "[vt,v5s]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "友達",
+        "kana": "ともだち",
+        "seq": 1540170,
+        "score": 273,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "と",
+        "kana": "と",
+        "seq": 1008490,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt,conj]",
+          "[prt,conj]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "話す",
+        "kana": "はなす",
+        "seq": 1562350,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5s,vt]",
+          "[v5s,vt]",
+          "[v5s,vt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.4981870651245117
+  },
+  {
+    "sentence": "家に帰る",
+    "status": "match",
+    "ichiran_texts": [
+      "家",
+      "に",
+      "帰る"
+    ],
+    "himotoki_texts": [
+      "家",
+      "に",
+      "帰る"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "家",
+        "kana": "いえ",
+        "seq": 1191730,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "帰る",
+        "kana": "かえる",
+        "seq": 1221270,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5r,vi]",
+          "[v5r,vi]",
+          "[vi,v5r]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "家",
+        "kana": "いえ",
+        "seq": 1191730,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "帰る",
+        "kana": "かえる",
+        "seq": 1221270,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5r,vi]",
+          "[v5r,vi]",
+          "[v5r,vi]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.7916998863220215
+  },
+  {
+    "sentence": "電車で行く",
+    "status": "match",
+    "ichiran_texts": [
+      "電車",
+      "で",
+      "行く"
+    ],
+    "himotoki_texts": [
+      "電車",
+      "で",
+      "行く"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "電車",
+        "kana": "でんしゃ",
+        "seq": 1443530,
+        "score": 286,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "行く",
+        "kana": "いく",
+        "seq": 1578850,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5k-s,vi]",
+          "[v5k-s,vi]",
+          "[v5k-s,vi]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "電車",
+        "kana": "でんしゃ",
+        "seq": 1443530,
+        "score": 286,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": []
+      },
+      {
+        "text": "行く",
+        "kana": "いく",
+        "seq": 1578850,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5k-s,vi]",
+          "[v5k-s,vi]",
+          "[v5k-s,vi]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 1.585927963256836
+  },
+  {
+    "sentence": "日本語を勉強する",
+    "status": "match",
+    "ichiran_texts": [
+      "日本語",
+      "を",
+      "勉強する"
+    ],
+    "himotoki_texts": [
+      "日本語",
+      "を",
+      "勉強する"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "日本語",
+        "kana": "にほんご",
+        "seq": 1464530,
+        "score": 1054,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "勉強する",
+        "kana": "べんきょうする",
+        "seq": 1512670,
+        "score": 736,
+        "is_compound": true,
+        "components": [
+          "勉強",
+          "する"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "日本語",
+        "kana": "にほんご",
+        "seq": 1464530,
+        "score": 1054,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "勉強する",
+        "kana": "べんきょう する",
+        "seq": 1512670,
+        "score": 736,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.3456540107727051
+  },
+  {
+    "sentence": "ご飯を食べる",
+    "status": "match",
+    "ichiran_texts": [
+      "ご飯",
+      "を",
+      "食べる"
+    ],
+    "himotoki_texts": [
+      "ご飯",
+      "を",
+      "食べる"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "ご飯",
+        "kana": "ごはん",
+        "seq": 1270590,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "食べる",
+        "kana": "たべる",
+        "seq": 1358280,
+        "score": 504,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vt]",
+          "[vt,v1]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "ご飯",
+        "kana": "ごはん",
+        "seq": 1270590,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "食べる",
+        "kana": "たべる",
+        "seq": 1358280,
+        "score": 504,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vt]",
+          "[v1,vt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.5433378219604492
+  },
+  {
+    "sentence": "音楽を聴く",
+    "status": "match",
+    "ichiran_texts": [
+      "音楽",
+      "を",
+      "聴く"
+    ],
+    "himotoki_texts": [
+      "音楽",
+      "を",
+      "聴く"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "音楽",
+        "kana": "おんがく",
+        "seq": 1183720,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "聴く",
+        "kana": "きく",
+        "seq": 1591110,
+        "score": 88,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5k,vt]",
+          "[v5k,vt]",
+          "[v5k,vt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "音楽",
+        "kana": "おんがく",
+        "seq": 1183720,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "聴く",
+        "kana": "きく",
+        "seq": 1591110,
+        "score": 88,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5k,vt]",
+          "[v5k,vt]",
+          "[v5k,vt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.6689300537109375e-06,
+    "time_himotoki": 0.4148132801055908
+  },
+  {
+    "sentence": "学生です",
+    "status": "match",
+    "ichiran_texts": [
+      "学生",
+      "です"
+    ],
+    "himotoki_texts": [
+      "学生",
+      "です"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "学生",
+        "kana": "がくせい",
+        "seq": 1206900,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "学生",
+        "kana": "がくせい",
+        "seq": 1206900,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.5251610279083252
+  },
+  {
+    "sentence": "先生です",
+    "status": "match",
+    "ichiran_texts": [
+      "先生",
+      "です"
+    ],
+    "himotoki_texts": [
+      "先生",
+      "です"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "先生",
+        "kana": "せんせい",
+        "seq": 1387990,
+        "score": 312,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n,n-suf]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "先生",
+        "kana": "せんせい",
+        "seq": 1387990,
+        "score": 312,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n,n-suf]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.5438358783721924
+  },
+  {
+    "sentence": "静かです",
+    "status": "match",
+    "ichiran_texts": [
+      "静か",
+      "です"
+    ],
+    "himotoki_texts": [
+      "静か",
+      "です"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "静か",
+        "kana": "しずか",
+        "seq": 1381820,
+        "score": 168,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "静か",
+        "kana": "しずか",
+        "seq": 1381820,
+        "score": 168,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.6307740211486816
+  },
+  {
+    "sentence": "元気です",
+    "status": "match",
+    "ichiran_texts": [
+      "元気",
+      "です"
+    ],
+    "himotoki_texts": [
+      "元気",
+      "です"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "元気",
+        "kana": "げんき",
+        "seq": 1260720,
+        "score": 260,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na,n]",
+          "[n,adj-na]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "元気",
+        "kana": "げんき",
+        "seq": 1260720,
+        "score": 260,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na,n]",
+          "[adj-na,n]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.5355300903320312
+  },
+  {
+    "sentence": "本だ",
+    "status": "match",
+    "ichiran_texts": [
+      "本",
+      "だ"
+    ],
+    "himotoki_texts": [
+      "本",
+      "だ"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "だ",
+        "kana": "だ",
+        "seq": 2089020,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[aux-v,cop-da,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "だ",
+        "kana": "だ",
+        "seq": 2089020,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.3642890453338623
+  },
+  {
+    "sentence": "猫だ",
+    "status": "match",
+    "ichiran_texts": [
+      "猫",
+      "だ"
+    ],
+    "himotoki_texts": [
+      "猫",
+      "だ"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "猫",
+        "kana": "ねこ",
+        "seq": 1467640,
+        "score": 19,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "だ",
+        "kana": "だ",
+        "seq": 2089020,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[aux-v,cop-da,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "猫",
+        "kana": "ねこ",
+        "seq": 1467640,
+        "score": 19,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "だ",
+        "kana": "だ",
+        "seq": 2089020,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.2130751609802246
+  },
+  {
+    "sentence": "きれいです",
+    "status": "match",
+    "ichiran_texts": [
+      "きれい",
+      "です"
+    ],
+    "himotoki_texts": [
+      "きれい",
+      "です"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "きれい",
+        "kana": "きれい",
+        "seq": 1591900,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "きれい",
+        "kana": "きれい",
+        "seq": 1591900,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 3.1720259189605713
+  },
+  {
+    "sentence": "有名です",
+    "status": "match",
+    "ichiran_texts": [
+      "有名",
+      "です"
+    ],
+    "himotoki_texts": [
+      "有名",
+      "です"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "有名",
+        "kana": "ゆうめい",
+        "seq": 1541620,
+        "score": 299,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "有名",
+        "kana": "ゆうめい",
+        "seq": 1541620,
+        "score": 299,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.491569995880127
+  },
+  {
+    "sentence": "日本人です",
+    "status": "match",
+    "ichiran_texts": [
+      "日本人",
+      "です"
+    ],
+    "himotoki_texts": [
+      "日本人",
+      "です"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "日本人",
+        "kana": "にほんじん",
+        "seq": 1464700,
+        "score": 1088,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "日本人",
+        "kana": "にほんじん",
+        "seq": 1464700,
+        "score": 1088,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 1.5340638160705566
+  },
+  {
+    "sentence": "学校です",
+    "status": "match",
+    "ichiran_texts": [
+      "学校",
+      "です"
+    ],
+    "himotoki_texts": [
+      "学校",
+      "です"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "学校",
+        "kana": "がっこう",
+        "seq": 1206730,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "学校",
+        "kana": "がっこう",
+        "seq": 1206730,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "です",
+        "kana": "です",
+        "seq": 1628500,
+        "score": 64,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.4917221069335938
+  },
+  {
+    "sentence": "食べている",
+    "status": "partial",
+    "ichiran_texts": [
+      "食べている"
+    ],
+    "himotoki_texts": [
+      "食べている"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べている",
+        "kana": "たべている",
+        "seq": 10091242,
+        "score": 630,
+        "is_compound": true,
+        "components": [
+          "食べて",
+          "いる"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べている",
+        "kana": "たべている",
+        "seq": 10063115,
+        "score": 630,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '食べている': seq: 10091242 vs 10063115"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.2164068222045898
+  },
+  {
+    "sentence": "食べています",
+    "status": "match",
+    "ichiran_texts": [
+      "食べています"
+    ],
+    "himotoki_texts": [
+      "食べています"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べています",
+        "kana": "たべています",
+        "seq": 10091242,
+        "score": 812,
+        "is_compound": true,
+        "components": [
+          "食べて",
+          "います"
+        ],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "居る",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べています",
+        "kana": "たべています",
+        "seq": 10063115,
+        "score": 812,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "居る",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 2.0460469722747803
+  },
+  {
+    "sentence": "見ている",
+    "status": "partial",
+    "ichiran_texts": [
+      "見ている"
+    ],
+    "himotoki_texts": [
+      "見ている"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "見ている",
+        "kana": "みている",
+        "seq": 10312424,
+        "score": 406,
+        "is_compound": true,
+        "components": [
+          "見て",
+          "いる"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "見ている",
+        "kana": "みている",
+        "seq": 10050355,
+        "score": 406,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '見ている': seq: 10312424 vs 10050355"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.199753999710083
+  },
+  {
+    "sentence": "読んでいる",
+    "status": "partial",
+    "ichiran_texts": [
+      "読んでいる"
+    ],
+    "himotoki_texts": [
+      "読んでいる"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "読んでいる",
+        "kana": "よんでいる",
+        "seq": 10101138,
+        "score": 630,
+        "is_compound": true,
+        "components": [
+          "読んで",
+          "いる"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "読んでいる",
+        "kana": "よんでいる",
+        "seq": 10280116,
+        "score": 630,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '読んでいる': seq: 10101138 vs 10280116"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.4022581577301025
+  },
+  {
+    "sentence": "書いている",
+    "status": "partial",
+    "ichiran_texts": [
+      "書いている"
+    ],
+    "himotoki_texts": [
+      "書いている"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "書いている",
+        "kana": "かいている",
+        "seq": 10522827,
+        "score": 630,
+        "is_compound": true,
+        "components": [
+          "書いて",
+          "いる"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "書いている",
+        "kana": "かいている",
+        "seq": 10226350,
+        "score": 630,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '書いている': seq: 10522827 vs 10226350"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 2.3214519023895264
+  },
+  {
+    "sentence": "走っている",
+    "status": "partial",
+    "ichiran_texts": [
+      "走っている"
+    ],
+    "himotoki_texts": [
+      "走っている"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "走っている",
+        "kana": "はしっている",
+        "seq": 10062721,
+        "score": 406,
+        "is_compound": true,
+        "components": [
+          "走って",
+          "いる"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "走っている",
+        "kana": "はしっている",
+        "seq": 10327244,
+        "score": 406,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '走っている': seq: 10062721 vs 10327244"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.9464998245239258
+  },
+  {
+    "sentence": "食べてある",
+    "status": "partial",
+    "ichiran_texts": [
+      "食べてある"
+    ],
+    "himotoki_texts": [
+      "食べてある"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べてある",
+        "kana": "たべてある",
+        "seq": 10091242,
+        "score": 462,
+        "is_compound": true,
+        "components": [
+          "食べて",
+          "ある"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べてある",
+        "kana": "たべてある",
+        "seq": 10063115,
+        "score": 462,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '食べてある': seq: 10091242 vs 10063115"
+    ],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.4065239429473877
+  },
+  {
+    "sentence": "書いてある",
+    "status": "partial",
+    "ichiran_texts": [
+      "書いてある"
+    ],
+    "himotoki_texts": [
+      "書いてある"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "書いてある",
+        "kana": "かいてある",
+        "seq": 10522827,
+        "score": 462,
+        "is_compound": true,
+        "components": [
+          "書いて",
+          "ある"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "書いてある",
+        "kana": "かいてある",
+        "seq": 10226350,
+        "score": 462,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '書いてある': seq: 10522827 vs 10226350"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.9962189197540283
+  },
+  {
+    "sentence": "食べてしまう",
+    "status": "partial",
+    "ichiran_texts": [
+      "食べてしまう"
+    ],
+    "himotoki_texts": [
+      "食べてしまう"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べてしまう",
+        "kana": "たべてしまう",
+        "seq": 10091242,
+        "score": 560,
+        "is_compound": true,
+        "components": [
+          "食べて",
+          "しまう"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べてしまう",
+        "kana": "たべてしまう",
+        "seq": 10063115,
+        "score": 560,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '食べてしまう': seq: 10091242 vs 10063115"
+    ],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.8340439796447754
+  },
+  {
+    "sentence": "忘れてしまった",
+    "status": "match",
+    "ichiran_texts": [
+      "忘れてしまった"
+    ],
+    "himotoki_texts": [
+      "忘れてしまった"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "忘れてしまった",
+        "kana": "わすれてしまった",
+        "seq": 10524475,
+        "score": 360,
+        "is_compound": true,
+        "components": [
+          "忘れて",
+          "しまった"
+        ],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "仕舞う",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "忘れてしまった",
+        "kana": "わすれてしまった",
+        "seq": 10082875,
+        "score": 360,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "仕舞う",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 1.8720481395721436
+  },
+  {
+    "sentence": "食べる",
+    "status": "match",
+    "ichiran_texts": [
+      "食べる"
+    ],
+    "himotoki_texts": [
+      "食べる"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べる",
+        "kana": "たべる",
+        "seq": 1358280,
+        "score": 504,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vt]",
+          "[vt,v1]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べる",
+        "kana": "たべる",
+        "seq": 1358280,
+        "score": 504,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vt]",
+          "[v1,vt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.27967214584350586
+  },
+  {
+    "sentence": "食べた",
+    "status": "match",
+    "ichiran_texts": [
+      "食べた"
+    ],
+    "himotoki_texts": [
+      "食べた"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べた",
+        "kana": "たべた",
+        "seq": 10091238,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べた",
+        "kana": "たべた",
+        "seq": 10063111,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 1.1333320140838623
+  },
+  {
+    "sentence": "食べない",
+    "status": "match",
+    "ichiran_texts": [
+      "食べない"
+    ],
+    "himotoki_texts": [
+      "食べない"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べない",
+        "kana": "たべない",
+        "seq": 10091236,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べない",
+        "kana": "たべない",
+        "seq": 10063109,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 2.0330758094787598
+  },
+  {
+    "sentence": "食べます",
+    "status": "match",
+    "ichiran_texts": [
+      "食べます"
+    ],
+    "himotoki_texts": [
+      "食べます"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べます",
+        "kana": "たべます",
+        "seq": 10091235,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べます",
+        "kana": "たべます",
+        "seq": 10063108,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 1.2124617099761963
+  },
+  {
+    "sentence": "食べました",
+    "status": "match",
+    "ichiran_texts": [
+      "食べました"
+    ],
+    "himotoki_texts": [
+      "食べました"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べました",
+        "kana": "たべました",
+        "seq": 10091239,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べました",
+        "kana": "たべました",
+        "seq": 10063112,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 7.152557373046875e-07,
+    "time_himotoki": 1.9156382083892822
+  },
+  {
+    "sentence": "食べません",
+    "status": "match",
+    "ichiran_texts": [
+      "食べません"
+    ],
+    "himotoki_texts": [
+      "食べません"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べません",
+        "kana": "たべません",
+        "seq": 10091237,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": true,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べません",
+        "kana": "たべません",
+        "seq": 10063110,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": true,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.8582940101623535
+  },
+  {
+    "sentence": "食べて",
+    "status": "match",
+    "ichiran_texts": [
+      "食べて"
+    ],
+    "himotoki_texts": [
+      "食べて"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べて",
+        "kana": "たべて",
+        "seq": 10091242,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べて",
+        "kana": "たべて",
+        "seq": 10063115,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.1864330768585205
+  },
+  {
+    "sentence": "食べたい",
+    "status": "partial",
+    "ichiran_texts": [
+      "食べたい"
+    ],
+    "himotoki_texts": [
+      "食べたい"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べたい",
+        "kana": "たべたい",
+        "seq": 10091282,
+        "score": 378,
+        "is_compound": true,
+        "components": [
+          "食べ",
+          "たい"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べたい",
+        "kana": "たべたい",
+        "seq": 10063151,
+        "score": 378,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '食べたい': seq: 10091282 vs 10063151"
+    ],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.0095608234405518
+  },
+  {
+    "sentence": "食べられる",
+    "status": "match",
+    "ichiran_texts": [
+      "食べられる"
+    ],
+    "himotoki_texts": [
+      "食べられる"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べられる",
+        "kana": "たべられる",
+        "seq": 10091250,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Potential",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べられる",
+        "kana": "たべられる",
+        "seq": 10063123,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Potential",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.6475789546966553
+  },
+  {
+    "sentence": "食べさせる",
+    "status": "match",
+    "ichiran_texts": [
+      "食べさせる"
+    ],
+    "himotoki_texts": [
+      "食べさせる"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べさせる",
+        "kana": "たべさせる",
+        "seq": 10091254,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Causative",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べさせる",
+        "kana": "たべさせる",
+        "seq": 10063127,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Causative",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 2.8898770809173584
+  },
+  {
+    "sentence": "大きい",
+    "status": "match",
+    "ichiran_texts": [
+      "大きい"
+    ],
+    "himotoki_texts": [
+      "大きい"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "大きい",
+        "kana": "おおきい",
+        "seq": 1588880,
+        "score": 576,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-i]",
+          "[adj-i]",
+          "[adj-i]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "大きい",
+        "kana": "おおきい",
+        "seq": 1588880,
+        "score": 576,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-i]",
+          "[adj-i]",
+          "[adj-i]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 1.1799511909484863
+  },
+  {
+    "sentence": "大きかった",
+    "status": "match",
+    "ichiran_texts": [
+      "大きかった"
+    ],
+    "himotoki_texts": [
+      "大きかった"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "大きかった",
+        "kana": "おおきかった",
+        "seq": 10558887,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "大きい",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "大きかった",
+        "kana": "おおきかった",
+        "seq": 10008868,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "大きい",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 2.3583569526672363
+  },
+  {
+    "sentence": "大きくない",
+    "status": "match",
+    "ichiran_texts": [
+      "大きくない"
+    ],
+    "himotoki_texts": [
+      "大きくない"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "大きくない",
+        "kana": "おおきくない",
+        "seq": 10558885,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "大きい",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "大きくない",
+        "kana": "おおきくない",
+        "seq": 10008866,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "大きい",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 2.6988747119903564
+  },
+  {
+    "sentence": "大きくなかった",
+    "status": "match",
+    "ichiran_texts": [
+      "大きくなかった"
+    ],
+    "himotoki_texts": [
+      "大きくなかった"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "大きくなかった",
+        "kana": "おおきくなかった",
+        "seq": 10558889,
+        "score": 1656,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "大きい",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "大きくなかった",
+        "kana": "おおきくなかった",
+        "seq": 10008870,
+        "score": 1656,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "大きい",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 2.979713201522827
+  },
+  {
+    "sentence": "静かな",
+    "status": "partial",
+    "ichiran_texts": [
+      "静か",
+      "な"
+    ],
+    "himotoki_texts": [
+      "静か",
+      "な"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "静か",
+        "kana": "しずか",
+        "seq": 1381820,
+        "score": 168,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "な",
+        "kana": "な",
+        "seq": 2029110,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Adjective Stem",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "ない",
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "静か",
+        "kana": "しずか",
+        "seq": 1381820,
+        "score": 168,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "な",
+        "kana": "な",
+        "seq": 2029110,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[int]"
+        ]
+      }
+    ],
+    "differences": [
+      "Segment 'な': conj_type: Adjective Stem vs None"
+    ],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.3811209201812744
+  },
+  {
+    "sentence": "静かに",
+    "status": "match",
+    "ichiran_texts": [
+      "静かに"
+    ],
+    "himotoki_texts": [
+      "静かに"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "静かに",
+        "kana": "しずかに",
+        "seq": 2119870,
+        "score": 264,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adv]",
+          "[exp]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "静かに",
+        "kana": "しずかに",
+        "seq": 2119870,
+        "score": 264,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adv]",
+          "[exp]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.5406429767608643
+  },
+  {
+    "sentence": "きれいな",
+    "status": "partial",
+    "ichiran_texts": [
+      "きれい",
+      "な"
+    ],
+    "himotoki_texts": [
+      "きれい",
+      "な"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "きれい",
+        "kana": "きれい",
+        "seq": 1591900,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "な",
+        "kana": "な",
+        "seq": 2029110,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Adjective Stem",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "ない",
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "きれい",
+        "kana": "きれい",
+        "seq": 1591900,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "な",
+        "kana": "な",
+        "seq": 2029110,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[int]"
+        ]
+      }
+    ],
+    "differences": [
+      "Segment 'な': conj_type: Adjective Stem vs None"
+    ],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.808811902999878
+  },
+  {
+    "sentence": "きれいに",
+    "status": "match",
+    "ichiran_texts": [
+      "きれい",
+      "に"
+    ],
+    "himotoki_texts": [
+      "きれい",
+      "に"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "きれい",
+        "kana": "きれい",
+        "seq": 1591900,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "きれい",
+        "kana": "きれい",
+        "seq": 1591900,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]",
+          "[adj-na]",
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 2.0437119007110596
+  },
+  {
+    "sentence": "天気がいい",
+    "status": "partial",
+    "ichiran_texts": [
+      "天気",
+      "が",
+      "いい"
+    ],
+    "himotoki_texts": [
+      "天気",
+      "が",
+      "いい"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "天気",
+        "kana": "てんき",
+        "seq": 1438690,
+        "score": 260,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "が",
+        "kana": "が",
+        "seq": 2028930,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[conj,prt]"
+        ]
+      },
+      {
+        "text": "いい",
+        "kana": "いい",
+        "seq": 2820690,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-ix]",
+          "[adj-ix]",
+          "[adj-ix]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "天気",
+        "kana": "てんき",
+        "seq": 1438690,
+        "score": 260,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "が",
+        "kana": "が",
+        "seq": 2028930,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[conj,prt]"
+        ]
+      },
+      {
+        "text": "いい",
+        "kana": "いい",
+        "seq": 10556282,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Continuative (~i)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "言う",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment 'いい': conj_type: None vs Continuative (~i)"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 2.5319957733154297
+  },
+  {
+    "sentence": "本が面白い",
+    "status": "match",
+    "ichiran_texts": [
+      "本",
+      "が",
+      "面白い"
+    ],
+    "himotoki_texts": [
+      "本",
+      "が",
+      "面白い"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "が",
+        "kana": "が",
+        "seq": 2028930,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[conj,prt]"
+        ]
+      },
+      {
+        "text": "面白い",
+        "kana": "おもしろい",
+        "seq": 1533580,
+        "score": 667,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-i]",
+          "[adj-i]",
+          "[adj-i]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "が",
+        "kana": "が",
+        "seq": 2028930,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[conj,prt]"
+        ]
+      },
+      {
+        "text": "面白い",
+        "kana": "おもしろい",
+        "seq": 1533580,
+        "score": 667,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-i]",
+          "[adj-i]",
+          "[adj-i]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.6689300537109375e-06,
+    "time_himotoki": 1.2171151638031006
+  },
+  {
+    "sentence": "一覧は最高だぞ",
+    "status": "match",
+    "ichiran_texts": [
+      "一覧",
+      "は",
+      "最高",
+      "だ",
+      "ぞ"
+    ],
+    "himotoki_texts": [
+      "一覧",
+      "は",
+      "最高",
+      "だ",
+      "ぞ"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "一覧",
+        "kana": "いちらん",
+        "seq": 1167180,
+        "score": 208,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,vs,vt]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "‌は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "最高",
+        "kana": "さいこう",
+        "seq": 1293850,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-no,adj-na,n]",
+          "[n,adj-na,adj-no]"
+        ]
+      },
+      {
+        "text": "だ",
+        "kana": "だ",
+        "seq": 2089020,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[cop-da,aux-v,cop]"
+        ]
+      },
+      {
+        "text": "ぞ",
+        "kana": "ぞ",
+        "seq": 2029130,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "一覧",
+        "kana": "いちらん",
+        "seq": 1167180,
+        "score": 208,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,vs,vt]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "最高",
+        "kana": "さいこう",
+        "seq": 1293850,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-no,adj-na,n]",
+          "[adj-no,adj-na,n]"
+        ]
+      },
+      {
+        "text": "だ",
+        "kana": "だ",
+        "seq": 2089020,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      },
+      {
+        "text": "ぞ",
+        "kana": "ぞ",
+        "seq": 2029130,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.5704059600830078
+  },
+  {
+    "sentence": "猫に水をあげる",
+    "status": "match",
+    "ichiran_texts": [
+      "猫",
+      "に",
+      "水",
+      "を",
+      "あげる"
+    ],
+    "himotoki_texts": [
+      "猫",
+      "に",
+      "水",
+      "を",
+      "あげる"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "猫",
+        "kana": "ねこ",
+        "seq": 1467640,
+        "score": 19,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "水",
+        "kana": "みず",
+        "seq": 1371260,
+        "score": 25,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "あげる",
+        "kana": "あげる",
+        "seq": 1352320,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vt]",
+          "[v1,vt]",
+          "[v1,vt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "猫",
+        "kana": "ねこ",
+        "seq": 1467640,
+        "score": 19,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "水",
+        "kana": "みず",
+        "seq": 1371260,
+        "score": 25,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "あげる",
+        "kana": "あげる",
+        "seq": 1352320,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vt]",
+          "[v1,vt]",
+          "[v1,vt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.9166159629821777
+  },
+  {
+    "sentence": "日本語を勉強しています",
+    "status": "match",
+    "ichiran_texts": [
+      "日本語",
+      "を",
+      "勉強しています"
+    ],
+    "himotoki_texts": [
+      "日本語",
+      "を",
+      "勉強しています"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "日本語",
+        "kana": "にほんご",
+        "seq": 1464530,
+        "score": 1054,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "勉強しています",
+        "kana": "べんきょうしています",
+        "seq": 1512670,
+        "score": 2254,
+        "is_compound": true,
+        "components": [
+          "勉強",
+          "して",
+          "います"
+        ],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "居る",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "日本語",
+        "kana": "にほんご",
+        "seq": 1464530,
+        "score": 1054,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "勉強しています",
+        "kana": "べんきょういます",
+        "seq": 1512670,
+        "score": 2254,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "居る",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 2.558967113494873
+  },
+  {
+    "sentence": "東京に行きたいです",
+    "status": "match",
+    "ichiran_texts": [
+      "東京",
+      "に",
+      "行きたいです"
+    ],
+    "himotoki_texts": [
+      "東京",
+      "に",
+      "行きたいです"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "東京",
+        "kana": "とうきょう",
+        "seq": 1447690,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "行きたいです",
+        "kana": "いきたいです",
+        "seq": 10346556,
+        "score": 728,
+        "is_compound": true,
+        "components": [
+          "行き",
+          "たいです"
+        ],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "たい",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "東京",
+        "kana": "とうきょう",
+        "seq": 1447690,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "行きたいです",
+        "kana": "いきたいです",
+        "seq": 10269084,
+        "score": 728,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "たい",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 3.334425926208496
+  },
+  {
+    "sentence": "明日は雨が降るでしょう",
+    "status": "partial",
+    "ichiran_texts": [
+      "明日",
+      "は",
+      "雨が降る",
+      "でしょう"
+    ],
+    "himotoki_texts": [
+      "明日",
+      "は",
+      "雨が降る",
+      "でしょう"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "明日",
+        "kana": "あした",
+        "seq": 1584660,
+        "score": 273,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,adv]",
+          "[n,adv]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "‌は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "雨が降る",
+        "kana": "あめがふる",
+        "seq": 2851949,
+        "score": 1035,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v5r,exp]"
+        ]
+      },
+      {
+        "text": "でしょう",
+        "kana": "でしょう",
+        "seq": 1008420,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Volitional",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "だ",
+        "pos": [
+          "[exp]",
+          "[exp]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "明日",
+        "kana": "あした",
+        "seq": 1584660,
+        "score": 273,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,adv]",
+          "[n,adv]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "雨が降る",
+        "kana": "あめがふる",
+        "seq": 2851949,
+        "score": 1035,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp,v5r]"
+        ]
+      },
+      {
+        "text": "でしょう",
+        "kana": "でしょう",
+        "seq": 1008420,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp]",
+          "[exp]"
+        ]
+      }
+    ],
+    "differences": [
+      "Segment 'でしょう': conj_type: Volitional vs None, fml: True vs False"
+    ],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 2.1053309440612793
+  },
+  {
+    "sentence": "彼女は先生になりました",
+    "status": "partial",
+    "ichiran_texts": [
+      "彼女",
+      "は",
+      "先生",
+      "に",
+      "なりました"
+    ],
+    "himotoki_texts": [
+      "彼女",
+      "は",
+      "先生",
+      "に",
+      "なりました"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "彼女",
+        "kana": "かのじょ",
+        "seq": 1483150,
+        "score": 312,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pn]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "‌は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "先生",
+        "kana": "せんせい",
+        "seq": 1387990,
+        "score": 312,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n,n-suf]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "なりました",
+        "kana": "なりました",
+        "seq": 10371750,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "成る",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "彼女",
+        "kana": "かのじょ",
+        "seq": 1483150,
+        "score": 312,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pn]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "先生",
+        "kana": "せんせい",
+        "seq": 1387990,
+        "score": 312,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n,n-suf]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "なりました",
+        "kana": "なりました",
+        "seq": 10346227,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "生る",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment 'なりました': source: 成る vs 生る"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 4.383563995361328
+  },
+  {
+    "sentence": "この本は面白いと思います",
+    "status": "match",
+    "ichiran_texts": [
+      "この",
+      "本",
+      "は",
+      "面白い",
+      "と",
+      "思います"
+    ],
+    "himotoki_texts": [
+      "この",
+      "本",
+      "は",
+      "面白い",
+      "と",
+      "思います"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "この",
+        "kana": "この",
+        "seq": 1582920,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-pn]",
+          "[adj-pn]",
+          "[adj-pn]"
+        ]
+      },
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "‌は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "面白い",
+        "kana": "おもしろい",
+        "seq": 1533580,
+        "score": 667,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-i]",
+          "[adj-i]",
+          "[adj-i]"
+        ]
+      },
+      {
+        "text": "と",
+        "kana": "と",
+        "seq": 1008490,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt,conj]",
+          "[prt,conj]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "思います",
+        "kana": "おもいます",
+        "seq": 10542051,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "思う",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "この",
+        "kana": "この",
+        "seq": 1582920,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-pn]",
+          "[adj-pn]",
+          "[adj-pn]"
+        ]
+      },
+      {
+        "text": "本",
+        "kana": "ほん",
+        "seq": 1522150,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[pref]",
+          "[pref]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "面白い",
+        "kana": "おもしろい",
+        "seq": 1533580,
+        "score": 667,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-i]",
+          "[adj-i]",
+          "[adj-i]"
+        ]
+      },
+      {
+        "text": "と",
+        "kana": "と",
+        "seq": 1008490,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt,conj]",
+          "[prt,conj]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "思います",
+        "kana": "おもいます",
+        "seq": 10556422,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "思う",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 3.7862279415130615
+  },
+  {
+    "sentence": "時間がないから行けない",
+    "status": "match",
+    "ichiran_texts": [
+      "時間",
+      "が",
+      "ない",
+      "から",
+      "行けない"
+    ],
+    "himotoki_texts": [
+      "時間",
+      "が",
+      "ない",
+      "から",
+      "行けない"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "時間",
+        "kana": "じかん",
+        "seq": 1315920,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "が",
+        "kana": "が",
+        "seq": 2028930,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[conj,prt]"
+        ]
+      },
+      {
+        "text": "ない",
+        "kana": "ない",
+        "seq": 10467186,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "有る",
+        "pos": []
+      },
+      {
+        "text": "から",
+        "kana": "から",
+        "seq": 1002980,
+        "score": 48,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "行けない",
+        "kana": "いけない",
+        "seq": 10346522,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Potential",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "行く",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "時間",
+        "kana": "じかん",
+        "seq": 1315920,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "が",
+        "kana": "が",
+        "seq": 2028930,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[conj,prt]"
+        ]
+      },
+      {
+        "text": "ない",
+        "kana": "ない",
+        "seq": 10430043,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "有る",
+        "pos": []
+      },
+      {
+        "text": "から",
+        "kana": "から",
+        "seq": 1002980,
+        "score": 48,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "行けない",
+        "kana": "いけない",
+        "seq": 10269054,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Potential",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "行く",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 4.954998016357422
+  },
+  {
+    "sentence": "食べてから寝る",
+    "status": "match",
+    "ichiran_texts": [
+      "食べて",
+      "から",
+      "寝る"
+    ],
+    "himotoki_texts": [
+      "食べて",
+      "から",
+      "寝る"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べて",
+        "kana": "たべて",
+        "seq": 10091242,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      },
+      {
+        "text": "から",
+        "kana": "から",
+        "seq": 1002980,
+        "score": 48,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "寝る",
+        "kana": "ねる",
+        "seq": 1360010,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vi]",
+          "[v1,vi]",
+          "[v1,vi]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べて",
+        "kana": "たべて",
+        "seq": 10063115,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      },
+      {
+        "text": "から",
+        "kana": "から",
+        "seq": 1002980,
+        "score": 48,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "寝る",
+        "kana": "ねる",
+        "seq": 1360010,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vi]",
+          "[v1,vi]",
+          "[v1,vi]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.6972651481628418
+  },
+  {
+    "sentence": "勉強しなければならない",
+    "status": "partial",
+    "ichiran_texts": [
+      "勉強しなければ",
+      "ならない"
+    ],
+    "himotoki_texts": [
+      "勉強しなければ",
+      "ならない"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "勉強しなければ",
+        "kana": "べんきょうしなければ",
+        "seq": 1512670,
+        "score": 1564,
+        "is_compound": true,
+        "components": [
+          "勉強",
+          "しなければ"
+        ],
+        "conj_type": "Provisional (~eba)",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "為る",
+        "pos": []
+      },
+      {
+        "text": "ならない",
+        "kana": "ならない",
+        "seq": 10371747,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "成る",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "勉強しなければ",
+        "kana": "べんきょう しなければ",
+        "seq": 1512670,
+        "score": 1564,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Provisional (~eba)",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "為る",
+        "pos": []
+      },
+      {
+        "text": "ならない",
+        "kana": "ならない",
+        "seq": 10346224,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "生る",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment 'ならない': source: 成る vs 生る"
+    ],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 5.620335102081299
+  },
+  {
+    "sentence": "おはよう",
+    "status": "match",
+    "ichiran_texts": [
+      "おはよう"
+    ],
+    "himotoki_texts": [
+      "おはよう"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "おはよう",
+        "kana": "おはよう",
+        "seq": 1612820,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "おはよう",
+        "kana": "おはよう",
+        "seq": 1612820,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.3565540313720703
+  },
+  {
+    "sentence": "こんにちは",
+    "status": "match",
+    "ichiran_texts": [
+      "こんにちは"
+    ],
+    "himotoki_texts": [
+      "こんにちは"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "こんにちは",
+        "kana": "こんにち‌は",
+        "seq": 1289400,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "こんにちは",
+        "kana": "こんにちは",
+        "seq": 1289400,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.6627528667449951
+  },
+  {
+    "sentence": "こんばんは",
+    "status": "match",
+    "ichiran_texts": [
+      "こんばんは"
+    ],
+    "himotoki_texts": [
+      "こんばんは"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "こんばんは",
+        "kana": "こんばん‌は",
+        "seq": 1289480,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "こんばんは",
+        "kana": "こんばんは",
+        "seq": 1289480,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.6689300537109375e-06,
+    "time_himotoki": 0.4649970531463623
+  },
+  {
+    "sentence": "ありがとう",
+    "status": "match",
+    "ichiran_texts": [
+      "ありがとう"
+    ],
+    "himotoki_texts": [
+      "ありがとう"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "ありがとう",
+        "kana": "ありがとう",
+        "seq": 1586820,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "ありがとう",
+        "kana": "ありがとう",
+        "seq": 1586820,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.47724175453186035
+  },
+  {
+    "sentence": "すみません",
+    "status": "partial",
+    "ichiran_texts": [
+      "すみません"
+    ],
+    "himotoki_texts": [
+      "すみません"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "すみません",
+        "kana": "すみません",
+        "seq": 1295060,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp,int]",
+          "[int,exp]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "すみません",
+        "kana": "すみません",
+        "seq": 10274684,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": true,
+        "source_text": "済む",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment 'すみません': conj_type: None vs Non-past, neg: False vs True, fml: False vs True"
+    ],
+    "time_ichiran": 1.6689300537109375e-06,
+    "time_himotoki": 5.235075235366821
+  },
+  {
+    "sentence": "ごめんなさい",
+    "status": "match",
+    "ichiran_texts": [
+      "ごめんなさい"
+    ],
+    "himotoki_texts": [
+      "ごめんなさい"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "ごめんなさい",
+        "kana": "ごめんなさい",
+        "seq": 1270680,
+        "score": 396,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "ごめんなさい",
+        "kana": "ごめんなさい",
+        "seq": 1270680,
+        "score": 396,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.0682339668273926
+  },
+  {
+    "sentence": "いただきます",
+    "status": "match",
+    "ichiran_texts": [
+      "いただきます"
+    ],
+    "himotoki_texts": [
+      "いただきます"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "いただきます",
+        "kana": "いただきます",
+        "seq": 1410800,
+        "score": 756,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "頂く",
+        "pos": [
+          "[exp]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "いただきます",
+        "kana": "いただきます",
+        "seq": 1410800,
+        "score": 756,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": false,
+        "conj_fml": true,
+        "source_text": "頂く",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 2.915756940841675
+  },
+  {
+    "sentence": "ごちそうさま",
+    "status": "match",
+    "ichiran_texts": [
+      "ごちそうさま"
+    ],
+    "himotoki_texts": [
+      "ごちそうさま"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "ごちそうさま",
+        "kana": "ごちそうさま",
+        "seq": 1270520,
+        "score": 756,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]",
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "ごちそうさま",
+        "kana": "ごちそうさま",
+        "seq": 1270520,
+        "score": 756,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]",
+          "[int]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.6378271579742432
+  },
+  {
+    "sentence": "お願いします",
+    "status": "match",
+    "ichiran_texts": [
+      "お願いします"
+    ],
+    "himotoki_texts": [
+      "お願いします"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "お願いします",
+        "kana": "おねがいします",
+        "seq": 1001720,
+        "score": 1656,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "お願いします",
+        "kana": "おねがいします",
+        "seq": 1001720,
+        "score": 1656,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 2.0477499961853027
+  },
+  {
+    "sentence": "さようなら",
+    "status": "match",
+    "ichiran_texts": [
+      "さようなら"
+    ],
+    "himotoki_texts": [
+      "さようなら"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "さようなら",
+        "kana": "さようなら",
+        "seq": 1291050,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "さようなら",
+        "kana": "さようなら",
+        "seq": 1291050,
+        "score": 525,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.6358208656311035
+  },
+  {
+    "sentence": "一つ",
+    "status": "match",
+    "ichiran_texts": [
+      "一つ"
+    ],
+    "himotoki_texts": [
+      "一つ"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "一つ",
+        "kana": "ひとつ",
+        "seq": 1160820,
+        "score": 200,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[num]",
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "一つ",
+        "kana": "ひとつ",
+        "seq": 1160820,
+        "score": 200,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[num]",
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.2676107883453369
+  },
+  {
+    "sentence": "二人",
+    "status": "match",
+    "ichiran_texts": [
+      "二人"
+    ],
+    "himotoki_texts": [
+      "二人"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "二人",
+        "kana": "ふたり",
+        "seq": 1582670,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "二人",
+        "kana": "ふたり",
+        "seq": 1582670,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.2400047779083252
+  },
+  {
+    "sentence": "三匹",
+    "status": "match",
+    "ichiran_texts": [
+      "三匹"
+    ],
+    "himotoki_texts": [
+      "三匹"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "三匹",
+        "kana": "さんびき",
+        "seq": 1583370,
+        "score": 286,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[ctr]",
+          "[ctr]",
+          "[ctr]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "三匹",
+        "kana": "さんぴき",
+        "seq": 1583370,
+        "score": 128,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 7.152557373046875e-07,
+    "time_himotoki": 0.021708011627197266
+  },
+  {
+    "sentence": "四本",
+    "status": "match",
+    "ichiran_texts": [
+      "四本"
+    ],
+    "himotoki_texts": [
+      "四本"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "四本",
+        "kana": "よんほん",
+        "seq": 2005490,
+        "score": 208,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "四本",
+        "kana": "よんほん",
+        "seq": 2005490,
+        "score": 208,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.20053887367248535
+  },
+  {
+    "sentence": "五冊",
+    "status": "match",
+    "ichiran_texts": [
+      "五冊"
+    ],
+    "himotoki_texts": [
+      "五冊"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "五冊",
+        "kana": "ごさつ",
+        "seq": 1298520,
+        "score": 208,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[ctr]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "五冊",
+        "kana": "ごさつ",
+        "seq": 1298520,
+        "score": 80,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.6689300537109375e-06,
+    "time_himotoki": 0.023601293563842773
+  },
+  {
+    "sentence": "一月",
+    "status": "partial",
+    "ichiran_texts": [
+      "一月"
+    ],
+    "himotoki_texts": [
+      "一月"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "一月",
+        "kana": "ひとつき",
+        "seq": 1162130,
+        "score": 208,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "一月",
+        "kana": "いちがつ",
+        "seq": 1162120,
+        "score": 195,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [
+      "Segment '一月': seq: 1162130 vs 1162120"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.3934330940246582
+  },
+  {
+    "sentence": "二日",
+    "status": "match",
+    "ichiran_texts": [
+      "二日"
+    ],
+    "himotoki_texts": [
+      "二日"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "二日",
+        "kana": "ふつか",
+        "seq": 1462900,
+        "score": 143,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "二日",
+        "kana": "ふつか",
+        "seq": 1462900,
+        "score": 143,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.21199989318847656
+  },
+  {
+    "sentence": "三時",
+    "status": "match",
+    "ichiran_texts": [
+      "三時"
+    ],
+    "himotoki_texts": [
+      "三時"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "三時",
+        "kana": "さんじ",
+        "seq": 1300520,
+        "score": 143,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,adv]",
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "三時",
+        "kana": "さんじ",
+        "seq": 1300520,
+        "score": 143,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,adv]",
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.20394182205200195
+  },
+  {
+    "sentence": "百円",
+    "status": "match",
+    "ichiran_texts": [
+      "百円"
+    ],
+    "himotoki_texts": [
+      "百円"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "百円",
+        "kana": "ひゃくえん",
+        "seq": 2839866,
+        "score": 65,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "百円",
+        "kana": "ひゃくえん",
+        "seq": 2839866,
+        "score": 65,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.19664382934570312
+  },
+  {
+    "sentence": "千人",
+    "status": "match",
+    "ichiran_texts": [
+      "千人"
+    ],
+    "himotoki_texts": [
+      "千人"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "千人",
+        "kana": "せんにん",
+        "seq": 2149890,
+        "score": 208,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[ctr]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "千人",
+        "kana": "せんにん",
+        "seq": 2149890,
+        "score": 120,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.03308701515197754
+  },
+  {
+    "sentence": "コンピュータ",
+    "status": "match",
+    "ichiran_texts": [
+      "コンピュータ"
+    ],
+    "himotoki_texts": [
+      "コンピュータ"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "コンピュータ",
+        "kana": "コンピュータ",
+        "seq": 1053350,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "コンピュータ",
+        "kana": "コンピュータ",
+        "seq": 1053350,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.0323331356048584
+  },
+  {
+    "sentence": "テレビ",
+    "status": "match",
+    "ichiran_texts": [
+      "テレビ"
+    ],
+    "himotoki_texts": [
+      "テレビ"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "テレビ",
+        "kana": "テレビ",
+        "seq": 1080510,
+        "score": 384,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "テレビ",
+        "kana": "テレビ",
+        "seq": 1080510,
+        "score": 384,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.04597306251525879
+  },
+  {
+    "sentence": "インターネット",
+    "status": "match",
+    "ichiran_texts": [
+      "インターネット"
+    ],
+    "himotoki_texts": [
+      "インターネット"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "インターネット",
+        "kana": "インターネット",
+        "seq": 1022880,
+        "score": 1260,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "インターネット",
+        "kana": "インターネット",
+        "seq": 1022880,
+        "score": 1260,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.061594247817993164
+  },
+  {
+    "sentence": "レストラン",
+    "status": "match",
+    "ichiran_texts": [
+      "レストラン"
+    ],
+    "himotoki_texts": [
+      "レストラン"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "レストラン",
+        "kana": "レストラン",
+        "seq": 1145310,
+        "score": 1260,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "レストラン",
+        "kana": "レストラン",
+        "seq": 1145310,
+        "score": 1260,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.12310504913330078
+  },
+  {
+    "sentence": "コーヒー",
+    "status": "match",
+    "ichiran_texts": [
+      "コーヒー"
+    ],
+    "himotoki_texts": [
+      "コーヒー"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "コーヒー",
+        "kana": "コーヒー",
+        "seq": 1049180,
+        "score": 80,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "コーヒー",
+        "kana": "コーヒー",
+        "seq": 1049180,
+        "score": 80,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.025346040725708008
+  },
+  {
+    "sentence": "アメリカ",
+    "status": "match",
+    "ichiran_texts": [
+      "アメリカ"
+    ],
+    "himotoki_texts": [
+      "アメリカ"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "アメリカ",
+        "kana": "アメリカ",
+        "seq": 1149830,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "アメリカ",
+        "kana": "アメリカ",
+        "seq": 1149830,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.04847264289855957
+  },
+  {
+    "sentence": "フランス",
+    "status": "match",
+    "ichiran_texts": [
+      "フランス"
+    ],
+    "himotoki_texts": [
+      "フランス"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "フランス",
+        "kana": "フランス",
+        "seq": 1652680,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "フランス",
+        "kana": "フランス",
+        "seq": 1652680,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.06818199157714844
+  },
+  {
+    "sentence": "ドイツ",
+    "status": "match",
+    "ichiran_texts": [
+      "ドイツ"
+    ],
+    "himotoki_texts": [
+      "ドイツ"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "ドイツ",
+        "kana": "ドイツ",
+        "seq": 1599200,
+        "score": 384,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "ドイツ",
+        "kana": "ドイツ",
+        "seq": 1599200,
+        "score": 384,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.03157496452331543
+  },
+  {
+    "sentence": "スマートフォン",
+    "status": "match",
+    "ichiran_texts": [
+      "スマートフォン"
+    ],
+    "himotoki_texts": [
+      "スマートフォン"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "スマートフォン",
+        "kana": "スマートフォン",
+        "seq": 2304550,
+        "score": 660,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "スマートフォン",
+        "kana": "スマートフォン",
+        "seq": 2304550,
+        "score": 660,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.07828998565673828
+  },
+  {
+    "sentence": "プログラミング",
+    "status": "match",
+    "ichiran_texts": [
+      "プログラミング"
+    ],
+    "himotoki_texts": [
+      "プログラミング"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "プログラミング",
+        "kana": "プログラミング",
+        "seq": 1117070,
+        "score": 924,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[vt,vi,vs,n]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "プログラミング",
+        "kana": "プログラミング",
+        "seq": 1117070,
+        "score": 924,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,vs,vi,vt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.07355904579162598
+  },
+  {
+    "sentence": "がんばって",
+    "status": "match",
+    "ichiran_texts": [
+      "がんばって"
+    ],
+    "himotoki_texts": [
+      "がんばって"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "がんばって",
+        "kana": "がんばって",
+        "seq": 1949660,
+        "score": 416,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "頑張る",
+        "pos": [
+          "[int]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "がんばって",
+        "kana": "がんばって",
+        "seq": 1949660,
+        "score": 416,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "頑張る",
+        "pos": []
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.0839917659759521
+  },
+  {
+    "sentence": "やってみる",
+    "status": "match",
+    "ichiran_texts": [
+      "やってみる"
+    ],
+    "himotoki_texts": [
+      "やってみる"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "やってみる",
+        "kana": "やってみる",
+        "seq": 2059360,
+        "score": 176,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,exp]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "やってみる",
+        "kana": "やってみる",
+        "seq": 2059360,
+        "score": 176,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp,v1]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.9251949787139893
+  },
+  {
+    "sentence": "してあげる",
+    "status": "match",
+    "ichiran_texts": [
+      "して",
+      "あげる"
+    ],
+    "himotoki_texts": [
+      "して",
+      "あげる"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "して",
+        "kana": "して",
+        "seq": 10150864,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "為る",
+        "pos": []
+      },
+      {
+        "text": "あげる",
+        "kana": "あげる",
+        "seq": 1352320,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vt]",
+          "[v1,vt]",
+          "[v1,vt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "して",
+        "kana": "して",
+        "seq": 10587097,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "為る",
+        "pos": []
+      },
+      {
+        "text": "あげる",
+        "kana": "あげる",
+        "seq": 1352320,
+        "score": 144,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[v1,vt]",
+          "[v1,vt]",
+          "[v1,vt]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.595921277999878
+  },
+  {
+    "sentence": "してもらう",
+    "status": "partial",
+    "ichiran_texts": [
+      "してもらう"
+    ],
+    "himotoki_texts": [
+      "してもらう"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "してもらう",
+        "kana": "してもらう",
+        "seq": 10150864,
+        "score": 290,
+        "is_compound": true,
+        "components": [
+          "して",
+          "もらう"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "してもらう",
+        "kana": "して もらう",
+        "seq": 10587097,
+        "score": 290,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment 'してもらう': seq: 10150864 vs 10587097"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.7820310592651367
+  },
+  {
+    "sentence": "しなくてもいい",
+    "status": "partial",
+    "ichiran_texts": [
+      "しなくてもいい"
+    ],
+    "himotoki_texts": [
+      "しなくてもいい"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "しなくてもいい",
+        "kana": "しなくてもいい",
+        "seq": 10150866,
+        "score": 735,
+        "is_compound": true,
+        "components": [
+          "しなくて",
+          "もいい"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "しなくてもいい",
+        "kana": "しなくて もいい",
+        "seq": 10587099,
+        "score": 735,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment 'しなくてもいい': seq: 10150866 vs 10587099"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 3.350681781768799
+  },
+  {
+    "sentence": "食べなくてはいけない",
+    "status": "partial",
+    "ichiran_texts": [
+      "食べなくて",
+      "は",
+      "いけない"
+    ],
+    "himotoki_texts": [
+      "食べなくて",
+      "は",
+      "いけない"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "食べなくて",
+        "kana": "たべなくて",
+        "seq": 10091244,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      },
+      {
+        "text": "は",
+        "kana": "‌は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "いけない",
+        "kana": "いけない",
+        "seq": 1000730,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp,adj-i]",
+          "[exp,adj-i]",
+          "[exp,adj-i]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "食べなくて",
+        "kana": "たべなくて",
+        "seq": 10063117,
+        "score": 1380,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "食べる",
+        "pos": []
+      },
+      {
+        "text": "は",
+        "kana": "は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "いけない",
+        "kana": "いけない",
+        "seq": 10105829,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "生ける",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment 'いけない': conj_type: None vs Non-past, neg: False vs True"
+    ],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 7.696777820587158
+  },
+  {
+    "sentence": "行かなければならない",
+    "status": "partial",
+    "ichiran_texts": [
+      "行かなければ",
+      "ならない"
+    ],
+    "himotoki_texts": [
+      "行かなければ",
+      "ならない"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "行かなければ",
+        "kana": "いかなければ",
+        "seq": 10346518,
+        "score": 1656,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Provisional (~eba)",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "行く",
+        "pos": []
+      },
+      {
+        "text": "ならない",
+        "kana": "ならない",
+        "seq": 10371747,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "成る",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "行かなければ",
+        "kana": "いかなければ",
+        "seq": 10269050,
+        "score": 1656,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Provisional (~eba)",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "行く",
+        "pos": []
+      },
+      {
+        "text": "ならない",
+        "kana": "ならない",
+        "seq": 10346224,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": false,
+        "source_text": "生る",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment 'ならない': source: 成る vs 生る"
+    ],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 6.149093866348267
+  },
+  {
+    "sentence": "ということ",
+    "status": "partial",
+    "ichiran_texts": [
+      "という",
+      "こと"
+    ],
+    "himotoki_texts": [
+      "という",
+      "こと"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "という",
+        "kana": "という",
+        "seq": 1922760,
+        "score": 47,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp]",
+          "[exp]",
+          "[exp]"
+        ]
+      },
+      {
+        "text": "こと",
+        "kana": "こと",
+        "seq": 2524270,
+        "score": 44,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "という",
+        "kana": "という",
+        "seq": 1922760,
+        "score": 47,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp]",
+          "[exp]",
+          "[exp]"
+        ]
+      },
+      {
+        "text": "こと",
+        "kana": "こと",
+        "seq": 1313580,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[n]"
+        ]
+      }
+    ],
+    "differences": [
+      "Segment 'こと': seq: 2524270 vs 1313580"
+    ],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 1.091912031173706
+  },
+  {
+    "sentence": "というのは",
+    "status": "match",
+    "ichiran_texts": [
+      "というのは"
+    ],
+    "himotoki_texts": [
+      "というのは"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "というのは",
+        "kana": "というの​‌は",
+        "seq": 1008500,
+        "score": 275,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp,conj]",
+          "[conj,exp]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "というのは",
+        "kana": "というのは",
+        "seq": 1008500,
+        "score": 275,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp,conj]",
+          "[exp,conj]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.0105719566345215
+  },
+  {
+    "sentence": "それでは",
+    "status": "match",
+    "ichiran_texts": [
+      "それでは"
+    ],
+    "himotoki_texts": [
+      "それでは"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "それでは",
+        "kana": "それ​で‌は",
+        "seq": 1406050,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[conj]",
+          "[conj]",
+          "[exp]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "それでは",
+        "kana": "それでは",
+        "seq": 1406050,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[conj]",
+          "[conj]",
+          "[exp]"
+        ]
+      }
+    ],
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.7667722702026367
+  }
+]

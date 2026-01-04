@@ -67,7 +67,8 @@ class WordInfo:
     seq: Optional[Union[int, List[int]]] = None  # JMdict sequence number(s)
     conjugations: Optional[Union[List[int], str]] = None  # Conjugation IDs or 'root'
     score: int = 0
-    components: List['WordInfo'] = field(default_factory=list)  # For compound words
+    components: List['WordInfo'] = field(default_factory=list)  # For compound words (WordInfo objects)
+    compound_texts: List[str] = field(default_factory=list)  # Component texts for suffix compounds
     alternative: bool = False  # True if multiple readings available
     primary: bool = True  # Is this the primary reading
     start: Optional[int] = None
@@ -93,6 +94,7 @@ class WordInfo:
             'conjugations': 'ROOT' if self.conjugations == 'root' else self.conjugations,
             'score': self.score,
             'components': [c.to_dict() for c in self.components] if self.components else [],
+            'compound_texts': self.compound_texts,
             'alternative': self.alternative,
             'primary': self.primary,
             'start': self.start,
@@ -519,6 +521,10 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
                     if kana_text:
                         source_text = kana_text
         
+        # Get component texts from CompoundWord.components property
+        # This returns the text of each word in the compound
+        compound_texts = word.components if word.components else []
+        
         return WordInfo(
             type=word_type,
             text=segment.get_text(),
@@ -530,6 +536,7 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
             start=segment.start,
             end=segment.end,
             is_compound=True,
+            compound_texts=compound_texts,
             conj_type=conj_type_name,
             conj_neg=conj_neg,
             conj_fml=conj_fml,
@@ -749,6 +756,10 @@ def word_info_gloss_json(
         seq = word_info.seq
         if seq:
             js['seq'] = seq
+        
+        # Add compound texts if available (for ichiran compatibility)
+        if word_info.compound_texts:
+            js['compound'] = word_info.compound_texts
         
         # Build conjugation info directly from WordInfo fields
         # (the conjugation data was already extracted in word_info_from_segment)

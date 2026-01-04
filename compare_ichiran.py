@@ -72,6 +72,7 @@ class MatchStatus(Enum):
     MISMATCH = "mismatch"        # Different segmentation
     ICHIRAN_ERROR = "ichiran_error"  # Ichiran failed
     HIMOTOKI_ERROR = "himotoki_error"  # Himotoki failed
+    UNCOMPARABLE = "uncomparable"  # Ichiran result incomplete/unreliable
 
 
 @dataclass
@@ -187,8 +188,33 @@ def get_ichiran_cached(sentence: str) -> Optional[SegmentationResult]:
 # Ichiran Interface
 # ============================================================================
 
-# Global flag to control whether to use cache
-_use_ichiran_cache = False
+# Global flag to control whether to use cache (enabled by default)
+_use_ichiran_cache = True
+
+
+def _is_cache_result_complete(sentence: str, cached: SegmentationResult) -> bool:
+    """
+    Check if a cached ichiran result is complete (covers the full input).
+    
+    Returns False if:
+    - The result has an error
+    - The segments don't cover the full input text
+    - There are no segments
+    """
+    if cached.error:
+        return False
+    if not cached.segments:
+        return False
+    
+    # Join all segment texts and check if they cover the input
+    cached_text = "".join(seg.text for seg in cached.segments)
+    
+    # If cached text is much shorter than input, it's incomplete
+    # We allow some tolerance for punctuation differences
+    if len(cached_text) < len(sentence) * 0.5:
+        return False
+    
+    return True
 
 
 def run_ichiran(sentence: str) -> SegmentationResult:
@@ -206,7 +232,11 @@ def run_ichiran(sentence: str) -> SegmentationResult:
     if _use_ichiran_cache:
         cached = get_ichiran_cached(sentence)
         if cached is not None:
-            return cached
+            # Verify the cached result is complete - if not, re-process
+            if _is_cache_result_complete(sentence, cached):
+                return cached
+            else:
+                print(f"  (cache incomplete for '{sentence[:20]}...', re-processing)", file=sys.stderr)
     
     try:
         cmd = [
@@ -425,7 +455,12 @@ def compare_segmentations(sentence: str) -> ComparisonResult:
     # Determine status and differences
     differences = []
     
-    if ichiran_result.error:
+    # Check if ichiran result is incomplete (covers less than 50% of input)
+    ichiran_coverage = len("".join(ichiran_texts))
+    if ichiran_coverage < len(sentence) * 0.5 and not ichiran_result.error:
+        status = MatchStatus.UNCOMPARABLE
+        differences.append(f"Ichiran result incomplete: '{ichiran_texts}' covers only {ichiran_coverage}/{len(sentence)} chars")
+    elif ichiran_result.error:
         status = MatchStatus.ICHIRAN_ERROR
         differences.append(f"Ichiran error: {ichiran_result.error}")
     elif himotoki_result.error:
@@ -433,9 +468,13 @@ def compare_segmentations(sentence: str) -> ComparisonResult:
         differences.append(f"Himotoki error: {himotoki_result.error}")
     elif ichiran_texts == himotoki_texts:
         # Same segmentation - check for conjugation/detail differences
-        all_match = True
+        # We track two types of differences:
+        # - significant_diffs: conj_type, neg, fml, source (these make it PARTIAL)
+        # - info_diffs: seq differences (informational only, still counts as MATCH)
+        has_significant_diff = False
         for i, (iseg, hseg) in enumerate(zip(ichiran_result.segments, himotoki_result.segments)):
-            seg_diffs = []
+            seg_significant_diffs = []
+            seg_info_diffs = []
             
             # Check conjugation type (normalize: remove parenthetical hints like "(~ta)")
             i_type = iseg.conj_type
@@ -450,31 +489,33 @@ def compare_segmentations(sentence: str) -> ComparisonResult:
                 h_type = h_type.replace(" Polite", "")
                 
             if i_type != h_type:
-                seg_diffs.append(f"conj_type: {iseg.conj_type} vs {hseg.conj_type}")
+                seg_significant_diffs.append(f"conj_type: {iseg.conj_type} vs {hseg.conj_type}")
             
             # Check neg/fml flags
             if iseg.conj_neg != hseg.conj_neg:
-                seg_diffs.append(f"neg: {iseg.conj_neg} vs {hseg.conj_neg}")
+                seg_significant_diffs.append(f"neg: {iseg.conj_neg} vs {hseg.conj_neg}")
             if iseg.conj_fml != hseg.conj_fml:
-                seg_diffs.append(f"fml: {iseg.conj_fml} vs {hseg.conj_fml}")
+                seg_significant_diffs.append(f"fml: {iseg.conj_fml} vs {hseg.conj_fml}")
             
             # Check source text (dictionary form)
             if iseg.source_text and hseg.source_text:
                 if iseg.source_text != hseg.source_text:
-                    seg_diffs.append(f"source: {iseg.source_text} vs {hseg.source_text}")
+                    seg_significant_diffs.append(f"source: {iseg.source_text} vs {hseg.source_text}")
             
-            # Note seq differences (for info, but don't treat as mismatch for conjugated forms)
+            # Seq differences are informational only - different seq numbers for
+            # conjugated forms are expected and don't affect match status
             if iseg.seq != hseg.seq and iseg.seq is not None:
-                # Ichiran uses generated seqs (10000000+) for conjugated forms
-                # Only flag as significant if neither is conjugated
-                if not iseg.conj_type and not hseg.conj_type:
-                    seg_diffs.append(f"seq: {iseg.seq} vs {hseg.seq}")
+                seg_info_diffs.append(f"seq: {iseg.seq} vs {hseg.seq}")
             
-            if seg_diffs:
-                all_match = False
-                differences.append(f"Segment '{iseg.text}': {', '.join(seg_diffs)}")
+            if seg_significant_diffs:
+                has_significant_diff = True
+                differences.append(f"Segment '{iseg.text}': {', '.join(seg_significant_diffs)}")
+            # Optionally log seq diffs but don't count them as significant
+            # (uncomment if you want to see seq diffs in output)
+            # elif seg_info_diffs:
+            #     differences.append(f"Segment '{iseg.text}' (info): {', '.join(seg_info_diffs)}")
         
-        status = MatchStatus.MATCH if all_match else MatchStatus.PARTIAL
+        status = MatchStatus.PARTIAL if has_significant_diff else MatchStatus.MATCH
     else:
         status = MatchStatus.MISMATCH
         differences.append(f"Ichiran: {ichiran_texts}")
@@ -853,6 +894,7 @@ def print_result(result: ComparisonResult, verbose: bool = False, show_details: 
         MatchStatus.MISMATCH: "✗",
         MatchStatus.ICHIRAN_ERROR: "!I",
         MatchStatus.HIMOTOKI_ERROR: "!H",
+        MatchStatus.UNCOMPARABLE: "?",
     }
     
     symbol = status_symbols.get(result.status, "?")
@@ -873,6 +915,10 @@ def print_result(result: ComparisonResult, verbose: bool = False, show_details: 
             print(f"      Himotoki:")
             for seg in result.himotoki.segments:
                 print(f"        {_format_segment(seg)}")
+        for diff in result.differences:
+            print(f"      {diff}")
+    elif result.status == MatchStatus.UNCOMPARABLE:
+        print(f"  {symbol} {result.sentence}: ichiran incomplete")
         for diff in result.differences:
             print(f"      {diff}")
     else:
@@ -896,16 +942,22 @@ def print_summary(results: List[ComparisonResult]):
     matches = sum(1 for r in results if r.status == MatchStatus.MATCH)
     partial = sum(1 for r in results if r.status == MatchStatus.PARTIAL)
     mismatches = sum(1 for r in results if r.status == MatchStatus.MISMATCH)
+    uncomparable = sum(1 for r in results if r.status == MatchStatus.UNCOMPARABLE)
     ichiran_errors = sum(1 for r in results if r.status == MatchStatus.ICHIRAN_ERROR)
     himotoki_errors = sum(1 for r in results if r.status == MatchStatus.HIMOTOKI_ERROR)
+    
+    # Calculate comparable total (excluding uncomparable and errors)
+    comparable = total - uncomparable - ichiran_errors - himotoki_errors
     
     print("\n" + "=" * 60)
     print("SUMMARY")
     print("=" * 60)
     print(f"Total sentences:    {total}")
-    print(f"Exact matches:      {matches} ({100*matches/total:.1f}%)")
-    print(f"Partial matches:    {partial} ({100*partial/total:.1f}%)")
-    print(f"Mismatches:         {mismatches} ({100*mismatches/total:.1f}%)")
+    print(f"Comparable:         {comparable}")
+    print(f"Exact matches:      {matches} ({100*matches/comparable:.1f}% of comparable)" if comparable > 0 else f"Exact matches:      {matches}")
+    print(f"Partial matches:    {partial} ({100*partial/comparable:.1f}% of comparable)" if comparable > 0 else f"Partial matches:    {partial}")
+    print(f"Mismatches:         {mismatches} ({100*mismatches/comparable:.1f}% of comparable)" if comparable > 0 else f"Mismatches:         {mismatches}")
+    print(f"Uncomparable:       {uncomparable} (ichiran incomplete)")
     print(f"Ichiran errors:     {ichiran_errors}")
     print(f"Himotoki errors:    {himotoki_errors}")
     
@@ -1017,7 +1069,13 @@ def main():
     parser.add_argument(
         "--use-cache", "-u",
         action="store_true",
-        help="Use cached ichiran results from results.json instead of calling Docker"
+        default=True,
+        help="Use cached ichiran results from results.json instead of calling Docker (default: enabled)"
+    )
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Disable cache and always call Docker for ichiran results"
     )
     parser.add_argument(
         "--cache-file",
@@ -1028,9 +1086,12 @@ def main():
     
     args = parser.parse_args()
     
-    # Enable cache if requested
+    # Cache is enabled by default - load it
+    # If a sentence isn't in cache, it will still call ichiran normally
     global _use_ichiran_cache
-    if args.use_cache:
+    if args.no_cache:
+        _use_ichiran_cache = False
+    else:
         _use_ichiran_cache = True
         load_ichiran_cache(args.cache_file)
     
@@ -1062,12 +1123,10 @@ def main():
     # Print summary
     print_summary(results)
     
-    # Export results - default to results.json when not using cache
-    export_file = args.export
-    if export_file is None and not args.use_cache:
-        export_file = ICHIRAN_CACHE_FILE
-    if export_file:
-        export_results(results, export_file)
+    # Always export results - default to results.json
+    # This updates the cache with any new sentences that were processed
+    export_file = args.export if args.export else ICHIRAN_CACHE_FILE
+    export_results(results, export_file)
     
     # Return exit code based on results
     mismatches = sum(1 for r in results if r.status == MatchStatus.MISMATCH)
