@@ -85,6 +85,18 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
 
 
 # ============================================================================
+# Blocked Seqs for Abbreviation Suffixes
+# ============================================================================
+
+# Seqs blocked in nai/nai-n abbreviation handlers (居ない 来ない create problems)
+# Ports ichiran's exclusion in abbr-nee and abbr-n from dict-grammar.lisp
+BLOCKED_NAI_SEQS = {1577980, 1547720}  # いる (居る), 来る (くる)
+
+# Seq blocked in nai-x abbreviation handler (する creates problems)
+BLOCKED_NAI_X_SEQ = 1157170  # する
+
+
+# ============================================================================
 # Global Suffix Cache
 # ============================================================================
 
@@ -899,16 +911,95 @@ def _handler_iadj(session: Session, root: str, suffix: str, kf: Optional[KanaTex
 
 
 # Abbreviation handlers
+
+def _find_word_with_neg_prop_filtered(
+    session: Session,
+    word: str,
+    blocked_seqs: set,
+    allow_root: bool = False,
+) -> List[Any]:
+    """
+    Find words with negative conjugation property, excluding certain root seqs.
+    
+    Ports ichiran's filter logic from abbr-nee and abbr-n in dict-grammar.lisp:
+    (and (not (find (conj-data-from cdata) '(1577980 1547720)))
+         (conj-neg (conj-data-prop cdata)))
+    
+    Args:
+        session: Database session
+        word: Word text to search for
+        blocked_seqs: Set of from_seq values to exclude
+        allow_root: If True, also return root forms
+    
+    Returns:
+        List of word matches with negative conjugation, excluding blocked seqs
+    """
+    from himotoki.lookup import find_word_with_conj_prop
+    
+    def filter_fn(cdata):
+        # Must be negative form
+        if not (cdata.prop and hasattr(cdata.prop, 'neg') and cdata.prop.neg):
+            return False
+        # Exclude blocked root seqs (居ない, 来ない create problems)
+        if cdata.from_seq in blocked_seqs:
+            return False
+        return True
+    
+    return find_word_with_conj_prop(session, word, filter_fn, allow_root=allow_root)
+
+
 def _handler_abbr_nai(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle ない abbreviation (ねえ etc.)."""
-    return find_word_with_neg_prop(session, root + 'ない')
+    """
+    Handle ない abbreviation (ねえ, ねぇ, ねー etc.).
+    
+    Ports ichiran's abbr-nee from dict-grammar.lisp.
+    Blocks いる (1577980) and 来る (1547720) conjugations to avoid false matches.
+    Allows root forms (:allow-root t in ichiran).
+    """
+    return _find_word_with_neg_prop_filtered(
+        session, root + 'ない', BLOCKED_NAI_SEQS, allow_root=True
+    )
+
+
+def _handler_abbr_nai_n(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
+    """
+    Handle ん contraction (nai-n suffix).
+    
+    Ports ichiran's abbr-n from dict-grammar.lisp.
+    Blocks いる (1577980) and 来る (1547720) conjugations to avoid false matches.
+    Does NOT allow root forms (differs from abbr-nee).
+    
+    Example: 考えてん should NOT match 考えていないん (negative of いる).
+    Instead, it should match 考えて + ん separately.
+    """
+    return _find_word_with_neg_prop_filtered(
+        session, root + 'ない', BLOCKED_NAI_SEQS, allow_root=False
+    )
 
 
 def _handler_abbr_nx(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle ず/ざる/ぬ abbreviation."""
+    """
+    Handle ず/ざる/ぬ abbreviation (nai-x suffix).
+    
+    Ports ichiran's abbr-nx from dict-grammar.lisp.
+    Blocks する (1157170) conjugations.
+    Special case: せ -> しない (for する).
+    """
     if root == 'せ':
         return find_word_conj_of(session, 'しない', 1157170)
-    return find_word_with_neg_prop(session, root + 'ない')
+    
+    from himotoki.lookup import find_word_with_conj_prop
+    
+    def filter_fn(cdata):
+        # Must be negative form
+        if not (cdata.prop and hasattr(cdata.prop, 'neg') and cdata.prop.neg):
+            return False
+        # Exclude する conjugations
+        if cdata.from_seq == BLOCKED_NAI_X_SEQ:
+            return False
+        return True
+    
+    return find_word_with_conj_prop(session, root + 'ない', filter_fn)
 
 
 def _handler_abbr_nakereba(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -984,10 +1075,10 @@ SUFFIX_HANDLERS: Dict[str, Callable] = {
     'iadj': _handler_iadj,
     'chau': _handler_te,  # Uses te-form handling
     'to': _handler_te,
-    # Abbreviations
-    'nai': _handler_abbr_nai,
-    'nai-x': _handler_abbr_nx,
-    'nai-n': _handler_abbr_nai,
+    # Abbreviations - each has distinct behavior matching ichiran
+    'nai': _handler_abbr_nai,      # ねえ, ねぇ, ねー - allows root forms
+    'nai-x': _handler_abbr_nx,     # ず, ざる, ぬ - blocks する
+    'nai-n': _handler_abbr_nai_n,  # ん contraction - blocks いる/来る, no root
     'nakereba': _handler_abbr_nakereba,
     'shimashou': _handler_abbr_shimasho,
     'dewanai': _handler_abbr_dewanai,

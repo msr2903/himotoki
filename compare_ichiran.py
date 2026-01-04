@@ -989,22 +989,91 @@ def export_results(results: List[ComparisonResult], filename: str):
     """Export results to JSON file with detailed segment data."""
     data = []
     for r in results:
-        data.append({
-            "sentence": r.sentence,
-            "status": r.status.value,
-            "ichiran_texts": r.ichiran_texts,
-            "himotoki_texts": r.himotoki_texts,
-            "ichiran_segments": [_segmentinfo_to_dict(s) for s in r.ichiran.segments],
-            "himotoki_segments": [_segmentinfo_to_dict(s) for s in r.himotoki.segments],
-            "differences": r.differences,
-            "time_ichiran": r.time_ichiran,
-            "time_himotoki": r.time_himotoki,
-        })
+        data.append(_comparison_result_to_dict(r))
     
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
     print(f"\nResults exported to {filename}")
+
+
+def _comparison_result_to_dict(r: ComparisonResult) -> Dict[str, Any]:
+    """Convert a ComparisonResult to a JSON-serializable dict."""
+    return {
+        "sentence": r.sentence,
+        "status": r.status.value,
+        "ichiran_texts": r.ichiran_texts,
+        "himotoki_texts": r.himotoki_texts,
+        "ichiran_segments": [_segmentinfo_to_dict(s) for s in r.ichiran.segments],
+        "himotoki_segments": [_segmentinfo_to_dict(s) for s in r.himotoki.segments],
+        "differences": r.differences,
+        "time_ichiran": r.time_ichiran,
+        "time_himotoki": r.time_himotoki,
+    }
+
+
+def update_single_result(result: ComparisonResult, filename: str):
+    """
+    Update a single sentence result in the JSON file.
+    
+    Loads existing results, updates or adds the specific sentence,
+    and writes back only if there was a change.
+    """
+    # Load existing data
+    existing_data = []
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            existing_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        existing_data = []
+    
+    # Convert to dict for easy lookup by sentence
+    data_by_sentence = {item["sentence"]: item for item in existing_data}
+    
+    # Get new result as dict
+    new_result = _comparison_result_to_dict(result)
+    
+    # Check if there's a change
+    old_result = data_by_sentence.get(result.sentence)
+    if old_result:
+        # Compare relevant fields (ignore timing differences)
+        old_texts = old_result.get("himotoki_texts", [])
+        new_texts = new_result.get("himotoki_texts", [])
+        old_status = old_result.get("status")
+        new_status = new_result.get("status")
+        
+        if old_texts == new_texts and old_status == new_status:
+            print(f"\nNo change for '{result.sentence}' - not updating {filename}")
+            return
+        else:
+            print(f"\nUpdating '{result.sentence}' in {filename}")
+            print(f"  Status: {old_status} -> {new_status}")
+            if old_texts != new_texts:
+                print(f"  Old: {old_texts}")
+                print(f"  New: {new_texts}")
+    else:
+        print(f"\nAdding new sentence '{result.sentence}' to {filename}")
+    
+    # Update or add the result
+    data_by_sentence[result.sentence] = new_result
+    
+    # Convert back to list, preserving order of existing items
+    updated_data = []
+    seen = set()
+    for item in existing_data:
+        sentence = item["sentence"]
+        updated_data.append(data_by_sentence[sentence])
+        seen.add(sentence)
+    
+    # Add any new sentences not in original list
+    if result.sentence not in seen:
+        updated_data.append(new_result)
+    
+    # Write back
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(updated_data, f, ensure_ascii=False, indent=2)
+    
+    print(f"Updated {filename}")
 
 
 # ============================================================================
@@ -1123,10 +1192,17 @@ def main():
     # Print summary
     print_summary(results)
     
-    # Always export results - default to results.json
-    # This updates the cache with any new sentences that were processed
+    # Export results
+    # For single sentence mode, use incremental update
+    # For batch mode, export all results
     export_file = args.export if args.export else ICHIRAN_CACHE_FILE
-    export_results(results, export_file)
+    
+    if args.sentence and len(results) == 1:
+        # Single sentence mode - update only that sentence in the file
+        update_single_result(results[0], export_file)
+    else:
+        # Batch mode - export all results
+        export_results(results, export_file)
     
     # Return exit code based on results
     mismatches = sum(1 for r in results if r.status == MatchStatus.MISMATCH)

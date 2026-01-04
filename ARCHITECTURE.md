@@ -308,3 +308,78 @@ def kanji_break_penalty(kanji_break, score, info, text, ...):
 - Compare output against ichiran
 - Use same test sentences
 - Verify identical segmentation
+
+Himotoki vs Ichiran: Comprehensive Debugging Guide
+1. Architecture Overview
+Component	Ichiran (Common Lisp)	Himotoki (Python)
+Entry Point	dict-segment in dict.lisp	dict_segment in output.py
+Scoring	calc-score in dict.lisp	calc_score in lookup.py
+Path Finding	find-best-path in dict.lisp	find_best_path in segment.py
+Splits	dict-split.lisp	splits.py
+Synergies	dict-grammar.lisp	synergies.py
+Counters	dict-counters.lisp	counters.py
+Characters	characters.lisp	characters.py
+2. Segmentation Pipeline
+3. Critical Scoring Constants
+Constant	Ichiran	Himotoki	Description
+*score-cutoff* / SCORE_CUTOFF	5	5	Minimum score to keep
+Gap penalty	-500	-500	Per-char penalty for gaps
+Max word length	50	50	Max chars to search
+Cull ratio	0.5	0.5	Cutoff for culling
+4. Length Coefficient Sequences
+Type	Values	Usage
+strong	[1, 8, 24, 40, 60]	Kanji/katakana words
+weak	[1, 4, 9, 16, 25, 36]	Hiragana-only words
+tail	[4, 9, 16, 24]	Suffix context bonus
+ltail	[4, 12, 18, 24]	Longer suffix bonus
+⚠️ Potential Issue: Himotoki adds 0 at index 0 for 1-based indexing—verify get_length_coeff uses consistent indexing.
+
+5. Key Score Flags
+Flag	What It Checks	Impact
+kanji_p	Contains kanji	+3-5 bonus
+primary_p	Is primary reading	+2-10 bonus
+common_p	Has commonness tag	+2-20 bonus
+particle_p	Is particle (助詞)	+2 bonus
+long_p	Length ≥ threshold	+length bonus
+root_p	Is root (not conjugated)	Affects scoring
+6. Conjugation Types to Watch
+ID	Name	Notes
+50	Adverbial	Weak form
+51	Adjective Stem	Weak form
+52	Negative Stem	Weak form
+53	Causative (～す)	Weak form
+9 (neg)	Volitional Negative	Weak form
+7. Synergy Bonuses
+Pattern	Left Word	Right Word	Score
+Noun+Particle	is_noun	In NOUN_PARTICLES	10 + 4×len
+Noun+だ	is_noun	seq=2089020	10
+Na-adjective	adj-na	な/に	15
+No-adjective	adj-no	の	15
+To-adverb	adv-to	と	10 + 10×len
+8. Database Differences
+Aspect	Ichiran	Himotoki
+DB Type	PostgreSQL	SQLite
+Aggregation	string_agg()	group_concat()
+NULL	:null keyword	Python None
+Caching	defcache macro	dict/lru_cache
+9. Debugging Checklist
+When mismatches occur:
+
+Compare sticky positions - Are sokuon/modifiers detected the same?
+Compare candidate words - Do both find the same dictionary entries?
+Compare scores - Print calc_score intermediate values
+Check synergies - Are bonuses/penalties applied identically?
+Verify path selection - Compare TopArray alternatives
+10. Key Seq Numbers to Know
+Seq	Word	Usage
+2089020	だ (copula)	Noun+だ synergy
+2029110	な	Na-adjective synergy
+1469800	の	No-adjective synergy
+2013800	ちゃう	Skip word
+2017560	たい	Suffix :tai
+1577980	いる	Suffix :teiru
+Further Considerations
+What type of mismatch are you seeing? Segmentation boundary differences / Score ranking differences / Missing words
+Do you have specific test sentences? I can trace through both systems for the failing case
+Is your SQLite DB in sync with Ichiran's PostgreSQL? Dictionary version mismatches can cause differences
+Please share the specific mismatch problem you'd like me to debug, and I'll trace through both codebases to identify the root cause.

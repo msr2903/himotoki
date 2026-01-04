@@ -150,6 +150,43 @@ TEST_CASE_8 = SegmentTestCase(
     description="Noun + tachi suffix (tests suffix synergy)"
 )
 
+# Test case 9: あいつ何考えてんだろうね
+# ichiran output (reference):
+# 1. あいつ 【あいつ】 (pn) that guy; he; she
+# 2. 何 【なに】 (pn) what
+# 3. 考えて 【かんがえて】 = 考える (v1,vt) to think (te-form)
+# 4. ん (int) uh; huh (contraction of いる)
+# 5. だろう (exp) seems; I think; probably
+# 6. ね (prt) sentence-ending particle
+#
+# This tests that the ん contraction does NOT incorrectly match 考えていないん
+# (negative progressive of いる), which would be semantically wrong.
+# 考えてん = 考えている (thinking), NOT 考えていない (not thinking)
+TEST_CASE_9_N_CONTRACTION = SegmentTestCase(
+    input_text="あいつ何考えてんだろうね",
+    expected_segments=[
+        ExpectedSegment(text="あいつ", pos=["pn"]),
+        ExpectedSegment(text="何", reading="なに", pos=["pn"]),
+        ExpectedSegment(text="考えて", reading="かんがえて"),
+        ExpectedSegment(text="ん", pos=["int"]),
+        ExpectedSegment(text="だろう", pos=["exp"]),
+        ExpectedSegment(text="ね", pos=["prt"]),
+    ],
+    description="ん contraction must NOT match 考えていないん (tests BLOCKED_NAI_SEQS)"
+)
+
+# Test case 10: 来てんの (similar test for 来る blocking)
+# The ん should not match 来ていないん
+TEST_CASE_10_KURU_N = SegmentTestCase(
+    input_text="来てんの",
+    expected_segments=[
+        ExpectedSegment(text="来て", reading="きて"),
+        ExpectedSegment(text="ん", pos=["int"]),
+        ExpectedSegment(text="の", pos=["prt"]),
+    ],
+    description="ん contraction must NOT match 来ていないん (tests BLOCKED_NAI_SEQS for 来る)"
+)
+
 
 # ============================================================================
 # Test Fixtures (now using conftest.py db_session)
@@ -418,3 +455,79 @@ class TestEdgeCases:
         segments = simple_segment(db_session, text)
         # Should produce some results without timeout
         assert isinstance(segments, list)
+
+
+class TestColloquialContractions:
+    """
+    Test colloquial contraction handling.
+    
+    These tests verify that abbreviated/contracted forms are correctly
+    handled, particularly the ん contraction which should NOT incorrectly
+    match negative forms of いる or 来る.
+    
+    Background:
+    - 考えてん = 考えている (progressive: "is thinking")
+    - 考えていないん would be wrong (negative: "is not thinking")
+    
+    Ichiran blocks いる (seq 1577980) and 来る (seq 1547720) in the
+    nai-n suffix handler to prevent this semantic confusion.
+    """
+    
+    def test_n_contraction_does_not_match_iru_negative(self, db_session):
+        """
+        Test that ん contraction does NOT match いる negative forms.
+        
+        考えてん should segment as 考えて + ん, NOT as 考えていないん.
+        """
+        segments = simple_segment(db_session, "考えてんだろうね")
+        texts = segments_to_texts(segments)
+        
+        # Should NOT have 考えていないん as a single segment
+        assert "考えていないん" not in texts, \
+            f"ん contraction incorrectly matched いない: {texts}"
+        
+        # Should have 考えて as a separate segment
+        full_text = "".join(texts)
+        assert "考えて" in full_text or "考え" in full_text, \
+            f"Expected 考えて in segments: {texts}"
+    
+    def test_full_sentence_kangaetennn(self, db_session):
+        """Test full sentence: あいつ何考えてんだろうね"""
+        segments = simple_segment(db_session, "あいつ何考えてんだろうね")
+        texts = segments_to_texts(segments)
+        
+        # Critical check: 考えていないん should NOT appear
+        assert "考えていないん" not in texts, \
+            f"BLOCKED_NAI_SEQS filter not working: {texts}"
+        
+        # Check expected segments are present
+        full_text = "".join(texts)
+        assert "あいつ" in texts or "あいつ" in full_text
+        assert "何" in texts or "何" in full_text
+        assert "だろう" in texts or "だろう" in full_text
+    
+    def test_n_contraction_kuru(self, db_session):
+        """
+        Test that ん contraction does NOT match 来る negative forms.
+        
+        来てん should segment as 来て + ん, NOT as 来ていないん.
+        """
+        segments = simple_segment(db_session, "来てんの")
+        texts = segments_to_texts(segments)
+        
+        # Should NOT have 来ていないん as a single segment
+        assert "来ていないん" not in texts, \
+            f"ん contraction incorrectly matched 来ない: {texts}"
+    
+    @pytest.mark.parametrize("text,blocked_form", [
+        ("食べてん", "食べていないん"),  # Should NOT match for いる
+        ("行ってん", "行っていないん"),  # Should NOT match for いる
+        ("見てん", "見ていないん"),      # Should NOT match for いる
+    ])
+    def test_various_n_contractions(self, db_session, text, blocked_form):
+        """Test various verb + てん patterns don't match negative いる."""
+        segments = simple_segment(db_session, text)
+        texts = segments_to_texts(segments)
+        
+        assert blocked_form not in texts, \
+            f"ん contraction incorrectly matched negative: got {texts}"
