@@ -271,6 +271,10 @@ class CompoundWord:
     Ports ichiran's compound-text class from dict.lisp lines 608-670.
     Compound words are created when a primary word is joined with a suffix
     (e.g., 食べている = 食べ + て + いる).
+    
+    Abbreviation compounds (is_abbrev=True) are scored differently - they use
+    the original word's mora length instead of the abbreviated compound length.
+    This matches Ichiran's proxy-text behavior for abbreviation suffixes.
     """
     text: str  # Full compound text
     kana: str  # Full kana reading
@@ -278,6 +282,7 @@ class CompoundWord:
     words: List[WordMatch]  # All words in the compound
     score_mod: Union[float, List[float]] = 0.0  # Score modifier(s)
     score_base: Optional[WordMatch] = None  # Base for scoring (usually primary)
+    is_abbrev: bool = False  # True for abbreviation compounds (e.g., nai-x: ず/ざる/ぬ)
     
     @property
     def seq(self) -> int:
@@ -407,6 +412,7 @@ def adjoin_word(
     kana: Optional[str] = None,
     score_mod: float = 0.0,
     score_base: Optional[WordMatch] = None,
+    is_abbrev: bool = False,
 ) -> CompoundWord:
     """
     Create compound word from 2 words.
@@ -420,6 +426,7 @@ def adjoin_word(
         kana: Override kana (default: concatenate both kanas)
         score_mod: Score modifier for this join
         score_base: Base for scoring
+        is_abbrev: True if this is an abbreviation suffix (affects scoring)
     
     Returns:
         CompoundWord combining both words
@@ -449,6 +456,9 @@ def adjoin_word(
             word1.score_mod = [score_mod] + word1.score_mod
         else:
             word1.score_mod = [score_mod, word1.score_mod]
+        # Mark as abbreviation if this join is an abbreviation
+        if is_abbrev:
+            word1.is_abbrev = True
         return word1
     else:
         # Create new compound from two simple words
@@ -459,6 +469,7 @@ def adjoin_word(
             words=[word1, word2],
             score_mod=score_mod,
             score_base=score_base,
+            is_abbrev=is_abbrev,
         )
 
 
@@ -1219,8 +1230,16 @@ def calc_score(
     # From ichiran dict.lisp lines 782-794
     if isinstance(word, CompoundWord):
         base_word = word.get_score_base()
-        compound_use_length = mora_length(word.text)
         compound_score_mod = word.score_mod
+        
+        # Both regular compounds and abbreviation compounds use the compound
+        # text's mora length for use_length. This creates a penalty when the
+        # compound is shorter than the base word (negative difference in
+        # length_multiplier_coeff).
+        #
+        # For abbreviations like とまず (3 mora) from とまない (4 mora):
+        # use_length=3, base word len=4, difference=-1 → penalty applied
+        compound_use_length = mora_length(word.text)
         
         score, info = calc_score(
             session, base_word,

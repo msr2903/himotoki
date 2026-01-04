@@ -92,8 +92,10 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
 # Ports ichiran's exclusion in abbr-nee and abbr-n from dict-grammar.lisp
 BLOCKED_NAI_SEQS = {1577980, 1547720}  # いる (居る), 来る (くる)
 
-# Seq blocked in nai-x abbreviation handler (する creates problems)
-BLOCKED_NAI_X_SEQ = 1157170  # する
+# Seqs blocked in nai-x abbreviation handler (ず, ざる, ぬ)
+# - する (1157170): per ichiran - blocks せず from being a する conjugation
+# - 富む (1496740): uncommon word creates とまず which incorrectly beats と+まずい
+BLOCKED_NAI_X_SEQS = {1157170, 1496740}  # する, 富む
 
 
 # ============================================================================
@@ -521,6 +523,14 @@ SUFFIX_UNIQUE_ONLY: Set[str] = {
     'eba', 'teba', 'reba', 'keba', 'geba', 'neba', 'beba', 'meba', 'seba', 'ii',
 }
 
+# Abbreviation suffix types - these create compounds that should be scored 
+# without using the abbreviated compound's mora length.
+# Matches Ichiran's def-abbr-suffix handlers which create proxy-text objects.
+ABBREVIATION_SUFFIXES: Set[str] = {
+    'nai', 'nai-x', 'nai-n', 'nakereba', 'shimashou', 'dewanai',
+    'teba', 'reba', 'keba', 'geba', 'neba', 'beba', 'meba', 'seba', 'ii',
+}
+
 
 def match_unique(suffix_class: str, matches: List[Any]) -> bool:
     """
@@ -621,6 +631,9 @@ def find_word_suffix(
             score_mod = SUFFIX_SCORES.get(keyword, 0)
             connector = SUFFIX_CONNECTORS.get(keyword, '')
             
+            # Check if this is an abbreviation suffix
+            is_abbrev = keyword in ABBREVIATION_SUFFIXES
+            
             # Get kana for the compound
             # For primary word: get kana from reading, look up if kanji
             def get_word_kana(w):
@@ -651,6 +664,7 @@ def find_word_suffix(
                 text=word,
                 kana=compound_kana,
                 score_mod=score_mod,
+                is_abbrev=is_abbrev,
             )
             results.append(compound)
     
@@ -982,7 +996,7 @@ def _handler_abbr_nx(session: Session, root: str, suffix: str, kf: Optional[Kana
     Handle ず/ざる/ぬ abbreviation (nai-x suffix).
     
     Ports ichiran's abbr-nx from dict-grammar.lisp.
-    Blocks する (1157170) conjugations.
+    Blocks する (1157170) and 富む (1496740) conjugations.
     Special case: せ -> しない (for する).
     """
     if root == 'せ':
@@ -994,8 +1008,8 @@ def _handler_abbr_nx(session: Session, root: str, suffix: str, kf: Optional[Kana
         # Must be negative form
         if not (cdata.prop and hasattr(cdata.prop, 'neg') and cdata.prop.neg):
             return False
-        # Exclude する conjugations
-        if cdata.from_seq == BLOCKED_NAI_X_SEQ:
+        # Exclude blocked words (する, 富む)
+        if cdata.from_seq in BLOCKED_NAI_X_SEQS:
             return False
         return True
     

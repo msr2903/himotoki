@@ -187,6 +187,27 @@ TEST_CASE_10_KURU_N = SegmentTestCase(
     description="ん contraction must NOT match 来ていないん (tests BLOCKED_NAI_SEQS for 来る)"
 )
 
+# Test case 11: てか最近どうしてるの
+# ichiran output (reference):
+# 1. てか 【てか】 (conj) or rather; I mean (colloquial)
+# 2. 最近どう 【さいきんどう】 (int) how have you been lately
+# 3. している = する (vs-i) to do (progressive)
+# 4. の (prt) nominalizer
+#
+# This tests that てか is recognized as a single conjunction word, not split
+# into て (particle) + か (particle). The てか entry has common=0 errata
+# applied which boosts its score above the particle split.
+TEST_CASE_11_TEKA_CONJ = SegmentTestCase(
+    input_text="てか最近どうしてるの",
+    expected_segments=[
+        ExpectedSegment(text="てか", pos=["conj"]),
+        ExpectedSegment(text="最近どう", reading="さいきんどう", pos=["int"]),
+        ExpectedSegment(text="している"),  # compound, no specific pos check
+        ExpectedSegment(text="の", pos=["prt"]),
+    ],
+    description="てか must be recognized as conjunction, not split into て+か"
+)
+
 
 # ============================================================================
 # Test Fixtures (now using conftest.py db_session)
@@ -218,6 +239,19 @@ def get_segment_reading(segment: Union[Segment, SegmentList]) -> Optional[str]:
         reading = segment.word.reading
         if hasattr(reading, 'text'):
             return reading.text
+    return None
+
+
+def get_segment_pos(segment: Union[Segment, SegmentList]) -> Optional[List[str]]:
+    """Extract part-of-speech info from a segment."""
+    if isinstance(segment, SegmentList):
+        if segment.segments:
+            return get_segment_pos(segment.segments[0])
+        return None
+    if hasattr(segment, 'info') and segment.info:
+        posi = segment.info.get('posi')
+        if posi:
+            return posi if isinstance(posi, list) else list(posi)
     return None
 
 
@@ -531,3 +565,69 @@ class TestColloquialContractions:
         
         assert blocked_form not in texts, \
             f"ん contraction incorrectly matched negative: got {texts}"
+
+
+class TestConjunctionRecognition:
+    """
+    Test that colloquial conjunctions are recognized as single words.
+    
+    Some colloquial conjunctions like てか could be incorrectly split into
+    their component particles. The errata sets common=0 on てか to boost
+    its score above the particle split alternative.
+    """
+    
+    def test_teka_as_single_conjunction(self, db_session):
+        """
+        Test that てか is recognized as a single conjunction.
+        
+        てか should NOT be split into て (particle) + か (particle).
+        Ichiran errata sets common=0 on てか (seq 2848303) to ensure
+        it scores higher than the particle alternative.
+        """
+        segments = simple_segment(db_session, "てか最近どうしてるの")
+        texts = segments_to_texts(segments)
+        
+        # てか should be a single segment, not split
+        assert "てか" in texts, \
+            f"てか should be recognized as single conjunction, got: {texts}"
+        
+        # Should NOT have て and か as separate particles
+        # Check that we don't have consecutive て, か
+        for i in range(len(texts) - 1):
+            if texts[i] == "て" and texts[i+1] == "か":
+                pytest.fail(f"てか incorrectly split into て+か: {texts}")
+    
+    def test_teka_has_correct_pos(self, db_session):
+        """Test that てか has the correct part of speech (conj) when followed by text.
+        
+        Note: When てか is at the end of input, the か particle gets a final
+        particle bonus that makes て+か score higher than the conjunction.
+        This matches Ichiran's behavior.
+        """
+        # Use a sentence where てか is NOT at the end
+        # てかさ works (さ is a final particle), but てかね doesn't (かね is a word)
+        segments = simple_segment(db_session, "てかさ")
+        texts = segments_to_texts(segments)
+        
+        # Find the てか segment
+        teka_segment = None
+        for seg in segments:
+            if isinstance(seg, SegmentList):
+                for s in seg.segments:
+                    if hasattr(s, 'word') and s.word and s.word.text == "てか":
+                        teka_segment = s
+                        break
+            elif hasattr(seg, 'word') and seg.word and seg.word.text == "てか":
+                teka_segment = seg
+                break
+        
+        assert teka_segment is not None, f"Could not find てか segment in {texts}"
+        
+        # Get POS info
+        posi = get_segment_pos(teka_segment)
+        assert posi is not None, f"てか segment has no POS info"
+        
+        # Check for conjunction POS
+        pos_str = " ".join(posi) if posi else ""
+        assert "conj" in pos_str, \
+            f"てか should have 'conj' POS, got: {posi}"
