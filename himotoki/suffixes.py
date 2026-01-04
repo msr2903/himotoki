@@ -581,8 +581,16 @@ def find_word_suffix(
                 continue
             
             # Create suffix word for adjoin
+            # Get conjugation IDs for the suffix word if it's a conjugated form
+            suffix_conj_ids = None
+            if kf and hasattr(kf, '_conj_type') and kf._conj_type == 'conj':
+                # This is a conjugated form - get the conjugation IDs
+                from himotoki.db.models import Conjugation
+                conj_query = select(Conjugation.id).where(Conjugation.seq == kf.seq)
+                suffix_conj_ids = list(session.execute(conj_query).scalars().all())
+            
             if kf:
-                suffix_word = WordMatch(reading=kf)
+                suffix_word = WordMatch(reading=kf, conjugations=suffix_conj_ids)
             else:
                 # Create a placeholder for the suffix (abbreviation case)
                 # For abbreviations like もいい, we create a minimal placeholder
@@ -622,7 +630,8 @@ def find_word_suffix(
             
             primary_kana = get_word_kana(pw)
             suffix_kana = kf.text if kf else suffix
-            compound_kana = primary_kana + suffix_kana
+            # Include connector in kana (e.g., space for suru, kudasai, te+space)
+            compound_kana = primary_kana + connector + suffix_kana
             
             compound = adjoin_word(
                 pw,
@@ -636,7 +645,7 @@ def find_word_suffix(
     return results
 
 
-# Suffix scores - from def-simple-suffix definitions
+# Suffix scores - from def-simple-suffix definitions in ichiran's dict-grammar.lisp
 SUFFIX_SCORES: Dict[str, float] = {
     'tai': 5,
     'ren': 5,
@@ -645,12 +654,28 @@ SUFFIX_SCORES: Dict[str, float] = {
     'te': 0,
     'teiru': 3,
     'teiru+': 6,
+    'te+space': 3,
+    'teren': 4,
+    'teii': 1,
     'chau': 5,
+    'to': 0,
     'suru': 5,
-    'sou': 60,
+    'sou': 60,  # Default, but can be 40 for から, 0 for い
+    'sou+': 1,
+    'rou': 1,
+    'adv': 1,
+    'sugiru': 5,
+    'sa': 2,
+    'iadj': 1,
+    'garu': 0,
+    'ra': 1,
+    'rashii': 3,
+    'desu': 200,
+    'desho': 300,
+    'tosuru': 3,
+    'kurai': 3,
     'nai': 5,
     'kudasai': 360,
-    'sugiru': 30,
 }
 
 # Suffix connectors - space between root and suffix in kana
