@@ -83,8 +83,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.9065828323364258,
-    "time_himotoki": 0.9094452857971191
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 3.067903995513916
   },
   {
     "sentence": "犬を",
@@ -170,8 +170,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.633148193359375,
-    "time_himotoki": 0.19248390197753906
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.17703795433044434
   },
   {
     "sentence": "山に",
@@ -257,8 +257,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.339726209640503,
-    "time_himotoki": 0.4079258441925049
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.45027923583984375
   },
   {
     "sentence": "川で",
@@ -338,8 +338,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0279879570007324,
-    "time_himotoki": 3.969143867492676
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 3.7887930870056152
   },
   {
     "sentence": "友達と",
@@ -421,8 +421,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.2459399700164795,
-    "time_himotoki": 0.46432924270629883
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.5346717834472656
   },
   {
     "sentence": "家から",
@@ -508,8 +508,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.361966133117676,
-    "time_himotoki": 0.7700040340423584
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.7775869369506836
   },
   {
     "sentence": "駅まで",
@@ -595,8 +595,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.9194002151489258,
-    "time_himotoki": 0.5529680252075195
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.5235199928283691
   },
   {
     "sentence": "本は",
@@ -682,8 +682,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1748032569885254,
-    "time_himotoki": 0.3987619876861572
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.3817148208618164
   },
   {
     "sentence": "私も",
@@ -765,8 +765,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0659570693969727,
-    "time_himotoki": 0.6099720001220703
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.5812110900878906
   },
   {
     "sentence": "何か",
@@ -816,8 +816,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5605230331420898,
-    "time_himotoki": 0.33132100105285645
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.32259202003479004
   },
   {
     "sentence": "本を読む",
@@ -939,8 +939,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1594188213348389,
-    "time_himotoki": 0.5302770137786865
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.5146610736846924
   },
   {
     "sentence": "水を飲む",
@@ -1062,8 +1062,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.973376989364624,
-    "time_himotoki": 0.3708958625793457
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.36200690269470215
   },
   {
     "sentence": "東京に行く",
@@ -1182,12 +1182,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.0600051879882812,
-    "time_himotoki": 0.6544198989868164
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.6140589714050293
   },
   {
     "sentence": "学校で勉強する",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "学校",
       "で",
@@ -1280,10 +1280,7 @@
       {
         "text": "勉強する",
         "kana": "べんきょうする",
-        "seq": [
-          1512670,
-          1157170
-        ],
+        "seq": 1512670,
         "score": 736,
         "is_compound": false,
         "components": [],
@@ -1291,18 +1288,12 @@
         "conj_neg": false,
         "conj_fml": false,
         "source_text": null,
-        "pos": [
-          "[n,vs,vt]",
-          "[n,vs,vi]",
-          "[n]"
-        ]
+        "pos": []
       }
     ],
-    "differences": [
-      "Segment '勉強する': seq: 1512670 vs [1512670, 1157170]"
-    ],
-    "time_ichiran": 3.245983839035034,
-    "time_himotoki": 4.450247049331665
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 3.5103659629821777
   },
   {
     "sentence": "友達と話す",
@@ -1420,8 +1411,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.7521648406982422,
-    "time_himotoki": 0.6756200790405273
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 1.7960057258605957
   },
   {
     "sentence": "家に帰る",
@@ -1543,8 +1534,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.8305530548095703,
-    "time_himotoki": 0.8282687664031982
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.012141227722168
   },
   {
     "sentence": "電車で行く",
@@ -1658,12 +1649,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4685137271881104,
-    "time_himotoki": 4.5662431716918945
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.5876879692077637
   },
   {
     "sentence": "日本語を勉強する",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "日本語",
       "を",
@@ -1760,10 +1751,7 @@
       {
         "text": "勉強する",
         "kana": "べんきょうする",
-        "seq": [
-          1512670,
-          1157170
-        ],
+        "seq": 1512670,
         "score": 736,
         "is_compound": false,
         "components": [],
@@ -1771,18 +1759,12 @@
         "conj_neg": false,
         "conj_fml": false,
         "source_text": null,
-        "pos": [
-          "[n,vs,vt]",
-          "[n,vs,vi]",
-          "[n]"
-        ]
+        "pos": []
       }
     ],
-    "differences": [
-      "Segment '勉強する': seq: 1512670 vs [1512670, 1157170]"
-    ],
-    "time_ichiran": 3.521023988723755,
-    "time_himotoki": 0.46250486373901367
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.3184518814086914
   },
   {
     "sentence": "ご飯を食べる",
@@ -1900,8 +1882,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.580078125,
-    "time_himotoki": 0.7077138423919678
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.5129587650299072
   },
   {
     "sentence": "音楽を聴く",
@@ -2019,8 +2001,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.3258302211761475,
-    "time_himotoki": 0.4337339401245117
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.49198079109191895
   },
   {
     "sentence": "学生です",
@@ -2096,8 +2078,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.6842079162597656,
-    "time_himotoki": 4.481023073196411
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.9645192623138428
   },
   {
     "sentence": "先生です",
@@ -2177,8 +2159,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.730112075805664,
-    "time_himotoki": 1.3483541011810303
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 4.835686922073364
   },
   {
     "sentence": "静かです",
@@ -2258,8 +2240,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.3216381072998047,
-    "time_himotoki": 1.290984869003296
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.9040718078613281
   },
   {
     "sentence": "元気です",
@@ -2337,8 +2319,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5857629776000977,
-    "time_himotoki": 1.110651969909668
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 4.876114845275879
   },
   {
     "sentence": "本だ",
@@ -2420,8 +2402,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0442359447479248,
-    "time_himotoki": 0.3793652057647705
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.44898104667663574
   },
   {
     "sentence": "猫だ",
@@ -2503,8 +2485,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.8053576946258545,
-    "time_himotoki": 0.22849321365356445
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.23598480224609375
   },
   {
     "sentence": "きれいです",
@@ -2584,8 +2566,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.3880960941314697,
-    "time_himotoki": 5.967256784439087
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 4.9867730140686035
   },
   {
     "sentence": "有名です",
@@ -2661,8 +2643,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4713408946990967,
-    "time_himotoki": 1.4044392108917236
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.5066359043121338
   },
   {
     "sentence": "日本人です",
@@ -2738,8 +2720,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.7478909492492676,
-    "time_himotoki": 1.830564022064209
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 3.159144878387451
   },
   {
     "sentence": "学校です",
@@ -2815,8 +2797,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.3824529647827148,
-    "time_himotoki": 1.2193851470947266
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 5.176069259643555
   },
   {
     "sentence": "食べている",
@@ -2849,10 +2831,7 @@
       {
         "text": "食べている",
         "kana": "たべている",
-        "seq": [
-          10063115,
-          1577980
-        ],
+        "seq": 10063115,
         "score": 630,
         "is_compound": false,
         "components": [],
@@ -2864,14 +2843,14 @@
       }
     ],
     "differences": [
-      "Segment '食べている': seq: 10091242 vs [10063115, 1577980]"
+      "Segment '食べている': seq: 10091242 vs 10063115"
     ],
-    "time_ichiran": 3.117518901824951,
-    "time_himotoki": 1.3353893756866455
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.1347689628601074
   },
   {
     "sentence": "食べています",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べています"
     ],
@@ -2900,25 +2879,20 @@
       {
         "text": "食べています",
         "kana": "たべています",
-        "seq": [
-          10063115,
-          10105126
-        ],
+        "seq": 10063115,
         "score": 812,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Non-past",
         "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
+        "conj_fml": true,
+        "source_text": "居る",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '食べています': conj_type: Non-past vs None, fml: True vs False"
-    ],
-    "time_ichiran": 3.9380249977111816,
-    "time_himotoki": 1.7632300853729248
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 3.1468050479888916
   },
   {
     "sentence": "見ている",
@@ -2951,10 +2925,7 @@
       {
         "text": "見ている",
         "kana": "みている",
-        "seq": [
-          10050355,
-          1577980
-        ],
+        "seq": 10050355,
         "score": 406,
         "is_compound": false,
         "components": [],
@@ -2966,10 +2937,10 @@
       }
     ],
     "differences": [
-      "Segment '見ている': seq: 10312424 vs [10050355, 1577980]"
+      "Segment '見ている': seq: 10312424 vs 10050355"
     ],
-    "time_ichiran": 2.987849235534668,
-    "time_himotoki": 1.4329018592834473
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.1483452320098877
   },
   {
     "sentence": "読んでいる",
@@ -3002,10 +2973,7 @@
       {
         "text": "読んでいる",
         "kana": "よんでいる",
-        "seq": [
-          10280116,
-          1577980
-        ],
+        "seq": 10280116,
         "score": 630,
         "is_compound": false,
         "components": [],
@@ -3017,10 +2985,10 @@
       }
     ],
     "differences": [
-      "Segment '読んでいる': seq: 10101138 vs [10280116, 1577980]"
+      "Segment '読んでいる': seq: 10101138 vs 10280116"
     ],
-    "time_ichiran": 3.002760887145996,
-    "time_himotoki": 1.4332551956176758
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.3254640102386475
   },
   {
     "sentence": "書いている",
@@ -3053,10 +3021,7 @@
       {
         "text": "書いている",
         "kana": "かいている",
-        "seq": [
-          10226350,
-          1577980
-        ],
+        "seq": 10226350,
         "score": 630,
         "is_compound": false,
         "components": [],
@@ -3068,10 +3033,10 @@
       }
     ],
     "differences": [
-      "Segment '書いている': seq: 10522827 vs [10226350, 1577980]"
+      "Segment '書いている': seq: 10522827 vs 10226350"
     ],
-    "time_ichiran": 4.286582946777344,
-    "time_himotoki": 2.3582661151885986
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 2.191066026687622
   },
   {
     "sentence": "走っている",
@@ -3104,10 +3069,7 @@
       {
         "text": "走っている",
         "kana": "はしっている",
-        "seq": [
-          10327244,
-          1577980
-        ],
+        "seq": 10327244,
         "score": 406,
         "is_compound": false,
         "components": [],
@@ -3119,10 +3081,10 @@
       }
     ],
     "differences": [
-      "Segment '走っている': seq: 10062721 vs [10327244, 1577980]"
+      "Segment '走っている': seq: 10062721 vs 10327244"
     ],
-    "time_ichiran": 2.337083101272583,
-    "time_himotoki": 0.9604487419128418
+    "time_ichiran": 7.152557373046875e-07,
+    "time_himotoki": 0.9028110504150391
   },
   {
     "sentence": "食べてある",
@@ -3155,10 +3117,7 @@
       {
         "text": "食べてある",
         "kana": "たべてある",
-        "seq": [
-          10063115,
-          1296400
-        ],
+        "seq": 10063115,
         "score": 462,
         "is_compound": false,
         "components": [],
@@ -3170,10 +3129,10 @@
       }
     ],
     "differences": [
-      "Segment '食べてある': seq: 10091242 vs [10063115, 1296400]"
+      "Segment '食べてある': seq: 10091242 vs 10063115"
     ],
-    "time_ichiran": 1.3613991737365723,
-    "time_himotoki": 0.4312160015106201
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.3940467834472656
   },
   {
     "sentence": "書いてある",
@@ -3206,10 +3165,7 @@
       {
         "text": "書いてある",
         "kana": "かいてある",
-        "seq": [
-          10226350,
-          1296400
-        ],
+        "seq": 10226350,
         "score": 462,
         "is_compound": false,
         "components": [],
@@ -3221,10 +3177,10 @@
       }
     ],
     "differences": [
-      "Segment '書いてある': seq: 10522827 vs [10226350, 1296400]"
+      "Segment '書いてある': seq: 10522827 vs 10226350"
     ],
-    "time_ichiran": 2.8320629596710205,
-    "time_himotoki": 2.036245822906494
+    "time_ichiran": 7.152557373046875e-07,
+    "time_himotoki": 1.9581212997436523
   },
   {
     "sentence": "食べてしまう",
@@ -3257,10 +3213,7 @@
       {
         "text": "食べてしまう",
         "kana": "たべてしまう",
-        "seq": [
-          10063115,
-          1305380
-        ],
+        "seq": 10063115,
         "score": 560,
         "is_compound": false,
         "components": [],
@@ -3272,14 +3225,14 @@
       }
     ],
     "differences": [
-      "Segment '食べてしまう': seq: 10091242 vs [10063115, 1305380]"
+      "Segment '食べてしまう': seq: 10091242 vs 10063115"
     ],
-    "time_ichiran": 3.9926719665527344,
-    "time_himotoki": 0.8420021533966064
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.7837700843811035
   },
   {
     "sentence": "忘れてしまった",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "忘れてしまった"
     ],
@@ -3308,25 +3261,20 @@
       {
         "text": "忘れてしまった",
         "kana": "わすれてしまった",
-        "seq": [
-          10082875,
-          10548299
-        ],
+        "seq": 10082875,
         "score": 360,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Past (~ta)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "仕舞う",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '忘れてしまった': conj_type: Past (~ta) vs None"
-    ],
-    "time_ichiran": 3.800245761871338,
-    "time_himotoki": 1.5978972911834717
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 2.395845890045166
   },
   {
     "sentence": "食べる",
@@ -3374,12 +3322,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.7684299945831299,
-    "time_himotoki": 1.8901429176330566
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.9013750553131104
   },
   {
     "sentence": "食べた",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べた"
     ],
@@ -3409,22 +3357,20 @@
         "score": 336,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Past (~ta)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "食べる",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '食べた': conj_type: Past (~ta) vs None"
-    ],
-    "time_ichiran": 0.9453210830688477,
-    "time_himotoki": 0.4226219654083252
+    "differences": [],
+    "time_ichiran": 1.6689300537109375e-06,
+    "time_himotoki": 1.776787281036377
   },
   {
     "sentence": "食べない",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べない"
     ],
@@ -3454,22 +3400,20 @@
         "score": 840,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
+        "conj_type": "Non-past",
+        "conj_neg": true,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "食べる",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '食べない': conj_type: Non-past vs None, neg: True vs False"
-    ],
-    "time_ichiran": 2.5760040283203125,
-    "time_himotoki": 1.2741219997406006
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 5.058218955993652
   },
   {
     "sentence": "食べます",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べます"
     ],
@@ -3499,22 +3443,20 @@
         "score": 840,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Non-past",
         "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
+        "conj_fml": true,
+        "source_text": "食べる",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '食べます': conj_type: Non-past vs None, fml: True vs False"
-    ],
-    "time_ichiran": 1.5721890926361084,
-    "time_himotoki": 0.47019505500793457
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 1.423163890838623
   },
   {
     "sentence": "食べました",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べました"
     ],
@@ -3544,22 +3486,20 @@
         "score": 1380,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Past (~ta)",
         "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
+        "conj_fml": true,
+        "source_text": "食べる",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '食べました': conj_type: Past (~ta) vs None, fml: True vs False"
-    ],
-    "time_ichiran": 4.205672979354858,
-    "time_himotoki": 3.3212831020355225
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 2.7917728424072266
   },
   {
     "sentence": "食べません",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べません"
     ],
@@ -3589,22 +3529,20 @@
         "score": 1380,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": true,
+        "source_text": "食べる",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '食べません': conj_type: Non-past vs None, neg: True vs False, fml: True vs False"
-    ],
-    "time_ichiran": 2.7920188903808594,
-    "time_himotoki": 1.3818690776824951
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 1.8528800010681152
   },
   {
     "sentence": "食べて",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べて"
     ],
@@ -3634,18 +3572,16 @@
         "score": 336,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Conjunctive (~te)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "食べる",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '食べて': conj_type: Conjunctive (~te) vs None"
-    ],
-    "time_ichiran": 0.8731889724731445,
-    "time_himotoki": 0.458798885345459
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 1.146501064300537
   },
   {
     "sentence": "食べたい",
@@ -3678,10 +3614,7 @@
       {
         "text": "食べたい",
         "kana": "たべたい",
-        "seq": [
-          10063151,
-          2017560
-        ],
+        "seq": 10063151,
         "score": 378,
         "is_compound": false,
         "components": [],
@@ -3693,14 +3626,14 @@
       }
     ],
     "differences": [
-      "Segment '食べたい': seq: 10091282 vs [10063151, 2017560]"
+      "Segment '食べたい': seq: 10091282 vs 10063151"
     ],
-    "time_ichiran": 2.8480429649353027,
-    "time_himotoki": 1.0401551723480225
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.9856991767883301
   },
   {
     "sentence": "食べられる",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べられる"
     ],
@@ -3730,22 +3663,20 @@
         "score": 1380,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Potential",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "食べる",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '食べられる': conj_type: Potential vs None"
-    ],
-    "time_ichiran": 1.6274592876434326,
-    "time_himotoki": 0.8979418277740479
+    "differences": [],
+    "time_ichiran": 7.152557373046875e-07,
+    "time_himotoki": 5.1285200119018555
   },
   {
     "sentence": "食べさせる",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べさせる"
     ],
@@ -3775,18 +3706,16 @@
         "score": 1380,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Causative",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "食べる",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '食べさせる': conj_type: Causative vs None"
-    ],
-    "time_ichiran": 3.2198472023010254,
-    "time_himotoki": 4.126200199127197
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 2.9770100116729736
   },
   {
     "sentence": "大きい",
@@ -3836,8 +3765,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.6769821643829346,
-    "time_himotoki": 1.202528953552246
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.1088130474090576
   },
   {
     "sentence": "大きかった",
@@ -3879,8 +3808,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.979315996170044,
-    "time_himotoki": 3.8095381259918213
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 2.2211740016937256
   },
   {
     "sentence": "大きくない",
@@ -3922,8 +3851,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.648943662643433,
-    "time_himotoki": 2.3656933307647705
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 2.568774700164795
   },
   {
     "sentence": "大きくなかった",
@@ -3965,8 +3894,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.94852614402771,
-    "time_himotoki": 2.6727678775787354
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 2.9094038009643555
   },
   {
     "sentence": "静かな",
@@ -4054,8 +3983,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.7727811336517334,
-    "time_himotoki": 0.37604308128356934
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.36034512519836426
   },
   {
     "sentence": "静かに",
@@ -4103,8 +4032,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.1115169525146484,
-    "time_himotoki": 0.5390071868896484
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.5155148506164551
   },
   {
     "sentence": "きれいな",
@@ -4192,8 +4121,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.1825149059295654,
-    "time_himotoki": 1.793017864227295
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.6932270526885986
   },
   {
     "sentence": "きれいに",
@@ -4279,8 +4208,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.393749952316284,
-    "time_himotoki": 2.228929042816162
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.9188649654388428
   },
   {
     "sentence": "天気がいい",
@@ -4388,18 +4317,18 @@
         "score": 40,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Continuative (~i)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "言う",
         "pos": []
       }
     ],
     "differences": [
-      "Segment 'いい': seq: 2820690 vs 10556282"
+      "Segment 'いい': conj_type: None vs Continuative (~i)"
     ],
-    "time_ichiran": 4.273295164108276,
-    "time_himotoki": 1.9984021186828613
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 2.4476468563079834
   },
   {
     "sentence": "本が面白い",
@@ -4521,8 +4450,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.733445882797241,
-    "time_himotoki": 1.2099342346191406
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 1.1931729316711426
   },
   {
     "sentence": "一覧は最高だぞ",
@@ -4704,8 +4633,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.3360979557037354,
-    "time_himotoki": 0.5785360336303711
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.5582139492034912
   },
   {
     "sentence": "猫に水をあげる",
@@ -4899,12 +4828,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.6283841133117676,
-    "time_himotoki": 1.5171229839324951
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.8657426834106445
   },
   {
     "sentence": "日本語を勉強しています",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "日本語",
       "を",
@@ -5002,34 +4931,24 @@
       {
         "text": "勉強しています",
         "kana": "べんきょういます",
-        "seq": [
-          1512670,
-          10587097,
-          10105126
-        ],
+        "seq": 1512670,
         "score": 2254,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Non-past",
         "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,vs,vt]",
-          "[n,vs,vi]",
-          "[n]"
-        ]
+        "conj_fml": true,
+        "source_text": "居る",
+        "pos": []
       }
     ],
-    "differences": [
-      "Segment '勉強しています': conj_type: Non-past vs None, fml: True vs False"
-    ],
-    "time_ichiran": 11.645076990127563,
-    "time_himotoki": 2.2672431468963623
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 2.5451488494873047
   },
   {
     "sentence": "東京に行きたいです",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "東京",
       "に",
@@ -5127,25 +5046,20 @@
       {
         "text": "行きたいです",
         "kana": "いきたいです",
-        "seq": [
-          10269084,
-          10016036
-        ],
+        "seq": 10269084,
         "score": 728,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Non-past",
         "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
+        "conj_fml": true,
+        "source_text": "たい",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '行きたいです': conj_type: Non-past vs None, fml: True vs False"
-    ],
-    "time_ichiran": 6.73829197883606,
-    "time_himotoki": 2.9467291831970215
+    "differences": [],
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 3.1401829719543457
   },
   {
     "sentence": "明日は雨が降るでしょう",
@@ -5297,8 +5211,8 @@
     "differences": [
       "Segment 'でしょう': conj_type: Volitional vs None, fml: True vs False"
     ],
-    "time_ichiran": 5.070361852645874,
-    "time_himotoki": 3.5539400577545166
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 2.005011796951294
   },
   {
     "sentence": "彼女は先生になりました",
@@ -5474,22 +5388,22 @@
         "score": 525,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Past (~ta)",
         "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
+        "conj_fml": true,
+        "source_text": "生る",
         "pos": []
       }
     ],
     "differences": [
-      "Segment 'なりました': conj_type: Past (~ta) vs None, fml: True vs False"
+      "Segment 'なりました': source: 成る vs 生る"
     ],
-    "time_ichiran": 8.983826875686646,
-    "time_himotoki": 2.1846630573272705
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 4.242257833480835
   },
   {
     "sentence": "この本は面白いと思います",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "この",
       "本",
@@ -5699,22 +5613,20 @@
         "score": 840,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Non-past",
         "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
+        "conj_fml": true,
+        "source_text": "思う",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment '思います': conj_type: Non-past vs None, fml: True vs False"
-    ],
-    "time_ichiran": 7.30178689956665,
-    "time_himotoki": 3.037635087966919
+    "differences": [],
+    "time_ichiran": 1.6689300537109375e-06,
+    "time_himotoki": 3.578144073486328
   },
   {
     "sentence": "時間がないから行けない",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "時間",
       "が",
@@ -5850,10 +5762,10 @@
         "score": 40,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
+        "conj_type": "Non-past",
+        "conj_neg": true,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "有る",
         "pos": []
       },
       {
@@ -5880,23 +5792,20 @@
         "score": 840,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
+        "conj_type": "Potential",
+        "conj_neg": true,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "行く",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'ない': conj_type: Non-past vs None, neg: True vs False",
-      "Segment '行けない': conj_type: Potential vs None, neg: True vs False"
-    ],
-    "time_ichiran": 8.772233009338379,
-    "time_himotoki": 3.0292258262634277
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 4.76338005065918
   },
   {
     "sentence": "食べてから寝る",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "食べて",
       "から",
@@ -5964,10 +5873,10 @@
         "score": 336,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Conjunctive (~te)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "食べる",
         "pos": []
       },
       {
@@ -6005,11 +5914,9 @@
         ]
       }
     ],
-    "differences": [
-      "Segment '食べて': conj_type: Conjunctive (~te) vs None"
-    ],
-    "time_ichiran": 3.666367292404175,
-    "time_himotoki": 0.9638900756835938
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.6588859558105469
   },
   {
     "sentence": "勉強しなければならない",
@@ -6057,22 +5964,15 @@
       {
         "text": "勉強しなければ",
         "kana": "べんきょうしなければ",
-        "seq": [
-          1512670,
-          10587103
-        ],
+        "seq": 1512670,
         "score": 1564,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
+        "conj_type": "Provisional (~eba)",
+        "conj_neg": true,
         "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,vs,vt]",
-          "[n,vs,vi]",
-          "[n]"
-        ]
+        "source_text": "為る",
+        "pos": []
       },
       {
         "text": "ならない",
@@ -6081,19 +5981,18 @@
         "score": 336,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
+        "conj_type": "Non-past",
+        "conj_neg": true,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "生る",
         "pos": []
       }
     ],
     "differences": [
-      "Segment '勉強しなければ': conj_type: Provisional (~eba) vs None, neg: True vs False",
-      "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
+      "Segment 'ならない': source: 成る vs 生る"
     ],
-    "time_ichiran": 8.940546035766602,
-    "time_himotoki": 2.953291893005371
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 7.780426979064941
   },
   {
     "sentence": "おはよう",
@@ -6139,8 +6038,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.1843619346618652,
-    "time_himotoki": 0.3596618175506592
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.337695837020874
   },
   {
     "sentence": "こんにちは",
@@ -6186,8 +6085,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.8243370056152344,
-    "time_himotoki": 0.6654629707336426
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.6219780445098877
   },
   {
     "sentence": "こんばんは",
@@ -6233,8 +6132,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.1523449420928955,
-    "time_himotoki": 0.467987060546875
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.44484686851501465
   },
   {
     "sentence": "ありがとう",
@@ -6280,8 +6179,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.371232032775879,
-    "time_himotoki": 0.4748091697692871
+    "time_ichiran": 7.152557373046875e-07,
+    "time_himotoki": 0.44273805618286133
   },
   {
     "sentence": "すみません",
@@ -6318,18 +6217,18 @@
         "score": 525,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
+        "conj_type": "Non-past",
+        "conj_neg": true,
+        "conj_fml": true,
+        "source_text": "済む",
         "pos": []
       }
     ],
     "differences": [
-      "Segment 'すみません': seq: 1295060 vs 10274684"
+      "Segment 'すみません': conj_type: None vs Non-past, neg: False vs True, fml: False vs True"
     ],
-    "time_ichiran": 3.1245837211608887,
-    "time_himotoki": 2.2267210483551025
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 5.101526975631714
   },
   {
     "sentence": "ごめんなさい",
@@ -6375,12 +6274,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.5099449157714844,
-    "time_himotoki": 1.1698050498962402
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 1.0411710739135742
   },
   {
     "sentence": "いただきます",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "いただきます"
     ],
@@ -6412,18 +6311,16 @@
         "score": 756,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Non-past",
         "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
+        "conj_fml": true,
+        "source_text": "頂く",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'いただきます': conj_type: Non-past vs None, fml: True vs False"
-    ],
-    "time_ichiran": 3.63079571723938,
-    "time_himotoki": 2.419518232345581
+    "differences": [],
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 6.227273941040039
   },
   {
     "sentence": "ごちそうさま",
@@ -6471,8 +6368,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.4994711875915527,
-    "time_himotoki": 0.6396498680114746
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.7067880630493164
   },
   {
     "sentence": "お願いします",
@@ -6518,8 +6415,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.283693075180054,
-    "time_himotoki": 2.071744918823242
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 2.1434779167175293
   },
   {
     "sentence": "さようなら",
@@ -6565,8 +6462,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.6881449222564697,
-    "time_himotoki": 0.5379908084869385
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.5019478797912598
   },
   {
     "sentence": "一つ",
@@ -6616,8 +6513,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.8306419849395752,
-    "time_himotoki": 1.503572940826416
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.21286702156066895
   },
   {
     "sentence": "二人",
@@ -6663,8 +6560,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.7729020118713379,
-    "time_himotoki": 0.2977290153503418
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.20296907424926758
   },
   {
     "sentence": "三匹",
@@ -6710,8 +6607,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.6383991241455078,
-    "time_himotoki": 0.026163816452026367
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.017460107803344727
   },
   {
     "sentence": "四本",
@@ -6757,8 +6654,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.6789751052856445,
-    "time_himotoki": 0.2033247947692871
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.18694305419921875
   },
   {
     "sentence": "五冊",
@@ -6802,8 +6699,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.6718668937683105,
-    "time_himotoki": 0.02965712547302246
+    "time_ichiran": 7.152557373046875e-07,
+    "time_himotoki": 0.02110886573791504
   },
   {
     "sentence": "一月",
@@ -6852,8 +6749,8 @@
     "differences": [
       "Segment '一月': seq: 1162130 vs 1162120"
     ],
-    "time_ichiran": 0.8314638137817383,
-    "time_himotoki": 0.3847222328186035
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.3697657585144043
   },
   {
     "sentence": "二日",
@@ -6901,8 +6798,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.7644169330596924,
-    "time_himotoki": 0.2190999984741211
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.20567774772644043
   },
   {
     "sentence": "三時",
@@ -6952,8 +6849,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.7142751216888428,
-    "time_himotoki": 0.2101590633392334
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 0.22434091567993164
   },
   {
     "sentence": "百円",
@@ -6999,8 +6896,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.7033679485321045,
-    "time_himotoki": 0.2103888988494873
+    "time_ichiran": 7.152557373046875e-07,
+    "time_himotoki": 0.19031333923339844
   },
   {
     "sentence": "千人",
@@ -7044,8 +6941,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.6918289661407471,
-    "time_himotoki": 0.04063105583190918
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.030192852020263672
   },
   {
     "sentence": "コンピュータ",
@@ -7091,8 +6988,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.4257338047027588,
-    "time_himotoki": 0.03557300567626953
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.031174182891845703
   },
   {
     "sentence": "テレビ",
@@ -7140,8 +7037,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.5295250415802002,
-    "time_himotoki": 0.05496096611022949
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.037548065185546875
   },
   {
     "sentence": "インターネット",
@@ -7187,8 +7084,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.5600588321685791,
-    "time_himotoki": 0.07416796684265137
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.058679819107055664
   },
   {
     "sentence": "レストラン",
@@ -7234,8 +7131,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.8846616744995117,
-    "time_himotoki": 0.11811208724975586
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.10636591911315918
   },
   {
     "sentence": "コーヒー",
@@ -7281,8 +7178,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.3760969638824463,
-    "time_himotoki": 0.028456926345825195
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.02306389808654785
   },
   {
     "sentence": "アメリカ",
@@ -7330,8 +7227,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.5484790802001953,
-    "time_himotoki": 0.05977487564086914
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.04274892807006836
   },
   {
     "sentence": "フランス",
@@ -7377,8 +7274,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.6277201175689697,
-    "time_himotoki": 0.08256387710571289
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.06105804443359375
   },
   {
     "sentence": "ドイツ",
@@ -7424,8 +7321,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.49487900733947754,
-    "time_himotoki": 0.03545427322387695
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.029494047164916992
   },
   {
     "sentence": "スマートフォン",
@@ -7471,8 +7368,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.5829949378967285,
-    "time_himotoki": 0.08822512626647949
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.07013893127441406
   },
   {
     "sentence": "プログラミング",
@@ -7518,12 +7415,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 0.654271125793457,
-    "time_himotoki": 0.08117103576660156
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 0.0645298957824707
   },
   {
     "sentence": "がんばって",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "がんばって"
     ],
@@ -7555,18 +7452,16 @@
         "score": 416,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Conjunctive (~te)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "頑張る",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'がんばって': conj_type: Conjunctive (~te) vs None"
-    ],
-    "time_ichiran": 1.1868438720703125,
-    "time_himotoki": 0.32736992835998535
+    "differences": [],
+    "time_ichiran": 1.9073486328125e-06,
+    "time_himotoki": 1.436372995376587
   },
   {
     "sentence": "やってみる",
@@ -7612,12 +7507,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5406291484832764,
-    "time_himotoki": 0.9315698146820068
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 0.8654520511627197
   },
   {
     "sentence": "してあげる",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "して",
       "あげる"
@@ -7666,10 +7561,10 @@
         "score": 40,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Conjunctive (~te)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "為る",
         "pos": []
       },
       {
@@ -7690,11 +7585,9 @@
         ]
       }
     ],
-    "differences": [
-      "Segment 'して': conj_type: Conjunctive (~te) vs None"
-    ],
-    "time_ichiran": 2.3245739936828613,
-    "time_himotoki": 0.8600261211395264
+    "differences": [],
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 4.552058696746826
   },
   {
     "sentence": "してもらう",
@@ -7727,10 +7620,7 @@
       {
         "text": "してもらう",
         "kana": "してもらう",
-        "seq": [
-          10587097,
-          1535910
-        ],
+        "seq": 10587097,
         "score": 200,
         "is_compound": false,
         "components": [],
@@ -7742,10 +7632,10 @@
       }
     ],
     "differences": [
-      "Segment 'してもらう': seq: 10150864 vs [10587097, 1535910]"
+      "Segment 'してもらう': seq: 10150864 vs 10587097"
     ],
-    "time_ichiran": 2.5528061389923096,
-    "time_himotoki": 0.7727539539337158
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 1.0123558044433594
   },
   {
     "sentence": "しなくてもいい",
@@ -7778,10 +7668,7 @@
       {
         "text": "しなくてもいい",
         "kana": "しなくてもいい",
-        "seq": [
-          10587099,
-          null
-        ],
+        "seq": 10587099,
         "score": 672,
         "is_compound": false,
         "components": [],
@@ -7793,10 +7680,10 @@
       }
     ],
     "differences": [
-      "Segment 'しなくてもいい': seq: 10150866 vs [10587099, None]"
+      "Segment 'しなくてもいい': seq: 10150866 vs 10587099"
     ],
-    "time_ichiran": 4.976009130477905,
-    "time_himotoki": 3.3074936866760254
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 3.1681079864501953
   },
   {
     "sentence": "食べなくてはいけない",
@@ -7868,10 +7755,10 @@
         "score": 1380,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": true,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "食べる",
         "pos": []
       },
       {
@@ -7898,19 +7785,18 @@
         "score": 336,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
+        "conj_type": "Non-past",
+        "conj_neg": true,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "生ける",
         "pos": []
       }
     ],
     "differences": [
-      "Segment '食べなくて': conj_type: Conjunctive (~te) vs None, neg: True vs False",
-      "Segment 'いけない': seq: 1000730 vs 10105829"
+      "Segment 'いけない': conj_type: None vs Non-past, neg: False vs True"
     ],
-    "time_ichiran": 7.15843939781189,
-    "time_himotoki": 3.5685577392578125
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 10.233758211135864
   },
   {
     "sentence": "行かなければならない",
@@ -7959,10 +7845,10 @@
         "score": 1656,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
+        "conj_type": "Provisional (~eba)",
+        "conj_neg": true,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "行く",
         "pos": []
       },
       {
@@ -7972,19 +7858,18 @@
         "score": 336,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
-        "conj_neg": false,
+        "conj_type": "Non-past",
+        "conj_neg": true,
         "conj_fml": false,
-        "source_text": null,
+        "source_text": "生る",
         "pos": []
       }
     ],
     "differences": [
-      "Segment '行かなければ': conj_type: Provisional (~eba) vs None, neg: True vs False",
-      "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
+      "Segment 'ならない': source: 成る vs 生る"
     ],
-    "time_ichiran": 6.4186670780181885,
-    "time_himotoki": 2.9465668201446533
+    "time_ichiran": 2.1457672119140625e-06,
+    "time_himotoki": 11.632615804672241
   },
   {
     "sentence": "ということ",
@@ -8072,8 +7957,8 @@
     "differences": [
       "Segment 'こと': seq: 2524270 vs 1313580"
     ],
-    "time_ichiran": 3.196592330932617,
-    "time_himotoki": 1.0513348579406738
+    "time_ichiran": 9.5367431640625e-07,
+    "time_himotoki": 1.2634592056274414
   },
   {
     "sentence": "というのは",
@@ -8121,8 +8006,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.593458890914917,
-    "time_himotoki": 0.9458580017089844
+    "time_ichiran": 1.6689300537109375e-06,
+    "time_himotoki": 0.9488229751586914
   },
   {
     "sentence": "それでは",
@@ -8172,7 +8057,7 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4643440246582031,
-    "time_himotoki": 0.7570607662200928
+    "time_ichiran": 1.1920928955078125e-06,
+    "time_himotoki": 0.7616498470306396
   }
 ]

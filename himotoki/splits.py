@@ -42,13 +42,22 @@ class SplitPart:
 
 @dataclass
 class SplitResult:
-    """Result of splitting a word."""
+    """
+    Result of splitting a word.
+    
+    Supports three scoring modes via modifiers:
+    - Standard (no modifier): Sum of part scores + score_bonus
+    - ':score': Direct score addition (score_bonus added directly)
+    - ':pscore': Proportional score modification (score_bonus modifies prop_score)
+    """
     parts: List[SplitPart]
     score_bonus: int
+    modifiers: Set[str] = field(default_factory=set)  # ':score', ':pscore', or empty for standard
     
     def __repr__(self):
         texts = [p.text for p in self.parts]
-        return f"<SplitResult({' + '.join(texts)}, bonus={self.score_bonus})>"
+        mod_str = f", modifiers={self.modifiers}" if self.modifiers else ""
+        return f"<SplitResult({' + '.join(texts)}, bonus={self.score_bonus}{mod_str})>"
 
 
 # ============================================================================
@@ -93,8 +102,6 @@ def def_simple_split(
         - conjugated: If True, look up conjugated form
     """
     def split_fn(session: Session, reading: Any) -> Optional[SplitResult]:
-        from himotoki.lookup import find_word, find_word_conj_of
-        
         text = getattr(reading, 'text', str(reading))
         offset = 0
         result_parts = []
@@ -155,8 +162,6 @@ def def_de_split(seq: int, seq_a: int, score: int = 20):
     Common pattern: X + で where X is the main meaning.
     """
     def split_fn(session: Session, reading: Any) -> Optional[SplitResult]:
-        from himotoki.lookup import find_word, find_word_seq
-        
         text = getattr(reading, 'text', str(reading))
         if not text.endswith('で'):
             return None
@@ -191,8 +196,6 @@ def def_toori_split(seq: int, seq_a: int, score: int = 50, seq_b: int = 1432930)
     Define a 通り split: word + 通り.
     """
     def split_fn(session: Session, reading: Any) -> Optional[SplitResult]:
-        from himotoki.lookup import find_word, find_word_seq
-        
         text = getattr(reading, 'text', str(reading))
         word_type = getattr(reading, 'word_type', 'kana')
         

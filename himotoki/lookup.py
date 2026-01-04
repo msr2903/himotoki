@@ -1449,6 +1449,51 @@ def calc_score(
         ((n_kanji - 1) * 5 if n_kanji > 1 else 0)
     )
     
+    # Split scoring integration (ichiran lines 927-970)
+    # Check for split definition and apply split scoring
+    split_info = None
+    from himotoki.splits import get_split
+    split_result = get_split(session, word, conj_of if conj_of else None)
+    
+    if split_result:
+        if ':score' in split_result.modifiers:
+            # Direct score addition mode
+            score += split_result.score_bonus
+            split_info = ('score', split_result.score_bonus)
+        elif ':pscore' in split_result.modifiers:
+            # Proportional score modification mode
+            import math
+            new_prop_score = max(1, prop_score + split_result.score_bonus)
+            score = math.ceil(score * new_prop_score / prop_score) if prop_score > 0 else score
+            prop_score = new_prop_score
+            split_info = ('pscore', split_result.score_bonus)
+        else:
+            # Standard split: sum of part scores + bonus
+            split_score = split_result.score_bonus
+            part_scores = []
+            for i, part in enumerate(split_result.parts):
+                is_last = (i == len(split_result.parts) - 1)
+                # Calculate adjusted use_length for final part
+                part_use_length = None
+                if is_last and use_length:
+                    # Subtract mora lengths of preceding parts
+                    preceding_mora = sum(
+                        mora_length(p.text) for p in split_result.parts[:-1]
+                    )
+                    part_use_length = use_length - preceding_mora
+                
+                part_score, _ = calc_score(
+                    session, part.reading,
+                    final=final and is_last,
+                    use_length=part_use_length,
+                    score_mod=score_mod if is_last else 0,
+                )
+                part_scores.append(part_score)
+                split_score += part_score
+            
+            score = split_score
+            split_info = ('split', split_result.score_bonus, part_scores)
+    
     # Apply use_length bonus for context
     if use_length:
         tail_len = use_length - word_len
@@ -1466,7 +1511,7 @@ def calc_score(
         'seq_set': seq_set,
         'conj': conj_data,
         'common': common_of if common_p else None,
-        'score_info': [prop_score, kanji_break, use_length_bonus, None],
+        'score_info': [prop_score, kanji_break, use_length_bonus, split_info],
         'kpcl': [kanji_p or katakana_p, primary_p, common_p, long_p],
     }
     
