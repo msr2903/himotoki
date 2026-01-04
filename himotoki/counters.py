@@ -22,7 +22,7 @@ from himotoki.db.models import (
     Entry, KanjiText, KanaText, SenseProp,
 )
 from himotoki.characters import (
-    get_char_class, mora_length, as_hiragana,
+    get_char_class, mora_length, as_hiragana, count_char_class,
 )
 
 
@@ -228,6 +228,9 @@ class CounterText:
     Represents a counter expression (number + counter).
     
     Ports ichiran's counter-text class from dict-counters.lisp.
+    
+    CounterText objects are designed to be compatible with WordMatch
+    so they can be scored using the main calc_score function.
     """
     text: str  # Full text (e.g., "三匹")
     kana: str  # Kana reading (e.g., "さんびき")
@@ -238,7 +241,8 @@ class CounterText:
     source: Optional[Union[KanjiText, KanaText]] = None  # Source counter entry
     ordinalp: bool = False  # Is this ordinal? (〜目)
     suffix: Optional[str] = None  # Kana suffix (e.g., "め" for 目)
-    common: Optional[int] = None  # Commonness rating
+    _common: Optional[int] = None  # Commonness rating (internal)
+    digit_opts: Optional[Dict] = None  # Digit-specific options for phonetic rules
     
     @property
     def seq(self) -> Optional[int]:
@@ -251,9 +255,49 @@ class CounterText:
         return self.source.ord if self.source else 0
     
     @property
+    def common(self) -> Optional[int]:
+        """Get commonness rating from source or override."""
+        if self._common is not None:
+            return self._common
+        if self.source:
+            return self.source.common
+        return 0
+    
+    @property
     def word_type(self) -> str:
         """Counter expressions are typically kanji."""
-        return 'kanji'
+        # Check if text contains kanji
+        if count_char_class(self.text, 'kanji') > 0:
+            return 'kanji'
+        return 'kana'
+    
+    @property
+    def reading(self):
+        """Return self as the reading for compatibility with calc_score."""
+        return self
+    
+    @property
+    def conjugations(self) -> None:
+        """Counters don't have conjugations."""
+        return None
+    
+    @property
+    def is_root(self) -> bool:
+        """Counters are always root forms."""
+        return True
+    
+    @property
+    def is_compound(self) -> bool:
+        """Counters are not compound words."""
+        return False
+    
+    @property
+    def components(self) -> List[str]:
+        """Return empty list for counters (no components)."""
+        return []
+    
+    def __repr__(self):
+        return f"<CounterText(text='{self.text}', value={self.number_value}, counter='{self.counter_text}')>"
 
 
 # ============================================================================
@@ -265,12 +309,87 @@ _counter_cache: Dict[str, List[Tuple[type, Dict]]] = {}
 _counter_cache_initialized = False
 
 # Special counter handling overrides
+# Maps seq to digit_opts dict for phonetic rules
+# Format: {digit: [opts]} where opts can be 'g' (geminate), 'r' (rendaku), 'h' (handakuten)
+# or a string to replace the number reading
+SPECIAL_COUNTER_OPTS: Dict[int, Dict] = {
+    # 匹/疋 (hiki) - counter for small animals
+    1583370: {3: ['r']},  # 3 -> さんびき (rendaku)
+    # 本 (hon) - counter for long thin objects
+    1522150: {3: ['r']},  # 3 -> さんぼん (rendaku)
+    # 杯/盃 (hai) - counter for cups/glasses
+    2019640: {3: ['r']},  # 3 -> さんばい (rendaku)
+    # 階 (kai) - counter for floors
+    1203020: {3: ['r']},  # 3 -> さんがい (rendaku)
+    # 軒 (ken) - counter for houses
+    2078590: {3: ['r']},  # 3 -> さんげん (rendaku)
+    # 遍 (hen) - counter for times
+    2208060: {3: ['r']},  # 3 -> さんべん (rendaku)
+    # 編/篇 (hen) - counter for literary works
+    1511870: {3: ['r']},  # 3 -> さんべん (rendaku)
+    # 足 (soku) - counter for pairs of footwear
+    2412230: {3: ['r']},  # 3 -> さんぞく (rendaku)
+    # 時 (ji) - counter for hours
+    2020680: {4: 'よ', 7: 'しち', 9: 'く'},
+    # 時間 (jikan) - counter for hours duration
+    1315920: {4: 'よ', 9: 'く'},
+    # 年 (nen) - counter for years
+    2084840: {4: 'よ', 7: 'しち', 9: 'く'},
+    # 円 (en) - counter for yen
+    1175570: {4: 'よ'},
+    # 分 (fun) - counter for minutes
+    1502840: {4: ['h']},  # 4 -> よんぷん (handakuten)
+    # 舗 (ho) - counter for shops
+    1514050: {4: ['h']},
+    # 敗 (hai) - counter for losses
+    1901390: {4: ['h']},
+    # 泊 (haku) - counter for nights stay
+    1919550: {4: ['h']},
+    # 筆 (hitsu) - counter for brush strokes
+    1487770: {4: ['h']},
+    # 冊 (satsu) - counter for books - uses standard rules
+    # 人 (nin) - counter for people - special class
+    2149890: {4: 'よ', 7: 'しち'},
+    # 月 (gatsu) - counter for months
+    1255430: {4: 'し', 7: 'しち', 9: 'く'},
+}
+
+# Special counter classes that need custom kana generation
+# Maps seq to a function that returns the kana for a given number
+SPECIAL_COUNTER_KANA: Dict[int, callable] = {}
+
+# Days counter (日 ka) - kun readings for 1-10, 14, 20, 24, 30
+DAYS_KUN_READINGS = {
+    1: 'ついたち',
+    2: 'ふつか',
+    3: 'みっか',
+    4: 'よっか',
+    5: 'いつか',
+    6: 'むいか',
+    7: 'なのか',
+    8: 'ようか',
+    9: 'ここのか',
+    10: 'とうか',
+    14: 'じゅうよっか',
+    20: 'はつか',
+    24: 'にじゅうよっか',
+    30: 'みそか',
+}
+
+# People counter (人 nin) - kun readings for 1-2
+PEOPLE_KUN_READINGS = {
+    1: 'ひとり',
+    2: 'ふたり',
+}
+
 SPECIAL_COUNTERS: Dict[int, callable] = {}
 
 # Extra counter IDs (not marked as ctr but act as counters)
+# Note: 時 (2020680) is intentionally not included because it conflicts with
+# regular dictionary entries like 三時 (3 o'clock)
 EXTRA_COUNTER_IDS = [
-    1255430,  # 月
-    1606800,  # 割
+    1255430,  # 月 (months)
+    1606800,  # 割 (percentage)
 ]
 
 # Skip these counter IDs
@@ -441,6 +560,16 @@ def counter_join(number_value: int, number_kana: str, counter_kana: str,
     Join number kana with counter kana, applying phonetic rules.
     
     Ports ichiran's counter-join method from dict-counters.lisp.
+    
+    Args:
+        number_value: The numeric value
+        number_kana: The kana reading of the number
+        counter_kana: The kana reading of the counter
+        digit_opts: Optional dict mapping digits to phonetic options
+        foreign: Whether this is a foreign-style counter
+    
+    Returns:
+        The combined kana string with phonetic rules applied
     """
     if digit_opts is None:
         digit_opts = {}
@@ -461,7 +590,17 @@ def counter_join(number_value: int, number_kana: str, counter_kana: str,
     if digit in digit_opts:
         opts = digit_opts[digit]
         if isinstance(opts, str):
-            # Replace number reading
+            # Replace number reading with the string
+            # Get the stem length to replace
+            if digit < 10:
+                stem_kana = DIGIT_TO_KANA.get(digit, '')
+            else:
+                power = round(len(str(digit)) - 1)  # log10
+                stem_kana = POWER_TO_KANA.get(power, '')
+            
+            stem_len = len(stem_kana) if stem_kana else 0
+            if stem_len > 0 and len(number_kana) >= stem_len:
+                return number_kana[:-stem_len] + opts + counter_kana
             return opts + counter_kana
         elif isinstance(opts, list):
             # Apply modifications
@@ -530,6 +669,12 @@ def counter_join(number_value: int, number_kana: str, counter_kana: str,
 # Counter Lookup
 # ============================================================================
 
+# Special counter kana overrides
+# Maps seq to the kana reading to use for the counter
+SPECIAL_COUNTER_KANA_OVERRIDE: Dict[int, str] = {
+    1255430: 'がつ',  # 月 (months) - uses がつ not つき
+}
+
 def init_counter_cache(session: Session) -> None:
     """Initialize the counter cache with all counter readings."""
     global _counter_cache, _counter_cache_initialized
@@ -544,8 +689,14 @@ def init_counter_cache(session: Session) -> None:
         if not kana_list:
             continue
         
-        # Primary kana reading
-        primary_kana = kana_list[0].text if kana_list else ''
+        # Primary kana reading - check for override first
+        if seq in SPECIAL_COUNTER_KANA_OVERRIDE:
+            primary_kana = SPECIAL_COUNTER_KANA_OVERRIDE[seq]
+        else:
+            primary_kana = kana_list[0].text if kana_list else ''
+        
+        # Get digit_opts for this counter if it's a special counter
+        digit_opts = SPECIAL_COUNTER_OPTS.get(seq)
         
         # Use kanji readings as counter text
         for kt in kanji_list:
@@ -563,6 +714,7 @@ def init_counter_cache(session: Session) -> None:
                 'source': kt,
                 'ordinalp': is_ordinal,
                 'common': kt.common,
+                'digit_opts': digit_opts,
             })
     
     _counter_cache_initialized = True
@@ -600,12 +752,45 @@ def find_counter(
     
     results = []
     for args in counter_args_list:
-        # Generate the kana reading
-        number_kana = number_to_kana(number_value)
+        source = args.get('source')
+        seq = source.seq if source else None
+        digit_opts = args.get('digit_opts')
         counter_kana = args['counter_kana']
         
-        # Apply phonetic rules
-        full_kana = counter_join(number_value, number_kana, counter_kana)
+        # Check for special kana readings
+        special_kana = None
+        common_override = args.get('common')
+        
+        # Days counter (日 ka) - seq 2083110
+        # Only valid for 1-10, 14, 20, 24, 30
+        if seq == 2083110:
+            if number_value in DAYS_KUN_READINGS:
+                special_kana = DAYS_KUN_READINGS[number_value]
+                # Use source common value, don't override
+            else:
+                # Skip this counter for numbers without kun readings
+                continue
+        
+        # Days counter (日 nichi) - seq 2083100
+        # Valid for numbers > 10 (except 14, 20, 24, 30) and 1
+        if seq == 2083100:
+            if number_value in DAYS_KUN_READINGS and number_value != 1:
+                # Skip nichi reading for numbers that have kun readings (except 1)
+                continue
+        
+        # People counter (人 nin) - seq 2149890
+        if seq == 2149890:
+            if number_value in PEOPLE_KUN_READINGS:
+                special_kana = PEOPLE_KUN_READINGS[number_value]
+        
+        # Generate the kana reading
+        if special_kana:
+            full_kana = special_kana
+        else:
+            number_kana = number_to_kana(number_value)
+            # Apply phonetic rules with digit_opts
+            full_kana = counter_join(number_value, number_kana, counter_kana, digit_opts=digit_opts)
+        
         full_text = number_text + counter_text
         
         counter_obj = CounterText(
@@ -615,9 +800,10 @@ def find_counter(
             number_value=number_value,
             counter_text=counter_text,
             counter_kana=counter_kana,
-            source=args.get('source'),
+            source=source,
             ordinalp=args.get('ordinalp', False),
-            common=args.get('common'),
+            _common=common_override,
+            digit_opts=digit_opts,
         )
         
         results.append(counter_obj)

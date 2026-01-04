@@ -29,7 +29,7 @@ from himotoki.synergies import (
     get_segment_score_synergy, Synergy,
 )
 from himotoki.counters import (
-    find_counter_in_text, CounterText, calc_counter_score,
+    find_counter_in_text, CounterText,
 )
 
 
@@ -366,13 +366,12 @@ def join_substring_words_impl(
             # Add counter-based segments
             for counter in counters:
                 # Create a segment with counter as word
-                # We need to wrap the counter in a format compatible with Segment
-                counter_score = calc_counter_score(counter)
+                # CounterText is now compatible with calc_score, so we don't pre-score
                 seg = Segment(
                     start=start,
                     end=end,
                     word=counter,  # CounterText acts as word
-                    score=counter_score,
+                    score=0,  # Will be scored by gen_score
                     info={'posi': ['ctr'], 'counter': True, 'seq_set': {counter.seq} if counter.seq else set()},
                 )
                 segments.append(seg)

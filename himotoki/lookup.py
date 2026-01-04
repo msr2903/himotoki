@@ -25,6 +25,12 @@ from himotoki.characters import (
     mora_length, count_char_class, get_char_class,
 )
 
+# Import CounterText for type checking in calc_score
+# This is imported here to avoid circular imports
+def _is_counter_text(obj) -> bool:
+    """Check if object is a CounterText without importing the class."""
+    return type(obj).__name__ == 'CounterText'
+
 
 # ============================================================================
 # Constants (ported from ichiran's dict-errata.lisp)
@@ -1235,15 +1241,18 @@ def calc_score(
         
         return score, info
     
+    # Check for counter mode (CounterText objects)
+    ctr_mode = _is_counter_text(word)
+    
     reading = word.reading
     text = word.text
     seq = word.seq
     ord_val = word.ord
     common = word.common
     
-    # Get entry info
-    entry = session.get(Entry, seq)
-    if not entry:
+    # Get entry info - counters don't have entries
+    entry = None if ctr_mode else session.get(Entry, seq)
+    if not entry and not ctr_mode:
         return 0, {}
     
     # Basic properties
@@ -1256,12 +1265,14 @@ def calc_score(
     n_kanji = count_char_class(text, 'kanji')
     word_len = max(1, mora_length(text))
     
-    # Conjugation info
-    conj_only = word.conjugations is not None and word.conjugations != 'root'
-    root_p = not conj_only and entry.root_p
+    # Conjugation info - counters don't have conjugations
+    conj_only = False if ctr_mode else (word.conjugations is not None and word.conjugations != 'root')
+    root_p = ctr_mode or (not conj_only and entry and entry.root_p)
     
-    # Get conjugation data
-    if conj_only and isinstance(word.conjugations, list):
+    # Get conjugation data - counters don't have conjugations
+    if ctr_mode:
+        conj_data = []
+    elif conj_only and isinstance(word.conjugations, list):
         conj_data = get_conj_data(session, seq, conj_ids=word.conjugations, texts=[text])
     elif not word.is_root:
         conj_data = get_conj_data(session, seq, texts=[text])
@@ -1291,24 +1302,30 @@ def calc_score(
     )
     
     # Get part-of-speech info
-    seq_set = {seq} | set(conj_of)
+    seq_set = {seq} | set(conj_of) if seq else set()
     sp_seq_set = [seq] if (seq and root_p and not use_length) else list(seq_set)
     
-    # Check for prefer kana (uk - usually written in kana)
-    prefer_kana = session.execute(
-        select(SenseProp)
-        .where(and_(
-            SenseProp.seq.in_(sp_seq_set),
-            SenseProp.tag == 'misc',
-            SenseProp.text == 'uk'
-        ))
-    ).scalars().first() is not None
-    
-    # Check if all entries are archaic
-    is_arch_p = is_arch(session, set(sp_seq_set))
-    
-    # Get part-of-speech (excluding archaic senses)
-    posi = get_non_arch_posi(session, seq_set)
+    # For counters, use 'ctr' as the part of speech
+    if ctr_mode:
+        prefer_kana = False
+        is_arch_p = False
+        posi = {'ctr'}
+    else:
+        # Check for prefer kana (uk - usually written in kana)
+        prefer_kana = session.execute(
+            select(SenseProp)
+            .where(and_(
+                SenseProp.seq.in_(sp_seq_set),
+                SenseProp.tag == 'misc',
+                SenseProp.text == 'uk'
+            ))
+        ).scalars().first() is not None
+        
+        # Check if all entries are archaic
+        is_arch_p = is_arch(session, set(sp_seq_set))
+        
+        # Get part-of-speech (excluding archaic senses)
+        posi = get_non_arch_posi(session, seq_set)
     
     # Common properties
     common_p = common is not None
@@ -1441,6 +1458,10 @@ def calc_score(
         if long_p and (n_kanji > 1 or word_len > 4):
             score += 2
     
+    # Counter mode minimum score (ichiran line 926: (when ctr-mode (setf score (max 5 score))))
+    if ctr_mode:
+        score = max(5, score)
+    
     # Calculate prop_score and apply length multiplier (lines 927-937)
     prop_score = score
     length_class = 'strong' if (kanji_p or katakana_p) else 'weak'
@@ -1451,48 +1472,50 @@ def calc_score(
     
     # Split scoring integration (ichiran lines 927-970)
     # Check for split definition and apply split scoring
+    # Note: counters don't use split scoring (ichiran: (unless ctr-mode ...))
     split_info = None
-    from himotoki.splits import get_split
-    split_result = get_split(session, word, conj_of if conj_of else None)
-    
-    if split_result:
-        if ':score' in split_result.modifiers:
-            # Direct score addition mode
-            score += split_result.score_bonus
-            split_info = ('score', split_result.score_bonus)
-        elif ':pscore' in split_result.modifiers:
-            # Proportional score modification mode
-            import math
-            new_prop_score = max(1, prop_score + split_result.score_bonus)
-            score = math.ceil(score * new_prop_score / prop_score) if prop_score > 0 else score
-            prop_score = new_prop_score
-            split_info = ('pscore', split_result.score_bonus)
-        else:
-            # Standard split: sum of part scores + bonus
-            split_score = split_result.score_bonus
-            part_scores = []
-            for i, part in enumerate(split_result.parts):
-                is_last = (i == len(split_result.parts) - 1)
-                # Calculate adjusted use_length for final part
-                part_use_length = None
-                if is_last and use_length:
-                    # Subtract mora lengths of preceding parts
-                    preceding_mora = sum(
-                        mora_length(p.text) for p in split_result.parts[:-1]
+    if not ctr_mode:
+        from himotoki.splits import get_split
+        split_result = get_split(session, word, conj_of if conj_of else None)
+        
+        if split_result:
+            if ':score' in split_result.modifiers:
+                # Direct score addition mode
+                score += split_result.score_bonus
+                split_info = ('score', split_result.score_bonus)
+            elif ':pscore' in split_result.modifiers:
+                # Proportional score modification mode
+                import math
+                new_prop_score = max(1, prop_score + split_result.score_bonus)
+                score = math.ceil(score * new_prop_score / prop_score) if prop_score > 0 else score
+                prop_score = new_prop_score
+                split_info = ('pscore', split_result.score_bonus)
+            else:
+                # Standard split: sum of part scores + bonus
+                split_score = split_result.score_bonus
+                part_scores = []
+                for i, part in enumerate(split_result.parts):
+                    is_last = (i == len(split_result.parts) - 1)
+                    # Calculate adjusted use_length for final part
+                    part_use_length = None
+                    if is_last and use_length:
+                        # Subtract mora lengths of preceding parts
+                        preceding_mora = sum(
+                            mora_length(p.text) for p in split_result.parts[:-1]
+                        )
+                        part_use_length = use_length - preceding_mora
+                    
+                    part_score, _ = calc_score(
+                        session, part.reading,
+                        final=final and is_last,
+                        use_length=part_use_length,
+                        score_mod=score_mod if is_last else 0,
                     )
-                    part_use_length = use_length - preceding_mora
+                    part_scores.append(part_score)
+                    split_score += part_score
                 
-                part_score, _ = calc_score(
-                    session, part.reading,
-                    final=final and is_last,
-                    use_length=part_use_length,
-                    score_mod=score_mod if is_last else 0,
-                )
-                part_scores.append(part_score)
-                split_score += part_score
-            
-            score = split_score
-            split_info = ('split', split_result.score_bonus, part_scores)
+                score = split_score
+                split_info = ('split', split_result.score_bonus, part_scores)
     
     # Apply use_length bonus for context
     if use_length:
@@ -1760,16 +1783,25 @@ def cull_segments(segments: List[Segment]) -> List[Segment]:
     Filter segments to remove low-scoring duplicates.
     
     Keeps segments scoring at least IDENTICAL_WORD_SCORE_CUTOFF of the max.
+    Sorts by score descending, then by commonness ascending.
     """
     if not segments:
         return segments
     
-    # Sort by commonness then score
+    # Sort by score descending, then by commonness ascending
+    # Note: common=0 is the best (most common), so we need to handle it specially
+    # since 0 is falsy in Python
+    def get_common_key(s):
+        common = s.info.get('common') if s.info else None
+        if common is None:
+            return float('inf')
+        return common
+    
     segments = sorted(
         segments,
         key=lambda s: (
-            s.info.get('common') or float('inf'),
-            -s.score
+            -s.score,  # Score descending (higher is better)
+            get_common_key(s),  # Commonness ascending (lower is better)
         )
     )
     
@@ -1786,16 +1818,14 @@ def gen_score(
     kanji_break: Optional[List[int]] = None,
 ) -> Segment:
     """Generate score for a segment."""
-    # Check if this is a counter segment (already scored)
-    if segment.info and segment.info.get('counter'):
-        # Counter segments are pre-scored, just return
-        return segment
-    
     score, info = calc_score(
         session, segment.word,
         final=final, kanji_break=kanji_break
     )
     segment.score = score
+    # Preserve counter flag if it was set
+    if segment.info and segment.info.get('counter'):
+        info['counter'] = True
     segment.info = info
     return segment
 
