@@ -219,6 +219,16 @@ class WordMatch:
         """True if this is marked as a root form (not conjugated)."""
         return self.conjugations == 'root'
     
+    @property
+    def is_compound(self) -> bool:
+        """Always False for simple WordMatch."""
+        return False
+    
+    @property
+    def components(self) -> List[str]:
+        """Return empty list for simple words (no components)."""
+        return []
+    
     def __repr__(self):
         return f"<WordMatch(seq={self.seq}, text='{self.text}', type={self.word_type})>"
 
@@ -240,9 +250,19 @@ class CompoundWord:
     score_base: Optional[WordMatch] = None  # Base for scoring (usually primary)
     
     @property
-    def seq(self) -> List[int]:
-        """Returns list of seqs for all words in compound."""
-        return [w.seq for w in self.words]
+    def seq(self) -> int:
+        """Returns primary seq for compound (not a list)."""
+        return self.primary.seq
+    
+    @property
+    def is_compound(self) -> bool:
+        """Always True for CompoundWord."""
+        return True
+    
+    @property
+    def components(self) -> List[str]:
+        """Return component texts."""
+        return [w.text for w in self.words]
     
     @property
     def reading(self):
@@ -286,8 +306,68 @@ class CompoundWord:
         """Get the base word for scoring."""
         return self.score_base or self.primary
     
+    def get_conjugation_info(self, session: 'Session') -> Dict[str, Any]:
+        """
+        Get conjugation info from final word.
+        
+        Extracts conj_type, neg, fml, and source_text from the final word
+        in the compound.
+        
+        Args:
+            session: Database session for looking up conjugation data
+            
+        Returns:
+            Dict with keys: conj_type, neg, fml, source_text
+        """
+        if not self.words:
+            return {
+                'conj_type': None,
+                'neg': False,
+                'fml': False,
+                'source_text': None,
+            }
+        
+        last_word = self.words[-1]
+        conj_data = get_word_conj_data(session, last_word)
+        
+        if not conj_data:
+            return {
+                'conj_type': None,
+                'neg': False,
+                'fml': False,
+                'source_text': None,
+            }
+        
+        # Get the first conjugation data entry
+        cd = conj_data[0]
+        prop = cd.prop
+        
+        # Get conj_type name
+        conj_type = None
+        neg = False
+        fml = False
+        if prop:
+            conj_type = prop.conj_type
+            neg = prop.neg if prop.neg else False
+            fml = prop.fml if prop.fml else False
+        
+        # Get source_text from src_map
+        source_text = None
+        if cd.src_map:
+            for text, src_text in cd.src_map:
+                if text == last_word.text:
+                    source_text = src_text
+                    break
+        
+        return {
+            'conj_type': conj_type,
+            'neg': neg,
+            'fml': fml,
+            'source_text': source_text,
+        }
+    
     def __repr__(self):
-        return f"<CompoundWord(text='{self.text}', seqs={self.seq})>"
+        return f"<CompoundWord(text='{self.text}', seq={self.seq})>"
 
 
 def adjoin_word(

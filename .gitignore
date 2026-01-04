@@ -154,8 +154,6 @@ cython_debug/
 *.db
 *.sqlite
 *.pgdump
-results.json
-results-detail.json
 .DS_Store
 
 # Data Directory
