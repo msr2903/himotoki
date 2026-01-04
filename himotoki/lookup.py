@@ -1033,9 +1033,9 @@ def get_non_arch_posi(session: Session, seq_set: Set[int]) -> Set[str]:
 # Conjugation Form Testing
 # ============================================================================
 
-def test_conj_prop(prop: ConjProp, forms: List[Tuple]) -> bool:
+def matches_conj_form(prop: ConjProp, forms: List[Tuple]) -> bool:
     """
-    Test if a conjugation property matches any of the weak/skip forms.
+    Check if a conjugation property matches any of the weak/skip forms.
     From ichiran's test-conj-prop.
     
     Args:
@@ -1078,7 +1078,7 @@ def skip_by_conj_data(conj_data: List[ConjData]) -> bool:
         return False
     
     return all(
-        cd.prop is not None and test_conj_prop(cd.prop, SKIP_CONJ_FORMS)
+        cd.prop is not None and matches_conj_form(cd.prop, SKIP_CONJ_FORMS)
         for cd in conj_data
     )
 
@@ -1091,7 +1091,7 @@ def is_weak_conj_form(conj_data: List[ConjData]) -> bool:
         return False
     
     return all(
-        cd.prop is not None and test_conj_prop(cd.prop, WEAK_CONJ_FORMS)
+        cd.prop is not None and matches_conj_form(cd.prop, WEAK_CONJ_FORMS)
         for cd in conj_data
     )
 
@@ -1287,7 +1287,7 @@ def calc_score(
     conj_types_p = (
         root_p or
         use_length is not None or
-        not all(test_conj_prop(prop, WEAK_CONJ_FORMS) for prop in conj_props if prop)
+        not all(matches_conj_form(prop, WEAK_CONJ_FORMS) for prop in conj_props if prop)
     )
     
     # Get part-of-speech info
@@ -1595,13 +1595,57 @@ def get_original_text_data(
 ) -> List[Tuple[Optional[int], int]]:
     """
     Get (common, ord) pairs from original (unconjugated) text.
+    
+    Ports ichiran's get-original-text* function from dict.lisp.
     Extended from get_original_text_common to also return ord.
+    
+    For secondary conjugations (via forms), this function recursively
+    follows the conjugation chain to find the original source text.
+    
+    Args:
+        session: Database session
+        word: WordMatch object to get original text for
+        conj_data: List of ConjData objects for the word
+    
+    Returns:
+        List of (common, ord) tuples from the original source forms
+    """
+    return _get_original_text_data_recursive(session, conj_data, [word.text])
+
+
+def _get_original_text_data_recursive(
+    session: Session,
+    conj_data: List[ConjData],
+    texts: List[str],
+) -> List[Tuple[Optional[int], int]]:
+    """
+    Recursive helper for get_original_text_data.
+    
+    Follows the conjugation chain through via forms to find the
+    ultimate source text and its properties.
+    
+    Args:
+        session: Database session
+        conj_data: List of ConjData objects
+        texts: List of text forms to look up
+    
+    Returns:
+        List of (common, ord) tuples from the original source forms
     """
     result = []
     for cd in conj_data:
+        # Find matching source texts from src_map
+        src_texts = []
         for text, src_text in cd.src_map:
-            if text == word.text:
-                # Look up the source text
+            if text in texts:
+                src_texts.append(src_text)
+        
+        if not src_texts:
+            continue
+        
+        if cd.via is None:
+            # Direct conjugation - look up the source text in from_seq
+            for src_text in src_texts:
                 table = KanjiText if has_kanji(src_text) else KanaText
                 orig = session.execute(
                     select(table)
@@ -1609,6 +1653,15 @@ def get_original_text_data(
                 ).scalars().first()
                 if orig:
                     result.append((orig.common, orig.ord))
+        else:
+            # Secondary conjugation (via form) - recursively follow the chain
+            # Get conjugation data from via -> from_seq
+            via_conj_data = get_conj_data(session, cd.via, from_seq=cd.from_seq)
+            if via_conj_data:
+                result.extend(_get_original_text_data_recursive(
+                    session, via_conj_data, src_texts
+                ))
+    
     return result
 
 
