@@ -60,6 +60,8 @@ pytest_debug.log
 # --- Project Specific Data ---
 *.db
 *.sqlite
+*.db-shm
+*.db-wal
 *.pgdump
 data/*.db
 data/*.sqlite
