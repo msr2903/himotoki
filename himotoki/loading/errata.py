@@ -261,6 +261,72 @@ def add_gozaimasu_conjs(session: Session) -> None:
     logger.info("Added ございます conjugations")
 
 
+def add_custom_suru_verbs(session: Session) -> None:
+    """
+    Add custom する-verb entries that exist in Ichiran's extra.xml but not JMdict.
+    
+    These are common expressions that need to be recognized as single units.
+    """
+    from himotoki.loading.conjugations import get_next_seq
+    
+    # Custom する-verbs to add: (text, kanji, glosses)
+    # お掛け is used in お手数をおかけして (to cause trouble)
+    custom_entries = [
+        ('おかけ', 'お掛け', ['to cause', 'to sit', 'to spend (time)']),
+    ]
+    
+    next_seq = get_next_seq(session)
+    
+    for kana_text, kanji_text, glosses in custom_entries:
+        # Check if entry already exists
+        existing = session.execute(
+            select(KanaText.seq).where(KanaText.text == kana_text)
+        ).scalar_one_or_none()
+        
+        if existing:
+            logger.debug(f"Custom entry '{kana_text}' already exists at seq {existing}")
+            continue
+        
+        seq = next_seq
+        next_seq += 1
+        
+        # Create entry
+        entry = Entry(seq=seq, root_p=True, n_kanji=1, n_kana=1, primary_nokanji=True)
+        session.add(entry)
+        
+        # Create kanji text
+        kanji = KanjiText(seq=seq, text=kanji_text, ord=0, common=0)
+        session.add(kanji)
+        
+        # Create kana text
+        kana = KanaText(seq=seq, text=kana_text, ord=0, common=0, conjugate_p=True, nokanji=True)
+        session.add(kana)
+        
+        # Create sense with vs (suru-verb) pos
+        sense = Sense(seq=seq, ord=0)
+        session.add(sense)
+        session.flush()  # Get sense.id
+        
+        # Add pos tag: vs (noun taking the aux verb suru)
+        pos_prop = SenseProp(sense_id=sense.id, seq=seq, tag='pos', text='vs', ord=0)
+        session.add(pos_prop)
+        
+        # Add misc tags: uk (usually kana), hum (humble)
+        uk_prop = SenseProp(sense_id=sense.id, seq=seq, tag='misc', text='uk', ord=0)
+        session.add(uk_prop)
+        hum_prop = SenseProp(sense_id=sense.id, seq=seq, tag='misc', text='hum', ord=1)
+        session.add(hum_prop)
+        
+        # Add glosses
+        for i, gloss_text in enumerate(glosses):
+            gloss = Gloss(sense_id=sense.id, text=gloss_text, ord=i)
+            session.add(gloss)
+        
+        logger.debug(f"Added custom entry '{kana_text}' at seq {seq}")
+    
+    logger.info(f"Added {len(custom_entries)} custom する-verb entries")
+
+
 def add_deha_ja_readings(session: Session) -> None:
     """
     Add じゃ readings for では forms.
@@ -1088,7 +1154,7 @@ def apply_counter_pos_adjustments(session: Session) -> None:
 def apply_primary_nokanji_adjustments(session: Session) -> None:
     """Apply primary_nokanji flag adjustments."""
     for seq in PRIMARY_NOKANJI_CLEAR:
-        set_primary_nokanji(session, seq, None)
+        set_primary_nokanji(session, seq, False)  # Use False instead of None (column is NOT NULL)
     
     logger.info(f"Applied {len(PRIMARY_NOKANJI_CLEAR)} primary_nokanji adjustments")
 
@@ -1130,6 +1196,9 @@ def add_errata(session: Session) -> None:
     Ports ichiran's add-errata function.
     """
     logger.info("Applying errata corrections...")
+    
+    # Custom entries (must be added first, before conjugations)
+    add_custom_suru_verbs(session)
     
     # Conjugation-related errata
     add_gozaimasu_conjs(session)

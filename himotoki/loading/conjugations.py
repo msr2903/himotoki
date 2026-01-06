@@ -84,6 +84,12 @@ SECONDARY_CONJUGATION_TYPES = [2, 3, 4, 9, 10, 11, 12, 13]
 # Conjugation type ID for causative-su
 CONJ_CAUSATIVE_SU = 14
 
+# Additional custom conjugation types (from ichiran's dict-errata.lisp)
+CONJ_ADVERBIAL = 50
+CONJ_ADJECTIVE_STEM = 51
+CONJ_NEGATIVE_STEM = 52
+CONJ_ADJECTIVE_LITERARY = 54
+
 
 def get_data_path() -> Path:
     """Get path to data directory containing CSV files."""
@@ -219,6 +225,9 @@ def load_conj_rules(csv_path: Optional[Path] = None) -> Dict[int, List[Conjugati
                 if pos_id not in _conj_rules:
                     _conj_rules[pos_id] = []
                 _conj_rules[pos_id].append(rule)
+    
+    # Apply errata hook to add additional conjugation rules
+    errata_conj_rules_hook(_conj_rules)
     
     return _conj_rules
 
@@ -1080,26 +1089,20 @@ def _insert_conjugation_from_data(session, conj_data: Dict, new_seq: int) -> boo
     """
     readings = conj_data['readings']
     
-    # Group readings by (kanji_flag, ord)
-    grouped = {}
-    for conj_text, kanji_flag, orig_text, ord_num, onum in readings:
-        key = (kanji_flag, ord_num)
-        if key not in grouped:
-            grouped[key] = []
-        grouped[key].append((conj_text, orig_text, onum))
+    # Collect ALL readings (ichiran collects all, not just best per group)
+    # Sort by (ord, onum) for consistent ordering
+    sorted_readings = sorted(readings, key=lambda x: (x[3], x[4]))  # ord_num, onum
     
     kanji_readings = []
     kana_readings = []
     source_readings = []
     
-    for (kanji_flag, ord_num), group in grouped.items():
-        group.sort(key=lambda x: x[2])
-        best = group[0]
-        source_readings.append((best[0], best[1]))
+    for conj_text, kanji_flag, orig_text, ord_num, onum in sorted_readings:
+        source_readings.append((conj_text, orig_text))
         if kanji_flag:
-            kanji_readings.append(best[0])
+            kanji_readings.append(conj_text)
         else:
-            kana_readings.append(best[0])
+            kana_readings.append(conj_text)
     
     if not kanji_readings and not kana_readings:
         return False
@@ -1270,29 +1273,24 @@ def insert_conjugation_fast(
     Fast version of insert_conjugation for bulk loading.
     Skips existence checks since we're loading fresh.
     """
-    # Group readings by (kanji_flag, ord)
-    grouped = {}
-    for conj_text, kanji_flag, orig_text, ord_num, onum in readings:
-        key = (kanji_flag, ord_num)
-        if key not in grouped:
-            grouped[key] = []
-        grouped[key].append((conj_text, orig_text, onum))
+    # Collect ALL readings (ichiran collects all, not just best per group)
+    # Sort by (ord, onum) for consistent ordering
+    sorted_readings = sorted(readings, key=lambda x: (x[3], x[4]))  # ord_num, onum
     
-    # Select best reading for each group
     kanji_readings = []
     kana_readings = []
     source_readings = []
     
-    for (kanji_flag, ord_num), group in grouped.items():
-        # Sort by onum and take first
-        group.sort(key=lambda x: x[2])
-        best = group[0]
-        
-        source_readings.append((best[0], best[1]))
+    for conj_text, kanji_flag, orig_text, ord_num, onum in sorted_readings:
+        source_readings.append((conj_text, orig_text))
         if kanji_flag:
-            kanji_readings.append(best[0])
+            kanji_readings.append(conj_text)
         else:
-            kana_readings.append(best[0])
+            kana_readings.append(conj_text)
+    
+    # Remove duplicates while preserving order
+    kanji_readings = list(dict.fromkeys(kanji_readings))
+    kana_readings = list(dict.fromkeys(kana_readings))
     
     if not kanji_readings and not kana_readings:
         return False
@@ -1515,11 +1513,77 @@ def load_secondary_conjugations(from_seqs: Optional[List[int]] = None, progress_
 # Errata hooks (for custom modifications to loaded data)
 def errata_conj_description_hook(descriptions: Dict[int, str]):
     """Hook for modifying conjugation descriptions after loading."""
-    # Add any custom modifications here
-    pass
+    # Add descriptions for custom conjugation types
+    descriptions[CONJ_ADVERBIAL] = "Adverbial"
+    descriptions[CONJ_ADJECTIVE_STEM] = "Adjective Stem"
+    descriptions[CONJ_NEGATIVE_STEM] = "Negative Stem"
+    descriptions[CONJ_CAUSATIVE_SU] = "Causative (~su)"
+    descriptions[CONJ_ADJECTIVE_LITERARY] = "Old/literary form"
 
 
 def errata_conj_rules_hook(rules: Dict[int, List[ConjugationRule]]):
-    """Hook for modifying conjugation rules after loading."""
-    # Add any custom modifications here
-    pass
+    """
+    Hook for modifying conjugation rules after loading.
+    
+    Adds additional conjugation types from ichiran's dict-errata.lisp:
+    - Adverbial form (conj_type 50): i-adjective + く
+    - Adjective stem (conj_type 51): i-adjective stem (drop い)
+    - Adjective literary (conj_type 54): i-adjective + き
+    """
+    global _pos_index
+    
+    # Use already loaded pos_index if available, otherwise load it
+    if _pos_index is None:
+        return  # Can't add rules without POS index
+    
+    pos_index = _pos_index
+    adj_i_id = pos_index.get("adj-i", (1, ""))[0]   # Should be 1
+    adj_ix_id = pos_index.get("adj-ix", (7, ""))[0]  # Should be 7 (いい/よい class)
+    
+    # Add rules for adj-i (standard i-adjectives like 楽しい)
+    adj_i_rules = [
+        # Adverbial: 楽しい -> 楽しく (drop い, add く)
+        ConjugationRule(
+            pos=adj_i_id, conj=CONJ_ADVERBIAL, neg=False, fml=False,
+            onum=1, stem=1, okuri='く', euphr='', euphk=''
+        ),
+        # Adjective stem: 楽しい -> 楽し (drop い, add nothing)
+        ConjugationRule(
+            pos=adj_i_id, conj=CONJ_ADJECTIVE_STEM, neg=False, fml=False,
+            onum=1, stem=1, okuri='', euphr='', euphk=''
+        ),
+        # Adjective literary: 楽しい -> 楽しき (drop い, add き)
+        ConjugationRule(
+            pos=adj_i_id, conj=CONJ_ADJECTIVE_LITERARY, neg=False, fml=False,
+            onum=1, stem=1, okuri='き', euphr='', euphk=''
+        ),
+    ]
+    
+    # Add rules for adj-ix (いい/よい class adjectives)
+    # These need euphonic change よ for the stem
+    adj_ix_rules = [
+        # Adverbial: いい -> よく (uses euphonic change)
+        ConjugationRule(
+            pos=adj_ix_id, conj=CONJ_ADVERBIAL, neg=False, fml=False,
+            onum=1, stem=1, okuri='く', euphr='よ', euphk=''
+        ),
+        # Adjective stem: いい -> よ (uses euphonic change) 
+        ConjugationRule(
+            pos=adj_ix_id, conj=CONJ_ADJECTIVE_STEM, neg=False, fml=False,
+            onum=1, stem=1, okuri='', euphr='よ', euphk=''
+        ),
+        # Adjective literary: いい -> よき (uses euphonic change)
+        ConjugationRule(
+            pos=adj_ix_id, conj=CONJ_ADJECTIVE_LITERARY, neg=False, fml=False,
+            onum=1, stem=1, okuri='き', euphr='よ', euphk=''
+        ),
+    ]
+    
+    # Add rules to the rules dict
+    if adj_i_id not in rules:
+        rules[adj_i_id] = []
+    rules[adj_i_id].extend(adj_i_rules)
+    
+    if adj_ix_id not in rules:
+        rules[adj_ix_id] = []
+    rules[adj_ix_id].extend(adj_ix_rules)
