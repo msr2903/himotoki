@@ -329,8 +329,9 @@ def parse_ichiran_output(data: Any) -> SegmentationResult:
                 component_texts = info.get("compound", [])
                 components_info = info.get("components", [])
                 
-                # Join component texts to get the full compound text
-                full_text = "".join(component_texts)
+                # Use the text field directly if available (Himotoki sets this correctly)
+                # Otherwise join component texts (for backwards compatibility)
+                full_text = info.get("text") or "".join(component_texts)
                 
                 # Get conjugation info from the last component
                 conj_type = None
@@ -997,6 +998,24 @@ def export_results(results: List[ComparisonResult], filename: str):
     print(f"\nResults exported to {filename}")
 
 
+def export_filtered_results(results: List[ComparisonResult]):
+    """Export mismatch.json and partial.json for easier debugging."""
+    mismatches = [r for r in results if r.status == MatchStatus.MISMATCH]
+    partials = [r for r in results if r.status == MatchStatus.PARTIAL]
+    
+    # Export mismatch.json
+    mismatch_data = [_comparison_result_to_dict(r) for r in mismatches]
+    with open('mismatch.json', 'w', encoding='utf-8') as f:
+        json.dump(mismatch_data, f, ensure_ascii=False, indent=2)
+    print(f"Exported {len(mismatches)} mismatches to mismatch.json")
+    
+    # Export partial.json
+    partial_data = [_comparison_result_to_dict(r) for r in partials]
+    with open('partial.json', 'w', encoding='utf-8') as f:
+        json.dump(partial_data, f, ensure_ascii=False, indent=2)
+    print(f"Exported {len(partials)} partial matches to partial.json")
+
+
 def _comparison_result_to_dict(r: ComparisonResult) -> Dict[str, Any]:
     """Convert a ComparisonResult to a JSON-serializable dict."""
     return {
@@ -1203,6 +1222,9 @@ def main():
     else:
         # Batch mode - export all results
         export_results(results, export_file)
+        
+        # Also export mismatch.json and partial.json for easier debugging
+        export_filtered_results(results)
     
     # Return exit code based on results
     mismatches = sum(1 for r in results if r.status == MatchStatus.MISMATCH)

@@ -517,6 +517,17 @@ def _init_synergies():
         score=20,
         connector="",
     )
+    
+    # かどうか + は (whether or not + topic marker)
+    # This prevents misparses like はま+だ instead of は+まだ
+    def_generic_synergy(
+        name="synergy-kadouka-wa",
+        filter_left=filter_in_seq_set(2087300),  # かどうか
+        filter_right=filter_in_seq_set(2028920),  # は
+        description="kadouka+wa",
+        score=30,
+        connector=" ",
+    )
 
 
 # Initialize synergies on module load
