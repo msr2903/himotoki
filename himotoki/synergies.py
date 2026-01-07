@@ -304,15 +304,66 @@ def def_generic_synergy(
 def _init_synergies():
     """Initialize all synergy definitions."""
     
-    # noun + particle
-    def_generic_synergy(
-        name="synergy-noun-particle",
-        filter_left=filter_is_noun,
-        filter_right=filter_in_seq_set(*NOUN_PARTICLES),
-        description="noun+prt",
-        score=lambda l, r: 10 + 4 * (r.end - r.start),
-        connector=" ",
-    )
+    # Helper to check for specific seq combinations that should NOT get noun+prt synergy
+    def not_to_before_wa(left_seg_list: Any, right_seg_list: Any) -> bool:
+        """Return False if left is と (1008490) and right is は (2028920)."""
+        left_seqs = set()
+        right_seqs = set()
+        for seg in getattr(left_seg_list, 'segments', []):
+            info = getattr(seg, 'info', {})
+            left_seqs.update(info.get('seq_set', set()))
+        for seg in getattr(right_seg_list, 'segments', []):
+            info = getattr(seg, 'info', {})
+            right_seqs.update(info.get('seq_set', set()))
+        # Block synergy if left has と and right has は
+        if 1008490 in left_seqs and 2028920 in right_seqs:
+            return False
+        return True
+    
+    # Create a modified filter_is_noun that also checks the right side
+    def filter_is_noun_not_to_wa(segment: Any, right_seg_list: Any = None) -> bool:
+        if not filter_is_noun(segment):
+            return False
+        # This will be used via custom synergy below
+        return True
+    
+    # noun + particle (with exclusion for と + は)
+    def synergy_noun_particle(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Custom noun+particle synergy that excludes と + は."""
+        # Check if left is noun
+        left_nouns = [s for s in seg_list_left.segments if filter_is_noun(s)]
+        if not left_nouns:
+            return []
+        
+        # Check if right is particle
+        particle_filter = filter_in_seq_set(*NOUN_PARTICLES)
+        right_particles = [s for s in seg_list_right.segments if particle_filter(s)]
+        if not right_particles:
+            return []
+        
+        # Check serial
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Check for と + は case that should be excluded
+        if not not_to_before_wa(seg_list_left, seg_list_right):
+            return []
+        
+        # Create synergy
+        length = seg_list_right.end - seg_list_right.start
+        score = 10 + 4 * length
+        
+        synergy = Synergy(
+            description="noun+prt",
+            connector=" ",
+            score=score,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        return [(seg_list_right, synergy, seg_list_left)]
+    
+    register_synergy(synergy_noun_particle)
     
     # noun + だ
     def_generic_synergy(
@@ -599,6 +650,44 @@ def def_generic_penalty(
 # Define penalties
 def _init_penalties():
     """Initialize all penalty definitions."""
+    
+    # と + は should be penalized to prefer compound とは (seq=2028950)
+    # The noun+prt synergy gives +14 to と+は which makes it beat とは (24 vs 22)
+    # This penalty counteracts that so とは wins
+    # NOTE: This must come BEFORE other penalties so it applies first
+    def has_seq_simple(seqs: set):
+        """Check if segment_list has any of the given seq numbers."""
+        def _filter(segment_list: Any) -> bool:
+            segments = getattr(segment_list, 'segments', [])
+            for seg in segments:
+                info = getattr(seg, 'info', {})
+                seq_set = info.get('seq_set', set())
+                if seqs.intersection(seq_set):
+                    return True
+            return False
+        return _filter
+    
+    def_generic_penalty(
+        name="penalty-to-wa",
+        test_left=has_seq_simple({1008490}),  # と
+        test_right=has_seq_simple({2028920}),  # は
+        description="to+wa-penalty",
+        score=-20,
+        serial=True,
+    )
+    
+    # に + つれ should be penalized to prefer compound につれ (seq=2136050)
+    # につれ has score 36, but に(11)+つれ(40)=51 wins otherwise
+    # Need penalty of at least -(51-36)=-15, but make it larger to be safe
+    # つれ seqs include: 10351890, 1434020, 10097136, 1559290, 1434120, 10351981
+    def_generic_penalty(
+        name="penalty-ni-tsure",
+        test_left=has_seq_simple({2028990}),  # に
+        test_right=has_seq_simple({10351890, 1434020, 10097136, 1559290, 1434120, 10351981}),  # つれ
+        description="ni+tsure-penalty",
+        score=-30,
+        serial=True,
+    )
     
     # Short kana words together
     def_generic_penalty(

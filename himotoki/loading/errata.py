@@ -327,6 +327,58 @@ def add_custom_suru_verbs(session: Session) -> None:
     logger.info(f"Added {len(custom_entries)} custom する-verb entries")
 
 
+def add_synthetic_suffix_entries(session: Session) -> None:
+    """
+    Add synthetic entries for suffixes that don't exist in JMdict.
+    
+    These are entries that Ichiran expects for suffix handling but aren't
+    in the standard JMdict data. They are referenced by their seq numbers
+    in dict-grammar.lisp.
+    
+    Ports the following from ichiran's dict-errata.lisp:
+    - seq 900000: たそう (tasou) - combined tai+sou suffix
+    """
+    # Synthetic suffix entries: (seq, text, description)
+    synthetic_entries = [
+        (900000, 'たそう', 'looking like wanting to... (tai+sou suffix)'),
+    ]
+    
+    for seq, text, description in synthetic_entries:
+        # Check if entry already exists
+        existing = session.execute(
+            select(Entry).where(Entry.seq == seq)
+        ).scalar_one_or_none()
+        
+        if existing:
+            logger.debug(f"Synthetic entry seq={seq} '{text}' already exists")
+            continue
+        
+        # Create entry
+        entry = Entry(seq=seq, root_p=True, n_kanji=0, n_kana=1, primary_nokanji=True)
+        session.add(entry)
+        
+        # Create kana text
+        kana = KanaText(seq=seq, text=text, ord=0, common=0, conjugate_p=False, nokanji=True)
+        session.add(kana)
+        
+        # Create sense with suf (suffix) pos
+        sense = Sense(seq=seq, ord=0)
+        session.add(sense)
+        session.flush()  # Get sense.id
+        
+        # Add pos tag: suf (suffix)
+        pos_prop = SenseProp(sense_id=sense.id, seq=seq, tag='pos', text='suf', ord=0)
+        session.add(pos_prop)
+        
+        # Add gloss
+        gloss = Gloss(sense_id=sense.id, text=description, ord=0)
+        session.add(gloss)
+        
+        logger.debug(f"Added synthetic suffix entry seq={seq} '{text}'")
+    
+    logger.info(f"Added {len(synthetic_entries)} synthetic suffix entries")
+
+
 def add_deha_ja_readings(session: Session) -> None:
     """
     Add じゃ readings for では forms.
@@ -1050,6 +1102,8 @@ COMMON_ADJUSTMENTS = [
     ('kana_text', 1610400, 'つける', 12),
     ('kana_text', 1495740, 'つく', 11),
     ('kanji_text', 1495740, '付く', 11),
+    # につれ - boost to prefer compound over に+つれ split
+    ('kana_text', 2136050, 'につれ', 0),
 ]
 
 
@@ -1199,6 +1253,7 @@ def add_errata(session: Session) -> None:
     
     # Custom entries (must be added first, before conjugations)
     add_custom_suru_verbs(session)
+    add_synthetic_suffix_entries(session)
     
     # Conjugation-related errata
     add_gozaimasu_conjs(session)

@@ -628,7 +628,11 @@ def find_word_suffix(
             
             # Use adjoin_word to create compound (following ichiran's pattern)
             # Score is determined by the suffix handler configuration
-            score_mod = SUFFIX_SCORES.get(keyword, 0)
+            # For 'sou' suffix, use conditional scoring based on root
+            if keyword in ('sou', 'sou+'):
+                score_mod = get_sou_score(root)
+            else:
+                score_mod = SUFFIX_SCORES.get(keyword, 0)
             connector = SUFFIX_CONNECTORS.get(keyword, '')
             
             # Check if this is an abbreviation suffix
@@ -686,7 +690,7 @@ SUFFIX_SCORES: Dict[str, float] = {
     'chau': 5,
     'to': 0,
     'suru': 5,
-    'sou': 60,  # Default, but can be 40 for から, 0 for い
+    'sou': 60,  # Default, but overridden by get_sou_score for specific roots
     'sou+': 1,
     'rou': 1,
     'adv': 1,
@@ -711,6 +715,36 @@ SUFFIX_CONNECTORS: Dict[str, str] = {
     'te+space': ' ',
     'teii': ' ',
 }
+
+
+def get_sou_score(root: str) -> float:
+    """
+    Get the score_mod for そう suffix based on the root.
+    
+    Ports ichiran's conditional scoring for suffix-sou:
+    - root "から" → 40
+    - root "い" → 0
+    - root "出来" → 100
+    - otherwise → 60
+    
+    Additional adjustment: reduce score for short hiragana-only roots
+    that could be confused with verb continuative forms (e.g., いた, よさ).
+    This prevents incorrect splits like 言+いたそう when 言いたそう exists.
+    """
+    from himotoki.characters import count_char_class
+    
+    if root == 'から':
+        return 40
+    elif root == 'い':
+        return 0
+    elif root == '出来':
+        return 100
+    else:
+        # For short hiragana-only roots, reduce the score to prevent
+        # incorrect splits with verb continuatives
+        if len(root) <= 2 and count_char_class(root, 'kanji') == 0:
+            return 10  # Reduced from 60 to lower priority
+        return 60
 
 
 # ============================================================================
