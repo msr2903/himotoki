@@ -689,6 +689,34 @@ def _init_penalties():
         serial=True,
     )
     
+    # お + すすめ should be penalized to prefer compound おすすめ (seq=1002150)
+    # おすすめ has score 64, but お(10)+すすめ(90)=100 wins otherwise
+    # Need penalty of at least -36 to make them equal
+    # お seqs: 1343610 (common=12), 1485770 (common=5), 2089690, 2268350, 2603520, 2742870, 2826528
+    # すすめ seqs: 1210900 (noun), 10074000 (verb conjugation), 1365980, 1365990
+    def_generic_penalty(
+        name="penalty-o-susume",
+        test_left=has_seq_simple({1343610, 1485770, 2089690, 2268350, 2603520, 2742870, 2826528}),  # お
+        test_right=has_seq_simple({1210900, 10074000, 1365980, 1365990}),  # すすめ
+        description="o+susume-penalty",
+        score=-40,
+        serial=True,
+    )
+    
+    # 人がい + たら should be penalized to prefer 人 + が + いたら
+    # 人がい is a conjugation of 人がいい (seq=10043332, 2250200)
+    # 人がい(120)+たら(68)=188 beats 人(16)+が(11)+いたら(90)=117
+    # Need penalty of at least -71 to make them equal
+    # たら seqs: 1408160, 1416790, 2029050, 11435516, 11679733
+    def_generic_penalty(
+        name="penalty-hitogai-tara",
+        test_left=has_seq_simple({10043332, 2250200}),  # 人がい / 人がいい
+        test_right=has_seq_simple({1408160, 1416790, 2029050, 11435516, 11679733}),  # たら
+        description="hitogai+tara-penalty",
+        score=-75,
+        serial=True,
+    )
+    
     # Short kana words together
     def_generic_penalty(
         name="penalty-short",

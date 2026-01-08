@@ -28,7 +28,8 @@ import time
 
 ICHIRAN_CONTAINER = "ichiran-main-1"
 ICHIRAN_TIMEOUT = 30  # seconds
-ICHIRAN_CACHE_FILE = "results.json"
+ICHIRAN_CACHE_FILE = "cache.json"
+RESULTS_EXPORT_FILE = "results.json"
 
 # Cache a single Himotoki DB session and suffix initialization so repeated
 # comparisons don't pay the startup cost each time.
@@ -1214,7 +1215,7 @@ def main():
     # Export results
     # For single sentence mode, use incremental update
     # For batch mode, export all results
-    export_file = args.export if args.export else ICHIRAN_CACHE_FILE
+    export_file = args.export if args.export else RESULTS_EXPORT_FILE
     
     if args.sentence and len(results) == 1:
         # Single sentence mode - update only that sentence in the file

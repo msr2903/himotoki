@@ -762,6 +762,8 @@ ADDITIONAL_COMMON_ADJUSTMENTS = [
     ('kana_text', 1511600, 'かたかな', 0),
     ('kana_text', 1056400, 'サウンドトラック', 0),
     ('kana_text', 1510640, 'へん', 5),
+    # jan26 - boost compound expressions to beat suffix splits
+    ('kana_text', 2009070, 'でないと', 0),  # "without; but if" - beat suffix でない + と
 ]
 
 
@@ -1104,6 +1106,33 @@ COMMON_ADJUSTMENTS = [
     ('kanji_text', 1495740, '付く', 11),
     # につれ - boost to prefer compound over に+つれ split
     ('kana_text', 2136050, 'につれ', 0),
+    # おすすめ - boost to prefer compound over お+すすめ split
+    # お(10)+すすめ(90)=91(capped) beats おすすめ(64), need common=0 for high score
+    ('kana_text', 1002150, 'おすすめ', 0),
+    # 百円ショップ - boost compound (seq=2100330) 
+    # Need to boost both kanji and kana forms to beat counter parsing (百円 + ショップ = 353)
+    ('kana_text', 2100330, 'ひゃくえんショップ', 0),
+    ('kanji_text', 2100330, '百円ショップ', 0),
+    # でないと - boost compound (seq=2009070) to beat でない+と split with suffixes
+    ('kana_text', 2009070, 'でないと', 0),
+    # 無理をする - boost compound expression (seq=2838589)
+    # Need both kana and kanji forms for proper inheritance
+    ('kana_text', 2838589, 'むりをする', 0),
+    ('kanji_text', 2838589, '無理をする', 0),
+    # 運がいい - boost compound expression (seq=1172620)
+    # Need both kana and kanji forms for proper inheritance in conjugated forms
+    ('kana_text', 1172620, 'うんがいい', 0),
+    ('kana_text', 1172620, 'うんがよい', 0),
+    ('kanji_text', 1172620, '運がいい', 0),
+    ('kanji_text', 1172620, '運が良い', 0),
+    ('kanji_text', 1172620, '運がよい', 0),
+    # 気がする - boost compound (seq=1221540)
+    # Need both kana and kanji forms
+    ('kana_text', 1221540, 'きがする', 0),
+    ('kanji_text', 1221540, '気がする', 0),
+    # なぜ (verb - to stroke) demoted to prevent なぜそう compound from beating なぜ (why) + そう
+    # seq=10195060 is the verb form that creates the unwanted compound
+    ('kana_text', 10195060, 'なぜ', None),
 ]
 
 

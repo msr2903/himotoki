@@ -847,7 +847,11 @@ def _handler_sou(session: Session, root: str, suffix: str, kf: Optional[KanaText
         root_patched = root[:-1] + 'い'
         return find_word_with_neg_prop(session, root_patched)
     
-    return find_word_with_conj_type(session, root, 13, CONJ_ADJECTIVE_STEM, CONJ_ADVERBIAL)
+    results = find_word_with_conj_type(session, root, 13, CONJ_ADJECTIVE_STEM, CONJ_ADVERBIAL)
+    # Filter out なぜる (seq 10195060 for conjugated form) which incorrectly matches なぜ + そう
+    # The word なぜ is the interrogative "why", not the verb "to stroke"
+    results = [r for r in results if getattr(r, 'seq', None) != 10195060]
+    return results
 
 
 def _handler_sugiru(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
