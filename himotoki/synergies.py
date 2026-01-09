@@ -24,6 +24,20 @@ from sqlalchemy import select, and_, or_
 from sqlalchemy.orm import Session
 
 from himotoki.db.models import KanjiText, KanaText
+from himotoki.constants import (
+    # Particles
+    SEQ_WA, SEQ_GA, SEQ_NI, SEQ_DE, SEQ_HE, SEQ_WO, SEQ_NO, SEQ_TO, SEQ_MO, SEQ_YA, SEQ_KA,
+    # Compound particles
+    SEQ_NIHA, SEQ_TOHA, SEQ_TOKA, SEQ_TOSHITE, SEQ_DESAE,
+    # Other particles
+    SEQ_DAKE, SEQ_GORO, SEQ_MADE, SEQ_NADO, SEQ_NOMI, SEQ_SAE, SEQ_TTE, SEQ_KARA, SEQ_NITOTTE,
+    # Verbs
+    SEQ_SURU, SEQ_IRU, SEQ_KURU,
+    # Expressions
+    SEQ_NITSURE, SEQ_OSUSUME,
+    # Pre-built set
+    NOUN_PARTICLES,
+)
 
 
 # ============================================================================
@@ -206,36 +220,6 @@ def filter_short_kana(length: int, except_list: Optional[List[str]] = None):
 
 
 # ============================================================================
-# Noun Particles
-# ============================================================================
-
-NOUN_PARTICLES = {
-    2028920,   # は
-    2028930,   # が
-    2028990,   # に
-    2028980,   # で
-    2029000,   # へ
-    1007340,   # だけ
-    1579080,   # ごろ
-    1525680,   # まで
-    2028940,   # も
-    1582300,   # など
-    2215430,   # には
-    1469800,   # の
-    1009990,   # のみ
-    2029010,   # を
-    1005120,   # さえ
-    2034520,   # でさえ
-    1008490,   # と
-    1008530,   # とか
-    1008590,   # として
-    2028950,   # とは
-    2028960,   # や
-    1009600,   # にとって
-}
-
-
-# ============================================================================
 # Synergy Definitions
 # ============================================================================
 
@@ -306,7 +290,7 @@ def _init_synergies():
     
     # Helper to check for specific seq combinations that should NOT get noun+prt synergy
     def not_to_before_wa(left_seg_list: Any, right_seg_list: Any) -> bool:
-        """Return False if left is と (1008490) and right is は (2028920)."""
+        """Return False if left is と (SEQ_TO) and right is は (SEQ_WA)."""
         left_seqs = set()
         right_seqs = set()
         for seg in getattr(left_seg_list, 'segments', []):
@@ -316,7 +300,7 @@ def _init_synergies():
             info = getattr(seg, 'info', {})
             right_seqs.update(info.get('seq_set', set()))
         # Block synergy if left has と and right has は
-        if 1008490 in left_seqs and 2028920 in right_seqs:
+        if SEQ_TO in left_seqs and SEQ_WA in right_seqs:
             return False
         return True
     

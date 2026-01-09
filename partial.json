@@ -83,8 +83,8 @@
     "differences": [
       "Segment '待ってください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 2.662611961364746
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 2.5499987602233887
   },
   {
     "sentence": "お名前を教えていただけますか",
@@ -238,8 +238,8 @@
     "differences": [
       "Segment '教えていただけます': conj_type: Potential vs Non-past, source: 頂く vs 頂ける"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 9.31886100769043
+    "time_ichiran": 5.7220458984375e-06,
+    "time_himotoki": 4.903130292892456
   },
   {
     "sentence": "なんかお腹すいてきたな",
@@ -357,8 +357,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.5974044799804688e-05,
-    "time_himotoki": 6.710284233093262
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 6.807529926300049
   },
   {
     "sentence": "あいつ何考えてんだろうね",
@@ -578,8 +578,8 @@
     "differences": [
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 6.333706855773926
+    "time_ichiran": 1.2874603271484375e-05,
+    "time_himotoki": 15.644660949707031
   },
   {
     "sentence": "そろそろ寝ないとまずいな",
@@ -767,8 +767,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 10.181249141693115
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 4.55512809753418
   },
   {
     "sentence": "何かご不明な点がございましたらお申し付けください",
@@ -1117,8 +1117,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 11.235750198364258
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 23.509727001190186
   },
   {
     "sentence": "本件につきましてご報告申し上げます",
@@ -1324,8 +1324,8 @@
     "differences": [
       "Segment 'つきまして': source: 付く vs 就く"
     ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 19.26779007911682
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 17.281886100769043
   },
   {
     "sentence": "何卒よろしくお願い申し上げます",
@@ -1474,7 +1474,7 @@
       "Segment 'よろしく': conj_type: Adverbial vs None"
     ],
     "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 6.079503059387207
+    "time_himotoki": 11.581986904144287
   },
   {
     "sentence": "お返事をお待ちしております",
@@ -1680,8 +1680,8 @@
     "differences": [
       "Segment 'おります': source: 居る vs 降りる"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 11.50481104850769
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 10.32414698600769
   },
   {
     "sentence": "首相は記者会見で新たな政策を発表した",
@@ -2000,7 +2000,7 @@
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 5.464903831481934
+    "time_himotoki": 10.483178853988647
   },
   {
     "sentence": "来月から新しい制度が施行される見込みだ",
@@ -2287,8 +2287,8 @@
       "Segment '施行される': conj_type: None vs Passive",
       "Segment '見込み': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 5.321424722671509
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 5.27768087387085
   },
   {
     "sentence": "関係者によると計画は来年度から実施されるという",
@@ -2574,8 +2574,8 @@
     "differences": [
       "Segment '実施される': conj_type: None vs Passive"
     ],
-    "time_ichiran": 1.52587890625e-05,
-    "time_himotoki": 10.026647806167603
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 8.05507493019104
   },
   {
     "sentence": "その問題についてはよく考える必要がある",
@@ -2907,8 +2907,8 @@
     "differences": [
       "Segment 'よく': conj_type: Adverbial vs None"
     ],
-    "time_ichiran": 1.2159347534179688e-05,
-    "time_himotoki": 15.993023872375488
+    "time_ichiran": 1.5974044799804688e-05,
+    "time_himotoki": 7.404350996017456
   },
   {
     "sentence": "この件については様々な意見があるようだ",
@@ -3309,7 +3309,7 @@
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
     "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 5.039510726928711
+    "time_himotoki": 5.005404949188232
   },
   {
     "sentence": "この書類に必要事項を記入してください",
@@ -3533,8 +3533,8 @@
     "differences": [
       "Segment '記入してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 10.70959186553955
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 5.271403074264526
   },
   {
     "sentence": "もう少し大きな声で話していただけますか",
@@ -3752,8 +3752,8 @@
     "differences": [
       "Segment '話していただけます': conj_type: Potential vs Non-past, source: 頂く vs 頂ける"
     ],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 10.055342674255371
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 11.587970972061157
   },
   {
     "sentence": "電源を切ってからコンセントを抜いてください",
@@ -3935,8 +3935,8 @@
     "differences": [
       "Segment '抜いてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 7.234813928604126
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 7.848926067352295
   },
   {
     "sentence": "ここから先は立ち入り禁止となっております",
@@ -4184,7 +4184,7 @@
       "Segment 'おります': source: 居る vs 降りる"
     ],
     "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 13.855717182159424
+    "time_himotoki": 13.929147005081177
   },
   {
     "sentence": "荷物は棚の上に置かないでください",
@@ -4446,7 +4446,7 @@
       "Segment '置かないでください': conj_type: None vs Imperative"
     ],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 11.882118940353394
+    "time_himotoki": 10.63701581954956
   },
   {
     "sentence": "出発前に必ず持ち物を確認してください",
@@ -4702,8 +4702,8 @@
     "differences": [
       "Segment '確認してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 11.761214971542358
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 7.378473997116089
   },
   {
     "sentence": "この薬は食後に一錠ずつ服用してください",
@@ -4996,8 +4996,8 @@
     "differences": [
       "Segment '服用してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 8.941994190216064
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 4.982620000839233
   },
   {
     "sentence": "会議室の利用後は椅子を元の位置に戻してください",
@@ -5427,8 +5427,8 @@
     "differences": [
       "Segment '戻してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 8.335190057754517
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 6.915091037750244
   },
   {
     "sentence": "資料は事前にダウンロードしておいてください",
@@ -5619,7 +5619,7 @@
       "Segment 'ダウンロードしておいてください': conj_type: None vs Imperative"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 12.338778257369995
+    "time_himotoki": 14.691720962524414
   },
   {
     "sentence": "早く起きていたらこんなことにはならなかった",
@@ -5835,8 +5835,8 @@
     "differences": [
       "Segment 'ならなかった': source: 成る vs 生る"
     ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 21.015926122665405
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 18.84657311439514
   },
   {
     "sentence": "許可が下りなかった場合は計画を変更します",
@@ -6118,8 +6118,8 @@
     "differences": [
       "Segment '下りなかった': source: 下りる vs 降りる"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 6.066471815109253
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 6.151280879974365
   },
   {
     "sentence": "そうでなければ別の方法を考えなければならない",
@@ -6400,8 +6400,8 @@
       "Segment 'でなければ': conj_type: Provisional (~eba) vs None, neg: True vs False",
       "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 22.48394536972046
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 25.219223022460938
   },
   {
     "sentence": "仮に失敗したとしても後悔はしないだろう",
@@ -6649,8 +6649,8 @@
     "differences": [
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 9.388536214828491
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 15.63859486579895
   },
   {
     "sentence": "運が良ければ今日中に届くかもしれない",
@@ -6794,8 +6794,8 @@
     "differences": [
       "Segment '運が良ければ': source: 運が良い vs 運がいい"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 5.884505271911621
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 6.1728599071502686
   },
   {
     "sentence": "体調が悪いため今日は早退させてください",
@@ -7057,8 +7057,8 @@
     "differences": [
       "Segment '早退させてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 11.869751214981079
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 11.624911785125732
   },
   {
     "sentence": "締め切りに間に合わなかったのは準備不足のせいだ",
@@ -7378,8 +7378,8 @@
     "differences": [
       "Segment '締め切り': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 25.05232310295105
+    "time_ichiran": 7.152557373046875e-06,
+    "time_himotoki": 10.584412813186646
   },
   {
     "sentence": "参加者が少なかったのでイベントは中止になった",
@@ -7689,8 +7689,8 @@
     "differences": [
       "Segment 'なった': source: 成る vs 生る"
     ],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 19.24882936477661
+    "time_ichiran": 6.198883056640625e-06,
+    "time_himotoki": 10.29757285118103
   },
   {
     "sentence": "この地域は昔から水が豊富なことで知られている",
@@ -8122,8 +8122,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 11.572301149368286
+    "time_ichiran": 1.3828277587890625e-05,
+    "time_himotoki": 12.299422264099121
   },
   {
     "sentence": "技術的な問題により本日のサービスは停止しています",
@@ -8449,8 +8449,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 12.87137484550476
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 7.220033884048462
   },
   {
     "sentence": "そういうわけで今回は見送ることにしました",
@@ -8694,8 +8694,8 @@
     "differences": [
       "Segment 'わけ': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 12.25503396987915
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 12.047573804855347
   },
   {
     "sentence": "天候の影響でフライトが欠航になりました",
@@ -9008,7 +9008,7 @@
       "Segment 'なりました': source: 成る vs 生る"
     ],
     "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 9.529531955718994
+    "time_himotoki": 37.02969193458557
   },
   {
     "sentence": "彼女は何も言わずに手紙を渡してきた",
@@ -9299,8 +9299,8 @@
     "differences": [
       "Segment '言わず': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 1.5974044799804688e-05,
-    "time_himotoki": 4.976360082626343
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 4.947594881057739
   },
   {
     "sentence": "駅に着いてからすぐに電話してください",
@@ -9520,8 +9520,8 @@
     "differences": [
       "Segment '電話してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 9.891773223876953
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 11.065468788146973
   },
   {
     "sentence": "何度も練習してやっとできるようになった",
@@ -9701,8 +9701,8 @@
     "differences": [
       "Segment 'できる': conj_type: Potential vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 8.97226333618164
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 5.644989013671875
   },
   {
     "sentence": "せっかくの休みなのに家から出られなかった",
@@ -9993,7 +9993,7 @@
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 9.94492506980896
+    "time_himotoki": 11.028049945831299
   },
   {
     "sentence": "これだけ準備をしたのだから失敗するわけがない",
@@ -10275,8 +10275,8 @@
     "differences": [
       "Segment 'わけがない': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 6.165197134017944
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 7.460763216018677
   },
   {
     "sentence": "今にも雨が降りそうな空模様だ",
@@ -10458,8 +10458,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 2.8672308921813965
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 2.823408842086792
   },
   {
     "sentence": "新しい店は繁盛しそうな雰囲気がある",
@@ -10755,8 +10755,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 4.451530933380127
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 4.540241003036499
   },
   {
     "sentence": "彼女は泣き出しそうな顔をしていた",
@@ -11019,7 +11019,7 @@
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 6.79644513130188
+    "time_himotoki": 9.443021059036255
   },
   {
     "sentence": "うまくいきそうな気がしてきた",
@@ -11139,8 +11139,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 9.525896072387695
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 9.93296194076538
   },
   {
     "sentence": "もうすぐ届きそうなので待っていてください",
@@ -11290,8 +11290,8 @@
     "differences": [
       "Segment '待っていてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 7.3620500564575195
+    "time_ichiran": 2.6226043701171875e-06,
+    "time_himotoki": 7.007106065750122
   },
   {
     "sentence": "頑張れば間に合いそうな気がする",
@@ -11439,8 +11439,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 5.398190021514893
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 6.778646945953369
   },
   {
     "sentence": "彼は上司に無理な仕事を押し付けられている",
@@ -11767,8 +11767,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 8.123113870620728
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 19.776591300964355
   },
   {
     "sentence": "突然の雨に降られて服がびしょ濡れになった",
@@ -12118,8 +12118,8 @@
     "differences": [
       "Segment 'なった': source: 成る vs 生る"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 12.283759117126465
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 27.49721598625183
   },
   {
     "sentence": "この言葉の意味を教えていただけますか",
@@ -12381,8 +12381,8 @@
     "differences": [
       "Segment '教えていただけます': conj_type: Potential vs Non-past, source: 頂く vs 頂ける"
     ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 5.555511236190796
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 5.38515305519104
   },
   {
     "sentence": "やっぱり行かなきゃだめかな",
@@ -12534,8 +12534,8 @@
     "differences": [
       "Segment '行かなきゃ': conj_type: Provisional (~eba) vs None, neg: True vs False"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.6755449771881104
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 1.851572036743164
   },
   {
     "sentence": "それって本当なのかな",
@@ -12767,8 +12767,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 5.094051122665405
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 5.159408092498779
   },
   {
     "sentence": "問題解決に向けた取り組みが求められている",
@@ -12981,8 +12981,8 @@
     "differences": [
       "Segment '取り組み': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 11.94931411743164
+    "time_ichiran": 1.5974044799804688e-05,
+    "time_himotoki": 8.595829010009766
   },
   {
     "sentence": "状況を鑑みるに慎重な対応が必要である",
@@ -13377,7 +13377,7 @@
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 5.905335903167725
+    "time_himotoki": 14.772202968597412
   },
   {
     "sentence": "この問題に対する解答は一つではない",
@@ -13629,8 +13629,8 @@
     "differences": [
       "Segment 'ではない': source: で‌はある vs だ"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 6.024739027023315
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 6.333297967910767
   },
   {
     "sentence": "真実を追求する姿勢を忘れてはならない",
@@ -13918,8 +13918,8 @@
     "differences": [
       "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 8.565628051757812
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 8.646869897842407
   },
   {
     "sentence": "彼らの努力なくして成功はあり得なかった",
@@ -14165,8 +14165,8 @@
     "differences": [
       "Segment 'あり得なかった': neg: True vs False, source: あり得る vs あり得ない"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 12.389331817626953
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 22.082974910736084
   },
   {
     "sentence": "駅から歩いて十五分くらいかかります",
@@ -14377,7 +14377,7 @@
     "differences": [
       "Segment 'かかります': source: 掛かる vs 罹る"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 24.058283805847168
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 13.034597158432007
   }
 ]

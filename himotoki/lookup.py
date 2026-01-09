@@ -139,56 +139,13 @@ NO_KANJI_BREAK_PENALTY: Set[int] = {
     2827864,   # なので
 }
 
-# Custom conjugation types (from dict-errata.lisp)
-CONJ_ADVERBIAL = 50
-CONJ_ADJECTIVE_STEM = 51
-CONJ_NEGATIVE_STEM = 52
-CONJ_CAUSATIVE_SU = 53
-CONJ_ADJECTIVE_LITERARY = 54
-
-# Conjugation type names mapping (from ichiran's conj.csv)
-# Maps conj_type IDs to human-readable names
-CONJ_TYPE_NAMES = {
-    1: "Non-past",
-    2: "Past (~ta)",
-    3: "Conjunctive (~te)",
-    4: "Provisional (~eba)",
-    5: "Potential",
-    6: "Passive",
-    7: "Causative",
-    8: "Causative-Passive",
-    9: "Volitional",
-    10: "Imperative",
-    11: "Conditional (~tara)",
-    12: "Alternative (~tari)",
-    13: "Continuative (~i)",
-    # Custom conjugation types
-    CONJ_ADVERBIAL: "Adverbial",
-    CONJ_ADJECTIVE_STEM: "Adjective Stem",
-    CONJ_NEGATIVE_STEM: "Negative Stem",
-    CONJ_CAUSATIVE_SU: "Causative (~su)",
-    CONJ_ADJECTIVE_LITERARY: "Old/Literary",
-}
-
-# Weak conjugation forms - these don't contribute as much to scoring
-# Format: (conj_type, neg, fml) where None means "any"
-# From ichiran's *weak-conj-forms*
-WEAK_CONJ_FORMS: List[Tuple[int, Optional[bool], Optional[bool]]] = [
-    (CONJ_ADJECTIVE_STEM, None, None),    # Adjective stem
-    (CONJ_NEGATIVE_STEM, None, None),     # Negative stem
-    (CONJ_CAUSATIVE_SU, None, None),      # Causative (~su)
-    (CONJ_ADJECTIVE_LITERARY, None, None),  # Old/literary form
-    (9, True, None),                       # Volitional negative
-]
-
-# Skip conjugation forms - these conjugations should be skipped entirely
-# Format: (pos, conj_type, neg, fml) or (conj_type, neg, fml)
-# From ichiran's *skip-conj-forms*
-SKIP_CONJ_FORMS: List[Tuple] = [
-    (10, True, None),          # Continuative (~i stem) negative
-    (3, True, True),           # Te-form negative formal
-    ('vs-s', 5, None, None),   # vs-s potential (any)
-]
+# Import conjugation constants from central location
+from himotoki.constants import (
+    CONJ_ADVERBIAL, CONJ_ADJECTIVE_STEM, CONJ_NEGATIVE_STEM,
+    CONJ_CAUSATIVE_SU, CONJ_ADJECTIVE_LITERARY,
+    CONJ_TYPE_NAMES, WEAK_CONJ_FORMS, SKIP_CONJ_FORMS,
+    CONJ_VOLITIONAL, CONJ_TE, CONJ_POTENTIAL, CONJ_IMPERATIVE,
+)
 
 # Archaic words cache - populated on first use
 _ARCHAIC_CACHE: Optional[Set[int]] = None

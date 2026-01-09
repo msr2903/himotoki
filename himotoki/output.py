@@ -25,8 +25,8 @@ from himotoki.lookup import (
     Segment, SegmentList, WordMatch, ConjData,
     get_conj_data, find_word,
     get_conj_type_name, get_conj_neg, get_conj_fml, get_source_text,
-    CONJ_TYPE_NAMES,
 )
+from himotoki.constants import CONJ_TYPE_NAMES, get_conj_description
 
 
 # ============================================================================
@@ -339,30 +339,7 @@ def get_senses_json(
 # Conjugation Info Functions
 # ============================================================================
 
-def get_conj_description(conj_type: int) -> str:
-    """Get human-readable description for conjugation type."""
-    descriptions = {
-        1: 'Non-past',
-        2: 'Past (~ta)',
-        3: 'Conjunctive (~te)',
-        4: 'Provisional (~eba)',
-        5: 'Potential',
-        6: 'Passive',
-        7: 'Causative',
-        8: 'Causative-Passive',
-        9: 'Volitional',
-        10: 'Imperative',
-        11: 'Conditional (~tara)',
-        12: 'Alternative (~tari)',
-        13: 'Continuative (~i)',
-        # Custom conjugation types (from dict-errata.lisp)
-        50: 'Adverbial',
-        51: 'Adjective Stem',
-        52: 'Negative Stem',
-        53: 'Causative (~su)',
-        54: 'Old/Literary',
-    }
-    return descriptions.get(conj_type, f'Type {conj_type}')
+# get_conj_description is now imported from himotoki.constants
 
 
 def conj_prop_json(prop: ConjProp) -> Dict[str, Any]:

@@ -81,14 +81,14 @@ SECONDARY_CONJUGATION_TYPES_FROM = [5, 6, 7, 8, 14]  # 14 is causative-su
 # Secondary conjugation types to generate
 SECONDARY_CONJUGATION_TYPES = [2, 3, 4, 9, 10, 11, 12, 13]
 
-# Conjugation type ID for causative-su
-CONJ_CAUSATIVE_SU = 14
-
-# Additional custom conjugation types (from ichiran's dict-errata.lisp)
-CONJ_ADVERBIAL = 50
-CONJ_ADJECTIVE_STEM = 51
-CONJ_NEGATIVE_STEM = 52
-CONJ_ADJECTIVE_LITERARY = 54
+# Import conjugation constants from central location
+from himotoki.constants import (
+    CONJ_ADVERBIAL, CONJ_ADJECTIVE_STEM, CONJ_NEGATIVE_STEM,
+    CONJ_ADJECTIVE_LITERARY, CONJ_CAUSATIVE_SU,
+)
+# Note: CONJ_CAUSATIVE_SU is 53 in constants.py (custom type for errata)
+# But locally we also need 14 for conjo.csv's causative-su
+CONJ_CAUSATIVE_SU_CONJO = 14  # Local override for conjo.csv
 
 
 def get_data_path() -> Path:

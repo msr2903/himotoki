@@ -26,6 +26,24 @@ from himotoki.db.models import (
     Conjugation, ConjProp, ConjSourceReading,
 )
 from himotoki.characters import is_kana, as_hiragana
+from himotoki.constants import (
+    CONJ_ADVERBIAL, CONJ_ADJECTIVE_STEM,
+    # Particles
+    SEQ_O_PREFIX, SEQ_DE, SEQ_KA, SEQ_NI, SEQ_WO, SEQ_NO, SEQ_TTE, SEQ_KARA,
+    SEQ_WA, SEQ_MO,
+    # Common verbs
+    SEQ_IRU, SEQ_KURU, SEQ_SURU, SEQ_TOMU, SEQ_ORU, SEQ_ARU, SEQ_OKU, SEQ_IKU,
+    SEQ_SHIMAU, SEQ_MORAU, SEQ_ITADAKU, SEQ_KURERU,
+    # Honorific/humble verb forms
+    SEQ_ITASU, SEQ_SARERU, SEQ_SASERU, SEQ_TOKU,
+    # Suffix-related
+    SEQ_CHAU, SEQ_CHIMAU, SEQ_TAI, SEQ_NIKUI, SEQ_II, SEQ_KUDASAI,
+    SEQ_SOU, SEQ_SOU_NI_NAI, SEQ_MOII,
+    # Blocked seqs
+    BLOCKED_NAI_SEQS, BLOCKED_NAI_X_SEQS,
+    # Suffix descriptions (to merge with local ones)
+    SUFFIX_DESCRIPTION as SUFFIX_DESCRIPTION_SEQS,
+)
 
 
 # ============================================================================
@@ -74,31 +92,22 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     'me': 'somewhat/-ish',
     'gai': 'worth it to ...',
     'tasou': 'seem to want to... (tai+sou)',
-    # Particle seqs used in split processing
-    2826528: 'polite prefix',  # お
-    2028980: 'at / in / by',  # で
-    2028970: 'or / questioning particle',  # か
-    2028990: 'to / at / in',  # に
-    2029010: 'indicates direct object of action',  # を
-    1469800: "indicates possessive (...'s)",  # の
-    2086960: 'quoting particle',  # って
-    1002980: 'from / because',  # から
+    # Particle seqs - imported from constants and merged
+    **SUFFIX_DESCRIPTION_SEQS,
 }
 
 
 # ============================================================================
-# Blocked Seqs for Abbreviation Suffixes
+# Maximum Suffix Nesting Depth
 # ============================================================================
+# Limits recursion when finding nested compound words like:
+# 勉強し続けている (勉強し + 続けて + いる)
+# Without a limit, pathological inputs could cause infinite recursion.
+MAX_SUFFIX_DEPTH = 5
 
-# Seqs blocked in nai/nai-n abbreviation handlers (居ない 来ない create problems)
-# Ports ichiran's exclusion in abbr-nee and abbr-n from dict-grammar.lisp
-BLOCKED_NAI_SEQS = {1577980, 1547720}  # いる (居る), 来る (くる)
-
-# Seqs blocked in nai-x abbreviation handler (ず, ざる, ぬ)
-# - する (1157170): per ichiran - blocks せず from being a する conjugation
-# - 富む (1496740): uncommon word creates とまず which incorrectly beats と+まずい
-BLOCKED_NAI_X_SEQS = {1157170, 1496740}  # する, 富む
-
+# Thread-local storage for tracking current recursion depth
+import contextvars
+_current_suffix_depth: contextvars.ContextVar[int] = contextvars.ContextVar('suffix_depth', default=0)
 
 # ============================================================================
 # Global Suffix Cache
@@ -250,34 +259,34 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         _suffix_class = {}
         
         # ちゃう (chau) - completion
-        _load_conjs(session, 'chau', 2013800)
-        _load_conjs(session, 'chau', 2210750)  # ちまう
+        _load_conjs(session, 'chau', SEQ_CHAU)
+        _load_conjs(session, 'chau', SEQ_CHIMAU)
         
         # は particle with ちゃ/じゃ reading
-        ha_kf = get_kana_form(session, 2028920, 'は')
+        ha_kf = get_kana_form(session, SEQ_WA, 'は')
         if ha_kf:
             _load_kf('chau', ha_kf, suffix_class='ha', text='ちゃ')
             _load_kf('chau', ha_kf, suffix_class='ha', text='じゃ')
         
         # たい (tai) - want to
-        _load_conjs(session, 'tai', 2017560)
+        _load_conjs(session, 'tai', SEQ_TAI)
         
         # たそう (tasou) - seem to want to (tai + sou)
-        tasou_kf = get_kana_form(session, 900000, 'たそう')
+        tasou_kf = get_kana_form(session, 900000, 'たそう')  # Synthetic entry
         if tasou_kf:
             _load_kf('tai', tasou_kf, suffix_class='tasou')
         
         # 難い (nikui) - difficult to
-        _load_conjs(session, 'ren-', 2772730, suffix_class='nikui')
+        _load_conjs(session, 'ren-', SEQ_NIKUI, suffix_class='nikui')
         
         # おる (oru) - humble progressive
-        _load_conjs(session, 'te', 1577985, suffix_class='oru')
+        _load_conjs(session, 'te', SEQ_ORU, suffix_class='oru')
         
         # ある (aru) - result state
-        _load_conjs(session, 'te', 1296400, suffix_class='aru')
+        _load_conjs(session, 'te', SEQ_ARU, suffix_class='aru')
         
         # いる (iru) - progressive
-        for kf in get_kana_forms(session, 1577980):
+        for kf in get_kana_forms(session, SEQ_IRU):
             tkf = kf.text
             if len(tkf) > 1:
                 _update_cache(tkf, ('teiru+', kf))
@@ -287,22 +296,22 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
             _suffix_class[kf.seq] = 'iru'
         
         # くる (kuru) - coming to be
-        _load_conjs(session, 'te', 1547720, suffix_class='kuru')
+        _load_conjs(session, 'te', SEQ_KURU, suffix_class='kuru')
         
         # おく (oku) - in advance
-        _load_conjs(session, 'te', 1421850, suffix_class='oku')
-        _load_conjs(session, 'to', 2108590, suffix_class='oku')  # とく
+        _load_conjs(session, 'te', SEQ_OKU, suffix_class='oku')
+        _load_conjs(session, 'to', SEQ_TOKU, suffix_class='oku')
         
         # しまう (shimau) - completion (via chau)
-        _load_conjs(session, 'te', 1305380, suffix_class='chau')
+        _load_conjs(session, 'te', SEQ_SHIMAU, suffix_class='chau')
         
         # くれる/もらう/いただく - request forms
-        _load_conjs(session, 'te+space', 1269130, suffix_class='kureru')
-        _load_conjs(session, 'te+space', 1535910, suffix_class='morau')
-        _load_conjs(session, 'te+space', 1587290, suffix_class='itadaku')
+        _load_conjs(session, 'te+space', SEQ_KURERU, suffix_class='kureru')
+        _load_conjs(session, 'te+space', SEQ_MORAU, suffix_class='morau')
+        _load_conjs(session, 'te+space', SEQ_ITADAKU, suffix_class='itadaku')
         
         # いく (iku) - going/becoming
-        for kf in get_kana_forms(session, 1578850):
+        for kf in get_kana_forms(session, SEQ_IKU):
             tkf = kf.text
             if tkf.startswith('い'):
                 _update_cache(tkf, ('te', kf))
@@ -311,14 +320,14 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
             _suffix_class[kf.seq] = 'iku'
         
         # いい (ii) - ok if
-        ii_kf = get_kana_form(session, 2820690, 'いい')
+        ii_kf = get_kana_form(session, SEQ_II, 'いい')
         if ii_kf:
             _load_kf('teii', ii_kf, suffix_class='ii')
         
         # もいい - "it's ok if" (て form + もいい)
         # This creates the compound ～てもいい pattern
         # Try to load from database first, otherwise register directly
-        moii_kf = get_kana_form(session, 900001, 'もいい')
+        moii_kf = get_kana_form(session, SEQ_MOII, 'もいい')
         if moii_kf:
             _load_kf('teii', moii_kf, suffix_class='ii', text='もいい')
         else:
@@ -327,27 +336,27 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
             _load_abbr('teii', 'もいい')
         
         # も (mo) - even if
-        mo_kf = get_kana_form(session, 2028940, 'も')
+        mo_kf = get_kana_form(session, SEQ_MO, 'も')
         if mo_kf:
             _load_kf('te', mo_kf, suffix_class='mo')
         
         # ください (kudasai) - please do
-        kudasai_kf = get_kana_form(session, 1184270, 'ください', conj='root')
+        kudasai_kf = get_kana_form(session, SEQ_KUDASAI, 'ください', conj='root')
         if kudasai_kf:
             _load_kf('kudasai', kudasai_kf)
         
         # する (suru) - make verb from noun
-        _load_conjs(session, 'suru', 1157170)
-        _load_conjs(session, 'suru', 1421900, suffix_class='itasu')  # いたす
-        _load_conjs(session, 'suru', 2269820, suffix_class='sareru')  # される
-        _load_conjs(session, 'suru', 1005160, suffix_class='saseru')  # させる
+        _load_conjs(session, 'suru', SEQ_SURU)
+        _load_conjs(session, 'suru', SEQ_ITASU, suffix_class='itasu')
+        _load_conjs(session, 'suru', SEQ_SARERU, suffix_class='sareru')
+        _load_conjs(session, 'suru', SEQ_SASERU, suffix_class='saseru')
         
         # そう (sou) - looks like
-        _load_conjs(session, 'sou', 1006610)
-        _load_conjs(session, 'sou+', 2141080)  # そうにない
+        _load_conjs(session, 'sou', SEQ_SOU)
+        _load_conjs(session, 'sou+', SEQ_SOU_NI_NAI)
         
         # ろう (rou) - probably
-        darou_kf = get_kana_form(session, 1928670, 'だろう')
+        darou_kf = get_kana_form(session, 1928670, 'だろう')  # だろう seq not frequently used
         if darou_kf:
             _load_kf('rou', darou_kf, text='ろう')
         
@@ -577,6 +586,7 @@ def find_word_suffix(
     matches: Optional[List[Any]] = None,
     suffix_map: Optional[Dict] = None,
     next_end: Optional[int] = None,
+    depth: int = 0,
 ) -> List[Any]:
     """
     Find suffix matches for a word.
@@ -592,117 +602,131 @@ def find_word_suffix(
         matches: Existing matches (for uniqueness checking)
         suffix_map: Pre-computed suffix map (optional)
         next_end: End position in source text (optional)
+        depth: Current recursion depth for nested compounds
     
     Returns:
         List of compound word matches
     """
-    from himotoki.lookup import adjoin_word, WordMatch
+    # Guard against excessive recursion using both explicit depth and context var
+    current_depth = _current_suffix_depth.get()
+    effective_depth = max(depth, current_depth)
+    if effective_depth >= MAX_SUFFIX_DEPTH:
+        return []
     
-    init_suffixes(session)
+    # Set context var for handlers that may call find_word_suffix recursively
+    token = _current_suffix_depth.set(effective_depth + 1)
     
-    # Get suffixes from map or by direct lookup
-    if suffix_map and next_end:
-        suffixes = suffix_map.get(next_end, [])
-    else:
-        suffixes = get_suffixes(session, word)
-    
-    results = []
-    
-    for suffix, keyword, kf in suffixes:
-        # Check uniqueness constraint
-        suffix_class = _suffix_class.get(kf.seq if kf else None, keyword)
-        if matches and match_unique(suffix_class, matches):
-            continue
+    try:
+        from himotoki.lookup import adjoin_word, WordMatch
         
-        offset = len(word) - len(suffix)
-        if offset <= 0:
-            continue
+        init_suffixes(session)
         
-        root = word[:offset]
+        # Get suffixes from map or by direct lookup
+        if suffix_map and next_end:
+            suffixes = suffix_map.get(next_end, [])
+        else:
+            suffixes = get_suffixes(session, word)
         
-        # Get suffix function based on keyword
-        suffix_fn = SUFFIX_HANDLERS.get(keyword)
-        if not suffix_fn:
-            continue
+        results = []
         
-        # Call suffix handler to get primary words
-        primary_words = suffix_fn(session, root, suffix, kf)
-        
-        for pw in primary_words:
-            if pw is None:
+        for suffix, keyword, kf in suffixes:
+            # Check uniqueness constraint
+            suffix_class = _suffix_class.get(kf.seq if kf else None, keyword)
+            if matches and match_unique(suffix_class, matches):
                 continue
             
-            # Create suffix word for adjoin
-            # Get conjugation IDs for the suffix word if it's a conjugated form
-            suffix_conj_ids = None
-            if kf and hasattr(kf, '_conj_type') and kf._conj_type == 'conj':
-                # This is a conjugated form - get the conjugation IDs
-                from himotoki.db.models import Conjugation
-                conj_query = select(Conjugation.id).where(Conjugation.seq == kf.seq)
-                suffix_conj_ids = list(session.execute(conj_query).scalars().all())
+            offset = len(word) - len(suffix)
+            if offset <= 0:
+                continue
             
-            if kf:
-                suffix_word = WordMatch(reading=kf, conjugations=suffix_conj_ids)
-            else:
-                # Create a placeholder for the suffix (abbreviation case)
-                # For abbreviations like もいい, we create a minimal placeholder
-                # that looks like a KanaText but without a database entry
-                class PlaceholderReading:
-                    def __init__(self, text):
-                        self.text = text
-                        self.seq = None
-                        self.ord = 0
-                        self.common = None
-                placeholder = PlaceholderReading(suffix)
-                suffix_word = WordMatch(reading=placeholder)
+            root = word[:offset]
             
-            # Use adjoin_word to create compound (following ichiran's pattern)
-            # Score is determined by the suffix handler configuration
-            # For 'sou' suffix, use conditional scoring based on root
-            if keyword in ('sou', 'sou+'):
-                score_mod = get_sou_score(root)
-            else:
-                score_mod = SUFFIX_SCORES.get(keyword, 0)
-            connector = SUFFIX_CONNECTORS.get(keyword, '')
+            # Get suffix function based on keyword
+            suffix_fn = SUFFIX_HANDLERS.get(keyword)
+            if not suffix_fn:
+                continue
             
-            # Check if this is an abbreviation suffix
-            is_abbrev = keyword in ABBREVIATION_SUFFIXES
+            # Call suffix handler to get primary words
+            primary_words = suffix_fn(session, root, suffix, kf)
             
-            # Get kana for the compound
-            # For primary word: get kana from reading, look up if kanji
-            def get_word_kana(w):
-                if hasattr(w, 'reading'):
-                    reading = w.reading
-                    # Check if it's a kanji reading - look up kana
-                    if hasattr(reading, 'seq') and hasattr(reading, 'text'):
-                        # Try to get kana for this seq
-                        from himotoki.db.models import KanaText
-                        kana_result = session.execute(
-                            select(KanaText.text)
-                            .where(KanaText.seq == reading.seq)
-                        ).scalars().first()
-                        if kana_result:
-                            return kana_result
-                        # If no kana found, assume text is already kana
-                        return reading.text
-                return w.text if hasattr(w, 'text') else ''
-            
-            primary_kana = get_word_kana(pw)
-            suffix_kana = kf.text if kf else suffix
-            # Include connector in kana (e.g., space for suru, kudasai, te+space)
-            compound_kana = primary_kana + connector + suffix_kana
-            
-            compound = adjoin_word(
-                pw,
-                suffix_word,
-                text=word,
-                kana=compound_kana,
-                score_mod=score_mod,
-                is_abbrev=is_abbrev,
-            )
-            results.append(compound)
-    
-    return results
+            for pw in primary_words:
+                if pw is None:
+                    continue
+                
+                # Create suffix word for adjoin
+                # Get conjugation IDs for the suffix word if it's a conjugated form
+                suffix_conj_ids = None
+                if kf and hasattr(kf, '_conj_type') and kf._conj_type == 'conj':
+                    # This is a conjugated form - get the conjugation IDs
+                    from himotoki.db.models import Conjugation
+                    conj_query = select(Conjugation.id).where(Conjugation.seq == kf.seq)
+                    suffix_conj_ids = list(session.execute(conj_query).scalars().all())
+                
+                if kf:
+                    suffix_word = WordMatch(reading=kf, conjugations=suffix_conj_ids)
+                else:
+                    # Create a placeholder for the suffix (abbreviation case)
+                    # For abbreviations like もいい, we create a minimal placeholder
+                    # that looks like a KanaText but without a database entry
+                    class PlaceholderReading:
+                        def __init__(self, text):
+                            self.text = text
+                            self.seq = None
+                            self.ord = 0
+                            self.common = None
+                    placeholder = PlaceholderReading(suffix)
+                    suffix_word = WordMatch(reading=placeholder)
+                
+                # Use adjoin_word to create compound (following ichiran's pattern)
+                # Score is determined by the suffix handler configuration
+                # For 'sou' suffix, use conditional scoring based on root
+                if keyword in ('sou', 'sou+'):
+                    score_mod = get_sou_score(root)
+                else:
+                    score_mod = SUFFIX_SCORES.get(keyword, 0)
+                connector = SUFFIX_CONNECTORS.get(keyword, '')
+                
+                # Check if this is an abbreviation suffix
+                is_abbrev = keyword in ABBREVIATION_SUFFIXES
+                
+                # Get kana for the compound
+                # For primary word: get kana from reading, look up if kanji
+                def get_word_kana(w):
+                    if hasattr(w, 'reading'):
+                        reading = w.reading
+                        # Check if it's a kanji reading - look up kana
+                        if hasattr(reading, 'seq') and hasattr(reading, 'text'):
+                            # Try to get kana for this seq
+                            from himotoki.db.models import KanaText
+                            kana_result = session.execute(
+                                select(KanaText.text)
+                                .where(KanaText.seq == reading.seq)
+                            ).scalars().first()
+                            if kana_result:
+                                return kana_result
+                            # If no kana found, assume text is already kana
+                            return reading.text
+                    return w.text if hasattr(w, 'text') else ''
+                
+                primary_kana = get_word_kana(pw)
+                suffix_kana = kf.text if kf else suffix
+                # Include connector in kana (e.g., space for suru, kudasai, te+space)
+                compound_kana = primary_kana + connector + suffix_kana
+                
+                compound = adjoin_word(
+                    pw,
+                    suffix_word,
+                    text=word,
+                    kana=compound_kana,
+                    score_mod=score_mod,
+                    is_abbrev=is_abbrev,
+                )
+                results.append(compound)
+        
+        return results
+    finally:
+        # Reset context var to previous value
+        _current_suffix_depth.reset(token)
 
 
 # Suffix scores - from def-simple-suffix definitions in ichiran's dict-grammar.lisp
@@ -1042,7 +1066,7 @@ def _handler_abbr_nai(session: Session, root: str, suffix: str, kf: Optional[Kan
     Handle ない abbreviation (ねえ, ねぇ, ねー etc.).
     
     Ports ichiran's abbr-nee from dict-grammar.lisp.
-    Blocks いる (1577980) and 来る (1547720) conjugations to avoid false matches.
+    Blocks いる (SEQ_IRU) and 来る (SEQ_KURU) conjugations to avoid false matches.
     Allows root forms (:allow-root t in ichiran).
     """
     return _find_word_with_neg_prop_filtered(
@@ -1055,7 +1079,7 @@ def _handler_abbr_nai_n(session: Session, root: str, suffix: str, kf: Optional[K
     Handle ん contraction (nai-n suffix).
     
     Ports ichiran's abbr-n from dict-grammar.lisp.
-    Blocks いる (1577980) and 来る (1547720) conjugations to avoid false matches.
+    Blocks いる (SEQ_IRU) and 来る (SEQ_KURU) conjugations to avoid false matches.
     Does NOT allow root forms (differs from abbr-nee).
     
     Example: 考えてん should NOT match 考えていないん (negative of いる).
@@ -1071,11 +1095,11 @@ def _handler_abbr_nx(session: Session, root: str, suffix: str, kf: Optional[Kana
     Handle ず/ざる/ぬ abbreviation (nai-x suffix).
     
     Ports ichiran's abbr-nx from dict-grammar.lisp.
-    Blocks する (1157170) and 富む (1496740) conjugations.
+    Blocks する (SEQ_SURU) and 富む (SEQ_TOMU) conjugations.
     Special case: せ -> しない (for する).
     """
     if root == 'せ':
-        return find_word_conj_of(session, 'しない', 1157170)
+        return find_word_conj_of(session, 'しない', SEQ_SURU)
     
     from himotoki.lookup import find_word_with_conj_prop
     
