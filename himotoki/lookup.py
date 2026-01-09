@@ -1383,17 +1383,9 @@ def calc_score(
         (not long_p and posi == {'int'})
     )
     
-    # Primary reading check - now with archaic consideration
-    primary_p = False
-    if not is_arch_p:
-        primary_p = determine_primary_full(
-            session, entry, word, posi, common_p, kanji_p,
-            root_p, conj_data, prefer_kana, conj_types_p, cop_da_p, pronoun_p
-        )
-    
     use_length_bonus = 0
     
-    # Check for skip words and final particles
+    # Check for skip words and final particles (before ord correction per ichiran)
     if seq_set & SKIP_WORDS:
         return 0, {}
     if not final and seq in FINAL_PRT:
@@ -1401,7 +1393,8 @@ def calc_score(
     if not root_p and skip_by_conj_data(conj_data):
         return 0, {}
     
-    # Handle inherited commonness from conjugation source (ichiran lines 859-870)
+    # Handle inherited commonness and ord from conjugation source (ichiran lines 859-870)
+    # This MUST happen BEFORE primary_p determination so that ord_val is correct
     if conj_data and not (ord_val == 0 and common_p):
         orig_texts = get_original_text_data(session, word, conj_data)
         if orig_texts:
@@ -1417,6 +1410,16 @@ def calc_score(
             conj_of_ord = min(o for c, o in orig_texts)
             if conj_of_ord < ord_val:
                 ord_val = conj_of_ord
+    
+    # Primary reading check - now with archaic consideration
+    # Pass ord_val to use corrected ord from conjugation source
+    primary_p = False
+    if not is_arch_p:
+        primary_p = determine_primary_full(
+            session, entry, word, posi, common_p, kanji_p,
+            root_p, conj_data, prefer_kana, conj_types_p, cop_da_p, pronoun_p,
+            ord_override=ord_val
+        )
     
     # Calculate base score (ichiran lines 890-925)
     if primary_p:
@@ -1581,13 +1584,22 @@ def determine_primary_full(
     conj_types_p: bool,
     cop_da_p: bool,
     pronoun_p: bool,
+    ord_override: Optional[int] = None,
 ) -> bool:
     """
     Full primary reading determination from ichiran lines 872-888.
     More complete than the simple version.
+    
+    Args:
+        ord_override: If provided, use this ord value instead of word.ord.
+                     This is used when the ord has been corrected based on
+                     conjugation source data.
     """
     if not entry:
         return True
+    
+    # Use overridden ord if provided, otherwise use word.ord
+    ord_val = ord_override if ord_override is not None else word.ord
     
     # Prefer kana and this is kana reading
     if prefer_kana and conj_types_p and not kanji_p:
@@ -1599,11 +1611,11 @@ def determine_primary_full(
         # Additional case: common hiragana word with ord=0 should be primary
         # This handles words like きれい that are commonly written in kana
         # but don't have the nokanji flag on the hiragana reading
-        if word.ord == 0 and common_p and (word.common == 0 or (word.common is not None and word.common < 10)):
+        if ord_val == 0 and common_p and (word.common == 0 or (word.common is not None and word.common < 10)):
             return True
     
     # Primary if ord=0 or copula
-    if word.ord == 0 or cop_da_p:
+    if ord_val == 0 or cop_da_p:
         if (kanji_p or conj_types_p) and (
             (kanji_p and not prefer_kana) or
             (common_p and pronoun_p) or
@@ -1612,7 +1624,7 @@ def determine_primary_full(
             return True
     
     # Special case: prefer_kana with kanji, ord=0, but uk is not for first sense
-    if prefer_kana and kanji_p and word.ord == 0:
+    if prefer_kana and kanji_p and ord_val == 0:
         # Check if uk prop is for ord=0 sense
         first_sense_uk = session.execute(
             select(SenseProp)

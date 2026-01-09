@@ -58,9 +58,11 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     'sa': '-ness (degree or condition of adjective)',
     'tsutsu': 'while ... / in the process of ...',
     'tsutsuaru': 'to be doing ... / to be in the process of doing ...',
+    'tsuzukeru': 'to continue ...',
     'uru': 'can ... / to be able to ...',
     'sou': 'looking like ... / seeming ...',
     'nai': 'negative suffix',
+    'naide': 'without doing ... / don\'t',
     'ra': 'pluralizing suffix (not polite)',
     'kudasai': 'please do ...',
     'yagaru': 'indicates disdain or contempt',
@@ -184,12 +186,31 @@ def get_kana_form(session: Session, seq: int, text: str, conj: Optional[str] = N
     return result
 
 
-def _load_conjs(session: Session, key: str, seq: int, suffix_class: Optional[str] = None, join: bool = False):
-    """Load all conjugation forms into suffix cache."""
+def _load_conjs(session: Session, key: str, seq: int, suffix_class: Optional[str] = None, join: bool = False, include_kanji: bool = False):
+    """Load all conjugation forms into suffix cache.
+    
+    Args:
+        session: Database session
+        key: Handler key for suffix matching
+        seq: Entry sequence number
+        suffix_class: Optional suffix class (defaults to key)
+        join: If True, join with existing cache entries
+        include_kanji: If True, also load kanji text forms
+    """
+    from himotoki.db.models import KanjiText
     actual_class = suffix_class or key
     for kf in get_kana_forms(session, seq):
         _update_cache(kf.text, (key, kf), join=join)
         _suffix_class[kf.seq] = actual_class
+        
+        # Also load kanji forms if requested
+        if include_kanji:
+            kanji_texts = session.execute(
+                select(KanjiText.text).where(KanjiText.seq == kf.seq)
+            ).scalars().all()
+            for kanji_text in kanji_texts:
+                if kanji_text != kf.text:  # Don't duplicate if already kana
+                    _update_cache(kanji_text, (key, kf), join=join)
 
 
 def _load_kf(key: str, kf: KanaText, suffix_class: Optional[str] = None, text: Optional[str] = None, join: bool = False):
@@ -344,6 +365,10 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
             _load_kf('ren', tsutsu_kf, suffix_class='tsutsu')
         _load_conjs(session, 'ren', 2027910, suffix_class='tsutsuaru')
         
+        # 続ける (tsuzukeru) - to continue (V-続ける pattern)
+        # Include kanji forms so 続けて matches alongside つづけて
+        _load_conjs(session, 'ren', 1405800, suffix_class='tsuzukeru', include_kanji=True)
+        
         # うる (uru) - can
         uru_kf = get_kana_form(session, 1454500, 'うる')
         if uru_kf:
@@ -357,6 +382,11 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         ).scalars().first()
         if naku_kf:
             _load_kf('neg', naku_kf, suffix_class='nai')
+        
+        # ないで (naide) - negative te-form "without doing" / "don't"
+        naide_kf = get_kana_form(session, 2258690, 'ないで')
+        if naide_kf:
+            _load_kf('neg', naide_kf, suffix_class='naide')
         
         # なる (naru) - become
         _load_conjs(session, 'adv', 1375610, suffix_class='naru')
@@ -828,7 +858,14 @@ def _handler_teiru(session: Session, root: str, suffix: str, kf: Optional[KanaTe
         return []
     if not root.endswith('て') and not root.endswith('で'):
         return []
-    return find_word_with_conj_type(session, root, 3)
+    # First try direct database lookup for te-form
+    results = find_word_with_conj_type(session, root, 3)
+    if results:
+        return results
+    # If not found, try to find root as a compound via suffix matching
+    # This enables nested compounds like 勉強し続けている (勉強し + 続けて + いる)
+    compound_results = find_word_suffix(session, root)
+    return compound_results
 
 
 def _handler_suru(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:

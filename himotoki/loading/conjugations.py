@@ -257,6 +257,23 @@ def is_kana(text: str) -> bool:
     return True
 
 
+def is_kana_char(char: str) -> bool:
+    """Check if a single character is kana."""
+    code = ord(char)
+    return 0x3040 <= code <= 0x309F or 0x30A0 <= code <= 0x30FF
+
+
+def get_kana_suffix_length(word: str) -> int:
+    """Get the length of the kana suffix at the end of a word."""
+    count = 0
+    for char in reversed(word):
+        if is_kana_char(char):
+            count += 1
+        else:
+            break
+    return count
+
+
 def construct_conjugation(word: str, rule: ConjugationRule) -> str:
     """
     Apply a conjugation rule to a word to produce the conjugated form.
@@ -273,20 +290,25 @@ def construct_conjugation(word: str, rule: ConjugationRule) -> str:
     # Determine if word is kana-only
     iskana = is_kana(word)
     
+    # For mixed kanji+kana words (like 無理をする), check if the conjugatable
+    # part at the end is kana. If so, use kana conjugation rules for that part.
+    kana_suffix_len = get_kana_suffix_length(word)
+    use_kana_rules = iskana or (kana_suffix_len > 0 and kana_suffix_len >= rule.stem + 1)
+    
     # Get euphonic changes
     euphr = rule.euphr
     euphk = rule.euphk
     
     # Calculate stem length to remove
     stem = rule.stem
-    if iskana and euphr:
+    if use_kana_rules and euphr:
         stem += 1
-    elif not iskana and euphk:
+    elif not use_kana_rules and euphk:
         stem += 1
     
     # Build conjugated form
     base = word[:-stem] if stem > 0 else word
-    euph = euphr if iskana else euphk
+    euph = euphr if use_kana_rules else euphk
     
     return base + euph + rule.okuri
 

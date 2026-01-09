@@ -334,7 +334,7 @@ def parse_ichiran_output(data: Any) -> SegmentationResult:
                 # Otherwise join component texts (for backwards compatibility)
                 full_text = info.get("text") or "".join(component_texts)
                 
-                # Get conjugation info from the last component
+                # Get conjugation info from the last component, or from parent if no components
                 conj_type = None
                 neg = False
                 fml = False
@@ -342,15 +342,18 @@ def parse_ichiran_output(data: Any) -> SegmentationResult:
                 if components_info:
                     last_comp = components_info[-1] if components_info else {}
                     conj_type, neg, fml, source = extract_conj_info(last_comp)
+                else:
+                    # Himotoki compounds may have conj info on the parent, not in components
+                    conj_type, neg, fml, source = extract_conj_info(info)
                 
-                # Get kana by joining component kanas
+                # Get kana by joining component kanas, or use parent kana
                 kana_parts = [c.get("kana", "") for c in components_info]
-                full_kana = "".join(kana_parts)
+                full_kana = "".join(kana_parts) if kana_parts else info.get("kana", "")
                 
                 seg_info = SegmentInfo(
                     text=full_text,
                     kana=full_kana,
-                    seq=components_info[0].get("seq") if components_info else None,
+                    seq=components_info[0].get("seq") if components_info else info.get("seq"),
                     score=info.get("score", 0),
                     is_compound=True,
                     components=component_texts,

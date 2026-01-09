@@ -355,6 +355,12 @@ def get_conj_description(conj_type: int) -> str:
         11: 'Conditional (~tara)',
         12: 'Alternative (~tari)',
         13: 'Continuative (~i)',
+        # Custom conjugation types (from dict-errata.lisp)
+        50: 'Adverbial',
+        51: 'Adjective Stem',
+        52: 'Negative Stem',
+        53: 'Causative (~su)',
+        54: 'Old/Literary',
     }
     return descriptions.get(conj_type, f'Type {conj_type}')
 
@@ -520,6 +526,19 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
                     ).scalars().first()
                     if kana_text:
                         source_text = kana_text
+        else:
+            # Fallback: get conjugation info from the CompoundWord itself
+            # This handles suffix-created compounds where segment.info doesn't have conj data
+            conj_info = word.get_conjugation_info(session)
+            if conj_info.get('conj_type') is not None:
+                conj_type_name = CONJ_TYPE_NAMES.get(conj_info['conj_type'])
+                conj_neg = bool(conj_info.get('neg', False))
+                conj_fml = bool(conj_info.get('fml', False))
+                source_text = conj_info.get('source_text')
+            
+            # Also get conjugation IDs from the last word
+            if word.conjugations:
+                conjugations = word.conjugations
         
         # Get component texts from CompoundWord.components property
         # This returns the text of each word in the compound
