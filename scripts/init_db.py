@@ -2,6 +2,9 @@
 """
 Initialize the himotoki database.
 Downloads/loads JMDict and generates conjugations.
+
+Usage:
+    python -m scripts.init_db
 """
 
 import sys
@@ -11,14 +14,14 @@ from pathlib import Path
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Add the project directory to path
-project_dir = Path(__file__).parent
-sys.path.insert(0, str(project_dir))
+# Resolve paths relative to project root
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from himotoki.loading.jmdict import load_jmdict
 
 def main():
-    data_dir = project_dir / "data"
+    data_dir = PROJECT_ROOT / "data"
     db_path = data_dir / "himotoki.db"
     jmdict_path = data_dir / "JMdict_e.xml"
     

@@ -67,15 +67,16 @@ data/*.db
 data/*.sqlite
 data/JMdict_e.xml
 
-# --- Results & Reports ---
-# We generally want to keep results.json for tracking benchmarks,
-# but temporary reports and extra result files should be ignored.
-report.html
-results_counters.json
+# --- Output Files ---
+# Generated reports and intermediate files (keep results.json for benchmarking)
+output/report.html
+output/mismatch.json
+output/partial.json
+output/results_counters.json
 
 # --- External Source ---
 ichiran-source-code/
 
-# --- Debug Scripts ---
+# --- Debug Scripts (at root level) ---
 debug_*.py
 check_*.py

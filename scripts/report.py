@@ -1,5 +1,17 @@
+#!/usr/bin/env python3
+"""
+Generate HTML comparison report from results.json.
+
+Usage:
+    python -m scripts.report
+"""
 import json
 import os
+from pathlib import Path
+
+# Resolve paths relative to project root
+PROJECT_ROOT = Path(__file__).parent.parent
+OUTPUT_DIR = PROJECT_ROOT / "output"
 
 def generate_html(data):
     json_data = json.dumps(data)
@@ -280,10 +292,10 @@ def generate_html(data):
     return html
 
 def main():
-    input_file = 'results.json'
-    output_file = 'report.html'
+    input_file = OUTPUT_DIR / 'results.json'
+    output_file = OUTPUT_DIR / 'report.html'
     
-    if not os.path.exists(input_file):
+    if not input_file.exists():
         print(f"Error: {input_file} not found.")
         return
 

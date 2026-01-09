@@ -1,0 +1,269 @@
+[
+  {
+    "sentence": "彼の行動は理解しがたいものであった",
+    "status": "mismatch",
+    "ichiran_texts": [
+      "彼",
+      "の",
+      "行動",
+      "は",
+      "理解しがたい",
+      "も",
+      "ので",
+      "あった"
+    ],
+    "himotoki_texts": [
+      "彼",
+      "の",
+      "行動",
+      "は",
+      "理解しがたい",
+      "もの",
+      "であった"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "彼",
+        "kana": "かれ",
+        "seq": 1483070,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pn]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "の",
+        "kana": "の",
+        "seq": 1469800,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "行動",
+        "kana": "こうどう",
+        "seq": 1282100,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-no,vi,vs,n]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "‌は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "理解しがたい",
+        "kana": "りかいしがたい",
+        "seq": 2531670,
+        "score": 1001,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp]"
+        ]
+      },
+      {
+        "text": "も",
+        "kana": "も",
+        "seq": 2028940,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "ので",
+        "kana": "ので",
+        "seq": 1009970,
+        "score": 48,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]"
+        ]
+      },
+      {
+        "text": "あった",
+        "kana": "あった",
+        "seq": 10467188,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "有る",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "彼",
+        "kana": "かれ",
+        "seq": 1483070,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pn]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "の",
+        "kana": "の",
+        "seq": 1469800,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "行動",
+        "kana": "こうどう",
+        "seq": 1282100,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,vs,vi,adj-no]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "理解しがたい",
+        "kana": "りかいしがたい",
+        "seq": 2531670,
+        "score": 1001,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[exp]"
+        ]
+      },
+      {
+        "text": "もの",
+        "kana": "もの",
+        "seq": 2780660,
+        "score": 48,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "であった",
+        "kana": "であった",
+        "seq": 10579486,
+        "score": 90,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "出会う",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Ichiran: ['彼', 'の', '行動', 'は', '理解しがたい', 'も', 'ので', 'あった']",
+      "Himotoki: ['彼', 'の', '行動', 'は', '理解しがたい', 'もの', 'であった']"
+    ],
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 8.637642860412598
+  }
+]

@@ -44,6 +44,8 @@ dev = [
 
 [project.scripts]
 himotoki = "himotoki.cli:main"
+himotoki-compare = "scripts.compare:main"
+himotoki-report = "scripts.report:main"
 
 [project.urls]
 Homepage = "https://github.com/msr2903/himotoki"
@@ -53,7 +55,7 @@ Issues = "https://github.com/msr2903/himotoki/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["himotoki*"]
+include = ["himotoki*", "scripts*"]
 
 [tool.black]
 line-length = 100

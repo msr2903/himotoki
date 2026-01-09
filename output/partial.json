@@ -1,0 +1,729 @@
+[
+  {
+    "sentence": "首相は記者会見で新たな政策を発表した",
+    "status": "partial",
+    "ichiran_texts": [
+      "首相",
+      "は",
+      "記者会見",
+      "で",
+      "新た",
+      "な",
+      "政策",
+      "を",
+      "発表した"
+    ],
+    "himotoki_texts": [
+      "首相",
+      "は",
+      "記者会見",
+      "で",
+      "新た",
+      "な",
+      "政策",
+      "を",
+      "発表した"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "首相",
+        "kana": "しゅしょう",
+        "seq": 1329300,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "‌は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "記者会見",
+        "kana": "きしゃかいけん",
+        "seq": 1223260,
+        "score": 1265,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[vi,vs,n]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "新た",
+        "kana": "あらた",
+        "seq": 1361510,
+        "score": 200,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "な",
+        "kana": "な",
+        "seq": 2029110,
+        "score": 6,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Adjective Stem",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "ない",
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[int]"
+        ]
+      },
+      {
+        "text": "政策",
+        "kana": "せいさく",
+        "seq": 1375950,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "発表した",
+        "kana": "はっぴょうした",
+        "seq": 1477840,
+        "score": 768,
+        "is_compound": true,
+        "components": [
+          "発表",
+          "した"
+        ],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "為る",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "首相",
+        "kana": "しゅしょう",
+        "seq": 1329300,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "は",
+        "kana": "は",
+        "seq": 2028920,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "記者会見",
+        "kana": "きしゃかいけん",
+        "seq": 1223260,
+        "score": 1265,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,vs,vi]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": []
+      },
+      {
+        "text": "新た",
+        "kana": "あらた",
+        "seq": 1361510,
+        "score": 200,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-na]"
+        ]
+      },
+      {
+        "text": "な",
+        "kana": "な",
+        "seq": 2029110,
+        "score": 6,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[int]"
+        ]
+      },
+      {
+        "text": "政策",
+        "kana": "せいさく",
+        "seq": 1375950,
+        "score": 325,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "発表した",
+        "kana": "はっぴょう した",
+        "seq": 1477840,
+        "score": 768,
+        "is_compound": true,
+        "components": [
+          "発表",
+          "した"
+        ],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "為る",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment 'な': conj_type: Adjective Stem vs None"
+    ],
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 15.175886154174805
+  },
+  {
+    "sentence": "この書類に必要事項を記入してください",
+    "status": "partial",
+    "ichiran_texts": [
+      "この",
+      "書類",
+      "に",
+      "必要事項",
+      "を",
+      "記入してください"
+    ],
+    "himotoki_texts": [
+      "この",
+      "書類",
+      "に",
+      "必要事項",
+      "を",
+      "記入してください"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "この",
+        "kana": "この",
+        "seq": 1582920,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-pn]",
+          "[adj-pn]",
+          "[adj-pn]"
+        ]
+      },
+      {
+        "text": "書類",
+        "kana": "しょるい",
+        "seq": 1344200,
+        "score": 273,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "必要事項",
+        "kana": "ひつようじこう",
+        "seq": 2848632,
+        "score": 715,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "記入してください",
+        "kana": "きにゅうしてください",
+        "seq": 1223330,
+        "score": 1624,
+        "is_compound": true,
+        "components": [
+          "記入",
+          "して",
+          "ください"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "この",
+        "kana": "この",
+        "seq": 1582920,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adj-pn]",
+          "[adj-pn]",
+          "[adj-pn]"
+        ]
+      },
+      {
+        "text": "書類",
+        "kana": "しょるい",
+        "seq": 1344200,
+        "score": 273,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "必要事項",
+        "kana": "ひつようじこう",
+        "seq": 2848632,
+        "score": 715,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "を",
+        "kana": "を",
+        "seq": 2029010,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "記入してください",
+        "kana": "きにゅう ください",
+        "seq": 1223330,
+        "score": 35824,
+        "is_compound": true,
+        "components": [
+          "記入",
+          "して",
+          "ください"
+        ],
+        "conj_type": "Imperative",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "下さる",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Segment '記入してください': conj_type: None vs Imperative"
+    ],
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 5.340326309204102
+  },
+  {
+    "sentence": "今にも雨が降りそうな空模様だ",
+    "status": "partial",
+    "ichiran_texts": [
+      "今にも",
+      "雨が降りそう",
+      "な",
+      "空模様",
+      "だ"
+    ],
+    "himotoki_texts": [
+      "今にも",
+      "雨が降りそう",
+      "な",
+      "空模様",
+      "だ"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "今にも",
+        "kana": "いまにも",
+        "seq": 1288950,
+        "score": 504,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adv]"
+        ]
+      },
+      {
+        "text": "雨が降りそう",
+        "kana": "あめがふりそう",
+        "seq": 10168561,
+        "score": 1371,
+        "is_compound": true,
+        "components": [
+          "雨が降り",
+          "そう"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      },
+      {
+        "text": "な",
+        "kana": "な",
+        "seq": 2029110,
+        "score": 6,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Adjective Stem",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "ない",
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[int]"
+        ]
+      },
+      {
+        "text": "空模様",
+        "kana": "そらもよう",
+        "seq": 1246050,
+        "score": 782,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "だ",
+        "kana": "だ",
+        "seq": 2089020,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[aux-v,cop-da,cop]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "今にも",
+        "kana": "いまにも",
+        "seq": 1288950,
+        "score": 504,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adv]"
+        ]
+      },
+      {
+        "text": "雨が降りそう",
+        "kana": "あめがふりそう",
+        "seq": 10446465,
+        "score": 4071,
+        "is_compound": true,
+        "components": [
+          "雨が降り",
+          "そう"
+        ],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      },
+      {
+        "text": "な",
+        "kana": "な",
+        "seq": 2029110,
+        "score": 6,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[int]"
+        ]
+      },
+      {
+        "text": "空模様",
+        "kana": "そらもよう",
+        "seq": 1246050,
+        "score": 782,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "だ",
+        "kana": "だ",
+        "seq": 2089020,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[aux-v,cop]"
+        ]
+      }
+    ],
+    "differences": [
+      "Segment 'な': conj_type: Adjective Stem vs None"
+    ],
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 2.8109512329101562
+  }
+]

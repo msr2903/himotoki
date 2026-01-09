@@ -69,18 +69,27 @@ for word_infos, score in results:
 
 ---
 
-## 🏗️ Project Architecture
+## 🏗️ Project Structure
 
 Himotoki is designed with modularity in mind, keeping the database, logic, and output layers distinct.
 
 ```text
 himotoki/
-├── 🧠 segment.py    # Pathfinding and segmentation logic
-├── 📖 lookup.py     # Dictionary retrieval and scoring
-├── 🔄 deconjugate/  # Conjugation rules and engine
-├── 🗄️ db/           # SQLAlchemy models and connection management
-├── 🔤 characters.py # Kana/Kanji classification and conversion
-└── 🖥️ cli.py        # Command line interface
+├── himotoki/          # Main package
+│   ├── 🧠 segment.py    # Pathfinding and segmentation logic
+│   ├── 📖 lookup.py     # Dictionary retrieval and scoring
+│   ├── 🔄 constants.py  # Shared constants and SEQ definitions
+│   ├── 🗄️ db/           # SQLAlchemy models and connection
+│   ├── 📚 loading/      # JMdict and conjugation loaders
+│   └── 🖥️ cli.py        # Command line interface
+├── scripts/           # Developer tools
+│   ├── compare.py       # Ichiran comparison suite
+│   ├── init_db.py       # Database initialization
+│   └── report.py        # HTML report generator
+├── tests/             # Test suite
+├── data/              # Dictionary data files
+├── output/            # Generated results and reports
+└── docs/              # Documentation
 ```
 
 ---
@@ -91,10 +100,13 @@ Himotoki aims for 1:1 parity with the original `ichiran` implementation. We use 
 
 ```bash
 # Run the comparison script against ichiran results
-python compare_ichiran.py
+python -m scripts.compare
+
+# Generate HTML report
+python -m scripts.report
 ```
 
-Check out `ARCHITECTURE.md` for a deep dive into the internal mechanics and scoring algorithms.
+Check out `docs/ARCHITECTURE.md` for a deep dive into the internal mechanics and scoring algorithms.
 
 ---
 

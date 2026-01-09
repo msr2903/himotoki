@@ -6,10 +6,10 @@ Compares segmentation results between Ichiran (Docker CLI) and Himotoki
 to identify discrepancies and areas for improvement.
 
 Usage:
-    python compare_ichiran.py                    # Run all tests
-    python compare_ichiran.py --quick            # Run quick subset
-    python compare_ichiran.py --sentence "猫が食べる"  # Test single sentence
-    python compare_ichiran.py --export results.json   # Export results
+    python -m scripts.compare                    # Run all tests
+    python -m scripts.compare --quick            # Run quick subset
+    python -m scripts.compare --sentence "猫が食べる"  # Test single sentence
+    python -m scripts.compare --export results.json   # Export results
 """
 
 import subprocess
@@ -20,16 +20,21 @@ from dataclasses import dataclass, field, asdict
 from typing import List, Dict, Optional, Tuple, Any
 from enum import Enum
 import time
+from pathlib import Path
 
 
 # ============================================================================
 # Configuration
 # ============================================================================
 
+# Resolve paths relative to project root
+PROJECT_ROOT = Path(__file__).parent.parent
+OUTPUT_DIR = PROJECT_ROOT / "output"
+
 ICHIRAN_CONTAINER = "ichiran-main-1"
 ICHIRAN_TIMEOUT = 30  # seconds
-ICHIRAN_CACHE_FILE = "cache.json"
-RESULTS_EXPORT_FILE = "results.json"
+ICHIRAN_CACHE_FILE = str(OUTPUT_DIR / "cache.json")
+RESULTS_EXPORT_FILE = str(OUTPUT_DIR / "results.json")
 
 # Cache a single Himotoki DB session and suffix initialization so repeated
 # comparisons don't pay the startup cost each time.
@@ -1008,16 +1013,18 @@ def export_filtered_results(results: List[ComparisonResult]):
     partials = [r for r in results if r.status == MatchStatus.PARTIAL]
     
     # Export mismatch.json
+    mismatch_file = OUTPUT_DIR / 'mismatch.json'
     mismatch_data = [_comparison_result_to_dict(r) for r in mismatches]
-    with open('mismatch.json', 'w', encoding='utf-8') as f:
+    with open(mismatch_file, 'w', encoding='utf-8') as f:
         json.dump(mismatch_data, f, ensure_ascii=False, indent=2)
-    print(f"Exported {len(mismatches)} mismatches to mismatch.json")
+    print(f"Exported {len(mismatches)} mismatches to {mismatch_file}")
     
     # Export partial.json
+    partial_file = OUTPUT_DIR / 'partial.json'
     partial_data = [_comparison_result_to_dict(r) for r in partials]
-    with open('partial.json', 'w', encoding='utf-8') as f:
+    with open(partial_file, 'w', encoding='utf-8') as f:
         json.dump(partial_data, f, ensure_ascii=False, indent=2)
-    print(f"Exported {len(partials)} partial matches to partial.json")
+    print(f"Exported {len(partials)} partial matches to {partial_file}")
 
 
 def _comparison_result_to_dict(r: ComparisonResult) -> Dict[str, Any]:
