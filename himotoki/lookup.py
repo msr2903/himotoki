@@ -150,12 +150,25 @@ from himotoki.constants import (
 # Archaic words cache - populated on first use
 _ARCHAIC_CACHE: Optional[Set[int]] = None
 
+# Conjugation data cache - (seq, tuple(conj_ids), tuple(texts)) -> List[ConjData]
+# Using a simple dict with size limit
+_CONJ_DATA_CACHE: Dict[Tuple, List[Any]] = {}
+_CONJ_DATA_CACHE_MAX = 2048
+
+# POS cache - frozenset(seqs) -> frozenset(posi)
+_POS_CACHE: Dict[frozenset, frozenset] = {}
+_POS_CACHE_MAX = 1024
+
+# UK (prefer kana) cache - frozenset(seqs) -> bool
+_UK_CACHE: Dict[frozenset, bool] = {}
+_UK_CACHE_MAX = 1024
+
 
 # ============================================================================
 # Data Structures
 # ============================================================================
 
-@dataclass
+@dataclass(slots=True)
 class ConjData:
     """
     Conjugation data for a word match.
@@ -430,7 +443,7 @@ def adjoin_word(
         )
 
 
-@dataclass
+@dataclass(slots=True)
 class Segment:
     """
     A segment representing a word match within a string.
@@ -453,7 +466,7 @@ class Segment:
         return f"<Segment({self.start}:{self.end}, '{self.get_text()}', score={self.score})>"
 
 
-@dataclass
+@dataclass(slots=True)
 class SegmentList:
     """
     A list of segments at the same position.
@@ -706,6 +719,16 @@ def get_conj_data(
     Returns:
         List of ConjData objects
     """
+    global _CONJ_DATA_CACHE
+    
+    # Create cache key from immutable inputs
+    cache_key = (seq, from_seq, tuple(sorted(conj_ids)) if conj_ids else None, 
+                 tuple(sorted(texts)) if texts else None)
+    
+    # Check cache first
+    if cache_key in _CONJ_DATA_CACHE:
+        return _CONJ_DATA_CACHE[cache_key]
+    
     # Build query for conjugations
     query = select(Conjugation).where(Conjugation.seq == seq)
     
@@ -744,6 +767,14 @@ def get_conj_data(
                 prop=prop,
                 src_map=src_map,
             ))
+    
+    # Cache result (with size limit)
+    if len(_CONJ_DATA_CACHE) >= _CONJ_DATA_CACHE_MAX:
+        # Simple eviction: clear half the cache
+        keys = list(_CONJ_DATA_CACHE.keys())[:len(_CONJ_DATA_CACHE) // 2]
+        for k in keys:
+            del _CONJ_DATA_CACHE[k]
+    _CONJ_DATA_CACHE[cache_key] = result
     
     return result
 
@@ -973,11 +1004,50 @@ def is_arch(session: Session, seq_set: Set[int]) -> bool:
     return all(seq in _ARCHAIC_CACHE for seq in seq_set)
 
 
+def is_prefer_kana(session: Session, seq_set: List[int]) -> bool:
+    """
+    Check if entries have 'uk' (usually written in kana) misc tag.
+    Cached for performance.
+    """
+    global _UK_CACHE
+    
+    cache_key = frozenset(seq_set)
+    if cache_key in _UK_CACHE:
+        return _UK_CACHE[cache_key]
+    
+    result = session.execute(
+        select(SenseProp)
+        .where(and_(
+            SenseProp.seq.in_(seq_set),
+            SenseProp.tag == 'misc',
+            SenseProp.text == 'uk'
+        ))
+    ).scalars().first() is not None
+    
+    # Cache result (with size limit)
+    if len(_UK_CACHE) >= _UK_CACHE_MAX:
+        keys = list(_UK_CACHE.keys())[:len(_UK_CACHE) // 2]
+        for k in keys:
+            del _UK_CACHE[k]
+    _UK_CACHE[cache_key] = result
+    
+    return result
+
+
 def get_non_arch_posi(session: Session, seq_set: Set[int]) -> Set[str]:
     """
     Get part-of-speech tags for entries, excluding archaic senses.
     From ichiran's get-non-arch-posi.
     """
+    global _POS_CACHE
+    
+    # Create cache key from immutable input
+    cache_key = frozenset(seq_set)
+    
+    # Check cache first
+    if cache_key in _POS_CACHE:
+        return set(_POS_CACHE[cache_key])  # Return mutable copy
+    
     arch_misc = {'arch', 'obsc', 'rare'}
     
     # Subquery to find sense_ids with archaic props
@@ -1000,7 +1070,17 @@ def get_non_arch_posi(session: Session, seq_set: Set[int]) -> Set[str]:
         .distinct()
     )
     results = session.execute(query).scalars().all()
-    return set(results)
+    result_set = set(results)
+    
+    # Cache result (with size limit)
+    if len(_POS_CACHE) >= _POS_CACHE_MAX:
+        # Simple eviction: clear half the cache
+        keys = list(_POS_CACHE.keys())[:len(_POS_CACHE) // 2]
+        for k in keys:
+            del _POS_CACHE[k]
+    _POS_CACHE[cache_key] = frozenset(result_set)
+    
+    return result_set
 
 
 # ============================================================================
@@ -1226,6 +1306,15 @@ def calc_score(
     ord_val = word.ord
     common = word.common
     
+    # Fast path: Early termination for skip words (before any DB lookups)
+    # This avoids expensive entry lookups and conjugation data retrieval
+    if seq in SKIP_WORDS:
+        return 0, {}
+    
+    # Fast path: Final particles only score at end of text
+    if not final and seq in FINAL_PRT:
+        return 0, {}
+    
     # Get entry info - counters don't have entries
     entry = None if ctr_mode else session.get(Entry, seq)
     if not entry and not ctr_mode:
@@ -1287,20 +1376,13 @@ def calc_score(
         is_arch_p = False
         posi = {'ctr'}
     else:
-        # Check for prefer kana (uk - usually written in kana)
-        prefer_kana = session.execute(
-            select(SenseProp)
-            .where(and_(
-                SenseProp.seq.in_(sp_seq_set),
-                SenseProp.tag == 'misc',
-                SenseProp.text == 'uk'
-            ))
-        ).scalars().first() is not None
+        # Check for prefer kana (uk - usually written in kana) - cached
+        prefer_kana = is_prefer_kana(session, sp_seq_set)
         
         # Check if all entries are archaic
         is_arch_p = is_arch(session, set(sp_seq_set))
         
-        # Get part-of-speech (excluding archaic senses)
+        # Get part-of-speech (excluding archaic senses) - cached
         posi = get_non_arch_posi(session, seq_set)
     
     # Common properties
@@ -1342,10 +1424,10 @@ def calc_score(
     
     use_length_bonus = 0
     
-    # Check for skip words and final particles (before ord correction per ichiran)
+    # Check for skip words in conjugation chain and final particles
+    # Note: We already checked seq in SKIP_WORDS early (line ~1230), but here we check
+    # the entire seq_set which includes conjugation sources (conj_of)
     if seq_set & SKIP_WORDS:
-        return 0, {}
-    if not final and seq in FINAL_PRT:
         return 0, {}
     if not root_p and skip_by_conj_data(conj_data):
         return 0, {}

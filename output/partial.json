@@ -315,8 +315,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 15.175886154174805
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 2.6128158569335938
   },
   {
     "sentence": "この書類に必要事項を記入してください",
@@ -540,8 +540,8 @@
     "differences": [
       "Segment '記入してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 5.340326309204102
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 2.504545211791992
   },
   {
     "sentence": "今にも雨が降りそうな空模様だ",
@@ -723,7 +723,7 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 2.8109512329101562
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 1.4981153011322021
   }
 ]

@@ -154,6 +154,131 @@ def get_kana_for_entry(session: Session, seq: int) -> str:
     return kana_text or ''
 
 
+# ============================================================================
+# Batch Preloading for Performance
+# ============================================================================
+
+class ReadingsCache:
+    """
+    Cache for batch-loaded readings to avoid repeated DB queries.
+    
+    This significantly improves performance by loading all needed readings
+    in a single query instead of one query per word.
+    """
+    
+    def __init__(self):
+        self.kanji_readings: Dict[int, str] = {}  # seq -> primary kanji text
+        self.kana_readings: Dict[int, str] = {}   # seq -> primary kana text
+        self._loaded = False
+    
+    def preload(self, session: Session, seqs: set) -> None:
+        """
+        Batch load all kanji and kana readings for the given seqs.
+        
+        Args:
+            session: Database session
+            seqs: Set of seq numbers to load
+        """
+        if not seqs:
+            return
+        
+        # Batch load kanji readings (ord=0 is primary)
+        kanji_results = session.execute(
+            select(KanjiText.seq, KanjiText.text)
+            .where(and_(KanjiText.seq.in_(seqs), KanjiText.ord == 0))
+        ).all()
+        for seq, text in kanji_results:
+            self.kanji_readings[seq] = text
+        
+        # Batch load kana readings (ord=0 is primary)
+        kana_results = session.execute(
+            select(KanaText.seq, KanaText.text)
+            .where(and_(KanaText.seq.in_(seqs), KanaText.ord == 0))
+        ).all()
+        for seq, text in kana_results:
+            self.kana_readings[seq] = text
+        
+        self._loaded = True
+    
+    def get_kanji(self, seq: int) -> Optional[str]:
+        """Get cached kanji reading for seq."""
+        return self.kanji_readings.get(seq)
+    
+    def get_kana(self, seq: int) -> str:
+        """Get cached kana reading for seq."""
+        return self.kana_readings.get(seq, '')
+    
+    def get_source_text(self, from_seq: int) -> Optional[str]:
+        """Get source text (dictionary form) for a conjugation source."""
+        # Prefer kanji form, fall back to kana
+        kanji = self.kanji_readings.get(from_seq)
+        if kanji:
+            return kanji
+        return self.kana_readings.get(from_seq)
+
+
+def collect_seqs_from_path(path: list) -> set:
+    """
+    Collect all seq numbers needed from a path for batch preloading.
+    
+    This includes:
+    - Word seqs
+    - Conjugation from_seqs (for source_text lookup)
+    
+    Args:
+        path: List of SegmentLists or Segments
+        
+    Returns:
+        Set of seq numbers to preload
+    """
+    from himotoki.lookup import CompoundWord
+    from himotoki.counters import CounterText
+    
+    seqs = set()
+    
+    for item in path:
+        if isinstance(item, SegmentList):
+            # Get seqs from all segments in the list
+            for segment in item.segments:
+                _collect_segment_seqs(segment, seqs)
+        elif isinstance(item, Segment):
+            _collect_segment_seqs(item, seqs)
+    
+    return seqs
+
+
+def _collect_segment_seqs(segment: Segment, seqs: set) -> None:
+    """Helper to collect seqs from a single segment."""
+    from himotoki.lookup import CompoundWord
+    from himotoki.counters import CounterText
+    
+    word = segment.word
+    
+    # Skip CounterText - they don't have entries
+    if isinstance(word, CounterText):
+        if word.seq:
+            seqs.add(word.seq)
+        return
+    
+    # Add word seq
+    if hasattr(word, 'seq') and word.seq:
+        seqs.add(word.seq)
+    
+    # For CompoundWords, add all component seqs
+    if isinstance(word, CompoundWord):
+        if word.primary and hasattr(word.primary, 'seq'):
+            seqs.add(word.primary.seq)
+        for w in word.words:
+            if hasattr(w, 'seq') and w.seq:
+                seqs.add(w.seq)
+    
+    # Add from_seqs from conjugation data
+    conj_data = segment.info.get('conj', []) if segment.info else []
+    for cd in conj_data:
+        if cd.from_seq:
+            seqs.add(cd.from_seq)
+
+
 def word_info_reading_str(word_info: WordInfo) -> str:
     """Get formatted reading string for WordInfo."""
     if word_info.type == WordType.KANJI or word_info.counter:
@@ -423,13 +548,18 @@ def conj_info_json(
 # WordInfo Creation Functions
 # ============================================================================
 
-def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
+def word_info_from_segment(
+    session: Session,
+    segment: Segment,
+    cache: Optional[ReadingsCache] = None,
+) -> WordInfo:
     """
     Create WordInfo from a segment.
     
     Args:
         session: Database session
         segment: Segment with word match
+        cache: Optional preloaded readings cache for performance
         
     Returns:
         WordInfo object
@@ -488,21 +618,25 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
             # Get source_text - prefer kanji form from from_seq, fall back to src_map
             # This matches ichiran's behavior of showing the dictionary form
             if cd.from_seq:
-                # Try to get kanji form first
-                kanji_text = session.execute(
-                    select(KanjiText.text)
-                    .where(and_(KanjiText.seq == cd.from_seq, KanjiText.ord == 0))
-                ).scalars().first()
-                if kanji_text:
-                    source_text = kanji_text
+                # Use cache if available, otherwise query DB
+                if cache:
+                    source_text = cache.get_source_text(cd.from_seq)
                 else:
-                    # Fall back to kana form
-                    kana_text = session.execute(
-                        select(KanaText.text)
-                        .where(and_(KanaText.seq == cd.from_seq, KanaText.ord == 0))
+                    # Try to get kanji form first
+                    kanji_text = session.execute(
+                        select(KanjiText.text)
+                        .where(and_(KanjiText.seq == cd.from_seq, KanjiText.ord == 0))
                     ).scalars().first()
-                    if kana_text:
-                        source_text = kana_text
+                    if kanji_text:
+                        source_text = kanji_text
+                    else:
+                        # Fall back to kana form
+                        kana_text = session.execute(
+                            select(KanaText.text)
+                            .where(and_(KanaText.seq == cd.from_seq, KanaText.ord == 0))
+                        ).scalars().first()
+                        if kana_text:
+                            source_text = kana_text
         else:
             # Fallback: get conjugation info from the CompoundWord itself
             # This handles suffix-created compounds where segment.info doesn't have conj data
@@ -544,10 +678,13 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
     # Determine kana reading
     if isinstance(reading, KanjiText):
         word_type = WordType.KANJI
-        # Get best kana for kanji text - try cached, then look up from DB
+        # Get best kana for kanji text - try cached, then look up from DB/cache
         kana = reading.best_kana
         if not kana:
-            kana = get_kana_for_entry(session, word.seq)
+            if cache:
+                kana = cache.get_kana(word.seq)
+            else:
+                kana = get_kana_for_entry(session, word.seq)
     else:
         word_type = WordType.KANA
         kana = reading.text
@@ -584,21 +721,25 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
         # Get source_text - prefer kanji form from from_seq, fall back to src_map
         # This matches ichiran's behavior of showing the dictionary form
         if cd.from_seq:
-            # Try to get kanji form first
-            kanji_text = session.execute(
-                select(KanjiText.text)
-                .where(and_(KanjiText.seq == cd.from_seq, KanjiText.ord == 0))
-            ).scalars().first()
-            if kanji_text:
-                source_text = kanji_text
+            # Use cache if available, otherwise query DB
+            if cache:
+                source_text = cache.get_source_text(cd.from_seq)
             else:
-                # Fall back to kana form
-                kana_text = session.execute(
-                    select(KanaText.text)
-                    .where(and_(KanaText.seq == cd.from_seq, KanaText.ord == 0))
+                # Try to get kanji form first
+                kanji_text = session.execute(
+                    select(KanjiText.text)
+                    .where(and_(KanjiText.seq == cd.from_seq, KanjiText.ord == 0))
                 ).scalars().first()
-                if kana_text:
-                    source_text = kana_text
+                if kanji_text:
+                    source_text = kanji_text
+                else:
+                    # Fall back to kana form
+                    kana_text = session.execute(
+                        select(KanaText.text)
+                        .where(and_(KanaText.seq == cd.from_seq, KanaText.ord == 0))
+                    ).scalars().first()
+                    if kana_text:
+                        source_text = kana_text
     
     return WordInfo(
         type=word_type,
@@ -618,13 +759,18 @@ def word_info_from_segment(session: Session, segment: Segment) -> WordInfo:
     )
 
 
-def word_info_from_segment_list(session: Session, segment_list: SegmentList) -> WordInfo:
+def word_info_from_segment_list(
+    session: Session,
+    segment_list: SegmentList,
+    cache: Optional[ReadingsCache] = None,
+) -> WordInfo:
     """
     Create WordInfo from a segment list (multiple interpretations).
     
     Args:
         session: Database session
         segment_list: SegmentList with multiple segments
+        cache: Optional preloaded readings cache for performance
         
     Returns:
         WordInfo object (possibly with alternatives)
@@ -640,8 +786,8 @@ def word_info_from_segment_list(session: Session, segment_list: SegmentList) -> 
             end=segment_list.end,
         )
     
-    # Create WordInfo for each segment
-    wi_list = [word_info_from_segment(session, seg) for seg in segments]
+    # Create WordInfo for each segment (pass cache)
+    wi_list = [word_info_from_segment(session, seg, cache) for seg in segments]
     wi1 = wi_list[0]
     max_score = wi1.score
     
@@ -840,6 +986,12 @@ def fill_segment_path(
     Returns:
         List of WordInfo objects covering the entire text
     """
+    # Batch preload all readings for performance
+    # This reduces N queries to 2 queries (one for kanji, one for kana)
+    seqs = collect_seqs_from_path(path)
+    cache = ReadingsCache()
+    cache.preload(session, seqs)
+    
     result = []
     idx = 0
     
@@ -857,8 +1009,8 @@ def fill_segment_path(
                     end=segment_list.start,
                 ))
             
-            # Add the segment
-            result.append(word_info_from_segment_list(session, segment_list))
+            # Add the segment (pass cache for optimized lookups)
+            result.append(word_info_from_segment_list(session, segment_list, cache))
             idx = segment_list.end
         elif isinstance(item, Segment):
             segment = item
@@ -873,8 +1025,8 @@ def fill_segment_path(
                     end=segment.start,
                 ))
             
-            # Add the segment
-            result.append(word_info_from_segment(session, segment))
+            # Add the segment (pass cache for optimized lookups)
+            result.append(word_info_from_segment(session, segment, cache))
             idx = segment.end
     
     # Add trailing gap if needed

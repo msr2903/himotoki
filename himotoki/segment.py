@@ -51,7 +51,7 @@ KANA_CLASSES = frozenset(KANA_CHARS.keys())
 # TopArray - Priority Queue for Best Paths
 # ============================================================================
 
-@dataclass
+@dataclass(slots=True)
 class TopArrayItem:
     """Item in the top array."""
     score: float

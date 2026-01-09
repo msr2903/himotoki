@@ -44,7 +44,7 @@ from himotoki.constants import (
 # Synergy Data Structure
 # ============================================================================
 
-@dataclass
+@dataclass(slots=True)
 class Synergy:
     """Represents a synergy between two adjacent segments."""
     description: str

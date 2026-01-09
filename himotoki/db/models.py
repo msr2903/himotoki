@@ -81,6 +81,9 @@ class KanjiText(Base):
         Index("ix_kanji_text_ord", "ord"),
         Index("ix_kanji_text_text", "text"),
         Index("ix_kanji_text_common", "common"),
+        # Composite indexes for common query patterns
+        Index("ix_kanji_text_text_seq", "text", "seq"),  # find_word lookups
+        Index("ix_kanji_text_seq_ord", "seq", "ord"),  # ordered retrieval by entry
     )
 
     def __repr__(self):
@@ -112,10 +115,13 @@ class KanaText(Base):
         Index("ix_kana_text_ord", "ord"),
         Index("ix_kana_text_text", "text"),
         Index("ix_kana_text_common", "common"),
+        # Composite indexes for common query patterns
+        Index("ix_kana_text_text_seq", "text", "seq"),  # find_word lookups
+        Index("ix_kana_text_seq_ord", "seq", "ord"),  # ordered retrieval by entry
     )
 
     def __repr__(self):
-        return f"<KanaText(id={self.id}, seq={self.seq}, text='{self.text}')>"
+        return f"<KanaText(id={self.id}, seq={self.seq}, text='{self.text}')"
 
 
 class Sense(Base):
@@ -238,6 +244,8 @@ class Conjugation(Base):
     __table_args__ = (
         Index("ix_conjugation_seq", "seq"),
         Index("ix_conjugation_from", "from"),
+        # Composite index for conjugation chain lookups
+        Index("ix_conjugation_from_via", "from", "via"),
     )
 
     def __repr__(self):

@@ -64,13 +64,16 @@ def get_engine(db_path: Optional[str] = None, echo: bool = False) -> Engine:
             poolclass=StaticPool,  # Use static pool for SQLite
         )
         
-        # Enable foreign keys for SQLite
+        # Enable performance optimizations for SQLite
         @event.listens_for(_engine, "connect")
         def set_sqlite_pragma(dbapi_connection, connection_record):
             cursor = dbapi_connection.cursor()
             cursor.execute("PRAGMA foreign_keys=ON")
             cursor.execute("PRAGMA journal_mode=WAL")  # Better concurrent access
             cursor.execute("PRAGMA cache_size=-64000")  # 64MB cache
+            cursor.execute("PRAGMA mmap_size=268435456")  # 256MB memory-mapped I/O
+            cursor.execute("PRAGMA temp_store=MEMORY")  # Store temp tables in memory
+            cursor.execute("PRAGMA synchronous=NORMAL")  # Safe but faster than FULL
             cursor.close()
         
         return _engine

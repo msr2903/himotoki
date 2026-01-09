@@ -179,8 +179,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 15.457574844360352
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 4.064579010009766
   },
   {
     "sentence": "それマジでやばくない",
@@ -322,8 +322,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 35.93784809112549
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 6.00941276550293
   },
   {
     "sentence": "お忙しいところ恐れ入りますが",
@@ -471,8 +471,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 4.16646409034729
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 3.005871295928955
   },
   {
     "sentence": "首相は記者会見で新たな政策を発表した",
@@ -790,8 +790,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 15.175886154174805
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 2.6128158569335938
   },
   {
     "sentence": "私はその意見に賛成できないと思います",
@@ -1078,7 +1078,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 23.653252840042114
+    "time_himotoki": 4.386139869689941
   },
   {
     "sentence": "この書類に必要事項を記入してください",
@@ -1302,8 +1302,8 @@
     "differences": [
       "Segment '記入してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 5.340326309204102
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 2.504545211791992
   },
   {
     "sentence": "もし時間があれば手伝ってくれませんか",
@@ -1519,8 +1519,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 10.796171188354492
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 4.097880840301514
   },
   {
     "sentence": "電車が遅れたので遅刻してしまいました",
@@ -1698,8 +1698,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 12.973253726959229
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 3.9339911937713623
   },
   {
     "sentence": "桜の花が満開で公園は多くの人で賑わっていた",
@@ -2159,8 +2159,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.7220458984375e-06,
-    "time_himotoki": 24.573158979415894
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 4.195291996002197
   },
   {
     "sentence": "この本を読んでみたいと思っています",
@@ -2408,8 +2408,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 7.534143924713135
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 2.6676228046417236
   },
   {
     "sentence": "彼がそう言ったからといって信じるわけにはいかない",
@@ -2621,8 +2621,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 7.948462009429932
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 4.038151741027832
   },
   {
     "sentence": "今にも雨が降りそうな空模様だ",
@@ -2804,8 +2804,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 2.8109512329101562
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 1.4981153011322021
   },
   {
     "sentence": "電車の中で足を踏まれてしまった",
@@ -3061,8 +3061,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 6.594951868057251
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 2.7041571140289307
   },
   {
     "sentence": "この電車は新宿駅に止まりますか",
@@ -3348,8 +3348,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 7.3869030475616455
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 4.559115648269653
   },
   {
     "sentence": "そんなこと言ったってしょうがないじゃん",
@@ -3531,8 +3531,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 3.4021120071411133
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 2.604797840118408
   },
   {
     "sentence": "彼の行動は理解しがたいものであった",
@@ -3798,8 +3798,8 @@
       "Ichiran: ['彼', 'の', '行動', 'は', '理解しがたい', 'も', 'ので', 'あった']",
       "Himotoki: ['彼', 'の', '行動', 'は', '理解しがたい', 'もの', 'であった']"
     ],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 8.637642860412598
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 3.615100860595703
   },
   {
     "sentence": "この会社には従業員が三百人以上いる",
@@ -4089,7 +4089,7 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.821487426757812e-06,
-    "time_himotoki": 2.8395819664001465
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 1.623384714126587
   }
 ]
