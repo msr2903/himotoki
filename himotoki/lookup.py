@@ -200,14 +200,24 @@ class WordMatch:
     reading: Union[KanjiText, KanaText]
     conjugations: Optional[List[int]] = None  # List of conjugation IDs, or :root marker
     hinted: bool = False
+    # Cached properties for performance (avoid repeated isinstance checks)
+    _word_type: Optional[str] = field(default=None, repr=False)
+    _seq: Optional[int] = field(default=None, repr=False)
+    _text: Optional[str] = field(default=None, repr=False)
+    
+    def __post_init__(self):
+        # Pre-compute cached properties on creation
+        self._word_type = 'kanji' if isinstance(self.reading, KanjiText) else 'kana'
+        self._seq = self.reading.seq
+        self._text = self.reading.text
     
     @property
     def seq(self) -> int:
-        return self.reading.seq
+        return self._seq
     
     @property
     def text(self) -> str:
-        return self.reading.text
+        return self._text
     
     @property
     def common(self) -> Optional[int]:
@@ -220,9 +230,7 @@ class WordMatch:
     @property
     def word_type(self) -> str:
         """Returns 'kanji' or 'kana' based on reading type."""
-        if isinstance(self.reading, KanjiText):
-            return 'kanji'
-        return 'kana'
+        return self._word_type
     
     @property
     def is_root(self) -> bool:
@@ -240,7 +248,7 @@ class WordMatch:
         return []
     
     def __repr__(self):
-        return f"<WordMatch(seq={self.seq}, text='{self.text}', type={self.word_type})>"
+        return f"<WordMatch(seq={self._seq}, text='{self._text}', type={self._word_type})>"
 
 
 @dataclass
@@ -466,11 +474,26 @@ class Segment:
     info: Dict[str, Any] = field(default_factory=dict)
     text: Optional[str] = None  # Cached text
     top: bool = False  # Whether this is the top segment in its list
+    # Filter result cache: filter_id -> bool result
+    # This avoids re-running expensive filters on the same segment
+    _filter_cache: Optional[Dict[int, bool]] = None
     
     def get_text(self) -> str:
         if self.text is None:
             self.text = self.word.text
         return self.text
+    
+    def get_filter_result(self, filter_id: int) -> Optional[bool]:
+        """Get cached filter result if available."""
+        if self._filter_cache is None:
+            return None
+        return self._filter_cache.get(filter_id)
+    
+    def set_filter_result(self, filter_id: int, result: bool) -> None:
+        """Cache a filter result."""
+        if self._filter_cache is None:
+            self._filter_cache = {}
+        self._filter_cache[filter_id] = result
     
     def __repr__(self):
         return f"<Segment({self.start}:{self.end}, '{self.get_text()}', score={self.score})>"

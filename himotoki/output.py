@@ -161,6 +161,40 @@ def get_kana_for_entry(session: Session, seq: int) -> str:
 
 
 # ============================================================================
+# Global Meanings Cache for Performance
+# ============================================================================
+
+# Global cache for meanings and POS data (persists across analyze() calls)
+# Format: {seq: (meanings_list, pos_string)}
+_MEANINGS_CACHE: Dict[int, tuple] = {}
+
+# Maximum cache size to prevent unbounded memory growth
+_MEANINGS_CACHE_MAX_SIZE = 50000
+
+
+def get_cached_meanings(seq: int) -> Optional[tuple]:
+    """Get cached meanings for a seq if available."""
+    return _MEANINGS_CACHE.get(seq)
+
+
+def cache_meanings(seq: int, meanings: List[str], pos: Optional[str]) -> None:
+    """Cache meanings for a seq."""
+    global _MEANINGS_CACHE
+    # Simple LRU-ish: if cache is too large, clear half of it
+    if len(_MEANINGS_CACHE) >= _MEANINGS_CACHE_MAX_SIZE:
+        # Keep the most recent half (dict preserves insertion order in Python 3.7+)
+        items = list(_MEANINGS_CACHE.items())
+        _MEANINGS_CACHE = dict(items[len(items) // 2:])
+    _MEANINGS_CACHE[seq] = (meanings, pos)
+
+
+def clear_meanings_cache() -> None:
+    """Clear the global meanings cache (for testing)."""
+    global _MEANINGS_CACHE
+    _MEANINGS_CACHE = {}
+
+
+# ============================================================================
 # Batch Preloading for Performance
 # ============================================================================
 
@@ -1059,69 +1093,86 @@ def populate_meanings(session: Session, word_infos: List[WordInfo]) -> None:
     """
     Populate meanings and pos fields for a list of WordInfo objects.
     
-    This batch-loads meanings efficiently to avoid N+1 queries.
+    Uses a global cache to avoid repeated DB queries for the same words.
+    Only queries the database for seqs not already in cache.
     
     Args:
         session: Database session
         word_infos: List of WordInfo objects to populate
     """
-    # Collect all seqs that need meanings
+    # Collect all seqs that need meanings, checking cache first
     seq_to_words: Dict[int, List[WordInfo]] = {}
+    uncached_seqs: List[int] = []
+    
     for wi in word_infos:
         if wi.seq and wi.type != WordType.GAP:
             # Handle list seqs (compound words) - use first seq
             seq = wi.seq[0] if isinstance(wi.seq, list) else wi.seq
             if seq not in seq_to_words:
                 seq_to_words[seq] = []
+                # Check if we already have this in cache
+                cached = get_cached_meanings(seq)
+                if cached is None:
+                    uncached_seqs.append(seq)
             seq_to_words[seq].append(wi)
     
     if not seq_to_words:
         return
     
-    # Batch load senses for all seqs
-    seqs = list(seq_to_words.keys())
-    
-    # Query all senses and glosses in one go
-    senses_query = (
-        select(Sense.seq, Sense.ord, func.group_concat(Gloss.text, '; '))
-        .join(Gloss, Gloss.sense_id == Sense.id, isouter=True)
-        .where(Sense.seq.in_(seqs))
-        .group_by(Sense.id)
-        .order_by(Sense.seq, Sense.ord)
-    )
-    senses_results = session.execute(senses_query).all()
-    
-    # Query POS for all seqs
-    pos_query = (
-        select(Sense.seq, SenseProp.text)
-        .join(SenseProp, SenseProp.sense_id == Sense.id)
-        .where(and_(Sense.seq.in_(seqs), SenseProp.tag == 'pos', Sense.ord == 0))
-        .order_by(Sense.seq, SenseProp.ord)
-    )
-    pos_results = session.execute(pos_query).all()
-    
-    # Build meanings by seq
+    # Build lookup dicts - start with empty, will populate from cache or DB
     meanings_by_seq: Dict[int, List[str]] = {}
-    for seq, ord_val, gloss in senses_results:
-        if seq not in meanings_by_seq:
-            meanings_by_seq[seq] = []
-        if gloss:
-            meanings_by_seq[seq].append(gloss)
+    pos_by_seq: Dict[int, Optional[str]] = {}
     
-    # Build POS by seq (combine all POS tags for first sense)
-    pos_by_seq: Dict[int, str] = {}
-    for seq, pos_text in pos_results:
-        if seq not in pos_by_seq:
-            pos_by_seq[seq] = []
-        pos_by_seq[seq].append(pos_text) if isinstance(pos_by_seq.get(seq), list) else None
+    # Populate from cache for already-cached seqs
+    for seq in seq_to_words.keys():
+        cached = get_cached_meanings(seq)
+        if cached is not None:
+            meanings_by_seq[seq] = cached[0]
+            pos_by_seq[seq] = cached[1]
     
-    # Actually build the pos strings
-    pos_by_seq_temp: Dict[int, List[str]] = {}
-    for seq, pos_text in pos_results:
-        if seq not in pos_by_seq_temp:
-            pos_by_seq_temp[seq] = []
-        pos_by_seq_temp[seq].append(pos_text)
-    pos_by_seq = {seq: f"[{','.join(tags)}]" for seq, tags in pos_by_seq_temp.items()}
+    # Only query DB for uncached seqs
+    if uncached_seqs:
+        # Query all senses and glosses in one go
+        senses_query = (
+            select(Sense.seq, Sense.ord, func.group_concat(Gloss.text, '; '))
+            .join(Gloss, Gloss.sense_id == Sense.id, isouter=True)
+            .where(Sense.seq.in_(uncached_seqs))
+            .group_by(Sense.id)
+            .order_by(Sense.seq, Sense.ord)
+        )
+        senses_results = session.execute(senses_query).all()
+        
+        # Query POS for all uncached seqs
+        pos_query = (
+            select(Sense.seq, SenseProp.text)
+            .join(SenseProp, SenseProp.sense_id == Sense.id)
+            .where(and_(Sense.seq.in_(uncached_seqs), SenseProp.tag == 'pos', Sense.ord == 0))
+            .order_by(Sense.seq, SenseProp.ord)
+        )
+        pos_results = session.execute(pos_query).all()
+        
+        # Build meanings by seq from DB results
+        for seq, ord_val, gloss in senses_results:
+            if seq not in meanings_by_seq:
+                meanings_by_seq[seq] = []
+            if gloss:
+                meanings_by_seq[seq].append(gloss)
+        
+        # Build POS by seq from DB results
+        pos_by_seq_temp: Dict[int, List[str]] = {}
+        for seq, pos_text in pos_results:
+            if seq not in pos_by_seq_temp:
+                pos_by_seq_temp[seq] = []
+            pos_by_seq_temp[seq].append(pos_text)
+        
+        for seq, tags in pos_by_seq_temp.items():
+            pos_by_seq[seq] = f"[{','.join(tags)}]"
+        
+        # Cache the newly loaded data
+        for seq in uncached_seqs:
+            meanings = meanings_by_seq.get(seq, [])
+            pos = pos_by_seq.get(seq)
+            cache_meanings(seq, meanings, pos)
     
     # Populate WordInfo objects
     for seq, word_list in seq_to_words.items():
