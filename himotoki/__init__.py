@@ -4,6 +4,8 @@ A Python port of ichiran (https://github.com/tshatrov/ichiran)
 """
 
 import asyncio
+import logging
+import os
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from contextlib import contextmanager
@@ -11,19 +13,20 @@ from typing import Optional, Tuple, List, Any, Generator
 
 __version__ = "0.1.2"
 
-# Re-export Pydantic models for convenient access
-from himotoki.models import WordResult, AnalysisResult, VocabularyResult, VocabularyItem
+# Logger for himotoki operations (users can attach handlers for request tracing)
+logger = logging.getLogger("himotoki")
 
 # =============================================================================
 # Configuration Constants
 # =============================================================================
 
 # Maximum allowed text length to prevent DoS attacks
-# Adjust based on your use case and server capacity
-MAX_TEXT_LENGTH: int = 10000  # characters
+# Override with HIMOTOKI_MAX_TEXT_LENGTH environment variable
+MAX_TEXT_LENGTH: int = int(os.environ.get("HIMOTOKI_MAX_TEXT_LENGTH", 100))
 
 # Default timeout for analysis (seconds)
-DEFAULT_TIMEOUT: float = 30.0
+# Override with HIMOTOKI_DEFAULT_TIMEOUT environment variable
+DEFAULT_TIMEOUT: float = float(os.environ.get("HIMOTOKI_DEFAULT_TIMEOUT", 30.0))
 
 # Thread pool for async operations (SQLite is not async-native)
 _executor: Optional[ThreadPoolExecutor] = None

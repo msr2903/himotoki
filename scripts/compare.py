@@ -51,6 +51,7 @@ def get_himotoki_session():
     global _himotoki_session, _himotoki_suffixes_ready
     from himotoki.db.connection import get_session, get_db_path
     from himotoki.suffixes import init_suffixes
+    import himotoki
     
     db_path = get_db_path()
     if not db_path:
@@ -63,6 +64,7 @@ def get_himotoki_session():
     
     if not _himotoki_suffixes_ready:
         init_suffixes(_himotoki_session)
+        himotoki.warm_up()  # Pre-initialize all caches for faster analysis
         _himotoki_suffixes_ready = True
     
     return _himotoki_session
