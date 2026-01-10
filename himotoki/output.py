@@ -83,6 +83,10 @@ class WordInfo:
     conj_fml: bool = False  # True if formal/polite form
     source_text: Optional[str] = None  # Dictionary form for conjugated words
     
+    # NEW: Meanings and POS - populated during analysis
+    meanings: List[str] = field(default_factory=list)  # List of gloss strings
+    pos: Optional[str] = None  # Part of speech (e.g., "[n,vs,vt]")
+    
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary (for JSON serialization)."""
         return {
@@ -106,6 +110,8 @@ class WordInfo:
             'conj_neg': self.conj_neg,
             'conj_fml': self.conj_fml,
             'source_text': self.source_text,
+            'meanings': self.meanings,
+            'pos': self.pos,
         }
 
 
@@ -974,6 +980,7 @@ def fill_segment_path(
     session: Session,
     text: str,
     path: List[SegmentList],
+    include_meanings: bool = True,
 ) -> List[WordInfo]:
     """
     Fill gaps in segment path and convert to WordInfo list.
@@ -982,6 +989,7 @@ def fill_segment_path(
         session: Database session
         text: Original text
         path: List of SegmentLists or Segments from find_best_path
+        include_meanings: If True, populate meanings field (default True)
         
     Returns:
         List of WordInfo objects covering the entire text
@@ -1040,7 +1048,88 @@ def fill_segment_path(
             end=len(text),
         ))
     
+    # Populate meanings if requested
+    if include_meanings:
+        populate_meanings(session, result)
+    
     return result
+
+
+def populate_meanings(session: Session, word_infos: List[WordInfo]) -> None:
+    """
+    Populate meanings and pos fields for a list of WordInfo objects.
+    
+    This batch-loads meanings efficiently to avoid N+1 queries.
+    
+    Args:
+        session: Database session
+        word_infos: List of WordInfo objects to populate
+    """
+    # Collect all seqs that need meanings
+    seq_to_words: Dict[int, List[WordInfo]] = {}
+    for wi in word_infos:
+        if wi.seq and wi.type != WordType.GAP:
+            # Handle list seqs (compound words) - use first seq
+            seq = wi.seq[0] if isinstance(wi.seq, list) else wi.seq
+            if seq not in seq_to_words:
+                seq_to_words[seq] = []
+            seq_to_words[seq].append(wi)
+    
+    if not seq_to_words:
+        return
+    
+    # Batch load senses for all seqs
+    seqs = list(seq_to_words.keys())
+    
+    # Query all senses and glosses in one go
+    senses_query = (
+        select(Sense.seq, Sense.ord, func.group_concat(Gloss.text, '; '))
+        .join(Gloss, Gloss.sense_id == Sense.id, isouter=True)
+        .where(Sense.seq.in_(seqs))
+        .group_by(Sense.id)
+        .order_by(Sense.seq, Sense.ord)
+    )
+    senses_results = session.execute(senses_query).all()
+    
+    # Query POS for all seqs
+    pos_query = (
+        select(Sense.seq, SenseProp.text)
+        .join(SenseProp, SenseProp.sense_id == Sense.id)
+        .where(and_(Sense.seq.in_(seqs), SenseProp.tag == 'pos', Sense.ord == 0))
+        .order_by(Sense.seq, SenseProp.ord)
+    )
+    pos_results = session.execute(pos_query).all()
+    
+    # Build meanings by seq
+    meanings_by_seq: Dict[int, List[str]] = {}
+    for seq, ord_val, gloss in senses_results:
+        if seq not in meanings_by_seq:
+            meanings_by_seq[seq] = []
+        if gloss:
+            meanings_by_seq[seq].append(gloss)
+    
+    # Build POS by seq (combine all POS tags for first sense)
+    pos_by_seq: Dict[int, str] = {}
+    for seq, pos_text in pos_results:
+        if seq not in pos_by_seq:
+            pos_by_seq[seq] = []
+        pos_by_seq[seq].append(pos_text) if isinstance(pos_by_seq.get(seq), list) else None
+    
+    # Actually build the pos strings
+    pos_by_seq_temp: Dict[int, List[str]] = {}
+    for seq, pos_text in pos_results:
+        if seq not in pos_by_seq_temp:
+            pos_by_seq_temp[seq] = []
+        pos_by_seq_temp[seq].append(pos_text)
+    pos_by_seq = {seq: f"[{','.join(tags)}]" for seq, tags in pos_by_seq_temp.items()}
+    
+    # Populate WordInfo objects
+    for seq, word_list in seq_to_words.items():
+        meanings = meanings_by_seq.get(seq, [])
+        pos = pos_by_seq.get(seq)
+        for wi in word_list:
+            wi.meanings = meanings
+            wi.pos = pos
 
 
 def dict_segment(
