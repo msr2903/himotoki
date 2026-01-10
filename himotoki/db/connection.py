@@ -16,8 +16,31 @@ from sqlalchemy.pool import StaticPool
 
 from himotoki.db.models import Base, create_all_tables
 
-# Default database path
-DEFAULT_DB_PATH = Path(__file__).parent.parent.parent / "data" / "himotoki.db"
+# Default database path - computed lazily to allow setup module to configure
+# Priority: 1. HIMOTOKI_DB_PATH env var, 2. ~/.himotoki/, 3. package data/
+_DEFAULT_DB_PATH: Optional[Path] = None
+
+def _get_default_db_path() -> Path:
+    """Get default database path, checking user home first."""
+    global _DEFAULT_DB_PATH
+    if _DEFAULT_DB_PATH is not None:
+        return _DEFAULT_DB_PATH
+    
+    # Check user home directory first
+    user_db = Path.home() / ".himotoki" / "himotoki.db"
+    if user_db.exists():
+        _DEFAULT_DB_PATH = user_db
+        return _DEFAULT_DB_PATH
+    
+    # Fall back to package data directory (for development)
+    package_db = Path(__file__).parent.parent.parent / "data" / "himotoki.db"
+    if package_db.exists():
+        _DEFAULT_DB_PATH = package_db
+        return _DEFAULT_DB_PATH
+    
+    # Return user path as default (for new installs)
+    _DEFAULT_DB_PATH = user_db
+    return _DEFAULT_DB_PATH
 
 # Module-level state
 _engine: Optional[Engine] = None
@@ -50,7 +73,7 @@ def get_engine(db_path: Optional[str] = None, echo: bool = False) -> Engine:
             return _engine
         
         if db_path is None:
-            db_path = os.environ.get("HIMOTOKI_DB_PATH", str(DEFAULT_DB_PATH))
+            db_path = os.environ.get("HIMOTOKI_DB_PATH", str(_get_default_db_path()))
         
         # Ensure directory exists
         db_path = Path(db_path)
@@ -157,8 +180,9 @@ def get_db_path() -> Optional[str]:
         return None
     
     # Check default path
-    if DEFAULT_DB_PATH.exists():
-        return str(DEFAULT_DB_PATH)
+    default_path = _get_default_db_path()
+    if default_path.exists():
+        return str(default_path)
     
     return None
 

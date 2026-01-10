@@ -175,17 +175,62 @@ def main_init_db(args: list) -> int:
     return init_db_command(parsed)
 
 
+def main_setup(args: list) -> int:
+    """CLI entry point for setup subcommand."""
+    import argparse as ap
+    
+    parser = ap.ArgumentParser(
+        description='Set up the himotoki database',
+        prog='himotoki setup',
+    )
+    
+    parser.add_argument(
+        '--yes', '-y',
+        action='store_true',
+        help='Skip confirmation prompt',
+    )
+    
+    parser.add_argument(
+        '--force', '-f',
+        action='store_true',
+        help='Force rebuild even if database exists',
+    )
+    
+    parsed = parser.parse_args(args)
+    
+    from himotoki.setup import run_setup, is_database_ready, get_db_path, prompt_for_setup
+    
+    # Check if already set up
+    if is_database_ready() and not parsed.force:
+        print(f"✅ Database already exists at: {get_db_path()}")
+        print("   Use --force to rebuild.")
+        return 0
+    
+    # Prompt for confirmation unless --yes
+    if not parsed.yes:
+        if not prompt_for_setup():
+            return 1
+        print()
+    
+    # Run setup
+    success = run_setup(force=parsed.force, confirm=False)
+    return 0 if success else 1
+
+
 def main(args: Optional[list] = None) -> int:
     """Main CLI entry point."""
-    # Check for init-db subcommand
+    # Check for subcommands
     args_list = args if args is not None else sys.argv[1:]
+    
+    if args_list and args_list[0] == 'setup':
+        return main_setup(args_list[1:])
     if args_list and args_list[0] == 'init-db':
         return main_init_db(args_list[1:])
     
     parser = argparse.ArgumentParser(
         description='Command line interface for Himotoki (Japanese Morphological Analyzer)',
         prog='himotoki',
-        epilog='Subcommands:\n  himotoki init-db    Initialize the database from JMdict',
+        epilog='Subcommands:\n  himotoki setup      Set up the dictionary database (recommended)\n  himotoki init-db    Initialize database from local JMdict file',
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     
@@ -242,11 +287,21 @@ def main(args: Optional[list] = None) -> int:
         parser.print_help()
         return 1
     
-    # Get database session
-    db_path = parsed.database or get_db_path()
-    if not db_path:
-        print('Error: No database found. Set HIMOTOKI_DB or use --database.', file=sys.stderr)
-        return 1
+    # Get database session - with first-use setup prompt
+    db_path = parsed.database
+    if db_path is None:
+        db_path = get_db_path()
+    
+    if not db_path or not Path(db_path).exists():
+        # First-use experience: prompt for setup
+        from himotoki.setup import ensure_database_or_prompt, get_db_path as setup_get_db_path
+        
+        if not ensure_database_or_prompt():
+            print("\nRun 'himotoki setup' when you're ready to initialize the database.", file=sys.stderr)
+            return 1
+        
+        # After setup, get the new database path
+        db_path = str(setup_get_db_path())
     
     try:
         session = get_session(db_path)

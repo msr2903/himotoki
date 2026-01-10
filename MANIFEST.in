@@ -1,0 +1,37 @@
+# Include essential files
+include LICENSE
+include README.md
+include pyproject.toml
+
+# Include data directory structure and bundled data files
+# These small CSV files (conjugation data) are bundled with the package
+recursive-include data *.md *.csv .gitkeep
+recursive-include himotoki/data *.csv
+
+# Exclude large files that should not be packaged
+recursive-exclude data *.db *.sqlite *.xml *.gz *.pgdump
+
+# Include test fixtures but not large test data
+recursive-include tests *.py
+recursive-include tests/data *.json *.txt
+
+# Exclude development files
+exclude .gitignore
+exclude .coverage
+exclude uv.lock
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * .DS_Store
+
+# Exclude build artifacts
+prune build
+prune dist
+prune *.egg-info
+prune .pytest_cache
+prune .hypothesis
+prune .venv
+prune .git
+prune ichiran-source-code
+prune output
+prune .kiro
+prune .vscode

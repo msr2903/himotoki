@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-**Himotoki** (紐解き, "unraveling" or "untying strings") is a high-performance Python port of [ichiran](https://github.com/tshatrov/ichiran), the comprehensive Japanese morphological analyzer. It provides sophisticated text segmentation, dictionary lookup, and conjugation analysis, all powered by a portable SQLite backend.
+**Himotoki** (紐解き, "unraveling" or "untying strings") is a Python remake of [ichiran](https://github.com/tshatrov/ichiran), the comprehensive Japanese morphological analyzer. It provides sophisticated text segmentation, dictionary lookup, and conjugation analysis, all powered by a portable SQLite backend.
 
 ---
 
@@ -24,12 +24,37 @@
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/himotoki/himotoki.git
-cd himotoki
+pip install himotoki
+```
 
-# Install in development mode with all dependencies
-pip install -e ".[dev]"
+### First-Time Setup
+
+On first use, Himotoki will prompt you to download and initialize the dictionary database:
+
+```bash
+himotoki "日本語テキスト"
+```
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧶 Welcome to Himotoki!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+First-time setup required. This will:
+  • Download JMdict dictionary data (~15MB compressed)
+  • Generate optimized SQLite database (~3GB)
+  • Store data in ~/.himotoki/
+
+Proceed with setup? [Y/n]:
+```
+
+> ⚠️ **Disk Space**: The database requires approximately **3GB** of free disk space.  
+> The setup process takes approximately **10-20 minutes** to complete.
+
+You can also run setup manually:
+```bash
+himotoki setup            # Interactive setup
+himotoki setup --yes      # Non-interactive (for scripts/CI)
 ```
 
 ### Quick CLI Usage
@@ -52,19 +77,17 @@ himotoki -f "学校で勉強しています"
 Integrate Himotoki into your own projects with ease:
 
 ```python
-from himotoki.db.connection import get_session
-from himotoki.output import dict_segment
+import himotoki
 
-# Initialize session
-session = get_session()
+# Optional: pre-warm caches for faster first request
+himotoki.warm_up()
 
-# Analyze a sentence
-results = dict_segment(session, "日本語を勉強しています", limit=1)
+# Analyze Japanese text
+results = himotoki.analyze("日本語を勉強しています")
 
-for word_infos, score in results:
-    print(f"Path Score: {score}")
-    for wi in word_infos:
-        print(f"Result: {wi.text} 【{wi.kana}】 - {wi.gloss[:50]}...")
+for words, score in results:
+    for w in words:
+        print(f"{w.text} 【{w.kana}】 - {w.gloss[:50]}...")
 ```
 
 ---
@@ -94,25 +117,19 @@ himotoki/
 
 ---
 
-## 📊 Evaluation & Correctness
-
-Himotoki aims for 1:1 parity with the original `ichiran` implementation. We use a comprehensive evaluation suite to track accuracy:
-
-```bash
-# Run the comparison script against ichiran results
-python -m scripts.compare
-
-# Generate HTML report
-python -m scripts.report
-```
-
-Check out `docs/ARCHITECTURE.md` for a deep dive into the internal mechanics and scoring algorithms.
-
----
-
 ## 🛠️ Development
 
 We welcome contributions! To get started:
+
+### Install from Source
+
+```bash
+git clone https://github.com/msr2903/himotoki.git
+cd himotoki
+pip install -e ".[dev]"
+```
+
+### Development Commands
 
 1. **Tests**: `pytest`
 2. **Coverage**: `pytest --cov=himotoki`
