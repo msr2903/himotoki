@@ -4,11 +4,39 @@ Consolidated constants for Himotoki.
 This module provides a single source of truth for:
 - Conjugation type IDs and their human-readable names
 - Common JMdict sequence numbers (SEQ constants)
+- Interned POS tag strings for memory efficiency
 
 All other modules should import from here to avoid duplication.
 """
 
+import sys
 from typing import Dict, Set, Tuple, Optional, List
+
+
+# ============================================================================
+# Interned POS Tags (for memory efficiency)
+# ============================================================================
+# Using sys.intern() ensures each string exists only once in memory.
+# These are the most frequently used part-of-speech tags.
+
+POS_TAGS: Dict[str, str] = {
+    tag: sys.intern(tag) for tag in [
+        'n', 'n-adv', 'n-pref', 'n-suf', 'n-t',
+        'v1', 'v1-s', 'v5aru', 'v5b', 'v5g', 'v5k', 'v5k-s', 'v5m', 'v5n',
+        'v5r', 'v5r-i', 'v5s', 'v5t', 'v5u', 'v5u-s', 'v5uru', 'vk', 'vs',
+        'vs-i', 'vs-s', 'vz', 'vi', 'vt', 'vs-c',
+        'adj-i', 'adj-ix', 'adj-na', 'adj-no', 'adj-pn', 'adj-t', 'adj-f',
+        'adv', 'adv-to', 'aux', 'aux-v', 'aux-adj',
+        'conj', 'cop', 'ctr', 'exp', 'int', 'pn', 'pref', 'prt', 'suf', 'unc',
+        # Common sense tags
+        'uk', 'arch', 'male', 'fem', 'vulg', 'hon', 'hum', 'col', 'fam',
+    ]
+}
+
+
+def intern_pos(pos: str) -> str:
+    """Get interned version of POS tag for memory efficiency."""
+    return POS_TAGS.get(pos, pos)
 
 # ============================================================================
 # Conjugation Type Constants

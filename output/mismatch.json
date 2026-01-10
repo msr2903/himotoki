@@ -198,275 +198,8 @@
       "Ichiran: ['もう', '帰ん', 'なきゃいけない', 'ん', 'だけど']",
       "Himotoki: ['もう', '帰', 'ん', 'なきゃいけない', 'ん', 'だけど']"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 2.2174289226531982
-  },
-  {
-    "sentence": "なぜそうなったのか今でも不思議に思う",
-    "status": "mismatch",
-    "ichiran_texts": [
-      "なぜ",
-      "そう",
-      "なった",
-      "のか",
-      "今でも",
-      "不思議",
-      "に",
-      "思う"
-    ],
-    "himotoki_texts": [
-      "なぜそう",
-      "なった",
-      "のか",
-      "今でも",
-      "不思議",
-      "に",
-      "思う"
-    ],
-    "ichiran_segments": [
-      {
-        "text": "なぜ",
-        "kana": "なぜ",
-        "seq": 1577120,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adv]"
-        ]
-      },
-      {
-        "text": "そう",
-        "kana": "そう",
-        "seq": 1006610,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[aux,adj-na]"
-        ]
-      },
-      {
-        "text": "なった",
-        "kana": "なった",
-        "seq": 10371749,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "成る",
-        "pos": []
-      },
-      {
-        "text": "のか",
-        "kana": "のか",
-        "seq": 2527710,
-        "score": 24,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "今でも",
-        "kana": "いまでも",
-        "seq": 1288920,
-        "score": 264,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adv]"
-        ]
-      },
-      {
-        "text": "不思議",
-        "kana": "ふしぎ",
-        "seq": 1492570,
-        "score": 782,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adj-na,n]",
-          "[adv-to]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "思う",
-        "kana": "おもう",
-        "seq": 1589350,
-        "score": 192,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[v5u,vt]",
-          "[v5u,vt]",
-          "[v5u,vt]"
-        ]
-      }
-    ],
-    "himotoki_segments": [
-      {
-        "text": "なぜそう",
-        "kana": "なぜそう",
-        "seq": 10195059,
-        "score": 132,
-        "is_compound": true,
-        "components": [
-          "なぜ",
-          "そう"
-        ],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": []
-      },
-      {
-        "text": "なった",
-        "kana": "なった",
-        "seq": 10368488,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "生る",
-        "pos": []
-      },
-      {
-        "text": "のか",
-        "kana": "のか",
-        "seq": 2527710,
-        "score": 24,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "今でも",
-        "kana": "いまでも",
-        "seq": 1288920,
-        "score": 264,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adv]"
-        ]
-      },
-      {
-        "text": "不思議",
-        "kana": "ふしぎ",
-        "seq": 1492570,
-        "score": 782,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adj-na,n]",
-          "[adv-to]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "思う",
-        "kana": "おもう",
-        "seq": 1589350,
-        "score": 192,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[v5u,vt]",
-          "[v5u,vt]",
-          "[v5u,vt]"
-        ]
-      }
-    ],
-    "differences": [
-      "Ichiran: ['なぜ', 'そう', 'なった', 'のか', '今でも', '不思議', 'に', '思う']",
-      "Himotoki: ['なぜそう', 'なった', 'のか', '今でも', '不思議', 'に', '思う']"
-    ],
-    "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 1.5375540256500244
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.09368395805358887
   },
   {
     "sentence": "彼女は毎日日本語を勉強し続けている",
@@ -706,8 +439,8 @@
       "Ichiran: ['彼女', 'は', '毎日', '日本語', 'を', '勉強し', '続けている']",
       "Himotoki: ['彼女', 'は', '毎日', '日本語', 'を', '勉強し続けている']"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.7075178623199463
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.1054379940032959
   },
   {
     "sentence": "説明書を読んでからでないと使えない",
@@ -936,7 +669,7 @@
       "Himotoki: ['説明書', 'を', '読んで', 'から', 'でない', 'と', '使えない']"
     ],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 1.847592830657959
+    "time_himotoki": 0.06689620018005371
   },
   {
     "sentence": "この料理は見た目がとてもおいしそうですね",
@@ -1258,8 +991,8 @@
       "Ichiran: ['この', '料理', 'は', '見た目', 'が', 'とても', 'お', 'いし', 'そうですね']",
       "Himotoki: ['この', '料理', 'は', '見た目', 'が', 'とても', 'おいしそう', 'です', 'ね']"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 2.034223794937134
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.12076115608215332
   },
   {
     "sentence": "明日までにやっとかないとまずいかも",
@@ -1534,8 +1267,8 @@
       "Ichiran: ['明日', 'まで', 'に', 'やっとかない', 'と', 'まずい', 'かも']",
       "Himotoki: ['明日', 'まで', 'に', 'やっと', 'かない', 'と', 'まずい', 'かも']"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 1.0251109600067139
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.05620312690734863
   },
   {
     "sentence": "あれってさ、どう思う",
@@ -1708,8 +1441,8 @@
       "Ichiran: ['あれ', 'って', 'さ']",
       "Himotoki: ['あれ', 'って', 'さ', '、', 'どう', '思う']"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.3420259952545166
+    "time_ichiran": 1.1920928955078125e-05,
+    "time_himotoki": 0.021207094192504883
   },
   {
     "sentence": "彼の行動は理解しがたいものであった",
@@ -1731,7 +1464,8 @@
       "は",
       "理解しがたい",
       "もの",
-      "であった"
+      "で",
+      "あった"
     ],
     "ichiran_segments": [
       {
@@ -1958,25 +1692,38 @@
         ]
       },
       {
-        "text": "であった",
-        "kana": "であった",
-        "seq": 10579486,
-        "score": 90,
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": []
+      },
+      {
+        "text": "あった",
+        "kana": "あった",
+        "seq": 10452311,
+        "score": 40,
         "is_compound": false,
         "components": [],
         "conj_type": "Past (~ta)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": "出会う",
+        "source_text": "有る",
         "pos": []
       }
     ],
     "differences": [
       "Ichiran: ['彼', 'の', '行動', 'は', '理解しがたい', 'も', 'ので', 'あった']",
-      "Himotoki: ['彼', 'の', '行動', 'は', '理解しがたい', 'もの', 'であった']"
+      "Himotoki: ['彼', 'の', '行動', 'は', '理解しがたい', 'もの', 'で', 'あった']"
     ],
     "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 1.5567197799682617
+    "time_himotoki": 0.1530771255493164
   },
   {
     "sentence": "いかなる困難にも屈することなく前進し続けた",
@@ -2243,7 +1990,7 @@
       "Ichiran: ['いかなる', '困難', 'にも', '屈する', 'こと', 'なく', '前進し', '続けた']",
       "Himotoki: ['いかなる', '困難', 'にも', '屈する', 'こと', 'なく', '前進し続けた']"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.1445531845092773
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.10249495506286621
   }
 ]

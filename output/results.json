@@ -179,8 +179,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 2.873366117477417
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 1.298759937286377
   },
   {
     "sentence": "明日の予定はどうなっていますか",
@@ -402,10 +402,13 @@
       {
         "text": "なっています",
         "kana": "なっています",
-        "seq": 10368492,
+        "seq": 10347320,
         "score": 380,
-        "is_compound": false,
-        "components": [],
+        "is_compound": true,
+        "components": [
+          "なって",
+          "います"
+        ],
         "conj_type": "Non-past",
         "conj_neg": false,
         "conj_fml": true,
@@ -431,8 +434,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 2.8556010723114014
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.2513558864593506
   },
   {
     "sentence": "ちょっと待ってください",
@@ -519,7 +522,7 @@
       "Segment '待ってください': conj_type: None vs Imperative"
     ],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.7898130416870117
+    "time_himotoki": 0.07898378372192383
   },
   {
     "sentence": "すみません、道を教えていただけませんか",
@@ -654,8 +657,8 @@
     "differences": [
       "Ichiran result incomplete: '['すみません']' covers only 5/19 chars"
     ],
-    "time_ichiran": 12.391978979110718,
-    "time_himotoki": 4.082764148712158
+    "time_ichiran": 13.767287969589233,
+    "time_himotoki": 0.254777193069458
   },
   {
     "sentence": "最近忙しくてなかなか会えないね",
@@ -831,8 +834,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 2.1157402992248535
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.20131707191467285
   },
   {
     "sentence": "週末は何をする予定ですか",
@@ -1120,8 +1123,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.12720417976379395
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.025920867919921875
   },
   {
     "sentence": "昨日のパーティーは楽しかったです",
@@ -1303,8 +1306,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 1.7615811824798584
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.1267240047454834
   },
   {
     "sentence": "電車が遅れているみたいですね",
@@ -1458,10 +1461,13 @@
       {
         "text": "みたいです",
         "kana": "みたいです",
-        "seq": 10052567,
+        "seq": 10058110,
         "score": 450,
-        "is_compound": false,
-        "components": [],
+        "is_compound": true,
+        "components": [
+          "み",
+          "たいです"
+        ],
         "conj_type": "Non-past",
         "conj_neg": false,
         "conj_fml": true,
@@ -1487,8 +1493,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 1.2846708297729492
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.08597302436828613
   },
   {
     "sentence": "この近くにコンビニはありますか",
@@ -1739,7 +1745,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.8689029216766357
+    "time_himotoki": 0.06464719772338867
   },
   {
     "sentence": "久しぶりに会えて嬉しいです",
@@ -1879,8 +1885,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.085108995437622
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.1289970874786377
   },
   {
     "sentence": "ご飯を食べに行きませんか",
@@ -2092,8 +2098,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 0.9317898750305176
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.07843804359436035
   },
   {
     "sentence": "今何時ですか",
@@ -2240,8 +2246,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.057923078536987305
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.024037837982177734
   },
   {
     "sentence": "ここに座ってもいいですか",
@@ -2426,7 +2432,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.271989107131958
+    "time_himotoki": 0.035913944244384766
   },
   {
     "sentence": "お名前を教えていただけますか",
@@ -2581,7 +2587,7 @@
       "Segment '教えていただけます': conj_type: Potential vs Non-past, source: 頂く vs 頂ける"
     ],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.2947702407836914
+    "time_himotoki": 0.03328824043273926
   },
   {
     "sentence": "日本語がお上手ですね",
@@ -2763,8 +2769,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 9.775161743164062e-06,
-    "time_himotoki": 0.1816420555114746
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.036871910095214844
   },
   {
     "sentence": "それマジでやばくない",
@@ -2906,8 +2912,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.7516562938690186
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.06687784194946289
   },
   {
     "sentence": "明日暇だったら遊ぼうよ",
@@ -3081,8 +3087,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.8558688163757324
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.06282615661621094
   },
   {
     "sentence": "ちょっとそれ貸してくれない",
@@ -3202,8 +3208,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.084254264831543
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.0883479118347168
   },
   {
     "sentence": "昨日めっちゃ疲れたわ",
@@ -3347,8 +3353,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.32518601417541504
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.029422283172607422
   },
   {
     "sentence": "なんかお腹すいてきたな",
@@ -3466,8 +3472,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 1.9262447357177734
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.09543895721435547
   },
   {
     "sentence": "もう帰んなきゃいけないんだけど",
@@ -3668,8 +3674,8 @@
       "Ichiran: ['もう', '帰ん', 'なきゃいけない', 'ん', 'だけど']",
       "Himotoki: ['もう', '帰', 'ん', 'なきゃいけない', 'ん', 'だけど']"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 2.2174289226531982
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.09368395805358887
   },
   {
     "sentence": "あいつ何考えてんだろうね",
@@ -3889,8 +3895,8 @@
     "differences": [
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 2.4080276489257812e-05,
-    "time_himotoki": 2.226194143295288
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.06331992149353027
   },
   {
     "sentence": "そんなこと言われてもさ",
@@ -4012,7 +4018,7 @@
       {
         "text": "言われても",
         "kana": "いわれても",
-        "seq": 11979990,
+        "seq": 11981034,
         "score": 924,
         "is_compound": true,
         "components": [
@@ -4044,8 +4050,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4781951904296875e-05,
-    "time_himotoki": 1.372542142868042
+    "time_ichiran": 1.1920928955078125e-05,
+    "time_himotoki": 0.09625482559204102
   },
   {
     "sentence": "別にいいんじゃない",
@@ -4193,8 +4199,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.7130589485168457
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.03276801109313965
   },
   {
     "sentence": "てか最近どうしてるの",
@@ -4342,8 +4348,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4781951904296875e-05,
-    "time_himotoki": 0.883324146270752
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.04309892654418945
   },
   {
     "sentence": "まあそういうこともあるよね",
@@ -4566,7 +4572,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.39985013008117676
+    "time_himotoki": 0.038626909255981445
   },
   {
     "sentence": "それってどういう意味",
@@ -4716,8 +4722,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.09545683860778809
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.027956008911132812
   },
   {
     "sentence": "早く来てくれないかな",
@@ -4835,8 +4841,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.7741069793701172
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.06815695762634277
   },
   {
     "sentence": "そろそろ寝ないとまずいな",
@@ -5024,8 +5030,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 2.6226043701171875e-06,
-    "time_himotoki": 0.5682611465454102
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.045379638671875
   },
   {
     "sentence": "なんでそんなことするかな",
@@ -5215,8 +5221,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.42713499069213867
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.02991318702697754
   },
   {
     "sentence": "お忙しいところ恐れ入りますが",
@@ -5365,7 +5371,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.7385060787200928
+    "time_himotoki": 0.12362909317016602
   },
   {
     "sentence": "ご検討いただければ幸いです",
@@ -5537,8 +5543,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 1.5658149719238281
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.06281232833862305
   },
   {
     "sentence": "本日はお越しいただきありがとうございます",
@@ -5716,8 +5722,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 2.321316957473755
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.08147692680358887
   },
   {
     "sentence": "何かご不明な点がございましたらお申し付けください",
@@ -6066,8 +6072,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 3.6742160320281982
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.18927001953125
   },
   {
     "sentence": "お手数をおかけして申し訳ございません",
@@ -6217,8 +6223,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 2.8304378986358643
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.2692420482635498
   },
   {
     "sentence": "ご理解いただけますと幸いでございます",
@@ -6430,8 +6436,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.2874603271484375e-05,
-    "time_himotoki": 0.42067885398864746
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.08722901344299316
   },
   {
     "sentence": "本件につきましてご報告申し上げます",
@@ -6580,7 +6586,7 @@
         "text": "つきまして",
         "kana": "つきまして",
         "seq": 10248064,
-        "score": 525,
+        "score": 275,
         "is_compound": false,
         "components": [],
         "conj_type": "Conjunctive (~te)",
@@ -6637,8 +6643,8 @@
     "differences": [
       "Segment 'つきまして': source: 付く vs 就く"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 3.0447278022766113
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.23422622680664062
   },
   {
     "sentence": "ご多忙中恐縮ではございますが",
@@ -6825,8 +6831,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.1319739818572998
+    "time_ichiran": 1.1682510375976562e-05,
+    "time_himotoki": 0.030640125274658203
   },
   {
     "sentence": "お時間をいただけますでしょうか",
@@ -6968,8 +6974,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.821487426757812e-06,
-    "time_himotoki": 1.2469398975372314
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.05194211006164551
   },
   {
     "sentence": "改めてご連絡させていただきます",
@@ -7053,8 +7059,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.2159347534179688e-05,
-    "time_himotoki": 2.4774351119995117
+    "time_ichiran": 2.6702880859375e-05,
+    "time_himotoki": 0.180908203125
   },
   {
     "sentence": "ご確認のほどよろしくお願いいたします",
@@ -7241,7 +7247,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 2.4078400135040283
+    "time_himotoki": 0.12546300888061523
   },
   {
     "sentence": "何卒よろしくお願い申し上げます",
@@ -7389,8 +7395,8 @@
     "differences": [
       "Segment 'よろしく': conj_type: Adverbial vs None"
     ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.22620916366577148
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.056894779205322266
   },
   {
     "sentence": "ご迷惑をおかけして大変申し訳ございません",
@@ -7576,12 +7582,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.15691804885864258
+    "time_ichiran": 1.2159347534179688e-05,
+    "time_himotoki": 0.05374407768249512
   },
   {
     "sentence": "お返事をお待ちしております",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "お返事",
       "を",
@@ -7769,22 +7775,20 @@
       {
         "text": "おります",
         "kana": "おります",
-        "seq": 10137216,
+        "seq": 10363577,
         "score": 336,
         "is_compound": false,
         "components": [],
         "conj_type": "Non-past",
         "conj_neg": false,
         "conj_fml": true,
-        "source_text": "降りる",
+        "source_text": "居る",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'おります': source: 居る vs 降りる"
-    ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.1920020580291748
+    "differences": [],
+    "time_ichiran": 1.2874603271484375e-05,
+    "time_himotoki": 0.10394716262817383
   },
   {
     "sentence": "ご参加いただけますようお願いいたします",
@@ -7960,8 +7964,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.2019670009613037
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.06624007225036621
   },
   {
     "sentence": "首相は記者会見で新たな政策を発表した",
@@ -8279,8 +8283,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.2878899574279785
+    "time_ichiran": 1.2874603271484375e-05,
+    "time_himotoki": 0.09714293479919434
   },
   {
     "sentence": "今朝、東京で震度四の地震が観測された",
@@ -8473,8 +8477,8 @@
     "differences": [
       "Ichiran result incomplete: '['今朝']' covers only 2/18 chars"
     ],
-    "time_ichiran": 11.762979745864868,
-    "time_himotoki": 0.9708921909332275
+    "time_ichiran": 12.4457368850708,
+    "time_himotoki": 0.08729124069213867
   },
   {
     "sentence": "事故の原因については現在調査中である",
@@ -8797,7 +8801,7 @@
     ],
     "differences": [],
     "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 2.16705584526062
+    "time_himotoki": 0.09393000602722168
   },
   {
     "sentence": "来月から新しい制度が施行される見込みだ",
@@ -9084,8 +9088,8 @@
       "Segment '施行される': conj_type: None vs Passive",
       "Segment '見込み': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 1.8241691589355469
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.13809490203857422
   },
   {
     "sentence": "被害者は病院に搬送されたが命に別状はない",
@@ -9337,8 +9341,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.5031318664550781
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 0.045213937759399414
   },
   {
     "sentence": "政府は緊急対策本部を設置する方針を固めた",
@@ -9582,8 +9586,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.7484631538391113
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.0692908763885498
   },
   {
     "sentence": "株価は前日比で大幅に下落している",
@@ -9871,8 +9875,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.6579811573028564
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.07270288467407227
   },
   {
     "sentence": "選挙の投票率は過去最低を記録した",
@@ -10124,8 +10128,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.36475324630737305
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.05014300346374512
   },
   {
     "sentence": "専門家は今後の動向に注視する必要があると指摘した",
@@ -10553,8 +10557,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.71661376953125e-05,
-    "time_himotoki": 0.29756712913513184
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.08069682121276855
   },
   {
     "sentence": "関係者によると計画は来年度から実施されるという",
@@ -10840,8 +10844,8 @@
     "differences": [
       "Segment '実施される': conj_type: None vs Passive"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.639915943145752
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.07994604110717773
   },
   {
     "sentence": "被災地への支援物資の輸送が始まった",
@@ -11151,8 +11155,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.690955638885498
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.09313797950744629
   },
   {
     "sentence": "警察は容疑者の身柄を確保したと発表した",
@@ -11478,8 +11482,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 0.2844679355621338
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.057190895080566406
   },
   {
     "sentence": "経済の先行きに対する懸念が広がっている",
@@ -11726,7 +11730,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.4162659645080566
+    "time_himotoki": 0.08893489837646484
   },
   {
     "sentence": "新型ウイルスの感染者数は減少傾向にある",
@@ -12044,8 +12048,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 0.2630467414855957
+    "time_ichiran": 1.3828277587890625e-05,
+    "time_himotoki": 0.04329490661621094
   },
   {
     "sentence": "国際会議で合意に達することはできなかった",
@@ -12323,8 +12327,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 2.5767810344696045
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.0891880989074707
   },
   {
     "sentence": "私はその意見に賛成できないと思います",
@@ -12610,8 +12614,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1682510375976562e-05,
-    "time_himotoki": 1.4843761920928955
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.13087797164916992
   },
   {
     "sentence": "もう少し時間があればできたのに",
@@ -12821,8 +12825,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 1.1973950862884521
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.043447017669677734
   },
   {
     "sentence": "彼がそう言うとは思わなかった",
@@ -13002,8 +13006,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.718651294708252
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.06052398681640625
   },
   {
     "sentence": "正直に言って、あまり期待していません",
@@ -13167,8 +13171,8 @@
     "differences": [
       "Ichiran result incomplete: '['正直', 'に', '言って']' covers only 6/18 chars"
     ],
-    "time_ichiran": 15.824111938476562,
-    "time_himotoki": 2.048643112182617
+    "time_ichiran": 16.577849864959717,
+    "time_himotoki": 0.1067049503326416
   },
   {
     "sentence": "その問題についてはよく考える必要がある",
@@ -13500,8 +13504,8 @@
     "differences": [
       "Segment 'よく': conj_type: Adverbial vs None"
     ],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.8972511291503906
+    "time_ichiran": 1.52587890625e-05,
+    "time_himotoki": 0.05336189270019531
   },
   {
     "sentence": "どうしてそういう結論になるのか理解できない",
@@ -13758,7 +13762,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.4730980396270752
+    "time_himotoki": 0.08090591430664062
   },
   {
     "sentence": "もしかしたら間違っているかもしれない",
@@ -13870,8 +13874,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 4.544141054153442
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.23403573036193848
   },
   {
     "sentence": "そういう考え方もあるのかと驚いた",
@@ -14119,8 +14123,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.888930082321167
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.04071998596191406
   },
   {
     "sentence": "結局のところ何が正しいのかわからない",
@@ -14334,8 +14338,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 2.657773971557617
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.14189696311950684
   },
   {
     "sentence": "たとえ難しくてもやってみる価値はある",
@@ -14552,7 +14556,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 2.3660919666290283
+    "time_himotoki": 0.17852497100830078
   },
   {
     "sentence": "彼女の言っていることには一理ある",
@@ -14774,8 +14778,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 0.1339261531829834
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.03655505180358887
   },
   {
     "sentence": "そこまで深く考えたことはなかった",
@@ -14909,8 +14913,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.9208898544311523
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.07775688171386719
   },
   {
     "sentence": "個人的にはもっと慎重に進めるべきだと思う",
@@ -15260,8 +15264,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8570470809936523
+    "time_ichiran": 7.152557373046875e-06,
+    "time_himotoki": 0.05901288986206055
   },
   {
     "sentence": "この件については様々な意見があるようだ",
@@ -15661,12 +15665,12 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 3.031846284866333
+    "time_ichiran": 9.775161743164062e-06,
+    "time_himotoki": 0.08978509902954102
   },
   {
     "sentence": "なぜそうなったのか今でも不思議に思う",
-    "status": "mismatch",
+    "status": "match",
     "ichiran_texts": [
       "なぜ",
       "そう",
@@ -15678,7 +15682,8 @@
       "思う"
     ],
     "himotoki_texts": [
-      "なぜそう",
+      "なぜ",
+      "そう",
       "なった",
       "のか",
       "今でも",
@@ -15814,32 +15819,46 @@
     ],
     "himotoki_segments": [
       {
-        "text": "なぜそう",
-        "kana": "なぜそう",
-        "seq": 10195059,
-        "score": 132,
-        "is_compound": true,
-        "components": [
-          "なぜ",
-          "そう"
-        ],
+        "text": "なぜ",
+        "kana": "なぜ",
+        "seq": 1577120,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
         "conj_type": null,
         "conj_neg": false,
         "conj_fml": false,
         "source_text": null,
-        "pos": []
+        "pos": [
+          "[adv]"
+        ]
+      },
+      {
+        "text": "そう",
+        "kana": "そう",
+        "seq": 1006610,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[aux,adj-na]"
+        ]
       },
       {
         "text": "なった",
         "kana": "なった",
-        "seq": 10368488,
+        "seq": 10347316,
         "score": 40,
         "is_compound": false,
         "components": [],
         "conj_type": "Past (~ta)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": "生る",
+        "source_text": "成る",
         "pos": []
       },
       {
@@ -15924,12 +15943,9 @@
         ]
       }
     ],
-    "differences": [
-      "Ichiran: ['なぜ', 'そう', 'なった', 'のか', '今でも', '不思議', 'に', '思う']",
-      "Himotoki: ['なぜそう', 'なった', 'のか', '今でも', '不思議', 'に', '思う']"
-    ],
-    "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 1.5375540256500244
+    "differences": [],
+    "time_ichiran": 1.2159347534179688e-05,
+    "time_himotoki": 0.10614180564880371
   },
   {
     "sentence": "この書類に必要事項を記入してください",
@@ -16153,8 +16169,8 @@
     "differences": [
       "Segment '記入してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 1.2874603271484375e-05,
-    "time_himotoki": 1.1106481552124023
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.07776713371276855
   },
   {
     "sentence": "もう少し大きな声で話していただけますか",
@@ -16372,8 +16388,8 @@
     "differences": [
       "Segment '話していただけます': conj_type: Potential vs Non-past, source: 頂く vs 頂ける"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 2.1221089363098145
+    "time_ichiran": 4.410743713378906e-05,
+    "time_himotoki": 0.09608197212219238
   },
   {
     "sentence": "電源を切ってからコンセントを抜いてください",
@@ -16555,12 +16571,12 @@
     "differences": [
       "Segment '抜いてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 1.4781951904296875e-05,
-    "time_himotoki": 0.4179041385650635
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.08298492431640625
   },
   {
     "sentence": "ここから先は立ち入り禁止となっております",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "ここから",
       "先",
@@ -16775,36 +16791,33 @@
       {
         "text": "なって",
         "kana": "なって",
-        "seq": 10368492,
+        "seq": 10347320,
         "score": 40,
         "is_compound": false,
         "components": [],
         "conj_type": "Conjunctive (~te)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": "生る",
+        "source_text": "成る",
         "pos": []
       },
       {
         "text": "おります",
         "kana": "おります",
-        "seq": 10137216,
+        "seq": 10363577,
         "score": 336,
         "is_compound": false,
         "components": [],
         "conj_type": "Non-past",
         "conj_neg": false,
         "conj_fml": true,
-        "source_text": "降りる",
+        "source_text": "居る",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'なって': source: 成る vs 生る",
-      "Segment 'おります': source: 居る vs 降りる"
-    ],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 2.1511881351470947
+    "differences": [],
+    "time_ichiran": 1.1205673217773438e-05,
+    "time_himotoki": 0.12872982025146484
   },
   {
     "sentence": "申込書は窓口にてお受け取りください",
@@ -17047,8 +17060,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.8755447864532471
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.08543586730957031
   },
   {
     "sentence": "作業が終わりましたらお知らせください",
@@ -17221,8 +17234,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 2.3438820838928223
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.09215211868286133
   },
   {
     "sentence": "荷物は棚の上に置かないでください",
@@ -17483,8 +17496,8 @@
     "differences": [
       "Segment '置かないでください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.531418800354004
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.19075465202331543
   },
   {
     "sentence": "出発前に必ず持ち物を確認してください",
@@ -17740,8 +17753,8 @@
     "differences": [
       "Segment '確認してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3753209114074707
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.0855107307434082
   },
   {
     "sentence": "詳しくは係員にお尋ねください",
@@ -17920,8 +17933,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.6084737777709961
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.044909000396728516
   },
   {
     "sentence": "この薬は食後に一錠ずつ服用してください",
@@ -18214,8 +18227,8 @@
     "differences": [
       "Segment '服用してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.224869966506958
+    "time_ichiran": 9.775161743164062e-06,
+    "time_himotoki": 0.0631103515625
   },
   {
     "sentence": "緊急の場合はこちらの番号にお電話ください",
@@ -18571,7 +18584,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.43781185150146484
+    "time_himotoki": 0.06929421424865723
   },
   {
     "sentence": "登録が完了するまでしばらくお待ちください",
@@ -18856,8 +18869,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.5209522247314453
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.06112313270568848
   },
   {
     "sentence": "会議室の利用後は椅子を元の位置に戻してください",
@@ -19287,8 +19300,8 @@
     "differences": [
       "Segment '戻してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3421032428741455
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.08201813697814941
   },
   {
     "sentence": "パスワードは定期的に変更することをお勧めします",
@@ -19578,8 +19591,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8996641635894775
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.08403778076171875
   },
   {
     "sentence": "資料は事前にダウンロードしておいてください",
@@ -19769,8 +19782,8 @@
     "differences": [
       "Segment 'ダウンロードしておいてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8887958526611328
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.12697696685791016
   },
   {
     "sentence": "もし時間があれば手伝ってくれませんか",
@@ -19986,8 +19999,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 2.27290415763855
+    "time_ichiran": 1.1205673217773438e-05,
+    "time_himotoki": 0.10226297378540039
   },
   {
     "sentence": "雨が降らなければ公園に行くつもりです",
@@ -20195,8 +20208,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 2.9697506427764893
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.1255338191986084
   },
   {
     "sentence": "あの時もっと勉強していれば合格できたのに",
@@ -20444,8 +20457,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 4.118062973022461
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.1588447093963623
   },
   {
     "sentence": "彼が来るかどうかはまだわからない",
@@ -20697,12 +20710,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 2.2631092071533203
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.07869482040405273
   },
   {
     "sentence": "早く起きていたらこんなことにはならなかった",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "早く",
       "起きていたら",
@@ -20900,22 +20913,20 @@
       {
         "text": "ならなかった",
         "kana": "ならなかった",
-        "seq": 10368490,
+        "seq": 10347318,
         "score": 525,
         "is_compound": false,
         "components": [],
         "conj_type": "Past (~ta)",
         "conj_neg": true,
         "conj_fml": false,
-        "source_text": "生る",
+        "source_text": "成る",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'ならなかった': source: 成る vs 生る"
-    ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 4.646371841430664
+    "differences": [],
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.14047908782958984
   },
   {
     "sentence": "無理をしなければ体を壊さなかったはずだ",
@@ -21125,8 +21136,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.6868679523468018
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.11995601654052734
   },
   {
     "sentence": "お金さえあれば世界中を旅行したい",
@@ -21309,7 +21320,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 1.3066329956054688
+    "time_himotoki": 0.06345605850219727
   },
   {
     "sentence": "もしよろしければご一緒にいかがですか",
@@ -21555,8 +21566,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 3.4978339672088623
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.09685707092285156
   },
   {
     "sentence": "条件が整えば来月から開始する予定です",
@@ -21830,8 +21841,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.3754618167877197
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.06325078010559082
   },
   {
     "sentence": "許可が下りなかった場合は計画を変更します",
@@ -22114,7 +22125,7 @@
       "Segment '下りなかった': source: 下りる vs 降りる"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8266417980194092
+    "time_himotoki": 0.07693076133728027
   },
   {
     "sentence": "彼女に会えるなら何でもする",
@@ -22332,8 +22343,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.5641191005706787
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.08757305145263672
   },
   {
     "sentence": "そうでなければ別の方法を考えなければならない",
@@ -22614,8 +22625,8 @@
       "Segment 'でなければ': conj_type: Provisional (~eba) vs None, neg: True vs False",
       "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 1.9453191757202148
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.08486509323120117
   },
   {
     "sentence": "仮に失敗したとしても後悔はしないだろう",
@@ -22863,8 +22874,8 @@
     "differences": [
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.6056420803070068
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.12998080253601074
   },
   {
     "sentence": "運が良ければ今日中に届くかもしれない",
@@ -23008,8 +23019,8 @@
     "differences": [
       "Segment '運が良ければ': source: 運が良い vs 運がいい"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.1500139236450195
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.05562400817871094
   },
   {
     "sentence": "知っていたら教えてあげたのに",
@@ -23150,7 +23161,7 @@
     ],
     "differences": [],
     "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 1.3283040523529053
+    "time_himotoki": 0.05861806869506836
   },
   {
     "sentence": "電車が遅れたので遅刻してしまいました",
@@ -23328,8 +23339,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 3.458333969116211
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.09048080444335938
   },
   {
     "sentence": "体調が悪いため今日は早退させてください",
@@ -23591,8 +23602,8 @@
     "differences": [
       "Segment '早退させてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 4.032639026641846
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.16092276573181152
   },
   {
     "sentence": "予算の都合上、その計画は実現できません",
@@ -23791,8 +23802,8 @@
     "differences": [
       "Ichiran result incomplete: '['予算', 'の', '都合上']' covers only 6/19 chars"
     ],
-    "time_ichiran": 10.719007968902588,
-    "time_himotoki": 1.6697521209716797
+    "time_ichiran": 11.221930027008057,
+    "time_himotoki": 0.04827094078063965
   },
   {
     "sentence": "彼が怒っているのは誤解があったからだ",
@@ -24146,8 +24157,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 1.3383939266204834
+    "time_ichiran": 1.4781951904296875e-05,
+    "time_himotoki": 0.07106423377990723
   },
   {
     "sentence": "締め切りに間に合わなかったのは準備不足のせいだ",
@@ -24467,12 +24478,12 @@
     "differences": [
       "Segment '締め切り': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 2.6186389923095703
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.16297006607055664
   },
   {
     "sentence": "参加者が少なかったのでイベントは中止になった",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "参加者",
       "が",
@@ -24764,22 +24775,20 @@
       {
         "text": "なった",
         "kana": "なった",
-        "seq": 10368488,
+        "seq": 10347316,
         "score": 40,
         "is_compound": false,
         "components": [],
         "conj_type": "Past (~ta)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": "生る",
+        "source_text": "成る",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'なった': source: 成る vs 生る"
-    ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.8304319381713867
+    "differences": [],
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.047408103942871094
   },
   {
     "sentence": "この地域は昔から水が豊富なことで知られている",
@@ -25211,8 +25220,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 1.54795503616333
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.07002115249633789
   },
   {
     "sentence": "成功したのは皆さんの協力があったからこそです",
@@ -25558,8 +25567,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.8379459381103516
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.05264997482299805
   },
   {
     "sentence": "物価が上がっているのは円安の影響だと言われている",
@@ -25934,7 +25943,7 @@
       {
         "text": "言われている",
         "kana": "いわれている",
-        "seq": 11979990,
+        "seq": 11981034,
         "score": 1344,
         "is_compound": true,
         "components": [
@@ -25949,8 +25958,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.2159347534179688e-05,
-    "time_himotoki": 1.1311941146850586
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.09346294403076172
   },
   {
     "sentence": "彼女が辞めた理由は誰も知らない",
@@ -26193,7 +26202,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8315808773040771
+    "time_himotoki": 0.060363054275512695
   },
   {
     "sentence": "技術的な問題により本日のサービスは停止しています",
@@ -26519,12 +26528,12 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 2.4616711139678955
+    "time_ichiran": 4.076957702636719e-05,
+    "time_himotoki": 0.11472678184509277
   },
   {
     "sentence": "そういうわけで今回は見送ることにしました",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "そういう",
       "わけ",
@@ -26675,15 +26684,19 @@
       {
         "text": "わけ",
         "kana": "わけ",
-        "seq": 10256755,
-        "score": 40,
+        "seq": 1502990,
+        "score": 16,
         "is_compound": false,
         "components": [],
-        "conj_type": "Imperative",
+        "conj_type": null,
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": "沸く",
-        "pos": []
+        "source_text": null,
+        "pos": [
+          "[n,n-suf]",
+          "[n,n-suf]",
+          "[n,n-suf]"
+        ]
       },
       {
         "text": "で",
@@ -26761,11 +26774,9 @@
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'わけ': conj_type: None vs Imperative"
-    ],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 1.7075588703155518
+    "differences": [],
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.12721800804138184
   },
   {
     "sentence": "人手不足のため営業時間を短縮しております",
@@ -26987,8 +26998,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.9969291687011719
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.06141400337219238
   },
   {
     "sentence": "詳しい経緯については後ほど説明いたします",
@@ -27208,12 +27219,12 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 4.68541693687439
+    "time_ichiran": 1.71661376953125e-05,
+    "time_himotoki": 0.10171699523925781
   },
   {
     "sentence": "天候の影響でフライトが欠航になりました",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "天候",
       "の",
@@ -27507,22 +27518,20 @@
       {
         "text": "なりました",
         "kana": "なりました",
-        "seq": 10368489,
+        "seq": 10347317,
         "score": 525,
         "is_compound": false,
         "components": [],
         "conj_type": "Past (~ta)",
         "conj_neg": false,
         "conj_fml": true,
-        "source_text": "生る",
+        "source_text": "成る",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'なりました': source: 成る vs 生る"
-    ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.3043692111968994
+    "differences": [],
+    "time_ichiran": 5.7220458984375e-06,
+    "time_himotoki": 0.0476222038269043
   },
   {
     "sentence": "桜の花が満開で公園は多くの人で賑わっていた",
@@ -27982,8 +27991,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 0.5118100643157959
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.058673858642578125
   },
   {
     "sentence": "古い町並みが残るこの地域は観光客に人気がある",
@@ -28338,7 +28347,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.5012431144714355
+    "time_himotoki": 0.045944929122924805
   },
   {
     "sentence": "彼は静かに部屋を出て行った",
@@ -28556,8 +28565,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.6885590553283691
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.04923200607299805
   },
   {
     "sentence": "窓の外には雪が降り始めていた",
@@ -28813,8 +28822,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8212099075317383
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.08281278610229492
   },
   {
     "sentence": "子供たちは楽しそうに校庭で遊んでいる",
@@ -29064,8 +29073,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 1.4853596687316895
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.11311507225036621
   },
   {
     "sentence": "夕日が海に沈んでいく様子はとても美しかった",
@@ -29384,7 +29393,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.901771068572998
+    "time_himotoki": 0.08982992172241211
   },
   {
     "sentence": "店内は薄暗く、どこか懐かしい雰囲気が漂っていた",
@@ -29596,8 +29605,8 @@
     "differences": [
       "Ichiran result incomplete: '['店内', 'は', '薄暗く']' covers only 6/23 chars"
     ],
-    "time_ichiran": 14.524866819381714,
-    "time_himotoki": 2.3507320880889893
+    "time_ichiran": 16.276084899902344,
+    "time_himotoki": 0.16538405418395996
   },
   {
     "sentence": "彼女は何も言わずに手紙を渡してきた",
@@ -29888,8 +29897,8 @@
     "differences": [
       "Segment '言わず': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 1.3828277587890625e-05,
-    "time_himotoki": 1.569093942642212
+    "time_ichiran": 1.4781951904296875e-05,
+    "time_himotoki": 0.06953024864196777
   },
   {
     "sentence": "朝から雨が降り続いていて気分が沈む",
@@ -30139,8 +30148,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 1.4443328380584717
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.09065604209899902
   },
   {
     "sentence": "山の頂上からは町全体を見渡すことができる",
@@ -30463,7 +30472,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.2859818935394287
+    "time_himotoki": 0.1069040298461914
   },
   {
     "sentence": "駅前には新しいビルが建設されている",
@@ -30681,8 +30690,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.9390020370483398
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 0.06296014785766602
   },
   {
     "sentence": "彼の話を聞いて皆が驚きの表情を浮かべた",
@@ -31102,8 +31111,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.5788040161132812
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.07895421981811523
   },
   {
     "sentence": "この道をまっすぐ行くと大きな交差点に出る",
@@ -31468,7 +31477,7 @@
     ],
     "differences": [],
     "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 0.5332279205322266
+    "time_himotoki": 0.04238080978393555
   },
   {
     "sentence": "祭りの日は街中が活気に満ちている",
@@ -31796,8 +31805,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.4963352680206299
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.05912494659423828
   },
   {
     "sentence": "長い間使われていなかった建物が取り壊されることになった",
@@ -32001,8 +32010,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 3.2899160385131836
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.13640761375427246
   },
   {
     "sentence": "この本を読んでみたいと思っています",
@@ -32205,7 +32214,7 @@
       {
         "text": "みたい",
         "kana": "みたい",
-        "seq": 10052567,
+        "seq": 10058110,
         "score": 200,
         "is_compound": false,
         "components": [],
@@ -32250,8 +32259,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 1.6606252193450928
+    "time_ichiran": 6.198883056640625e-06,
+    "time_himotoki": 0.05680084228515625
   },
   {
     "sentence": "彼女は毎日日本語を勉強し続けている",
@@ -32491,8 +32500,8 @@
       "Ichiran: ['彼女', 'は', '毎日', '日本語', 'を', '勉強し', '続けている']",
       "Himotoki: ['彼女', 'は', '毎日', '日本語', 'を', '勉強し続けている']"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.7075178623199463
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.1054379940032959
   },
   {
     "sentence": "旅行の準備はもう終わってしまった",
@@ -32712,8 +32721,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.7809028625488281
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.0509951114654541
   },
   {
     "sentence": "せっかく作ったのに食べてもらえなかった",
@@ -32861,8 +32870,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 2.3113317489624023
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.07348799705505371
   },
   {
     "sentence": "駅に着いてからすぐに電話してください",
@@ -33082,8 +33091,8 @@
     "differences": [
       "Segment '電話してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 2.5395309925079346
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.09617996215820312
   },
   {
     "sentence": "彼は何も言わないで帰ってしまった",
@@ -33265,8 +33274,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.1439838409423828
+    "time_ichiran": 1.0251998901367188e-05,
+    "time_himotoki": 0.05397796630859375
   },
   {
     "sentence": "念のため確認しておいた方がいいですよ",
@@ -33410,8 +33419,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 2.5391180515289307
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 0.06327605247497559
   },
   {
     "sentence": "困っている人がいたら助けてあげたい",
@@ -33621,8 +33630,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 1.7395288944244385
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.07118797302246094
   },
   {
     "sentence": "先生に教えてもらったおかげで理解できた",
@@ -33836,8 +33845,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8855721950531006
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.06018710136413574
   },
   {
     "sentence": "宿題をやっておかないと明日困るよ",
@@ -34115,8 +34124,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.8577547073364258
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.04320383071899414
   },
   {
     "sentence": "友達に借りていた本を返してきた",
@@ -34339,7 +34348,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.597318172454834
+    "time_himotoki": 0.07528400421142578
   },
   {
     "sentence": "疲れていても毎日運動するようにしている",
@@ -34490,7 +34499,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.6084470748901367
+    "time_himotoki": 0.08142900466918945
   },
   {
     "sentence": "説明書を読んでからでないと使えない",
@@ -34719,7 +34728,7 @@
       "Himotoki: ['説明書', 'を', '読んで', 'から', 'でない', 'と', '使えない']"
     ],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 1.847592830657959
+    "time_himotoki": 0.06689620018005371
   },
   {
     "sentence": "子供のころからずっとピアノを習っている",
@@ -34941,8 +34950,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 0.9115989208221436
+    "time_ichiran": 1.5974044799804688e-05,
+    "time_himotoki": 0.051867008209228516
   },
   {
     "sentence": "何度も練習してやっとできるようになった",
@@ -35123,7 +35132,7 @@
       "Segment 'できる': conj_type: Potential vs None"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.9853129386901855
+    "time_himotoki": 0.0576021671295166
   },
   {
     "sentence": "彼がそう言ったからといって信じるわけにはいかない",
@@ -35335,8 +35344,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 2.657712936401367
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 1.4653129577636719
   },
   {
     "sentence": "日本に来たばかりのころは何もわからなかった",
@@ -35654,8 +35663,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.2159347534179688e-05,
-    "time_himotoki": 2.2936010360717773
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.15028619766235352
   },
   {
     "sentence": "いくら探しても見つからなかったのであきらめた",
@@ -35816,7 +35825,7 @@
         "text": "あきらめた",
         "kana": "あきらめた",
         "seq": 10083225,
-        "score": 525,
+        "score": 275,
         "is_compound": false,
         "components": [],
         "conj_type": "Past (~ta)",
@@ -35827,8 +35836,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 4.647945880889893
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.30815911293029785
   },
   {
     "sentence": "どんなに忙しくても健康には気をつけるべきだ",
@@ -36076,8 +36085,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 2.7356529235839844
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.12541890144348145
   },
   {
     "sentence": "この問題は簡単そうに見えて実は難しい",
@@ -36397,8 +36406,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 2.320168972015381
+    "time_ichiran": 1.1920928955078125e-05,
+    "time_himotoki": 0.10898494720458984
   },
   {
     "sentence": "彼女は泣きながら自分の過ちを認めた",
@@ -36714,8 +36723,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.151642084121704
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.09804582595825195
   },
   {
     "sentence": "せっかくの休みなのに家から出られなかった",
@@ -37005,8 +37014,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.0947530269622803
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.10787796974182129
   },
   {
     "sentence": "彼に限ってそんなことをするはずがない",
@@ -37260,8 +37269,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.6780328750610352
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.06432294845581055
   },
   {
     "sentence": "うっかり約束の時間を忘れてしまうところだった",
@@ -37551,8 +37560,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.7916028499603271
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.06310129165649414
   },
   {
     "sentence": "努力したにもかかわらず結果は出なかった",
@@ -37734,8 +37743,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 2.9814608097076416
+    "time_ichiran": 1.1920928955078125e-05,
+    "time_himotoki": 0.15491509437561035
   },
   {
     "sentence": "言われてみれば確かにそうかもしれない",
@@ -37878,7 +37887,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 3.1135218143463135
+    "time_himotoki": 0.10252714157104492
   },
   {
     "sentence": "彼が来るか来ないかにかかわらず会議は始める",
@@ -38207,16 +38216,19 @@
       },
       {
         "text": "かかわらず",
-        "kana": "かかわらないず",
-        "seq": 10364963,
-        "score": 630,
+        "kana": "かかわらず",
+        "seq": 1589860,
+        "score": 525,
         "is_compound": false,
         "components": [],
         "conj_type": null,
         "conj_neg": false,
         "conj_fml": false,
         "source_text": null,
-        "pos": []
+        "pos": [
+          "[exp]",
+          "[exp]"
+        ]
       },
       {
         "text": "会議",
@@ -38269,8 +38281,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 0.7615869045257568
+    "time_ichiran": 9.298324584960938e-06,
+    "time_himotoki": 0.06270170211791992
   },
   {
     "sentence": "あの人は見かけによらず優しい性格だ",
@@ -38484,8 +38496,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 2.657500982284546
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 0.1812269687652588
   },
   {
     "sentence": "勉強すればするほど知らないことが増えていく",
@@ -38739,8 +38751,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 2.1872730255126953
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.0891408920288086
   },
   {
     "sentence": "これだけ準備をしたのだから失敗するわけがない",
@@ -39022,8 +39034,8 @@
     "differences": [
       "Segment 'わけがない': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.7095580101013184
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.08117198944091797
   },
   {
     "sentence": "今にも雨が降りそうな空模様だ",
@@ -39205,8 +39217,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.7459890842437744
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.08083295822143555
   },
   {
     "sentence": "この料理は見た目がとてもおいしそうですね",
@@ -39528,8 +39540,8 @@
       "Ichiran: ['この', '料理', 'は', '見た目', 'が', 'とても', 'お', 'いし', 'そうですね']",
       "Himotoki: ['この', '料理', 'は', '見た目', 'が', 'とても', 'おいしそう', 'です', 'ね']"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 2.034223794937134
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.12076115608215332
   },
   {
     "sentence": "彼は何か言いたそうにこちらを見ていた",
@@ -39819,8 +39831,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.7881393432617188e-05,
-    "time_himotoki": 2.316174268722534
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.15544700622558594
   },
   {
     "sentence": "新しい店は繁盛しそうな雰囲気がある",
@@ -40116,8 +40128,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.8385663032531738
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.070404052734375
   },
   {
     "sentence": "話を聞いていると簡単そうに思える",
@@ -40403,8 +40415,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 1.234807014465332
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.10928726196289062
   },
   {
     "sentence": "疲れていそうだから少し休んだ方がいい",
@@ -40586,8 +40598,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.981497049331665
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.09157896041870117
   },
   {
     "sentence": "その案は実現できそうにないと思う",
@@ -40848,7 +40860,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.468898057937622
+    "time_himotoki": 0.08894801139831543
   },
   {
     "sentence": "明日は晴れそうなので洗濯をしよう",
@@ -41096,8 +41108,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.5378689765930176
+    "time_ichiran": 1.52587890625e-05,
+    "time_himotoki": 0.05082583427429199
   },
   {
     "sentence": "彼女は泣き出しそうな顔をしていた",
@@ -41359,8 +41371,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.5476973056793213
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.07648420333862305
   },
   {
     "sentence": "今年の夏は暑くなりそうだと予報が出ている",
@@ -41714,8 +41726,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.2388591766357422
+    "time_ichiran": 1.4781951904296875e-05,
+    "time_himotoki": 0.08057332038879395
   },
   {
     "sentence": "うまくいきそうな気がしてきた",
@@ -41835,8 +41847,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 2.9233510494232178
+    "time_ichiran": 7.152557373046875e-06,
+    "time_himotoki": 0.2121281623840332
   },
   {
     "sentence": "彼の話は嘘っぽくて信じられそうにない",
@@ -42051,8 +42063,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.3106968402862549
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.10432672500610352
   },
   {
     "sentence": "この仕事は私には難しそうです",
@@ -42304,8 +42316,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.976356029510498
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.09288597106933594
   },
   {
     "sentence": "もうすぐ届きそうなので待っていてください",
@@ -42455,8 +42467,8 @@
     "differences": [
       "Segment '待っていてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.0273900032043457
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.09340310096740723
   },
   {
     "sentence": "頑張れば間に合いそうな気がする",
@@ -42604,8 +42616,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 8.821487426757812e-06,
-    "time_himotoki": 0.8585960865020752
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.0903480052947998
   },
   {
     "sentence": "電車の中で足を踏まれてしまった",
@@ -42861,8 +42873,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 1.2449967861175537
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.04836726188659668
   },
   {
     "sentence": "母に野菜を食べさせられた",
@@ -43043,7 +43055,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 2.404981851577759
+    "time_himotoki": 0.12820196151733398
   },
   {
     "sentence": "彼は上司に無理な仕事を押し付けられている",
@@ -43370,8 +43382,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.6596770286560059
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.14632081985473633
   },
   {
     "sentence": "子供にゲームをやめさせるのは難しい",
@@ -43658,11 +43670,11 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 3.371572971343994
+    "time_himotoki": 0.11941695213317871
   },
   {
     "sentence": "突然の雨に降られて服がびしょ濡れになった",
-    "status": "partial",
+    "status": "match",
     "ichiran_texts": [
       "突然",
       "の",
@@ -43994,22 +44006,20 @@
       {
         "text": "なった",
         "kana": "なった",
-        "seq": 10368488,
+        "seq": 10347316,
         "score": 40,
         "is_compound": false,
         "components": [],
         "conj_type": "Past (~ta)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": "生る",
+        "source_text": "成る",
         "pos": []
       }
     ],
-    "differences": [
-      "Segment 'なった': source: 成る vs 生る"
-    ],
+    "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.4477229118347168
+    "time_himotoki": 0.06427502632141113
   },
   {
     "sentence": "彼女は親に留学を反対されているらしい",
@@ -44305,8 +44315,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 1.3687450885772705
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.10829472541809082
   },
   {
     "sentence": "部下に仕事を任せてみることにした",
@@ -44550,8 +44560,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 1.456204891204834
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.0659940242767334
   },
   {
     "sentence": "この曲を聴くと昔のことを思い出させられる",
@@ -44915,8 +44925,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.5495591163635254
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.07675409317016602
   },
   {
     "sentence": "財布を盗まれたので警察に届け出た",
@@ -45159,7 +45169,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.9083540439605713
+    "time_himotoki": 0.06246304512023926
   },
   {
     "sentence": "彼は皆から尊敬されている人物だ",
@@ -45418,7 +45428,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.2166268825531006
+    "time_himotoki": 0.08760404586791992
   },
   {
     "sentence": "子供のころは毎日勉強させられていた",
@@ -45568,8 +45578,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 1.60642671585083
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.11435914039611816
   },
   {
     "sentence": "彼の発言は多くの人に批判されている",
@@ -45897,8 +45907,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.2621278762817383
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.07277798652648926
   },
   {
     "sentence": "長時間待たされたので怒りを感じた",
@@ -46100,8 +46110,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.536686897277832
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.0697011947631836
   },
   {
     "sentence": "この作品は世界中で読まれている",
@@ -46317,8 +46327,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.36101198196411133
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.030757904052734375
   },
   {
     "sentence": "親に心配をかけさせてしまって申し訳ない",
@@ -46473,7 +46483,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 4.349969148635864
+    "time_himotoki": 0.14037227630615234
   },
   {
     "sentence": "この電車は新宿駅に止まりますか",
@@ -46759,8 +46769,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 2.238179922103882
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.13968205451965332
   },
   {
     "sentence": "どうしてそんなに早く起きるんですか",
@@ -47014,8 +47024,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 1.5096757411956787
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.07196903228759766
   },
   {
     "sentence": "注文した商品はいつ届きますか",
@@ -47229,8 +47239,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.7849929332733154
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.03393411636352539
   },
   {
     "sentence": "このあたりにおすすめのレストランはありますか",
@@ -47512,8 +47522,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 1.2664341926574707
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.09116911888122559
   },
   {
     "sentence": "どのくらい時間がかかりますか",
@@ -47624,7 +47634,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 2.858860969543457
+    "time_himotoki": 0.0946969985961914
   },
   {
     "sentence": "何か手伝えることはありますか",
@@ -47838,8 +47848,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.6477470397949219
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.03951001167297363
   },
   {
     "sentence": "彼女がなぜ怒っているのか知っていますか",
@@ -48094,7 +48104,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.300044059753418
+    "time_himotoki": 0.06319880485534668
   },
   {
     "sentence": "この言葉の意味を教えていただけますか",
@@ -48356,8 +48366,8 @@
     "differences": [
       "Segment '教えていただけます': conj_type: Potential vs Non-past, source: 頂く vs 頂ける"
     ],
-    "time_ichiran": 2.6226043701171875e-06,
-    "time_himotoki": 0.8480403423309326
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.06473612785339355
   },
   {
     "sentence": "どちらの方が人気がありますか",
@@ -48579,8 +48589,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8013670444488525
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.053652286529541016
   },
   {
     "sentence": "予約は必要でしょうか",
@@ -48732,8 +48742,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.9136619567871094
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.033879756927490234
   },
   {
     "sentence": "いつからこの仕事をしているのですか",
@@ -48987,8 +48997,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 2.75274395942688
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.07858896255493164
   },
   {
     "sentence": "何人くらい参加する予定ですか",
@@ -49203,7 +49213,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.15224504470825195
+    "time_himotoki": 0.026018142700195312
   },
   {
     "sentence": "どうやってここまで来たのですか",
@@ -49417,8 +49427,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.8411140441894531
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.030038833618164062
   },
   {
     "sentence": "あの建物は何ですか",
@@ -49634,8 +49644,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.08651113510131836
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.04017519950866699
   },
   {
     "sentence": "会議は何時に終わる予定ですか",
@@ -49921,7 +49931,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.32477903366088867
+    "time_himotoki": 0.033196210861206055
   },
   {
     "sentence": "そんなこと言ったってしょうがないじゃん",
@@ -50103,8 +50113,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.41113805770874023
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.04022073745727539
   },
   {
     "sentence": "やっぱり行かなきゃだめかな",
@@ -50256,8 +50266,8 @@
     "differences": [
       "Segment '行かなきゃ': conj_type: Provisional (~eba) vs None, neg: True vs False"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.759181022644043
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.04149198532104492
   },
   {
     "sentence": "もうちょっと待ってくんない",
@@ -50363,8 +50373,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.2423100471496582
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.03129124641418457
   },
   {
     "sentence": "それって本当なのかな",
@@ -50596,8 +50606,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.40087199211120605
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.03547978401184082
   },
   {
     "sentence": "別に怒ってるわけじゃないんだけど",
@@ -50777,8 +50787,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.0966830253601074
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.0779566764831543
   },
   {
     "sentence": "今日はなんか調子悪いんだよね",
@@ -51035,7 +51045,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.7078688144683838
+    "time_himotoki": 0.0441129207611084
   },
   {
     "sentence": "ていうか、それ知らなかったの",
@@ -51149,8 +51159,8 @@
     "differences": [
       "Ichiran result incomplete: '['ていうか']' covers only 4/14 chars"
     ],
-    "time_ichiran": 7.829514980316162,
-    "time_himotoki": 2.5236780643463135
+    "time_ichiran": 8.172096014022827,
+    "time_himotoki": 0.06477117538452148
   },
   {
     "sentence": "まあいっか、なんとかなるでしょ",
@@ -51264,8 +51274,8 @@
     "differences": [
       "Ichiran result incomplete: '['まあいっか']' covers only 5/15 chars"
     ],
-    "time_ichiran": 5.076516151428223,
-    "time_himotoki": 0.8566761016845703
+    "time_ichiran": 5.28940486907959,
+    "time_himotoki": 0.08174920082092285
   },
   {
     "sentence": "うん、でもそれちょっと違うんじゃない",
@@ -51435,8 +51445,8 @@
     "differences": [
       "Ichiran result incomplete: '['うん']' covers only 2/18 chars"
     ],
-    "time_ichiran": 10.790512084960938,
-    "time_himotoki": 0.2846031188964844
+    "time_ichiran": 11.399675130844116,
+    "time_himotoki": 0.03316378593444824
   },
   {
     "sentence": "明日までにやっとかないとまずいかも",
@@ -51711,8 +51721,8 @@
       "Ichiran: ['明日', 'まで', 'に', 'やっとかない', 'と', 'まずい', 'かも']",
       "Himotoki: ['明日', 'まで', 'に', 'やっと', 'かない', 'と', 'まずい', 'かも']"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 1.0251109600067139
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.05620312690734863
   },
   {
     "sentence": "そんなの知らないし",
@@ -51860,8 +51870,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 0.3375511169433594
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.03484296798706055
   },
   {
     "sentence": "ねえねえ、これ見てみて",
@@ -51870,8 +51880,7 @@
       "ねえねえ"
     ],
     "himotoki_texts": [
-      "ね",
-      "えねえ",
+      "ねえねえ",
       "、",
       "これ",
       "見て",
@@ -51896,33 +51905,19 @@
     ],
     "himotoki_segments": [
       {
-        "text": "ね",
-        "kana": "ね",
-        "seq": 10072466,
-        "score": 10,
+        "text": "ねえねえ",
+        "kana": "ねえねえ",
+        "seq": 2826108,
+        "score": 64,
         "is_compound": false,
         "components": [],
-        "conj_type": "Continuative (~i)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "寝る",
-        "pos": []
-      },
-      {
-        "text": "えねえ",
-        "kana": "えないねえ",
-        "seq": 10136691,
-        "score": 90,
-        "is_compound": true,
-        "components": [
-          "えない",
-          "ねえ"
-        ],
         "conj_type": null,
         "conj_neg": false,
         "conj_fml": false,
         "source_text": null,
-        "pos": []
+        "pos": [
+          "[int]"
+        ]
       },
       {
         "text": "、",
@@ -51970,22 +51965,22 @@
       {
         "text": "みて",
         "kana": "みて",
-        "seq": 10052527,
+        "seq": 10058070,
         "score": 40,
         "is_compound": false,
         "components": [],
         "conj_type": "Conjunctive (~te)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": "看る",
+        "source_text": "見る",
         "pos": []
       }
     ],
     "differences": [
       "Ichiran result incomplete: '['ねえねえ']' covers only 4/11 chars"
     ],
-    "time_ichiran": 4.534029006958008,
-    "time_himotoki": 1.6594691276550293
+    "time_ichiran": 4.795099973678589,
+    "time_himotoki": 0.07841610908508301
   },
   {
     "sentence": "あれってさ、どう思う",
@@ -52158,8 +52153,8 @@
       "Ichiran: ['あれ', 'って', 'さ']",
       "Himotoki: ['あれ', 'って', 'さ', '、', 'どう', '思う']"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.3420259952545166
+    "time_ichiran": 1.1920928955078125e-05,
+    "time_himotoki": 0.021207094192504883
   },
   {
     "sentence": "え、マジで言ってんの",
@@ -52199,15 +52194,19 @@
       {
         "text": "え",
         "kana": "え",
-        "seq": 10136737,
-        "score": 10,
+        "seq": 2122310,
+        "score": 6,
         "is_compound": false,
         "components": [],
-        "conj_type": "Continuative (~i)",
+        "conj_type": null,
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": "得る",
-        "pos": []
+        "source_text": null,
+        "pos": [
+          "[int]",
+          "[int]",
+          "[int]"
+        ]
       },
       {
         "text": "、",
@@ -52301,8 +52300,8 @@
     "differences": [
       "Ichiran result incomplete: '['え']' covers only 1/10 chars"
     ],
-    "time_ichiran": 3.1331398487091064,
-    "time_himotoki": 0.15834712982177734
+    "time_ichiran": 3.2079389095306396,
+    "time_himotoki": 0.02285599708557129
   },
   {
     "sentence": "だからさ、そういうことじゃないんだって",
@@ -52486,8 +52485,8 @@
     "differences": [
       "Ichiran result incomplete: '['だから', 'さ']' covers only 4/19 chars"
     ],
-    "time_ichiran": 9.878022193908691,
-    "time_himotoki": 0.8430540561676025
+    "time_ichiran": 10.16740107536316,
+    "time_himotoki": 0.12403988838195801
   },
   {
     "sentence": "彼の行動は理解しがたいものであった",
@@ -52509,7 +52508,8 @@
       "は",
       "理解しがたい",
       "もの",
-      "であった"
+      "で",
+      "あった"
     ],
     "ichiran_segments": [
       {
@@ -52736,25 +52736,38 @@
         ]
       },
       {
-        "text": "であった",
-        "kana": "であった",
-        "seq": 10579486,
-        "score": 90,
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": []
+      },
+      {
+        "text": "あった",
+        "kana": "あった",
+        "seq": 10452311,
+        "score": 40,
         "is_compound": false,
         "components": [],
         "conj_type": "Past (~ta)",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": "出会う",
+        "source_text": "有る",
         "pos": []
       }
     ],
     "differences": [
       "Ichiran: ['彼', 'の', '行動', 'は', '理解しがたい', 'も', 'ので', 'あった']",
-      "Himotoki: ['彼', 'の', '行動', 'は', '理解しがたい', 'もの', 'であった']"
+      "Himotoki: ['彼', 'の', '行動', 'は', '理解しがたい', 'もの', 'で', 'あった']"
     ],
     "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 1.5567197799682617
+    "time_himotoki": 0.1530771255493164
   },
   {
     "sentence": "その事実が明らかになるにつれ事態は深刻化した",
@@ -53040,8 +53053,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 1.2031316757202148
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.14290428161621094
   },
   {
     "sentence": "過去の経験に基づき判断を下すべきである",
@@ -53399,8 +53412,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 1.323038101196289
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.05789327621459961
   },
   {
     "sentence": "問題解決に向けた取り組みが求められている",
@@ -53613,8 +53626,8 @@
     "differences": [
       "Segment '取り組み': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 1.961972951889038
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 0.09575796127319336
   },
   {
     "sentence": "本研究の目的は現象の解明にある",
@@ -53973,7 +53986,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.11999726295471191
+    "time_himotoki": 0.021810054779052734
   },
   {
     "sentence": "かつてこの地には多くの寺院が存在していた",
@@ -54303,8 +54316,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.811981201171875e-05,
-    "time_himotoki": 1.9704530239105225
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 0.08496499061584473
   },
   {
     "sentence": "彼女の功績は後世に語り継がれるであろう",
@@ -54613,7 +54626,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.2630810737609863
+    "time_himotoki": 0.14926576614379883
   },
   {
     "sentence": "いかなる困難にも屈することなく前進し続けた",
@@ -54880,8 +54893,8 @@
       "Ichiran: ['いかなる', '困難', 'にも', '屈する', 'こと', 'なく', '前進し', '続けた']",
       "Himotoki: ['いかなる', '困難', 'にも', '屈する', 'こと', 'なく', '前進し続けた']"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.1445531845092773
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.10249495506286621
   },
   {
     "sentence": "状況を鑑みるに慎重な対応が必要である",
@@ -55275,8 +55288,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.4052541255950928
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.05402708053588867
   },
   {
     "sentence": "この問題に対する解答は一つではない",
@@ -55528,8 +55541,8 @@
     "differences": [
       "Segment 'ではない': source: で‌はある vs だ"
     ],
-    "time_ichiran": 2.193450927734375e-05,
-    "time_himotoki": 0.33080220222473145
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.04551982879638672
   },
   {
     "sentence": "時代の変化とともに価値観も変わっていく",
@@ -55785,8 +55798,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.5125770568847656
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.05560922622680664
   },
   {
     "sentence": "真実を追求する姿勢を忘れてはならない",
@@ -56075,7 +56088,7 @@
       "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.9045310020446777
+    "time_himotoki": 0.04594087600708008
   },
   {
     "sentence": "彼らの努力なくして成功はあり得なかった",
@@ -56321,8 +56334,8 @@
     "differences": [
       "Segment 'あり得なかった': neg: True vs False, source: あり得る vs あり得ない"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 3.112873077392578
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.1442270278930664
   },
   {
     "sentence": "未来に向けて何をなすべきか考える必要がある",
@@ -56687,7 +56700,7 @@
     ],
     "differences": [],
     "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 1.0146472454071045
+    "time_himotoki": 0.08518505096435547
   },
   {
     "sentence": "歴史が証明しているように変化は避けられない",
@@ -56941,8 +56954,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 1.9915368556976318
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.07288503646850586
   },
   {
     "sentence": "この会社には従業員が三百人以上いる",
@@ -57232,8 +57245,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.43120360374450684
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.026135683059692383
   },
   {
     "sentence": "一週間に二回はジムに通っている",
@@ -57477,8 +57490,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.37140679359436035
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.04247593879699707
   },
   {
     "sentence": "あの映画は三時間もあるから疲れた",
@@ -57760,8 +57773,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.0698418617248535
+    "time_ichiran": 1.1920928955078125e-05,
+    "time_himotoki": 0.03912496566772461
   },
   {
     "sentence": "本棚には五十冊くらいの本がある",
@@ -58053,8 +58066,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.4838690757751465
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.03344607353210449
   },
   {
     "sentence": "今年で日本に住んで十年になる",
@@ -58330,8 +58343,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.33009791374206543
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.024265289306640625
   },
   {
     "sentence": "駅から歩いて十五分くらいかかります",
@@ -58529,7 +58542,7 @@
         "text": "かかります",
         "kana": "かかります",
         "seq": 10368103,
-        "score": 525,
+        "score": 275,
         "is_compound": false,
         "components": [],
         "conj_type": "Non-past",
@@ -58542,8 +58555,8 @@
     "differences": [
       "Segment 'かかります': source: 掛かる vs 罹る"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 3.1597511768341064
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.0878152847290039
   },
   {
     "sentence": "このビルは三十階建てです",
@@ -58751,8 +58764,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.2623906135559082
+    "time_ichiran": 1.2159347534179688e-05,
+    "time_himotoki": 0.08448314666748047
   },
   {
     "sentence": "毎朝コーヒーを二杯飲んでいる",
@@ -58932,8 +58945,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.19403696060180664
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.04980301856994629
   },
   {
     "sentence": "今月は五回も出張がある",
@@ -59186,7 +59199,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.04549288749694824
+    "time_himotoki": 0.015126228332519531
   },
   {
     "sentence": "うちには犬が二匹と猫が一匹いる",
@@ -59550,8 +59563,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.5318529605865479
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.07054376602172852
   },
   {
     "sentence": "このプロジェクトには四つの段階がある",
@@ -59849,8 +59862,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.2248692512512207
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.032037973403930664
   },
   {
     "sentence": "昨日は三件のミーティングがあった",
@@ -60097,7 +60110,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3421058654785156
+    "time_himotoki": 0.036209821701049805
   },
   {
     "sentence": "百円ショップで色々買ってきた",
@@ -60245,8 +60258,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.0779709815979004
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.03724074363708496
   },
   {
     "sentence": "試験まであと二週間しかない",
@@ -60432,8 +60445,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.6226043701171875e-06,
-    "time_himotoki": 1.953228235244751
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.03738069534301758
   },
   {
     "sentence": "このクラスは生徒が二十五人いる",
@@ -60686,6 +60699,6 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.2221360206604004
+    "time_himotoki": 0.04241299629211426
   }
 ]

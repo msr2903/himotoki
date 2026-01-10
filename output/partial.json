@@ -84,7 +84,7 @@
       "Segment '待ってください': conj_type: None vs Imperative"
     ],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.7898130416870117
+    "time_himotoki": 0.07898378372192383
   },
   {
     "sentence": "お名前を教えていただけますか",
@@ -239,7 +239,7 @@
       "Segment '教えていただけます': conj_type: Potential vs Non-past, source: 頂く vs 頂ける"
     ],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.2947702407836914
+    "time_himotoki": 0.03328824043273926
   },
   {
     "sentence": "なんかお腹すいてきたな",
@@ -357,8 +357,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 1.9262447357177734
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.09543895721435547
   },
   {
     "sentence": "あいつ何考えてんだろうね",
@@ -578,8 +578,8 @@
     "differences": [
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 2.4080276489257812e-05,
-    "time_himotoki": 2.226194143295288
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.06331992149353027
   },
   {
     "sentence": "そろそろ寝ないとまずいな",
@@ -767,8 +767,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 2.6226043701171875e-06,
-    "time_himotoki": 0.5682611465454102
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.045379638671875
   },
   {
     "sentence": "何かご不明な点がございましたらお申し付けください",
@@ -1117,8 +1117,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 3.6742160320281982
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.18927001953125
   },
   {
     "sentence": "本件につきましてご報告申し上げます",
@@ -1267,7 +1267,7 @@
         "text": "つきまして",
         "kana": "つきまして",
         "seq": 10248064,
-        "score": 525,
+        "score": 275,
         "is_compound": false,
         "components": [],
         "conj_type": "Conjunctive (~te)",
@@ -1324,8 +1324,8 @@
     "differences": [
       "Segment 'つきまして': source: 付く vs 就く"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 3.0447278022766113
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.23422622680664062
   },
   {
     "sentence": "何卒よろしくお願い申し上げます",
@@ -1473,215 +1473,8 @@
     "differences": [
       "Segment 'よろしく': conj_type: Adverbial vs None"
     ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.22620916366577148
-  },
-  {
-    "sentence": "お返事をお待ちしております",
-    "status": "partial",
-    "ichiran_texts": [
-      "お返事",
-      "を",
-      "お",
-      "待ち",
-      "して",
-      "おります"
-    ],
-    "himotoki_texts": [
-      "お返事",
-      "を",
-      "お",
-      "待ち",
-      "して",
-      "おります"
-    ],
-    "ichiran_segments": [
-      {
-        "text": "お返事",
-        "kana": "おへんじ",
-        "seq": 2845573,
-        "score": 377,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[vs,n]"
-        ]
-      },
-      {
-        "text": "を",
-        "kana": "を",
-        "seq": 2029010,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "お",
-        "kana": "お",
-        "seq": 2826528,
-        "score": 10,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[pref]"
-        ]
-      },
-      {
-        "text": "待ち",
-        "kana": "まち",
-        "seq": 1640770,
-        "score": 128,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,n-suf]",
-          "[n-suf,n]"
-        ]
-      },
-      {
-        "text": "して",
-        "kana": "して",
-        "seq": 10150864,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "為る",
-        "pos": []
-      },
-      {
-        "text": "おります",
-        "kana": "おります",
-        "seq": 10634835,
-        "score": 336,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Non-past",
-        "conj_neg": false,
-        "conj_fml": true,
-        "source_text": "居る",
-        "pos": []
-      }
-    ],
-    "himotoki_segments": [
-      {
-        "text": "お返事",
-        "kana": "おへんじ",
-        "seq": 2845573,
-        "score": 377,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,vs]"
-        ]
-      },
-      {
-        "text": "を",
-        "kana": "を",
-        "seq": 2029010,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "お",
-        "kana": "お",
-        "seq": 2826528,
-        "score": 10,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[pref]"
-        ]
-      },
-      {
-        "text": "待ち",
-        "kana": "まち",
-        "seq": 1640770,
-        "score": 128,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,n-suf]",
-          "[n,n-suf]"
-        ]
-      },
-      {
-        "text": "して",
-        "kana": "して",
-        "seq": 10609659,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "為る",
-        "pos": []
-      },
-      {
-        "text": "おります",
-        "kana": "おります",
-        "seq": 10137216,
-        "score": 336,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Non-past",
-        "conj_neg": false,
-        "conj_fml": true,
-        "source_text": "降りる",
-        "pos": []
-      }
-    ],
-    "differences": [
-      "Segment 'おります': source: 居る vs 降りる"
-    ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.1920020580291748
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.056894779205322266
   },
   {
     "sentence": "首相は記者会見で新たな政策を発表した",
@@ -1999,8 +1792,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.2878899574279785
+    "time_ichiran": 1.2874603271484375e-05,
+    "time_himotoki": 0.09714293479919434
   },
   {
     "sentence": "来月から新しい制度が施行される見込みだ",
@@ -2287,8 +2080,8 @@
       "Segment '施行される': conj_type: None vs Passive",
       "Segment '見込み': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 1.8241691589355469
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.13809490203857422
   },
   {
     "sentence": "関係者によると計画は来年度から実施されるという",
@@ -2574,8 +2367,8 @@
     "differences": [
       "Segment '実施される': conj_type: None vs Passive"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.639915943145752
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.07994604110717773
   },
   {
     "sentence": "その問題についてはよく考える必要がある",
@@ -2907,8 +2700,8 @@
     "differences": [
       "Segment 'よく': conj_type: Adverbial vs None"
     ],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.8972511291503906
+    "time_ichiran": 1.52587890625e-05,
+    "time_himotoki": 0.05336189270019531
   },
   {
     "sentence": "この件については様々な意見があるようだ",
@@ -3308,8 +3101,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 3.031846284866333
+    "time_ichiran": 9.775161743164062e-06,
+    "time_himotoki": 0.08978509902954102
   },
   {
     "sentence": "この書類に必要事項を記入してください",
@@ -3533,8 +3326,8 @@
     "differences": [
       "Segment '記入してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 1.2874603271484375e-05,
-    "time_himotoki": 1.1106481552124023
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.07776713371276855
   },
   {
     "sentence": "もう少し大きな声で話していただけますか",
@@ -3752,8 +3545,8 @@
     "differences": [
       "Segment '話していただけます': conj_type: Potential vs Non-past, source: 頂く vs 頂ける"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 2.1221089363098145
+    "time_ichiran": 4.410743713378906e-05,
+    "time_himotoki": 0.09608197212219238
   },
   {
     "sentence": "電源を切ってからコンセントを抜いてください",
@@ -3935,256 +3728,8 @@
     "differences": [
       "Segment '抜いてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 1.4781951904296875e-05,
-    "time_himotoki": 0.4179041385650635
-  },
-  {
-    "sentence": "ここから先は立ち入り禁止となっております",
-    "status": "partial",
-    "ichiran_texts": [
-      "ここから",
-      "先",
-      "は",
-      "立ち入り禁止",
-      "と",
-      "なって",
-      "おります"
-    ],
-    "himotoki_texts": [
-      "ここから",
-      "先",
-      "は",
-      "立ち入り禁止",
-      "と",
-      "なって",
-      "おります"
-    ],
-    "ichiran_segments": [
-      {
-        "text": "ここから",
-        "kana": "ここから",
-        "seq": 2733920,
-        "score": 176,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[exp]"
-        ]
-      },
-      {
-        "text": "先",
-        "kana": "さき",
-        "seq": 1387210,
-        "score": 16,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]",
-          "[n]",
-          "[n]"
-        ]
-      },
-      {
-        "text": "は",
-        "kana": "‌は",
-        "seq": 2028920,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "立ち入り禁止",
-        "kana": "たちいりきんし",
-        "seq": 1597010,
-        "score": 2001,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[exp]",
-          "[n,adj-no]"
-        ]
-      },
-      {
-        "text": "と",
-        "kana": "と",
-        "seq": 1008490,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt,conj]",
-          "[prt,conj]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "なって",
-        "kana": "なって",
-        "seq": 10371753,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "成る",
-        "pos": []
-      },
-      {
-        "text": "おります",
-        "kana": "おります",
-        "seq": 10634835,
-        "score": 336,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Non-past",
-        "conj_neg": false,
-        "conj_fml": true,
-        "source_text": "居る",
-        "pos": []
-      }
-    ],
-    "himotoki_segments": [
-      {
-        "text": "ここから",
-        "kana": "ここから",
-        "seq": 2733920,
-        "score": 176,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[exp]"
-        ]
-      },
-      {
-        "text": "先",
-        "kana": "さき",
-        "seq": 1387210,
-        "score": 16,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]",
-          "[n]",
-          "[n]"
-        ]
-      },
-      {
-        "text": "は",
-        "kana": "は",
-        "seq": 2028920,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "立ち入り禁止",
-        "kana": "たちいりきんし",
-        "seq": 1597010,
-        "score": 2001,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[exp]",
-          "[adj-no,n]"
-        ]
-      },
-      {
-        "text": "と",
-        "kana": "と",
-        "seq": 1008490,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt,conj]",
-          "[prt,conj]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "なって",
-        "kana": "なって",
-        "seq": 10368492,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "生る",
-        "pos": []
-      },
-      {
-        "text": "おります",
-        "kana": "おります",
-        "seq": 10137216,
-        "score": 336,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Non-past",
-        "conj_neg": false,
-        "conj_fml": true,
-        "source_text": "降りる",
-        "pos": []
-      }
-    ],
-    "differences": [
-      "Segment 'なって': source: 成る vs 生る",
-      "Segment 'おります': source: 居る vs 降りる"
-    ],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 2.1511881351470947
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.08298492431640625
   },
   {
     "sentence": "荷物は棚の上に置かないでください",
@@ -4445,8 +3990,8 @@
     "differences": [
       "Segment '置かないでください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.531418800354004
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.19075465202331543
   },
   {
     "sentence": "出発前に必ず持ち物を確認してください",
@@ -4702,8 +4247,8 @@
     "differences": [
       "Segment '確認してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3753209114074707
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.0855107307434082
   },
   {
     "sentence": "この薬は食後に一錠ずつ服用してください",
@@ -4996,8 +4541,8 @@
     "differences": [
       "Segment '服用してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.224869966506958
+    "time_ichiran": 9.775161743164062e-06,
+    "time_himotoki": 0.0631103515625
   },
   {
     "sentence": "会議室の利用後は椅子を元の位置に戻してください",
@@ -5427,8 +4972,8 @@
     "differences": [
       "Segment '戻してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3421032428741455
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.08201813697814941
   },
   {
     "sentence": "資料は事前にダウンロードしておいてください",
@@ -5618,225 +5163,8 @@
     "differences": [
       "Segment 'ダウンロードしておいてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8887958526611328
-  },
-  {
-    "sentence": "早く起きていたらこんなことにはならなかった",
-    "status": "partial",
-    "ichiran_texts": [
-      "早く",
-      "起きていたら",
-      "こんな",
-      "こと",
-      "には",
-      "ならなかった"
-    ],
-    "himotoki_texts": [
-      "早く",
-      "起きていたら",
-      "こんな",
-      "こと",
-      "には",
-      "ならなかった"
-    ],
-    "ichiran_segments": [
-      {
-        "text": "早く",
-        "kana": "はやく",
-        "seq": 1400150,
-        "score": 128,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adv,n]",
-          "[adv]"
-        ]
-      },
-      {
-        "text": "起きていたら",
-        "kana": "おきていたら",
-        "seq": 10508071,
-        "score": 812,
-        "is_compound": true,
-        "components": [
-          "起きて",
-          "いたら"
-        ],
-        "conj_type": "Conditional (~tara)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "居る",
-        "pos": []
-      },
-      {
-        "text": "こんな",
-        "kana": "こんな",
-        "seq": 1004880,
-        "score": 144,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adj-pn]"
-        ]
-      },
-      {
-        "text": "こと",
-        "kana": "こと",
-        "seq": 1313580,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]",
-          "[n]",
-          "[n]"
-        ]
-      },
-      {
-        "text": "には",
-        "kana": "に‌は",
-        "seq": 2215430,
-        "score": 24,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[exp,prt]",
-          "[exp,prt]",
-          "[exp,prt]"
-        ]
-      },
-      {
-        "text": "ならなかった",
-        "kana": "ならなかった",
-        "seq": 10371751,
-        "score": 525,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": true,
-        "conj_fml": false,
-        "source_text": "成る",
-        "pos": []
-      }
-    ],
-    "himotoki_segments": [
-      {
-        "text": "早く",
-        "kana": "はやく",
-        "seq": 1400150,
-        "score": 128,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adv,n]",
-          "[adv]"
-        ]
-      },
-      {
-        "text": "起きていたら",
-        "kana": "おきていたら",
-        "seq": 10053717,
-        "score": 812,
-        "is_compound": true,
-        "components": [
-          "起きて",
-          "いたら"
-        ],
-        "conj_type": "Conditional (~tara)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "居る",
-        "pos": []
-      },
-      {
-        "text": "こんな",
-        "kana": "こんな",
-        "seq": 1004880,
-        "score": 144,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adj-pn]"
-        ]
-      },
-      {
-        "text": "こと",
-        "kana": "こと",
-        "seq": 1313580,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]",
-          "[n]",
-          "[n]"
-        ]
-      },
-      {
-        "text": "には",
-        "kana": "には",
-        "seq": 2215430,
-        "score": 24,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[exp,prt]",
-          "[exp,prt]",
-          "[exp,prt]"
-        ]
-      },
-      {
-        "text": "ならなかった",
-        "kana": "ならなかった",
-        "seq": 10368490,
-        "score": 525,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": true,
-        "conj_fml": false,
-        "source_text": "生る",
-        "pos": []
-      }
-    ],
-    "differences": [
-      "Segment 'ならなかった': source: 成る vs 生る"
-    ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 4.646371841430664
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.12697696685791016
   },
   {
     "sentence": "許可が下りなかった場合は計画を変更します",
@@ -6119,7 +5447,7 @@
       "Segment '下りなかった': source: 下りる vs 降りる"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.8266417980194092
+    "time_himotoki": 0.07693076133728027
   },
   {
     "sentence": "そうでなければ別の方法を考えなければならない",
@@ -6400,8 +5728,8 @@
       "Segment 'でなければ': conj_type: Provisional (~eba) vs None, neg: True vs False",
       "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 1.9453191757202148
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.08486509323120117
   },
   {
     "sentence": "仮に失敗したとしても後悔はしないだろう",
@@ -6649,8 +5977,8 @@
     "differences": [
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.6056420803070068
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.12998080253601074
   },
   {
     "sentence": "運が良ければ今日中に届くかもしれない",
@@ -6794,8 +6122,8 @@
     "differences": [
       "Segment '運が良ければ': source: 運が良い vs 運がいい"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.1500139236450195
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.05562400817871094
   },
   {
     "sentence": "体調が悪いため今日は早退させてください",
@@ -7057,8 +6385,8 @@
     "differences": [
       "Segment '早退させてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 4.032639026641846
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.16092276573181152
   },
   {
     "sentence": "締め切りに間に合わなかったのは準備不足のせいだ",
@@ -7378,319 +6706,8 @@
     "differences": [
       "Segment '締め切り': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 2.6186389923095703
-  },
-  {
-    "sentence": "参加者が少なかったのでイベントは中止になった",
-    "status": "partial",
-    "ichiran_texts": [
-      "参加者",
-      "が",
-      "少なかった",
-      "ので",
-      "イベント",
-      "は",
-      "中止",
-      "に",
-      "なった"
-    ],
-    "himotoki_texts": [
-      "参加者",
-      "が",
-      "少なかった",
-      "ので",
-      "イベント",
-      "は",
-      "中止",
-      "に",
-      "なった"
-    ],
-    "ichiran_segments": [
-      {
-        "text": "参加者",
-        "kana": "さんかしゃ",
-        "seq": 1302110,
-        "score": 1020,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]"
-        ]
-      },
-      {
-        "text": "が",
-        "kana": "が",
-        "seq": 2028930,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[conj,prt]"
-        ]
-      },
-      {
-        "text": "少なかった",
-        "kana": "すくなかった",
-        "seq": 10094247,
-        "score": 840,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "少ない",
-        "pos": []
-      },
-      {
-        "text": "ので",
-        "kana": "ので",
-        "seq": 1009970,
-        "score": 48,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]"
-        ]
-      },
-      {
-        "text": "イベント",
-        "kana": "イベント",
-        "seq": 1021680,
-        "score": 840,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]"
-        ]
-      },
-      {
-        "text": "は",
-        "kana": "‌は",
-        "seq": 2028920,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "中止",
-        "kana": "ちゅうし",
-        "seq": 1424410,
-        "score": 299,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,vs,vt]",
-          "[vt,vs,n]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "なった",
-        "kana": "なった",
-        "seq": 10371749,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "成る",
-        "pos": []
-      }
-    ],
-    "himotoki_segments": [
-      {
-        "text": "参加者",
-        "kana": "さんかしゃ",
-        "seq": 1302110,
-        "score": 1020,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]"
-        ]
-      },
-      {
-        "text": "が",
-        "kana": "が",
-        "seq": 2028930,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[conj,prt]"
-        ]
-      },
-      {
-        "text": "少なかった",
-        "kana": "すくなかった",
-        "seq": 10005115,
-        "score": 840,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "少ない",
-        "pos": []
-      },
-      {
-        "text": "ので",
-        "kana": "ので",
-        "seq": 1009970,
-        "score": 48,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]"
-        ]
-      },
-      {
-        "text": "イベント",
-        "kana": "イベント",
-        "seq": 1021680,
-        "score": 840,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]"
-        ]
-      },
-      {
-        "text": "は",
-        "kana": "は",
-        "seq": 2028920,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "中止",
-        "kana": "ちゅうし",
-        "seq": 1424410,
-        "score": 299,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,vs,vt]",
-          "[n,vs,vt]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "なった",
-        "kana": "なった",
-        "seq": 10368488,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "生る",
-        "pos": []
-      }
-    ],
-    "differences": [
-      "Segment 'なった': source: 成る vs 生る"
-    ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.8304319381713867
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.16297006607055664
   },
   {
     "sentence": "この地域は昔から水が豊富なことで知られている",
@@ -8122,8 +7139,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 1.54795503616333
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.07002115249633789
   },
   {
     "sentence": "技術的な問題により本日のサービスは停止しています",
@@ -8449,566 +7466,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 2.4616711139678955
-  },
-  {
-    "sentence": "そういうわけで今回は見送ることにしました",
-    "status": "partial",
-    "ichiran_texts": [
-      "そういう",
-      "わけ",
-      "で",
-      "今回",
-      "は",
-      "見送る",
-      "ことにしました"
-    ],
-    "himotoki_texts": [
-      "そういう",
-      "わけ",
-      "で",
-      "今回",
-      "は",
-      "見送る",
-      "ことにしました"
-    ],
-    "ichiran_segments": [
-      {
-        "text": "そういう",
-        "kana": "そういう",
-        "seq": 1394680,
-        "score": 176,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adj-pn]"
-        ]
-      },
-      {
-        "text": "わけ",
-        "kana": "わけ",
-        "seq": 1502990,
-        "score": 16,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,n-suf]",
-          "[n,n-suf]",
-          "[n-suf,n]"
-        ]
-      },
-      {
-        "text": "で",
-        "kana": "で",
-        "seq": 2028980,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "だ",
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "今回",
-        "kana": "こんかい",
-        "seq": 1289070,
-        "score": 325,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adv,n]"
-        ]
-      },
-      {
-        "text": "は",
-        "kana": "‌は",
-        "seq": 2028920,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "見送る",
-        "kana": "みおくる",
-        "seq": 1259830,
-        "score": 725,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[v5r,vt]",
-          "[v5r,vt]",
-          "[v5r,vt]"
-        ]
-      },
-      {
-        "text": "ことにしました",
-        "kana": "ことにしました",
-        "seq": 10398128,
-        "score": 487,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": true,
-        "source_text": "事にする",
-        "pos": []
-      }
-    ],
-    "himotoki_segments": [
-      {
-        "text": "そういう",
-        "kana": "そういう",
-        "seq": 1394680,
-        "score": 176,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adj-pn]"
-        ]
-      },
-      {
-        "text": "わけ",
-        "kana": "わけ",
-        "seq": 10256755,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Imperative",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "沸く",
-        "pos": []
-      },
-      {
-        "text": "で",
-        "kana": "で",
-        "seq": 2028980,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "だ",
-        "pos": []
-      },
-      {
-        "text": "今回",
-        "kana": "こんかい",
-        "seq": 1289070,
-        "score": 325,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,adv]"
-        ]
-      },
-      {
-        "text": "は",
-        "kana": "は",
-        "seq": 2028920,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "見送る",
-        "kana": "みおくる",
-        "seq": 1259830,
-        "score": 725,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[v5r,vt]",
-          "[v5r,vt]",
-          "[v5r,vt]"
-        ]
-      },
-      {
-        "text": "ことにしました",
-        "kana": "ことにしました",
-        "seq": 10615432,
-        "score": 882,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": true,
-        "source_text": "事にする",
-        "pos": []
-      }
-    ],
-    "differences": [
-      "Segment 'わけ': conj_type: None vs Imperative"
-    ],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 1.7075588703155518
-  },
-  {
-    "sentence": "天候の影響でフライトが欠航になりました",
-    "status": "partial",
-    "ichiran_texts": [
-      "天候",
-      "の",
-      "影響",
-      "で",
-      "フライト",
-      "が",
-      "欠航",
-      "に",
-      "なりました"
-    ],
-    "himotoki_texts": [
-      "天候",
-      "の",
-      "影響",
-      "で",
-      "フライト",
-      "が",
-      "欠航",
-      "に",
-      "なりました"
-    ],
-    "ichiran_segments": [
-      {
-        "text": "天候",
-        "kana": "てんこう",
-        "seq": 1438970,
-        "score": 234,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]"
-        ]
-      },
-      {
-        "text": "の",
-        "kana": "の",
-        "seq": 1469800,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "影響",
-        "kana": "えいきょう",
-        "seq": 1173660,
-        "score": 325,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[vi,vs,n]"
-        ]
-      },
-      {
-        "text": "で",
-        "kana": "で",
-        "seq": 2028980,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "だ",
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "フライト",
-        "kana": "フライト",
-        "seq": 1111060,
-        "score": 840,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[vi,vs,n]"
-        ]
-      },
-      {
-        "text": "が",
-        "kana": "が",
-        "seq": 2028930,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[conj,prt]"
-        ]
-      },
-      {
-        "text": "欠航",
-        "kana": "けっこう",
-        "seq": 1253980,
-        "score": 208,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[vi,vs,n]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "なりました",
-        "kana": "なりました",
-        "seq": 10371750,
-        "score": 525,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": true,
-        "source_text": "成る",
-        "pos": []
-      }
-    ],
-    "himotoki_segments": [
-      {
-        "text": "天候",
-        "kana": "てんこう",
-        "seq": 1438970,
-        "score": 234,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]"
-        ]
-      },
-      {
-        "text": "の",
-        "kana": "の",
-        "seq": 1469800,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "影響",
-        "kana": "えいきょう",
-        "seq": 1173660,
-        "score": 325,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,vs,vi]"
-        ]
-      },
-      {
-        "text": "で",
-        "kana": "で",
-        "seq": 2028980,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "だ",
-        "pos": []
-      },
-      {
-        "text": "フライト",
-        "kana": "フライト",
-        "seq": 1111060,
-        "score": 840,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,vs,vi]"
-        ]
-      },
-      {
-        "text": "が",
-        "kana": "が",
-        "seq": 2028930,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[conj,prt]"
-        ]
-      },
-      {
-        "text": "欠航",
-        "kana": "けっこう",
-        "seq": 1253980,
-        "score": 208,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,vs,vi]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "なりました",
-        "kana": "なりました",
-        "seq": 10368489,
-        "score": 525,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": true,
-        "source_text": "生る",
-        "pos": []
-      }
-    ],
-    "differences": [
-      "Segment 'なりました': source: 成る vs 生る"
-    ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.3043692111968994
+    "time_ichiran": 4.076957702636719e-05,
+    "time_himotoki": 0.11472678184509277
   },
   {
     "sentence": "彼女は何も言わずに手紙を渡してきた",
@@ -9299,8 +7758,8 @@
     "differences": [
       "Segment '言わず': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 1.3828277587890625e-05,
-    "time_himotoki": 1.569093942642212
+    "time_ichiran": 1.4781951904296875e-05,
+    "time_himotoki": 0.06953024864196777
   },
   {
     "sentence": "駅に着いてからすぐに電話してください",
@@ -9520,8 +7979,8 @@
     "differences": [
       "Segment '電話してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 2.5395309925079346
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.09617996215820312
   },
   {
     "sentence": "何度も練習してやっとできるようになった",
@@ -9702,7 +8161,7 @@
       "Segment 'できる': conj_type: Potential vs None"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.9853129386901855
+    "time_himotoki": 0.0576021671295166
   },
   {
     "sentence": "せっかくの休みなのに家から出られなかった",
@@ -9992,8 +8451,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.0947530269622803
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.10787796974182129
   },
   {
     "sentence": "これだけ準備をしたのだから失敗するわけがない",
@@ -10275,8 +8734,8 @@
     "differences": [
       "Segment 'わけがない': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.7095580101013184
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.08117198944091797
   },
   {
     "sentence": "今にも雨が降りそうな空模様だ",
@@ -10458,8 +8917,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.7459890842437744
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.08083295822143555
   },
   {
     "sentence": "新しい店は繁盛しそうな雰囲気がある",
@@ -10755,8 +9214,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.8385663032531738
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.070404052734375
   },
   {
     "sentence": "彼女は泣き出しそうな顔をしていた",
@@ -11018,8 +9477,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.5476973056793213
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.07648420333862305
   },
   {
     "sentence": "うまくいきそうな気がしてきた",
@@ -11139,8 +9598,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 2.9233510494232178
+    "time_ichiran": 7.152557373046875e-06,
+    "time_himotoki": 0.2121281623840332
   },
   {
     "sentence": "もうすぐ届きそうなので待っていてください",
@@ -11290,8 +9749,8 @@
     "differences": [
       "Segment '待っていてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.0273900032043457
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.09340310096740723
   },
   {
     "sentence": "頑張れば間に合いそうな気がする",
@@ -11439,8 +9898,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 8.821487426757812e-06,
-    "time_himotoki": 0.8585960865020752
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.0903480052947998
   },
   {
     "sentence": "彼は上司に無理な仕事を押し付けられている",
@@ -11767,359 +10226,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.6596770286560059
-  },
-  {
-    "sentence": "突然の雨に降られて服がびしょ濡れになった",
-    "status": "partial",
-    "ichiran_texts": [
-      "突然",
-      "の",
-      "雨",
-      "に",
-      "降られて",
-      "服",
-      "が",
-      "びしょ濡れ",
-      "に",
-      "なった"
-    ],
-    "himotoki_texts": [
-      "突然",
-      "の",
-      "雨",
-      "に",
-      "降られて",
-      "服",
-      "が",
-      "びしょ濡れ",
-      "に",
-      "なった"
-    ],
-    "ichiran_segments": [
-      {
-        "text": "突然",
-        "kana": "とつぜん",
-        "seq": 1457040,
-        "score": 247,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adv,adj-na,adj-no]"
-        ]
-      },
-      {
-        "text": "の",
-        "kana": "の",
-        "seq": 1469800,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "雨",
-        "kana": "あめ",
-        "seq": 1171900,
-        "score": 24,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]",
-          "[n]",
-          "[n]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "降られて",
-        "kana": "ふられて",
-        "seq": 10811158,
-        "score": 400,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": []
-      },
-      {
-        "text": "服",
-        "kana": "ふく",
-        "seq": 1500940,
-        "score": 22,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,n-suf]",
-          "[ctr]"
-        ]
-      },
-      {
-        "text": "が",
-        "kana": "が",
-        "seq": 2028930,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[conj,prt]"
-        ]
-      },
-      {
-        "text": "びしょ濡れ",
-        "kana": "びしょぬれ",
-        "seq": 1612930,
-        "score": 840,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,adj-no]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "なった",
-        "kana": "なった",
-        "seq": 10371749,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "成る",
-        "pos": []
-      }
-    ],
-    "himotoki_segments": [
-      {
-        "text": "突然",
-        "kana": "とつぜん",
-        "seq": 1457040,
-        "score": 247,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adj-no,adj-na,adv]"
-        ]
-      },
-      {
-        "text": "の",
-        "kana": "の",
-        "seq": 1469800,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "雨",
-        "kana": "あめ",
-        "seq": 1171900,
-        "score": 24,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n]",
-          "[n]",
-          "[n]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "降られて",
-        "kana": "ふられて",
-        "seq": 11403882,
-        "score": 400,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Conjunctive (~te)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "降る",
-        "pos": []
-      },
-      {
-        "text": "服",
-        "kana": "ふく",
-        "seq": 1500940,
-        "score": 22,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,n-suf]",
-          "[ctr]"
-        ]
-      },
-      {
-        "text": "が",
-        "kana": "が",
-        "seq": 2028930,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[conj,prt]"
-        ]
-      },
-      {
-        "text": "びしょ濡れ",
-        "kana": "びしょぬれ",
-        "seq": 1612930,
-        "score": 840,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adj-no,n]"
-        ]
-      },
-      {
-        "text": "に",
-        "kana": "に",
-        "seq": 2028990,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "なった",
-        "kana": "なった",
-        "seq": 10368488,
-        "score": 40,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Past (~ta)",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "生る",
-        "pos": []
-      }
-    ],
-    "differences": [
-      "Segment 'なった': source: 成る vs 生る"
-    ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.4477229118347168
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.14632081985473633
   },
   {
     "sentence": "この言葉の意味を教えていただけますか",
@@ -12381,8 +10489,8 @@
     "differences": [
       "Segment '教えていただけます': conj_type: Potential vs Non-past, source: 頂く vs 頂ける"
     ],
-    "time_ichiran": 2.6226043701171875e-06,
-    "time_himotoki": 0.8480403423309326
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.06473612785339355
   },
   {
     "sentence": "やっぱり行かなきゃだめかな",
@@ -12534,8 +10642,8 @@
     "differences": [
       "Segment '行かなきゃ': conj_type: Provisional (~eba) vs None, neg: True vs False"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.759181022644043
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.04149198532104492
   },
   {
     "sentence": "それって本当なのかな",
@@ -12767,8 +10875,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.40087199211120605
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.03547978401184082
   },
   {
     "sentence": "問題解決に向けた取り組みが求められている",
@@ -12981,8 +11089,8 @@
     "differences": [
       "Segment '取り組み': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 1.961972951889038
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 0.09575796127319336
   },
   {
     "sentence": "状況を鑑みるに慎重な対応が必要である",
@@ -13376,8 +11484,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.4052541255950928
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.05402708053588867
   },
   {
     "sentence": "この問題に対する解答は一つではない",
@@ -13629,8 +11737,8 @@
     "differences": [
       "Segment 'ではない': source: で‌はある vs だ"
     ],
-    "time_ichiran": 2.193450927734375e-05,
-    "time_himotoki": 0.33080220222473145
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.04551982879638672
   },
   {
     "sentence": "真実を追求する姿勢を忘れてはならない",
@@ -13919,7 +12027,7 @@
       "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.9045310020446777
+    "time_himotoki": 0.04594087600708008
   },
   {
     "sentence": "彼らの努力なくして成功はあり得なかった",
@@ -14165,8 +12273,8 @@
     "differences": [
       "Segment 'あり得なかった': neg: True vs False, source: あり得る vs あり得ない"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 3.112873077392578
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.1442270278930664
   },
   {
     "sentence": "駅から歩いて十五分くらいかかります",
@@ -14364,7 +12472,7 @@
         "text": "かかります",
         "kana": "かかります",
         "seq": 10368103,
-        "score": 525,
+        "score": 275,
         "is_compound": false,
         "components": [],
         "conj_type": "Non-past",
@@ -14377,7 +12485,7 @@
     "differences": [
       "Segment 'かかります': source: 掛かる vs 罹る"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 3.1597511768341064
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.0878152847290039
   }
 ]

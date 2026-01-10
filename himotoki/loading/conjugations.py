@@ -1076,26 +1076,207 @@ def load_conjugations(progress_callback=None, num_workers: int = None):
         
         logger.info(f"Inserting {len(all_conj_data)} conjugation records...")
         
-        # Track stats
-        reused_entries = 0
-        new_entries = 0
+        # Use fast bulk insert instead of one-by-one
+        new_entries, reused_entries = _bulk_insert_conjugations(
+            session, all_conj_data, _next_seq_counter
+        )
+        _next_seq_counter += new_entries
         
-        # Bulk insert all conjugations
-        for i, conj_data in enumerate(all_conj_data):
-            if _insert_conjugation_from_data(session, conj_data, _next_seq_counter):
-                _next_seq_counter += 1
-                new_entries += 1
-            else:
-                reused_entries += 1
-            
-            if (i + 1) % 10000 == 0:
-                session.commit()
-                logger.info(f"Inserted {i + 1}/{len(all_conj_data)} conjugations...")
-        
-        session.commit()
         set_bulk_loading_mode(session, enabled=False)
         logger.info(f"Conjugations complete. {len(all_conj_data)} conjugations inserted "
                    f"({new_entries} new entries, {reused_entries} reused existing entries).")
+
+
+def _bulk_insert_conjugations(session, all_conj_data: List[Dict], start_seq: int) -> Tuple[int, int]:
+    """
+    Bulk insert conjugations using SQLAlchemy Core for maximum performance.
+    
+    This is dramatically faster than the ORM-based approach because:
+    1. No individual flush() calls to get IDs
+    2. Batch inserts with executemany
+    3. In-memory tracking instead of DB lookups
+    
+    Returns:
+        (new_entries_count, reused_entries_count)
+    """
+    from sqlalchemy import insert
+    
+    global _reading_to_seq_index
+    
+    # Track what we're inserting
+    entries_to_insert = []
+    kanji_texts_to_insert = []
+    kana_texts_to_insert = []
+    conjugations_to_insert = []
+    conj_props_to_insert = []
+    source_readings_to_insert = []
+    
+    # Track (seq, from_seq, via) -> conj_id assignment
+    # We'll assign IDs in memory since SQLite uses auto-increment
+    next_seq = start_seq
+    next_conj_id = _get_max_conj_id(session) + 1
+    next_prop_id = _get_max_prop_id(session) + 1
+    next_sr_id = _get_max_sr_id(session) + 1
+    
+    # Track seen conjugations to avoid duplicates
+    seen_conjs: Dict[Tuple[int, int, Optional[int]], int] = {}  # (seq, from_seq, via) -> conj_id
+    seen_props: Set[Tuple[int, int, str, Optional[bool], Optional[bool]]] = set()  # (conj_id, type, pos, neg, fml)
+    seen_source_readings: Set[Tuple[int, str, str]] = set()  # (conj_id, text, source_text)
+    
+    new_entries = 0
+    reused_entries = 0
+    
+    for conj_data in all_conj_data:
+        readings = conj_data['readings']
+        
+        # Sort readings by (ord, onum)
+        sorted_readings = sorted(readings, key=lambda x: (x[3], x[4]))
+        
+        kanji_readings = []
+        kana_readings = []
+        source_readings = []
+        
+        for conj_text, kanji_flag, orig_text, ord_num, onum in sorted_readings:
+            source_readings.append((conj_text, orig_text))
+            if kanji_flag:
+                kanji_readings.append(conj_text)
+            else:
+                kana_readings.append(conj_text)
+        
+        if not kanji_readings and not kana_readings:
+            continue
+        
+        # Remove duplicates while preserving order
+        kanji_readings = list(dict.fromkeys(kanji_readings))
+        kana_readings = list(dict.fromkeys(kana_readings))
+        
+        # Check for existing entry with same readings
+        from_seq = conj_data['from_seq']
+        via = conj_data.get('via')
+        exclude_seqs = {from_seq}
+        if via:
+            exclude_seqs.add(via)
+        
+        existing_seq = _find_existing_seq_for_readings(kanji_readings, kana_readings, exclude_seqs)
+        
+        if existing_seq is not None:
+            seq = existing_seq
+            reused_entries += 1
+        else:
+            seq = next_seq
+            next_seq += 1
+            new_entries += 1
+            
+            conjugate_p = conj_data['conj_type'] in SECONDARY_CONJUGATION_TYPES_FROM
+            entries_to_insert.append({
+                'seq': seq, 'content': '', 'root_p': False,
+                'n_kanji': len(kanji_readings), 'n_kana': len(kana_readings),
+                'primary_nokanji': len(kanji_readings) == 0
+            })
+            
+            for ord_num, text in enumerate(kanji_readings):
+                kanji_texts_to_insert.append({
+                    'seq': seq, 'text': text, 'ord': ord_num,
+                    'common': None, 'conjugate_p': conjugate_p
+                })
+            
+            for ord_num, text in enumerate(kana_readings):
+                kana_texts_to_insert.append({
+                    'seq': seq, 'text': text, 'ord': ord_num,
+                    'common': None, 'conjugate_p': conjugate_p
+                })
+            
+            # Update reading index for this new entry
+            if _reading_to_seq_index is not None:
+                key = (frozenset(kanji_readings), frozenset(kana_readings))
+                _reading_to_seq_index[key] = seq
+        
+        # Check if conjugation already exists
+        conj_key = (seq, from_seq, via)
+        if conj_key in seen_conjs:
+            conj_id = seen_conjs[conj_key]
+        else:
+            conj_id = next_conj_id
+            next_conj_id += 1
+            seen_conjs[conj_key] = conj_id
+            conjugations_to_insert.append({
+                'id': conj_id, 'seq': seq, 'from': from_seq, 'via': via
+            })
+        
+        # Add prop if not seen
+        prop_key = (conj_id, conj_data['conj_type'], conj_data['pos'],
+                   conj_data['neg'], conj_data['fml'])
+        if prop_key not in seen_props:
+            seen_props.add(prop_key)
+            conj_props_to_insert.append({
+                'id': next_prop_id,
+                'conj_id': conj_id,
+                'conj_type': conj_data['conj_type'],
+                'pos': conj_data['pos'],
+                'neg': conj_data['neg'],
+                'fml': conj_data['fml']
+            })
+            next_prop_id += 1
+        
+        # Add source readings
+        for text, source_text in source_readings:
+            sr_key = (conj_id, text, source_text)
+            if sr_key not in seen_source_readings:
+                seen_source_readings.add(sr_key)
+                source_readings_to_insert.append({
+                    'id': next_sr_id,
+                    'conj_id': conj_id,
+                    'text': text,
+                    'source_text': source_text
+                })
+                next_sr_id += 1
+    
+    # Bulk insert all records
+    logger.info(f"Bulk inserting: {len(entries_to_insert)} entries, "
+               f"{len(conjugations_to_insert)} conjugations, "
+               f"{len(conj_props_to_insert)} props, "
+               f"{len(source_readings_to_insert)} source readings...")
+    
+    conn = session.connection()
+    
+    if entries_to_insert:
+        conn.execute(insert(Entry), entries_to_insert)
+    if kanji_texts_to_insert:
+        conn.execute(insert(KanjiText), kanji_texts_to_insert)
+    if kana_texts_to_insert:
+        conn.execute(insert(KanaText), kana_texts_to_insert)
+    if conjugations_to_insert:
+        conn.execute(insert(Conjugation), conjugations_to_insert)
+    if conj_props_to_insert:
+        conn.execute(insert(ConjProp), conj_props_to_insert)
+    if source_readings_to_insert:
+        conn.execute(insert(ConjSourceReading), source_readings_to_insert)
+    
+    session.commit()
+    logger.info("Bulk insert complete.")
+    
+    return new_entries, reused_entries
+
+
+def _get_max_conj_id(session) -> int:
+    """Get the current max conjugation ID."""
+    from sqlalchemy import func
+    result = session.query(func.max(Conjugation.id)).scalar()
+    return result or 0
+
+
+def _get_max_prop_id(session) -> int:
+    """Get the current max conj_prop ID."""
+    from sqlalchemy import func
+    result = session.query(func.max(ConjProp.id)).scalar()
+    return result or 0
+
+
+def _get_max_sr_id(session) -> int:
+    """Get the current max source reading ID."""
+    from sqlalchemy import func
+    result = session.query(func.max(ConjSourceReading.id)).scalar()
+    return result or 0
 
 
 def _insert_conjugation_from_data(session, conj_data: Dict, new_seq: int) -> bool:
@@ -1510,23 +1691,12 @@ def load_secondary_conjugations(from_seqs: Optional[List[int]] = None, progress_
         
         logger.info(f"Inserting {len(all_conj_data)} secondary conjugation records...")
         
-        # Track stats
-        reused_entries = 0
-        new_entries = 0
+        # Use fast bulk insert instead of one-by-one
+        new_entries, reused_entries = _bulk_insert_conjugations(
+            session, all_conj_data, _next_seq_counter
+        )
+        _next_seq_counter += new_entries
         
-        # Bulk insert
-        for i, conj_data in enumerate(all_conj_data):
-            if _insert_conjugation_from_data(session, conj_data, _next_seq_counter):
-                _next_seq_counter += 1
-                new_entries += 1
-            else:
-                reused_entries += 1
-            
-            if (i + 1) % 10000 == 0:
-                session.commit()
-                logger.info(f"Inserted {i + 1}/{len(all_conj_data)} secondary conjugations...")
-        
-        session.commit()
         set_bulk_loading_mode(session, enabled=False)
         logger.info(f"Secondary conjugations complete. {len(all_conj_data)} conjugations inserted "
                    f"({new_entries} new entries, {reused_entries} reused existing entries).")

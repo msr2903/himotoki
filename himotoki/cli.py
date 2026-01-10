@@ -6,11 +6,14 @@ Usage:
     python -m himotoki.cli "日本語テキスト"
     python -m himotoki.cli -i "日本語テキスト"  # with info
     python -m himotoki.cli -f "日本語テキスト"  # full JSON
+    python -m himotoki.cli init-db              # initialize database
 """
 
 import argparse
 import json
 import sys
+import time
+from pathlib import Path
 from typing import Optional
 
 from himotoki.db.connection import get_session, get_db_path
@@ -59,11 +62,131 @@ def format_word_info_text(session, word_infos) -> str:
     return '\n'.join(lines)
 
 
+def init_db_command(args) -> int:
+    """Initialize the himotoki database."""
+    import os
+    
+    # Determine paths
+    if args.jmdict:
+        jmdict_path = Path(args.jmdict)
+    else:
+        # Check common locations
+        for p in [Path('data/JMdict_e.xml'), Path('JMdict_e.xml')]:
+            if p.exists():
+                jmdict_path = p
+                break
+        else:
+            print("Error: JMdict file not found.", file=sys.stderr)
+            print("Download from: http://ftp.edrdg.org/pub/Nihongo/JMdict_e.gz", file=sys.stderr)
+            print("Or specify path with --jmdict", file=sys.stderr)
+            return 1
+    
+    if args.output:
+        db_path = Path(args.output)
+    else:
+        # Default to data directory
+        db_path = Path('data/himotoki.db')
+    
+    if not jmdict_path.exists():
+        print(f"Error: JMdict file not found: {jmdict_path}", file=sys.stderr)
+        return 1
+    
+    # Confirm overwrite
+    if db_path.exists() and not args.force:
+        print(f"Database already exists: {db_path}")
+        response = input("Overwrite? [y/N]: ").strip().lower()
+        if response != 'y':
+            print("Aborted.")
+            return 1
+    
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    print(f"Initializing database...")
+    print(f"  JMdict: {jmdict_path}")
+    print(f"  Output: {db_path}")
+    print()
+    
+    from himotoki.loading.jmdict import load_jmdict
+    
+    t0 = time.perf_counter()
+    
+    def progress(count):
+        if count % 50000 == 0:
+            print(f"  {count:,} entries loaded...")
+    
+    try:
+        total = load_jmdict(
+            xml_path=str(jmdict_path),
+            db_path=str(db_path),
+            load_extras=True,
+            batch_size=5000,
+            progress_callback=progress
+        )
+        
+        elapsed = time.perf_counter() - t0
+        db_size = os.path.getsize(db_path) / 1024 / 1024
+        
+        print()
+        print(f"✅ Database initialized successfully!")
+        print(f"   Entries: {total:,}")
+        print(f"   Time: {elapsed:.1f}s ({elapsed/60:.1f} min)")
+        print(f"   Size: {db_size:.1f}MB")
+        print()
+        print("Set HIMOTOKI_DB environment variable to use this database:")
+        print(f'  export HIMOTOKI_DB="{db_path.absolute()}"')
+        
+        return 0
+        
+    except Exception as e:
+        print(f"Error initializing database: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
+        return 1
+
+
+def main_init_db(args: list) -> int:
+    """CLI entry point for init-db subcommand."""
+    parser = argparse.ArgumentParser(
+        description='Initialize the himotoki database from JMdict',
+        prog='himotoki init-db',
+    )
+    
+    parser.add_argument(
+        '--jmdict', '-j',
+        type=str,
+        metavar='PATH',
+        help='Path to JMdict XML file (default: data/JMdict_e.xml)',
+    )
+    
+    parser.add_argument(
+        '--output', '-o',
+        type=str,
+        metavar='PATH',
+        help='Output database path (default: data/himotoki.db)',
+    )
+    
+    parser.add_argument(
+        '--force', '-f',
+        action='store_true',
+        help='Overwrite existing database without prompting',
+    )
+    
+    parsed = parser.parse_args(args)
+    return init_db_command(parsed)
+
+
 def main(args: Optional[list] = None) -> int:
     """Main CLI entry point."""
+    # Check for init-db subcommand
+    args_list = args if args is not None else sys.argv[1:]
+    if args_list and args_list[0] == 'init-db':
+        return main_init_db(args_list[1:])
+    
     parser = argparse.ArgumentParser(
         description='Command line interface for Himotoki (Japanese Morphological Analyzer)',
         prog='himotoki',
+        epilog='Subcommands:\n  himotoki init-db    Initialize the database from JMdict',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     
     parser.add_argument(

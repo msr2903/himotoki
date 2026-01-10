@@ -155,13 +155,23 @@ _ARCHAIC_CACHE: Optional[Set[int]] = None
 _CONJ_DATA_CACHE: Dict[Tuple, List[Any]] = {}
 _CONJ_DATA_CACHE_MAX = 2048
 
-# POS cache - frozenset(seqs) -> frozenset(posi)
-_POS_CACHE: Dict[frozenset, frozenset] = {}
-_POS_CACHE_MAX = 1024
+# POS cache - seq -> frozenset(posi) for per-seq caching
+# This allows combining results for multi-seq lookups
+_POS_SEQ_CACHE: Dict[int, frozenset] = {}
+_POS_SEQ_CACHE_MAX = 4096
 
 # UK (prefer kana) cache - frozenset(seqs) -> bool
 _UK_CACHE: Dict[frozenset, bool] = {}
 _UK_CACHE_MAX = 1024
+
+# Word lookup cache - (word, is_kana) -> List[WordMatch readings data]
+# Caches database lookups to avoid repeated queries for same word
+_WORD_CACHE: Dict[Tuple[str, bool], List[Tuple]] = {}
+_WORD_CACHE_MAX = 4096
+
+# Entry cache - seq -> Entry (reduces individual lookups)
+_ENTRY_CACHE: Dict[int, Any] = {}
+_ENTRY_CACHE_MAX = 4096
 
 
 # ============================================================================
@@ -931,6 +941,132 @@ def get_source_text(
 
 
 # ============================================================================
+# Batch Preloading for Performance
+# ============================================================================
+
+def preload_scoring_caches(session: Session, seqs: Set[int]) -> None:
+    """
+    Batch preload all caches needed for calc_score.
+    
+    This dramatically reduces cold-start latency by:
+    1. Batch loading Entry objects
+    2. Batch preloading UK (prefer-kana) status
+    3. Batch preloading POS tags
+    
+    Call this before scoring a batch of segments.
+    
+    Args:
+        session: Database session
+        seqs: Set of seq numbers to preload
+    """
+    global _ENTRY_CACHE, _UK_CACHE, _POS_SEQ_CACHE
+    
+    if not seqs:
+        return
+    
+    # Filter to seqs not already in entry cache
+    missing_seqs = seqs - set(_ENTRY_CACHE.keys())
+    
+    if missing_seqs:
+        # Batch load entries
+        entries = session.execute(
+            select(Entry).where(Entry.seq.in_(missing_seqs))
+        ).scalars().all()
+        
+        # Cache with size limit
+        if len(_ENTRY_CACHE) + len(entries) > _ENTRY_CACHE_MAX:
+            # Clear half the cache
+            keys = list(_ENTRY_CACHE.keys())[:len(_ENTRY_CACHE) // 2]
+            for k in keys:
+                del _ENTRY_CACHE[k]
+        
+        for entry in entries:
+            _ENTRY_CACHE[entry.seq] = entry
+    
+    # Find seqs not yet in UK cache
+    uk_missing = {seq for seq in seqs if frozenset([seq]) not in _UK_CACHE}
+    
+    if uk_missing:
+        # Single batch query for all UK statuses
+        uk_seqs = set(session.execute(
+            select(SenseProp.seq)
+            .where(and_(
+                SenseProp.seq.in_(uk_missing),
+                SenseProp.tag == 'misc',
+                SenseProp.text == 'uk'
+            ))
+            .distinct()
+        ).scalars().all())
+        
+        # Cache results for all checked seqs
+        for seq in uk_missing:
+            cache_key = frozenset([seq])
+            _UK_CACHE[cache_key] = seq in uk_seqs
+    
+    # Find seqs not yet in POS cache (now using _POS_SEQ_CACHE)
+    pos_missing = {seq for seq in seqs if seq not in _POS_SEQ_CACHE}
+    
+    if pos_missing:
+        # Build archaic senses subquery once
+        arch_misc = {'arch', 'obsc', 'rare'}
+        arch_senses = (
+            select(SenseProp.sense_id)
+            .where(and_(
+                SenseProp.tag == 'misc',
+                SenseProp.text.in_(arch_misc)
+            ))
+        )
+        
+        # Batch query for all POS tags (excluding archaic senses)
+        pos_results = session.execute(
+            select(SenseProp.seq, SenseProp.text)
+            .where(and_(
+                SenseProp.seq.in_(pos_missing),
+                SenseProp.tag == 'pos',
+                ~SenseProp.sense_id.in_(arch_senses)
+            ))
+        ).all()
+        
+        # Group results by seq
+        seq_to_posi: Dict[int, Set[str]] = {seq: set() for seq in pos_missing}
+        for seq, pos_text in pos_results:
+            seq_to_posi[seq].add(pos_text)
+        
+        # Cache results in _POS_SEQ_CACHE
+        if len(_POS_SEQ_CACHE) + len(seq_to_posi) > _POS_SEQ_CACHE_MAX:
+            keys = list(_POS_SEQ_CACHE.keys())[:len(_POS_SEQ_CACHE) // 2]
+            for k in keys:
+                del _POS_SEQ_CACHE[k]
+        
+        for seq, posi in seq_to_posi.items():
+            _POS_SEQ_CACHE[seq] = frozenset(posi)
+
+
+def get_cached_entry(session: Session, seq: int) -> Optional[Entry]:
+    """
+    Get Entry from cache or database.
+    Uses _ENTRY_CACHE for faster repeated lookups.
+    """
+    global _ENTRY_CACHE
+    
+    if seq in _ENTRY_CACHE:
+        return _ENTRY_CACHE[seq]
+    
+    entry = session.get(Entry, seq)
+    
+    # Cache with size limit
+    if len(_ENTRY_CACHE) >= _ENTRY_CACHE_MAX:
+        keys = list(_ENTRY_CACHE.keys())[:len(_ENTRY_CACHE) // 2]
+        for k in keys:
+            del _ENTRY_CACHE[k]
+    
+    if entry:
+        _ENTRY_CACHE[seq] = entry
+    
+    return entry
+
+
+# ============================================================================
 # Archaic Word Detection
 # ============================================================================
 
@@ -1034,53 +1170,76 @@ def is_prefer_kana(session: Session, seq_set: List[int]) -> bool:
     return result
 
 
+# Cache for individual seq -> posi (frozen set)
+_POS_SEQ_CACHE: Dict[int, frozenset] = {}
+_POS_SEQ_CACHE_MAX = 4096
+
+
 def get_non_arch_posi(session: Session, seq_set: Set[int]) -> Set[str]:
     """
     Get part-of-speech tags for entries, excluding archaic senses.
     From ichiran's get-non-arch-posi.
+    
+    Uses per-seq caching for better hit rate when seq_sets overlap.
     """
-    global _POS_CACHE
+    global _POS_SEQ_CACHE
     
-    # Create cache key from immutable input
-    cache_key = frozenset(seq_set)
+    # Check if we have all seqs cached
+    all_cached = all(seq in _POS_SEQ_CACHE for seq in seq_set)
     
-    # Check cache first
-    if cache_key in _POS_CACHE:
-        return set(_POS_CACHE[cache_key])  # Return mutable copy
+    if all_cached:
+        # Combine cached results
+        result = set()
+        for seq in seq_set:
+            result |= _POS_SEQ_CACHE[seq]
+        return result
     
-    arch_misc = {'arch', 'obsc', 'rare'}
+    # Find which seqs need to be fetched
+    missing_seqs = {seq for seq in seq_set if seq not in _POS_SEQ_CACHE}
     
-    # Subquery to find sense_ids with archaic props
-    arch_senses = (
-        select(SenseProp.sense_id)
-        .where(and_(
-            SenseProp.tag == 'misc',
-            SenseProp.text.in_(arch_misc)
-        ))
-    )
+    if missing_seqs:
+        arch_misc = {'arch', 'obsc', 'rare'}
+        
+        # Subquery to find sense_ids with archaic props
+        arch_senses = (
+            select(SenseProp.sense_id)
+            .where(and_(
+                SenseProp.tag == 'misc',
+                SenseProp.text.in_(arch_misc)
+            ))
+        )
+        
+        # Batch query for all missing seqs
+        results = session.execute(
+            select(SenseProp.seq, SenseProp.text)
+            .where(and_(
+                SenseProp.seq.in_(missing_seqs),
+                SenseProp.tag == 'pos',
+                ~SenseProp.sense_id.in_(arch_senses)
+            ))
+        ).all()
+        
+        # Group by seq
+        seq_posi: Dict[int, Set[str]] = {seq: set() for seq in missing_seqs}
+        for seq, pos_text in results:
+            seq_posi[seq].add(pos_text)
+        
+        # Cache individual seqs (with size limit)
+        if len(_POS_SEQ_CACHE) + len(seq_posi) > _POS_SEQ_CACHE_MAX:
+            keys = list(_POS_SEQ_CACHE.keys())[:len(_POS_SEQ_CACHE) // 2]
+            for k in keys:
+                del _POS_SEQ_CACHE[k]
+        
+        for seq, posi in seq_posi.items():
+            _POS_SEQ_CACHE[seq] = frozenset(posi)
     
-    # Get pos where sense is not archaic
-    query = (
-        select(SenseProp.text)
-        .where(and_(
-            SenseProp.seq.in_(seq_set),
-            SenseProp.tag == 'pos',
-            ~SenseProp.sense_id.in_(arch_senses)
-        ))
-        .distinct()
-    )
-    results = session.execute(query).scalars().all()
-    result_set = set(results)
+    # Combine results from cache
+    result = set()
+    for seq in seq_set:
+        if seq in _POS_SEQ_CACHE:
+            result |= _POS_SEQ_CACHE[seq]
     
-    # Cache result (with size limit)
-    if len(_POS_CACHE) >= _POS_CACHE_MAX:
-        # Simple eviction: clear half the cache
-        keys = list(_POS_CACHE.keys())[:len(_POS_CACHE) // 2]
-        for k in keys:
-            del _POS_CACHE[k]
-    _POS_CACHE[cache_key] = frozenset(result_set)
-    
-    return result_set
+    return result
 
 
 # ============================================================================
@@ -1316,7 +1475,8 @@ def calc_score(
         return 0, {}
     
     # Get entry info - counters don't have entries
-    entry = None if ctr_mode else session.get(Entry, seq)
+    # Use cached entry lookup for performance
+    entry = None if ctr_mode else get_cached_entry(session, seq)
     if not entry and not ctr_mode:
         return 0, {}
     

@@ -23,6 +23,7 @@ from himotoki.lookup import (
     MAX_WORD_LENGTH, SCORE_CUTOFF, GAP_PENALTY,
     WordMatch, Segment, SegmentList,
     find_word_full, gen_score, cull_segments, gap_penalty,
+    preload_scoring_caches,
 )
 from himotoki.synergies import (
     get_synergies, get_penalties, apply_segfilters,
@@ -407,6 +408,17 @@ def join_substring_words(session: Session, text: str) -> List[SegmentList]:
     
     ends_with_long_vowel = text.endswith('ー')
     text_len = len(text)
+    
+    # Batch preload all seqs for scoring performance
+    # This reduces N individual queries to 1 batch query
+    all_seqs: Set[int] = set()
+    for start, end, segments in results:
+        for seg in segments:
+            if hasattr(seg.word, 'seq') and seg.word.seq:
+                all_seqs.add(seg.word.seq)
+    
+    if all_seqs:
+        preload_scoring_caches(session, all_seqs)
     
     for start, end, segments in results:
         # Calculate kanji break positions relative to segment
