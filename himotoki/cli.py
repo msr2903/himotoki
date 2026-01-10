@@ -1,12 +1,7 @@
 """
 Command line interface for himotoki.
-Matches ichiran-cli functionality.
 
-Usage:
-    python -m himotoki.cli "日本語テキスト"
-    python -m himotoki.cli -i "日本語テキスト"  # with info
-    python -m himotoki.cli -f "日本語テキスト"  # full JSON
-    python -m himotoki.cli init-db              # initialize database
+Run 'himotoki --help' for usage information.
 """
 
 import argparse
@@ -26,17 +21,43 @@ from himotoki.output import (
 )
 from himotoki.characters import romanize_word
 
+# =============================================================================
+# Constants
+# =============================================================================
 
-def format_word_info_text(session, word_infos) -> str:
-    """Format word info list as text output."""
+VERSION = '0.1.1'
+CONJUGATION_ROOT = 'root'  # Marker for unconjugated (dictionary) form
+
+
+def get_kana(wi) -> str:
+    """Extract kana reading from a WordInfo object.
+    
+    Handles the various formats kana can be stored in:
+    - str: return as-is
+    - list: return first element
+    - None/empty: fall back to text
+    """
+    if isinstance(wi.kana, str):
+        return wi.kana
+    if wi.kana:  # non-empty list
+        return wi.kana[0]
+    return wi.text or ''
+
+
+def format_word_info_text(session, word_infos, include_romanization: bool = True) -> str:
+    """Format word info list as text output.
+    
+    Args:
+        session: Database session
+        word_infos: List of WordInfo objects
+        include_romanization: If True, include romanized reading line at top
+    """
     lines = []
     
-    # Romanized reading line
-    romanized_parts = []
-    for wi in word_infos:
-        kana = wi.kana if isinstance(wi.kana, str) else wi.kana[0] if wi.kana else wi.text
-        romanized_parts.append(romanize_word(kana))
-    lines.append(' '.join(romanized_parts))
+    # Romanized reading line (optional)
+    if include_romanization:
+        romanized_parts = [romanize_word(get_kana(wi)) for wi in word_infos]
+        lines.append(' '.join(romanized_parts))
     
     # Individual word info
     for wi in word_infos:
@@ -45,21 +66,90 @@ def format_word_info_text(session, word_infos) -> str:
         
         lines.append('')
         
-        kana = wi.kana if isinstance(wi.kana, str) else wi.kana[0] if wi.kana else wi.text
-        romanized = romanize_word(kana)
-        lines.append(f"* {romanized}  {word_info_reading_str(wi)}")
+        if include_romanization:
+            romanized = romanize_word(get_kana(wi))
+            lines.append(f"* {romanized}  {word_info_reading_str(wi)}")
+        else:
+            lines.append(f"* {word_info_reading_str(wi)}")
         
         if wi.seq:
             senses = get_senses_str(session, wi.seq)
             lines.append(senses)
         
         # Conjugation info
-        if wi.conjugations and wi.conjugations != 'root' and wi.seq:
+        if wi.conjugations and wi.conjugations != CONJUGATION_ROOT and wi.seq:
             conj_strs = format_conjugation_info(session, wi.seq, wi.conjugations)
             for cs in conj_strs:
                 lines.append(cs)
     
     return '\n'.join(lines)
+
+
+# =============================================================================
+# Output Handlers
+# =============================================================================
+
+def output_json(session, text: str, limit: int) -> None:
+    """Output segmentation as JSON."""
+    from himotoki.output import word_info_gloss_json
+    
+    results = dict_segment(session, text, limit=limit)
+    output = []
+    for word_infos, score in results:
+        segments = []
+        for wi in word_infos:
+            romanized = romanize_word(get_kana(wi))
+            segment_json = word_info_gloss_json(session, wi)
+            segments.append([romanized, segment_json, []])
+        output.append([segments, score])
+    
+    print(json.dumps(output, ensure_ascii=False))
+
+
+def output_romanize(session, text: str) -> None:
+    """Output simple romanization."""
+    results = dict_segment(session, text, limit=1)
+    if not results:
+        print(text)
+        return
+    
+    word_infos, _ = results[0]
+    romanized_parts = [romanize_word(get_kana(wi)) for wi in word_infos]
+    print(' '.join(romanized_parts))
+
+
+def output_full(session, text: str) -> None:
+    """Output romanization with dictionary info."""
+    results = dict_segment(session, text, limit=1)
+    if not results:
+        print(text)
+        return
+    
+    word_infos, _ = results[0]
+    print(format_word_info_text(session, word_infos, include_romanization=True))
+
+
+def output_kana(session, text: str) -> None:
+    """Output kana reading with spaces."""
+    results = dict_segment(session, text, limit=1)
+    if not results:
+        print(text)
+        return
+    
+    word_infos, _ = results[0]
+    kana_parts = [get_kana(wi) for wi in word_infos]
+    print(' '.join(kana_parts))
+
+
+def output_default(session, text: str) -> None:
+    """Output dictionary info only (no romanization)."""
+    results = dict_segment(session, text, limit=1)
+    if not results:
+        print(text)
+        return
+    
+    word_infos, _ = results[0]
+    print(format_word_info_text(session, word_infos, include_romanization=False))
 
 
 def init_db_command(args) -> int:
@@ -240,14 +330,25 @@ def main(args: Optional[list] = None) -> int:
         help='Japanese text to analyze',
     )
     
-    parser.add_argument(
-        '-i', '--with-info',
+    # Output format flags (mutually exclusive)
+    output_group = parser.add_mutually_exclusive_group()
+    output_group.add_argument(
+        '-r', '--romanize',
         action='store_true',
-        help='Print dictionary info for each word',
+        help='Simple romanization output only',
     )
-    
-    parser.add_argument(
+    output_group.add_argument(
         '-f', '--full',
+        action='store_true',
+        help='Full output with romanization and dictionary info',
+    )
+    output_group.add_argument(
+        '-k', '--kana',
+        action='store_true',
+        help='Kana reading with spaces between words',
+    )
+    output_group.add_argument(
+        '-j', '--json',
         action='store_true',
         help='Full split info as JSON',
     )
@@ -257,7 +358,7 @@ def main(args: Optional[list] = None) -> int:
         type=int,
         default=1,
         metavar='N',
-        help='Limit segmentations to N results (default: 1, use with -f)',
+        help='Limit segmentations to N results (default: 1, use with -j)',
     )
     
     parser.add_argument(
@@ -277,13 +378,13 @@ def main(args: Optional[list] = None) -> int:
     parsed = parser.parse_args(args)
     
     if parsed.version:
-        print('himotoki 0.1.0')
+        print(f'himotoki {VERSION}')
         return 0
     
     # Get input text
     text = ' '.join(parsed.text) if parsed.text else ''
     
-    if not text:
+    if not text or not text.strip():
         parser.print_help()
         return 1
     
@@ -314,52 +415,31 @@ def main(args: Optional[list] = None) -> int:
     init_suffixes(session)
     
     try:
-        if parsed.full:
-            # Full JSON output
+        # Determine output mode and dispatch (order-independent)
+        output_mode = 'default'
+        if parsed.json:
+            output_mode = 'json'
             limit = parsed.limit if parsed.limit > 0 else 5
-            results = dict_segment(session, text, limit=limit)
-            
-            # Format as ichiran-compatible JSON
-            output = []
-            for word_infos, score in results:
-                segments = []
-                for wi in word_infos:
-                    from himotoki.output import word_info_gloss_json
-                    kana = wi.kana if isinstance(wi.kana, str) else wi.kana[0] if wi.kana else wi.text
-                    romanized = romanize_word(kana)
-                    segment_json = word_info_gloss_json(session, wi)
-                    segments.append([romanized, segment_json, []])
-                output.append([segments, score])
-            
-            print(json.dumps(output, ensure_ascii=False))
-        
-        elif parsed.with_info:
-            # Text output with dictionary info
-            results = dict_segment(session, text, limit=1)
-            if results:
-                word_infos, score = results[0]
-                output = format_word_info_text(session, word_infos)
-                print(output)
-            else:
-                print(text)
-        
+            output_json(session, text, limit)
         else:
-            # Simple romanization
-            results = dict_segment(session, text, limit=1)
-            if results:
-                word_infos, score = results[0]
-                romanized_parts = []
-                for wi in word_infos:
-                    kana = wi.kana if isinstance(wi.kana, str) else wi.kana[0] if wi.kana else wi.text
-                    romanized_parts.append(romanize_word(kana))
-                print(' '.join(romanized_parts))
+            # Map flags to handlers (only one can be True due to mutually exclusive group)
+            handlers = {
+                'romanize': output_romanize,
+                'full': output_full,
+                'kana': output_kana,
+            }
+            for flag, fn in handlers.items():
+                if getattr(parsed, flag):
+                    output_mode = flag
+                    fn(session, text)
+                    break
             else:
-                print(text)
+                output_default(session, text)
         
         return 0
     
     except Exception as e:
-        print(f'Error processing text: {e}', file=sys.stderr)
+        print(f'Error processing text (mode={output_mode}): {e}', file=sys.stderr)
         import traceback
         traceback.print_exc()
         return 1

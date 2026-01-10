@@ -62,14 +62,20 @@ himotoki setup --yes      # Non-interactive (for scripts/CI)
 Analyze Japanese text directly from your terminal:
 
 ```bash
-# Basic segmentation and romanization
+# Default: Dictionary info only
 himotoki "学校で勉強しています"
 
-# Detailed analysis with dictionary info
-himotoki -i "学校で勉強しています"
+# Simple romanization
+himotoki -r "学校で勉強しています"
 
-# Full JSON output for integration
+# Full output (romanization + dictionary info)
 himotoki -f "学校で勉強しています"
+
+# Kana reading with spaces
+himotoki -k "学校で勉強しています"
+
+# JSON output for integration
+himotoki -j "学校で勉強しています"
 ```
 
 ### Python API Example

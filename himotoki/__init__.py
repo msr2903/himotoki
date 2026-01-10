@@ -6,7 +6,7 @@ A Python port of ichiran (https://github.com/tshatrov/ichiran)
 import time
 from typing import Optional, Tuple
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 def warm_up(verbose: bool = False) -> Tuple[float, dict]:
