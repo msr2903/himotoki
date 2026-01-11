@@ -215,6 +215,7 @@ def find_substring_words(
     Find all words that match substrings of the given text.
     
     This pre-loads words for efficiency, avoiding repeated database queries.
+    Uses RAW SQL instead of ORM for performance (avoids ORM object overhead).
     
     Args:
         session: Database session
@@ -224,6 +225,8 @@ def find_substring_words(
     Returns:
         Dictionary mapping substring to list of matching words
     """
+    from himotoki.raw_types import RawKanaReading, RawKanjiReading
+    
     if sticky is None:
         sticky = []
     
@@ -251,21 +254,37 @@ def find_substring_words(
                 else:
                     kanji_keys.append(part)
     
-    # Batch query database for all substrings
+    # =========================================================================
+    # RAW SQL QUERIES (replaces ORM for performance)
+    # =========================================================================
+    # Get raw connection from SQLAlchemy session
+    conn = session.connection().connection
+    cursor = conn.cursor()
+    
+    # Query kana_text table
     if kana_keys:
         unique_kana = list(set(kana_keys))
-        results = session.execute(
-            select(KanaText).where(KanaText.text.in_(unique_kana))
-        ).scalars().all()
-        for reading in results:
+        placeholders = ','.join('?' * len(unique_kana))
+        cursor.execute(
+            f"SELECT id, seq, text, ord, common, best_kanji "
+            f"FROM kana_text WHERE text IN ({placeholders})",
+            unique_kana
+        )
+        for row in cursor.fetchall():
+            reading = RawKanaReading(*row)
             substring_map[reading.text].append(WordMatch(reading=reading))
     
+    # Query kanji_text table
     if kanji_keys:
         unique_kanji = list(set(kanji_keys))
-        results = session.execute(
-            select(KanjiText).where(KanjiText.text.in_(unique_kanji))
-        ).scalars().all()
-        for reading in results:
+        placeholders = ','.join('?' * len(unique_kanji))
+        cursor.execute(
+            f"SELECT id, seq, text, ord, common, best_kana "
+            f"FROM kanji_text WHERE text IN ({placeholders})",
+            unique_kanji
+        )
+        for row in cursor.fetchall():
+            reading = RawKanjiReading(*row)
             substring_map[reading.text].append(WordMatch(reading=reading))
     
     # Also check for suffix-based compound words for each substring

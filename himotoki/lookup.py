@@ -14,6 +14,8 @@ from typing import Optional, List, Dict, Tuple, Union, Any, Set
 from functools import lru_cache
 from collections import OrderedDict
 
+from himotoki.raw_types import RawKanaReading, RawKanjiReading
+
 from sqlalchemy import select, and_, or_, func
 from sqlalchemy.orm import Session
 
@@ -243,9 +245,9 @@ class ConjData:
 class WordMatch:
     """
     Represents a word found in the database.
-    Wraps either a KanjiText or KanaText object with additional metadata.
+    Wraps either a KanjiText/KanaText ORM object OR a lightweight RawKana/KanjiReading.
     """
-    reading: Union[KanjiText, KanaText]
+    reading: Union[KanjiText, KanaText, RawKanaReading, RawKanjiReading]
     conjugations: Optional[List[int]] = None  # List of conjugation IDs, or :root marker
     hinted: bool = False
     # Cached properties for performance (avoid repeated isinstance checks)
@@ -255,7 +257,18 @@ class WordMatch:
     
     def __post_init__(self):
         # Pre-compute cached properties on creation
-        self._word_type = 'kanji' if isinstance(self.reading, KanjiText) else 'kana'
+        # Detect type: ORM objects have __table__, raw namedtuples don't
+        # For raw types: RawKanaReading has 'best_kanji', RawKanjiReading has 'best_kana'
+        if isinstance(self.reading, (KanjiText, KanaText)):
+            # ORM object
+            self._word_type = 'kanji' if isinstance(self.reading, KanjiText) else 'kana'
+        elif isinstance(self.reading, RawKanaReading):
+            self._word_type = 'kana'
+        elif isinstance(self.reading, RawKanjiReading):
+            self._word_type = 'kanji'
+        else:
+            # Fallback: check for best_kanji attribute (kana has it, kanji doesn't)
+            self._word_type = 'kana' if hasattr(self.reading, 'best_kanji') else 'kanji'
         self._seq = self.reading.seq
         self._text = self.reading.text
     
@@ -477,9 +490,9 @@ def adjoin_word(
                 return w.kana
             # For WordMatch, get kana from reading
             if hasattr(w, 'reading'):
-                # KanjiText has text=kanji, best_kana=kana reading
-                # KanaText has text=kana directly
-                if isinstance(w.reading, KanjiText):
+                # KanjiText/RawKanjiReading has text=kanji, best_kana=kana reading
+                # KanaText/RawKanaReading has text=kana directly
+                if isinstance(w.reading, (KanjiText, RawKanjiReading)):
                     return w.reading.best_kana or w.reading.text
                 elif hasattr(w.reading, 'text'):
                     return w.reading.text
