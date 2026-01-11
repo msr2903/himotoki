@@ -7,6 +7,22 @@ This module provides a single source of truth for:
 - Interned POS tag strings for memory efficiency
 
 All other modules should import from here to avoid duplication.
+
+---
+
+WARNING: SEQ NUMBER STABILITY REQUIREMENT
+=========================================
+Many constants in this file are JMdict sequence numbers (SEQ_WA, SEQ_SURU, etc.).
+These integer IDs are used to identify specific dictionary entries and are used
+in logic throughout the codebase (synergies.py, suffixes.py, lookup.py).
+
+IMPORTANT:
+- If the JMdict dictionary is rebuilt from a newer source, SEQ numbers may change.
+- If SEQ numbers change, the logic using them will silently break (wrong word matches).
+- Run `verify_seq_constants(session)` after any dictionary update to detect mismatches.
+- Consider migrating to string-based identifiers (e.g., "は-particle") for long-term stability.
+
+---
 """
 
 import sys

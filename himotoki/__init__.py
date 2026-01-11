@@ -7,6 +7,7 @@ import asyncio
 import logging
 import os
 import time
+import unicodedata
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from contextlib import contextmanager
 from typing import Optional, Tuple, List, Any, Generator
@@ -197,6 +198,10 @@ def analyze(
     if limit < 1:
         raise ValueError("limit must be >= 1")
     
+    # Unicode normalization - NFC ensures decomposed characters (e.g., か + ゛)
+    # are converted to their composed form (e.g., が) for correct dictionary lookup.
+    text = unicodedata.normalize('NFC', text)
+    
     # Length validation (protection against DoS)
     effective_max = max_length if max_length is not None else MAX_TEXT_LENGTH
     if len(text) > effective_max:
@@ -280,6 +285,10 @@ async def analyze_async(
         raise ValueError("text must be non-empty and not whitespace-only")
     if limit < 1:
         raise ValueError("limit must be >= 1")
+    
+    # Unicode normalization - NFC ensures decomposed characters are handled correctly
+    text = unicodedata.normalize('NFC', text)
+    
     if len(text) > MAX_TEXT_LENGTH:
         raise TextTooLongError(
             f"text length ({len(text)}) exceeds maximum allowed ({MAX_TEXT_LENGTH})"

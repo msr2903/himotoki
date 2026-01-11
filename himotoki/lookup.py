@@ -12,6 +12,7 @@ This module provides:
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Tuple, Union, Any, Set
 from functools import lru_cache
+from collections import OrderedDict
 
 from sqlalchemy import select, and_, or_, func
 from sqlalchemy.orm import Session
@@ -150,28 +151,75 @@ from himotoki.constants import (
 # Archaic words cache - populated on first use
 _ARCHAIC_CACHE: Optional[Set[int]] = None
 
-# Conjugation data cache - (seq, tuple(conj_ids), tuple(texts)) -> List[ConjData]
-# Using a simple dict with size limit
-_CONJ_DATA_CACHE: Dict[Tuple, List[Any]] = {}
-_CONJ_DATA_CACHE_MAX = 2048
+
+# ============================================================================
+# LRU Cache Implementation
+# ============================================================================
+# A simple LRU cache using OrderedDict to prevent memory leaks in long-running
+# processes. This replaces the previous unbounded Dict + "clear half" approach.
+
+class LRUCache:
+    """
+    A simple LRU (Least Recently Used) cache with a maximum size.
+    
+    Uses OrderedDict to maintain insertion/access order. When the cache
+    reaches capacity, the least recently used item is evicted.
+    
+    Thread-safety: This implementation is NOT thread-safe. For multi-threaded
+    use, wrap access with a lock.
+    """
+    
+    def __init__(self, maxsize: int):
+        self.maxsize = maxsize
+        self._cache: OrderedDict = OrderedDict()
+    
+    def get(self, key, default=None):
+        """Get item, moving it to the end (most recently used)."""
+        if key in self._cache:
+            self._cache.move_to_end(key)
+            return self._cache[key]
+        return default
+    
+    def __contains__(self, key):
+        return key in self._cache
+    
+    def __getitem__(self, key):
+        self._cache.move_to_end(key)
+        return self._cache[key]
+    
+    def __setitem__(self, key, value):
+        if key in self._cache:
+            self._cache.move_to_end(key)
+        else:
+            if len(self._cache) >= self.maxsize:
+                # Evict oldest (first) item
+                self._cache.popitem(last=False)
+        self._cache[key] = value
+    
+    def __len__(self):
+        return len(self._cache)
+    
+    def keys(self):
+        return self._cache.keys()
+    
+    def clear(self):
+        self._cache.clear()
+
+
+# Conjugation data cache - (seq, from_seq, tuple(conj_ids), tuple(texts)) -> List[ConjData]
+_CONJ_DATA_CACHE: LRUCache = LRUCache(maxsize=2048)
 
 # POS cache - seq -> frozenset(posi) for per-seq caching
-# This allows combining results for multi-seq lookups
-_POS_SEQ_CACHE: Dict[int, frozenset] = {}
-_POS_SEQ_CACHE_MAX = 4096
+_POS_SEQ_CACHE: LRUCache = LRUCache(maxsize=4096)
 
 # UK (prefer kana) cache - frozenset(seqs) -> bool
-_UK_CACHE: Dict[frozenset, bool] = {}
-_UK_CACHE_MAX = 1024
+_UK_CACHE: LRUCache = LRUCache(maxsize=1024)
 
 # Word lookup cache - (word, is_kana) -> List[WordMatch readings data]
-# Caches database lookups to avoid repeated queries for same word
-_WORD_CACHE: Dict[Tuple[str, bool], List[Tuple]] = {}
-_WORD_CACHE_MAX = 4096
+_WORD_CACHE: LRUCache = LRUCache(maxsize=4096)
 
 # Entry cache - seq -> Entry (reduces individual lookups)
-_ENTRY_CACHE: Dict[int, Any] = {}
-_ENTRY_CACHE_MAX = 4096
+_ENTRY_CACHE: LRUCache = LRUCache(maxsize=4096)
 
 
 # ============================================================================
@@ -805,12 +853,7 @@ def get_conj_data(
                 src_map=src_map,
             ))
     
-    # Cache result (with size limit)
-    if len(_CONJ_DATA_CACHE) >= _CONJ_DATA_CACHE_MAX:
-        # Simple eviction: clear half the cache
-        keys = list(_CONJ_DATA_CACHE.keys())[:len(_CONJ_DATA_CACHE) // 2]
-        for k in keys:
-            del _CONJ_DATA_CACHE[k]
+    # Cache result (LRUCache handles eviction automatically)
     _CONJ_DATA_CACHE[cache_key] = result
     
     return result
@@ -1000,13 +1043,7 @@ def preload_scoring_caches(session: Session, seqs: Set[int]) -> None:
             select(Entry).where(Entry.seq.in_(missing_seqs))
         ).scalars().all()
         
-        # Cache with size limit
-        if len(_ENTRY_CACHE) + len(entries) > _ENTRY_CACHE_MAX:
-            # Clear half the cache
-            keys = list(_ENTRY_CACHE.keys())[:len(_ENTRY_CACHE) // 2]
-            for k in keys:
-                del _ENTRY_CACHE[k]
-        
+        # LRUCache handles eviction automatically
         for entry in entries:
             _ENTRY_CACHE[entry.seq] = entry
     
@@ -1059,12 +1096,7 @@ def preload_scoring_caches(session: Session, seqs: Set[int]) -> None:
         for seq, pos_text in pos_results:
             seq_to_posi[seq].add(pos_text)
         
-        # Cache results in _POS_SEQ_CACHE
-        if len(_POS_SEQ_CACHE) + len(seq_to_posi) > _POS_SEQ_CACHE_MAX:
-            keys = list(_POS_SEQ_CACHE.keys())[:len(_POS_SEQ_CACHE) // 2]
-            for k in keys:
-                del _POS_SEQ_CACHE[k]
-        
+        # LRUCache handles eviction automatically
         for seq, posi in seq_to_posi.items():
             _POS_SEQ_CACHE[seq] = frozenset(posi)
 
@@ -1081,12 +1113,7 @@ def get_cached_entry(session: Session, seq: int) -> Optional[Entry]:
     
     entry = session.get(Entry, seq)
     
-    # Cache with size limit
-    if len(_ENTRY_CACHE) >= _ENTRY_CACHE_MAX:
-        keys = list(_ENTRY_CACHE.keys())[:len(_ENTRY_CACHE) // 2]
-        for k in keys:
-            del _ENTRY_CACHE[k]
-    
+    # LRUCache handles eviction automatically
     if entry:
         _ENTRY_CACHE[seq] = entry
     
@@ -1187,19 +1214,10 @@ def is_prefer_kana(session: Session, seq_set: List[int]) -> bool:
         ))
     ).scalars().first() is not None
     
-    # Cache result (with size limit)
-    if len(_UK_CACHE) >= _UK_CACHE_MAX:
-        keys = list(_UK_CACHE.keys())[:len(_UK_CACHE) // 2]
-        for k in keys:
-            del _UK_CACHE[k]
+    # LRUCache handles eviction automatically
     _UK_CACHE[cache_key] = result
     
     return result
-
-
-# Cache for individual seq -> posi (frozen set)
-_POS_SEQ_CACHE: Dict[int, frozenset] = {}
-_POS_SEQ_CACHE_MAX = 4096
 
 
 def get_non_arch_posi(session: Session, seq_set: Set[int]) -> Set[str]:
@@ -1251,12 +1269,7 @@ def get_non_arch_posi(session: Session, seq_set: Set[int]) -> Set[str]:
         for seq, pos_text in results:
             seq_posi[seq].add(pos_text)
         
-        # Cache individual seqs (with size limit)
-        if len(_POS_SEQ_CACHE) + len(seq_posi) > _POS_SEQ_CACHE_MAX:
-            keys = list(_POS_SEQ_CACHE.keys())[:len(_POS_SEQ_CACHE) // 2]
-            for k in keys:
-                del _POS_SEQ_CACHE[k]
-        
+        # LRUCache handles eviction automatically
         for seq, posi in seq_posi.items():
             _POS_SEQ_CACHE[seq] = frozenset(posi)
     
