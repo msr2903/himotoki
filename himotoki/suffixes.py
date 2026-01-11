@@ -116,6 +116,10 @@ _current_suffix_depth: contextvars.ContextVar[int] = contextvars.ContextVar('suf
 # Cache mapping suffix text to (keyword, kana_form) pairs
 _suffix_cache: Dict[str, List[Tuple[str, Optional[Any]]]] = {}
 
+# Set of all unique 1-char suffix endings for quick filtering
+# If a word doesn't end with any of these, no suffix can match
+_suffix_ending_chars: Set[str] = set()
+
 # Mapping from seq to suffix class
 _suffix_class: Dict[int, str] = {}
 
@@ -138,10 +142,13 @@ def get_suffix_description(seq: int) -> Optional[str]:
 
 def _update_cache(text: str, value: Tuple[str, Optional[Any]], join: bool = False):
     """Update suffix cache with a new entry."""
-    global _suffix_cache
+    global _suffix_cache, _suffix_ending_chars
     old = _suffix_cache.get(text)
     if old is None:
         _suffix_cache[text] = [value]
+        # Track the last character of this suffix for quick filtering
+        if text:
+            _suffix_ending_chars.add(text[-1])
     elif join:
         _suffix_cache[text].append(value)
     else:
@@ -246,7 +253,7 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         blocking: If True, wait for initialization to complete
         reset: If True, force re-initialization
     """
-    global _suffix_cache, _suffix_class, _suffix_initialized
+    global _suffix_cache, _suffix_class, _suffix_ending_chars, _suffix_initialized
     
     if _suffix_initialized and not reset:
         return
@@ -257,6 +264,7 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         
         _suffix_cache = {}
         _suffix_class = {}
+        _suffix_ending_chars = set()
         
         # ちゃう (chau) - completion
         _load_conjs(session, 'chau', SEQ_CHAU)
@@ -490,6 +498,25 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
 def is_suffix_cache_ready() -> bool:
     """Check if suffix cache is initialized."""
     return _suffix_initialized
+
+
+def could_have_suffix(word: str) -> bool:
+    """
+    Quick check if a word could possibly have a suffix.
+    
+    Returns False if the word doesn't end with any character that 
+    appears at the end of known suffixes. This is a cheap O(1) filter.
+    
+    Args:
+        word: Word to check
+        
+    Returns:
+        True if a suffix could potentially match, False if definitely not
+    """
+    if not _suffix_initialized or len(word) < 2:
+        return False
+    # Check if word ends with any character that suffixes end with
+    return word[-1] in _suffix_ending_chars
 
 
 # ============================================================================

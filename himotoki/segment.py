@@ -216,6 +216,7 @@ def find_substring_words(
     
     This pre-loads words for efficiency, avoiding repeated database queries.
     Uses RAW SQL instead of ORM for performance (avoids ORM object overhead).
+    Uses a trie filter to skip substrings that don't exist in the dictionary.
     
     Args:
         session: Database session
@@ -226,6 +227,7 @@ def find_substring_words(
         Dictionary mapping substring to list of matching words
     """
     from himotoki.raw_types import RawKanaReading, RawKanjiReading
+    from himotoki.trie import get_word_trie
     
     if sticky is None:
         sticky = []
@@ -234,8 +236,12 @@ def find_substring_words(
     substring_map: Dict[str, List[WordMatch]] = {}
     kana_keys: List[str] = []
     kanji_keys: List[str] = []
+    all_substrings: List[str] = []  # For suffix checking (not filtered by trie)
     
-    # Collect all possible substrings
+    # Get trie for fast filtering (None if not initialized - graceful fallback)
+    trie = get_word_trie()
+    
+    # Collect all substrings
     text_len = len(text)
     for start in range(text_len):
         if start in sticky_set:
@@ -247,7 +253,14 @@ def find_substring_words(
                 continue
             
             part = text[start:end]
-            if part not in substring_map:
+            if part in substring_map:
+                continue
+            
+            # Track all substrings for suffix checking
+            all_substrings.append(part)
+            
+            # TRIE FILTER: Only add to DB query lists if in trie
+            if trie is None or part in trie:
                 substring_map[part] = []
                 if is_kana(part):
                     kana_keys.append(part)
@@ -287,15 +300,19 @@ def find_substring_words(
             reading = RawKanjiReading(*row)
             substring_map[reading.text].append(WordMatch(reading=reading))
     
-    # Also check for suffix-based compound words for each substring
-    from himotoki.suffixes import find_word_suffix, is_suffix_cache_ready
+    # Check for suffix-based compound words for ALL substrings
+    # (suffix compounds aren't in the DB, so trie doesn't know about them)
+    from himotoki.suffixes import find_word_suffix, is_suffix_cache_ready, could_have_suffix
     if is_suffix_cache_ready():
-        for substring in list(substring_map.keys()):
-            # Only check substrings longer than 1 character
-            if len(substring) > 1:
-                suffix_results = find_word_suffix(session, substring)
-                if suffix_results:
-                    substring_map[substring].extend(suffix_results)
+        for substring in all_substrings:
+            # Quick filter: skip if word can't have a suffix (wrong ending char)
+            if not could_have_suffix(substring):
+                continue
+            suffix_results = find_word_suffix(session, substring)
+            if suffix_results:
+                if substring not in substring_map:
+                    substring_map[substring] = []
+                substring_map[substring].extend(suffix_results)
     
     return substring_map
 
