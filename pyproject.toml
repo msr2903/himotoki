@@ -32,6 +32,7 @@ classifiers = [
 dependencies = [
     "sqlalchemy>=2.0.0",
     "lxml>=4.9.0",
+    "marisa-trie>=1.0.0",
 ]
 
 [project.optional-dependencies]

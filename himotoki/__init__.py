@@ -81,6 +81,7 @@ def warm_up(verbose: bool = False) -> Tuple[float, dict]:
     from himotoki.lookup import build_archaic_cache, _ARCHAIC_CACHE
     from himotoki.suffixes import init_suffixes, is_suffix_cache_ready
     from himotoki.counters import init_counter_cache
+    from himotoki.trie import init_word_trie, is_trie_ready, get_trie_size
     
     timings = {}
     total_start = time.perf_counter()
@@ -118,6 +119,14 @@ def warm_up(verbose: bool = False) -> Tuple[float, dict]:
     timings['counter'] = (time.perf_counter() - t0) * 1000
     if verbose:
         print(f"  Counter cache:  {timings['counter']:>7.1f}ms")
+    
+    # 5. Build word trie (for fast substring filtering)
+    t0 = time.perf_counter()
+    if not is_trie_ready():
+        init_word_trie(session)
+    timings['word_trie'] = (time.perf_counter() - t0) * 1000
+    if verbose:
+        print(f"  Word trie:      {timings['word_trie']:>7.1f}ms ({get_trie_size():,} entries)")
     
     total_time = time.perf_counter() - total_start
     timings['total'] = total_time * 1000

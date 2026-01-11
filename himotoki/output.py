@@ -21,6 +21,7 @@ from himotoki.db.models import (
     Entry, KanjiText, KanaText, Sense, Gloss, SenseProp,
     Conjugation, ConjProp, ConjSourceReading,
 )
+from himotoki.raw_types import RawKanaReading, RawKanjiReading
 from himotoki.lookup import (
     Segment, SegmentList, WordMatch, ConjData,
     get_conj_data, find_word,
@@ -716,9 +717,10 @@ def word_info_from_segment(
     reading = word.reading
     
     # Determine kana reading
-    if isinstance(reading, KanjiText):
+    # Handle both ORM objects (KanjiText/KanaText) and raw namedtuples (RawKanjiReading/RawKanaReading)
+    if isinstance(reading, (KanjiText, RawKanjiReading)):
         word_type = WordType.KANJI
-        # Get best kana for kanji text - try cached, then look up from DB/cache
+        # Get best kana for kanji text - try best_kana attr, then cache, then DB lookup
         kana = reading.best_kana
         if not kana:
             if cache:
