@@ -428,9 +428,13 @@ def adjoin_word(
             if isinstance(w, CompoundWord):
                 return w.kana
             # For WordMatch, get kana from reading
-            if hasattr(w, 'reading') and hasattr(w.reading, 'text'):
-                # Check if reading is KanaText (has the actual kana)
-                return w.reading.text
+            if hasattr(w, 'reading'):
+                # KanjiText has text=kanji, best_kana=kana reading
+                # KanaText has text=kana directly
+                if isinstance(w.reading, KanjiText):
+                    return w.reading.best_kana or w.reading.text
+                elif hasattr(w.reading, 'text'):
+                    return w.reading.text
             return w.text
         kana = get_word_kana(word1) + get_word_kana(word2)
     

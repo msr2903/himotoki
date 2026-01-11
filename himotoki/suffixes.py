@@ -692,6 +692,10 @@ def find_word_suffix(
                 # Get kana for the compound
                 # For primary word: get kana from reading, look up if kanji
                 def get_word_kana(w):
+                    from himotoki.lookup import CompoundWord
+                    # For CompoundWord, return the compound's kana directly
+                    if isinstance(w, CompoundWord):
+                        return w.kana
                     if hasattr(w, 'reading'):
                         reading = w.reading
                         # Check if it's a kanji reading - look up kana
