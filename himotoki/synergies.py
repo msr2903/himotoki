@@ -558,11 +558,25 @@ def _init_synergies():
         connector="",
     )
     
-    # お + noun
+    # お + noun (excluding cases where it splits a valid compound like ごみ)
+    # Create a combined filter that checks pos AND excludes specific seqs
+    def filter_o_noun_right(segment: Any) -> bool:
+        """Filter for nouns that can follow お/ご prefix."""
+        # Must be a noun
+        if not filter_is_pos("n")(segment):
+            return False
+        # Exclude みの (straw raincoat) to prevent splitting ごみ
+        info = getattr(segment, 'info', {})
+        seq_set = info.get('seq_set', set())
+        excluded_seqs = {1634010, 2845080}  # みの seqs
+        if seq_set.intersection(excluded_seqs):
+            return False
+        return True
+    
     def_generic_synergy(
         name="synergy-o-prefix",
         filter_left=filter_in_seq_set(1270190),  # お
-        filter_right=filter_is_pos("n"),
+        filter_right=filter_o_noun_right,
         description="o+noun",
         score=10,
         connector="",
@@ -807,6 +821,50 @@ def _init_penalties():
         test_right=has_seq_simple({1408160, 1416790, 2029050, 11435516, 11679733}),  # たら
         description="hitogai+tara-penalty",
         score=-75,
+        serial=True,
+    )
+    
+    # ご + みの should be penalized to prefer compound ごみ (seq=1369900)
+    # ごみ + の = 12 + 16 = 28
+    # ご(10) + みの(12) = 22, plus o+noun synergy(+10) = 32
+    # Need penalty of at least -6 to make ごみ + の win (28 > 26)
+    # Using -15 to ensure ごみ is strongly preferred
+    # ご (honorific prefix): seq=1270190
+    # みの: seq=1634010 (straw raincoat), 2845080 (Mino province)
+    def_generic_penalty(
+        name="penalty-go-mino",
+        test_left=has_seq_simple({1270190}),  # ご (honorific prefix)
+        test_right=has_seq_simple({1634010, 2845080}),  # みの
+        description="go+mino-penalty",
+        score=-15,
+        serial=True,
+    )
+    
+    # わかん + ない should be penalized to prefer compound わかんない (seq=2158960)
+    # わかんない has score 125, but わかん(110)+ない(40)=150 wins otherwise
+    # Need penalty of at least -(150-125)=-25 to make わかんない win
+    # Using -30 to ensure it's strongly preferred
+    # わかん seqs: 10256789, 10256836 (conjugated forms of 分かる)
+    # ない seqs: 10452328, 1529520 (negative adjective/suffix)
+    def_generic_penalty(
+        name="penalty-wakan-nai",
+        test_left=has_seq_simple({10256789, 10256836}),  # わかん
+        test_right=has_seq_simple({10452328, 1529520}),  # ない
+        description="wakan+nai-penalty",
+        score=-30,
+        serial=True,
+    )
+    
+    # 知らん + けど should be penalized to prefer compound 知らんけど (seq=2856919)
+    # 知らんけど exists as a single expression (Kansai dialect "I dunno but")
+    # 知らん seqs include various conjugated forms
+    # けど seqs: 1004200
+    def_generic_penalty(
+        name="penalty-shiran-kedo",
+        test_left=has_seq_simple({10350776}),  # 知らん (conjugated 知る)
+        test_right=has_seq_simple({1004200}),  # けど
+        description="shiran+kedo-penalty",
+        score=-100,  # Strong penalty since 知らんけど is a specific expression
         serial=True,
     )
     

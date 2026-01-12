@@ -898,6 +898,69 @@ def _handler_neg(session: Session, root: str, suffix: str, kf: Optional[KanaText
     return find_word_with_conj_type(session, root, 13, CONJ_NEGATIVE_STEM)
 
 
+def _handler_chau(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
+    """
+    Handle ちゃう suffix - contracted てしまう (completion).
+    
+    Ports ichiran's suffix-chau from dict-grammar.lisp.
+    The suffix starts with ち or じ (contracted from て or で).
+    We reconstruct the te-form by:
+    1. Looking at first char of suffix to determine て or で
+    2. Concatenating root + て/で to form the te-form
+    3. Looking up that te-form in the database
+    
+    For example: サボっちゃった
+    - root = "サボっ"
+    - suffix = "ちゃった" (first char is ち → て)
+    - lookup "サボっ" + "て" = "サボって" as te-form
+    """
+    if not suffix:
+        return []
+    
+    # Map first char of suffix to te/de
+    first_char = suffix[0]
+    if first_char == 'ち':
+        te = 'て'
+    elif first_char == 'じ':
+        te = 'で'
+    else:
+        return []
+    
+    # Look up root + te as te-form conjugation
+    te_form = root + te
+    return find_word_with_conj_type(session, te_form, 3)
+
+
+def _handler_to_contracted(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
+    """
+    Handle とく suffix - contracted ておく (doing in advance).
+    
+    Ports ichiran's suffix-to from dict-grammar.lisp.
+    The suffix starts with と or ど (contracted from て or で).
+    We reconstruct the te-form similarly to chau.
+    
+    For example: 置いとく
+    - root = "置い"
+    - suffix = "とく" (first char is と → て)  
+    - lookup "置い" + "て" = "置いて" as te-form
+    """
+    if not suffix:
+        return []
+    
+    # Map first char of suffix to te/de
+    first_char = suffix[0]
+    if first_char == 'と':
+        te = 'て'
+    elif first_char == 'ど':
+        te = 'で'
+    else:
+        return []
+    
+    # Look up root + te as te-form conjugation
+    te_form = root + te
+    return find_word_with_conj_type(session, te_form, 3)
+
+
 def _handler_te(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
     """Handle て form suffix."""
     if root == 'で':
@@ -1217,8 +1280,8 @@ SUFFIX_HANDLERS: Dict[str, Callable] = {
     'tosuru': _handler_tosuru,
     'kurai': _handler_kurai,
     'iadj': _handler_iadj,
-    'chau': _handler_te,  # Uses te-form handling
-    'to': _handler_te,
+    'chau': _handler_chau,  # Contracted てしまう with te-reconstruction
+    'to': _handler_to_contracted,  # Contracted ておく with te-reconstruction
     # Abbreviations - each has distinct behavior matching ichiran
     'nai': _handler_abbr_nai,      # ねえ, ねぇ, ねー - allows root forms
     'nai-x': _handler_abbr_nx,     # ず, ざる, ぬ - blocks する
