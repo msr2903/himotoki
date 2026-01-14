@@ -32,7 +32,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 OUTPUT_DIR = PROJECT_ROOT / "output"
 
 ICHIRAN_CONTAINER = "ichiran-main-1"
-ICHIRAN_TIMEOUT = 30  # seconds
+ICHIRAN_TIMEOUT = 1  # seconds
 ICHIRAN_CACHE_FILE = str(OUTPUT_DIR / "cache.json")
 RESULTS_EXPORT_FILE = str(OUTPUT_DIR / "results.json")
 

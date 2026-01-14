@@ -529,12 +529,14 @@ def _init_synergies():
     )
     
     # noun + たち
+    # Use dynamic score based on noun length - longer nouns get higher synergy
+    # This helps 村人+たち (258+15=273) beat 村+人たち (263)
     def_generic_synergy(
         name="synergy-suffix-tachi",
         filter_left=filter_is_noun,
         filter_right=filter_in_seq_set(1416220),  # たち
         description="suffix-tachi",
-        score=10,
+        score=lambda l, r: 10 + 5 * (l.end - l.start),  # +5 per character
         connector="-",
     )
     
@@ -684,6 +686,92 @@ def _init_synergies():
         filter_right=filter_in_seq_set(2028920),  # は
         description="kadouka+wa",
         score=30,
+        connector=" ",
+    )
+    
+    # particle + common adverb synergy
+    # This boosts patterns like は+まだ, には+まだ, も+まだ etc.
+    # Common adverbs that follow particles:
+    # まだ (1527110): still, yet
+    # もう (1010180): already, soon
+    # まず (1623080): first of all
+    # やはり (2084660): as expected
+    # すでに (1303920): already
+    # ずっと (1008930): continuously
+    # もっと (1010210): more
+    # とても (1008550): very
+    # かなり (1004920): considerably
+    # なかなか (1530760): quite, rather
+    # 少し (1340610): a little
+    # ちょっと (1008680): a little
+    # 全然 (1391950): not at all
+    # 絶対 (1391700): absolutely
+    # 本当に (1583020): really
+    # 実は (1311820): actually
+    # 確かに (1208880): certainly
+    # 多分 (1397270): probably
+    # きっと (1399930): surely
+    # たぶん (1397270): probably
+    # 結局 (1252670): after all
+    # 一応 (2423580): tentatively
+    # とりあえず (1541310): for now
+    # 相変わらず (1273140): as usual
+    # いつも (1216780): always
+    # たまに (1623560): occasionally
+    # 時々 (1320780): sometimes
+    # よく (1544660): often
+    # あまり (1010990): not very
+    COMMON_ADVERB_SEQS = {
+        1527110,  # まだ
+        1010180,  # もう
+        1623080,  # まず
+        2084660,  # やはり
+        1303920,  # すでに (既に)
+        1008930,  # ずっと
+        1010210,  # もっと
+        1008550,  # とても
+        1004920,  # かなり
+        1530760,  # なかなか
+        1340610,  # 少し
+        1008680,  # ちょっと
+        1391950,  # 全然
+        1391700,  # 絶対
+        1583020,  # 本当に
+        1311820,  # 実は
+        1208880,  # 確かに
+        1397270,  # 多分/たぶん
+        1399930,  # きっと
+        1252670,  # 結局
+        2423580,  # 一応
+        1541310,  # とりあえず
+        1273140,  # 相変わらず
+        1216780,  # いつも
+        1623560,  # たまに
+        1320780,  # 時々
+        1544660,  # よく
+        1010990,  # あまり
+    }
+    
+    # Particles that can precede common adverbs
+    PARTICLE_SEQS = {
+        2028920,  # は
+        2028930,  # が
+        2028940,  # も
+        2028990,  # に
+        2028980,  # で
+        2215430,  # には
+        2028950,  # とは
+        1007340,  # だけ
+        1525680,  # まで
+        1002980,  # から
+    }
+    
+    def_generic_synergy(
+        name="synergy-particle-adverb",
+        filter_left=filter_in_seq_set(*PARTICLE_SEQS),
+        filter_right=filter_in_seq_set(*COMMON_ADVERB_SEQS),
+        description="particle+adverb",
+        score=20,  # Strong synergy to beat noun+copula patterns
         connector=" ",
     )
 
@@ -867,6 +955,67 @@ def _init_penalties():
         score=-100,  # Strong penalty since 知らんけど is a specific expression
         serial=True,
     )
+    
+    # はま + だ should be penalized to prefer は + まだ
+    # はま (seq=1490710, beach) + だ (copula) incorrectly beats は + まだ (still)
+    # はま+だ gets 66 (with noun+だ synergy), は+まだ gets 51
+    # With particle+adverb synergy (+20), は+まだ gets 71
+    # But we still need a penalty to be safe: -20 makes はま+だ = 46, safely below 71
+    def_generic_penalty(
+        name="penalty-hama-da",
+        test_left=has_seq_simple({1490710, 2084350}),  # はま (beach, other)
+        test_right=has_seq_simple({2089020}),  # だ (copula)
+        description="hama+da-penalty",
+        score=-20,
+        serial=True,
+    )
+    
+    # 人たち after single-kanji word should be penalized when compound word exists
+    # 村 + 人たち (263) vs 村人 + たち (258)
+    # This penalty makes 村+人たち = 263-10 = 253, so 村人+たち (258) wins
+    def penalty_hitotachi_split(seg_list_left: Any, seg_list_right: Any) -> Optional[Synergy]:
+        """Penalize single-kanji + 人たち to prefer compound + たち."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be serial
+        if start != end:
+            return None
+        
+        # Check if right is 人たち (seq=1368740)
+        segments_right = getattr(seg_list_right, 'segments', [])
+        has_hitotachi = False
+        for seg in segments_right:
+            info = getattr(seg, 'info', {})
+            seq_set = info.get('seq_set', set())
+            if 1368740 in seq_set:
+                has_hitotachi = True
+                break
+        
+        if not has_hitotachi:
+            return None
+        
+        # Check if left is a single-character word (likely kanji that could combine)
+        segments_left = getattr(seg_list_left, 'segments', [])
+        for seg in segments_left:
+            word = getattr(seg, 'word', None)
+            if word and hasattr(word, 'text'):
+                text = word.text
+                if len(text) == 1:
+                    # Single character - check if it's kanji
+                    from himotoki.characters import is_kanji
+                    if is_kanji(text):
+                        return Synergy(
+                            description="single-kanji+hitotachi-penalty",
+                            connector=" ",
+                            score=-15,  # Penalty to prefer compound+たち
+                            start=start,
+                            end=end,
+                        )
+        
+        return None
+    
+    register_penalty(penalty_hitotachi_split)
     
     # Short kana words together
     def_generic_penalty(

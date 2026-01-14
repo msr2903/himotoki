@@ -360,8 +360,10 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         _load_conjs(session, 'suru', SEQ_SASERU, suffix_class='saseru')
         
         # そう (sou) - looks like
+        # Only load そう conjugations, NOT そうにない (SEQ_SOU_NI_NAI = 2141080)
+        # because そうにない conjugations include そうにな which incorrectly matches
+        # patterns like 張り裂けそうになる (should be 張り裂けそう + に + なる)
         _load_conjs(session, 'sou', SEQ_SOU)
-        _load_conjs(session, 'sou+', SEQ_SOU_NI_NAI)
         
         # ろう (rou) - probably
         darou_kf = get_kana_form(session, 1928670, 'だろう')  # だろう seq not frequently used
