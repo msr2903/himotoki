@@ -2,6 +2,37 @@
 
 This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
 
+## Project Overview
+
+**Himotoki** is a Japanese text segmentation library that breaks sentences into words with readings.
+
+**Key directories:**
+- `himotoki/` - Core library (segment.py, splits.py, lookup.py, suffixes.py, conjugation_hints.py)
+- `scripts/` - Evaluation tools (llm_eval.py, check_segments.py, llm_report.py)
+- `tests/` - Test suite
+- `data/` - Dictionary data, skip lists, lock files
+- `output/` - Evaluation results (llm_results.json, llm_report.html)
+
+**Current task:** Improve segmentation accuracy by fixing failures in LLM evaluation.
+
+## Agent Onboarding
+
+When starting a new session, run these commands:
+
+```bash
+bd onboard                                    # Learn beads issue tracking
+python scripts/llm_eval.py --triage-status    # See failed entries & progress
+bd ready                                      # Find available work
+git log --oneline -5                          # Recent changes context
+```
+
+**First-time setup:**
+```bash
+source .venv/bin/activate                     # Activate Python environment
+pip install -e .                              # Install himotoki in dev mode
+pytest tests/ -x --tb=short                   # Verify tests pass
+```
+
 ## Quick Reference
 
 ```bash
