@@ -75,41 +75,39 @@ Use **chunkhound MCP** for semantic and regex codebase searches. Returns context
 
 ## Maximizing Agent Autonomy
 
-Agents should work as long as possible without human intervention. Follow these principles:
+Agents should work efficiently but **always confirm bug decisions with the user**. Follow these principles:
 
 ### Autonomous Decision Framework
 
 **DECIDE YOURSELF** (don't ask):
-- Fix vs skip when pattern matches known categories below
 - Implementation approach when issue description is clear
 - Commit message wording
 - Which files to change based on root cause analysis
 - Test verification strategy
 
-**ASK USER ONLY WHEN**:
-- Ambiguous between two valid interpretations
-- Change would affect public API
-- Multiple unrelated fixes needed (confirm scope)
-- Unsure if behavior is bug or intentional feature
+**ALWAYS ASK USER** (use `ask_questions` tool):
+- Whether to fix or skip ANY bug - always get confirmation
+- Before creating any beads issue
+- Before skipping any entry
 
-### Auto-Skip Patterns
+### Skip/Fix Pattern Reference
 
-Skip these automatically with the indicated reason:
+Use these patterns to **suggest** actions to the user, but always confirm:
 
-| Pattern | Reason | Example |
-|---------|--------|---------|
-| Proper noun reading | `Proper noun - multiple valid readings` | 東京 as とうきょう vs とうけい |
-| Counter ambiguity | `Counter expression - valid alternative` | 三人 as さんにん vs みたり |
-| Stylistic particle | `Stylistic choice - both valid` | は vs が emphasis |
-| Archaic reading | `Archaic reading - dictionary limitation` | 今日 as こんにち |
-| Compound boundary | `Compound boundary - subjective split` | Word can be split multiple ways |
+**Common Skip Patterns** (suggest skip, confirm with user):
 
-### Auto-Fix Patterns
+| Pattern | Suggested Reason |
+|---------|------------------|
+| Proper noun reading | `Proper noun - multiple valid readings` |
+| Counter ambiguity | `Counter expression - valid alternative` |
+| Stylistic particle | `Stylistic choice - both valid` |
+| Archaic reading | `Archaic reading - dictionary limitation` |
+| Compound boundary | `Compound boundary - subjective split` |
 
-Fix these without asking:
+**Common Fix Patterns** (suggest fix approach, confirm with user):
 
-| Pattern | Action |
-|---------|--------|
+| Pattern | Suggested Action |
+|---------|------------------|
 | Missing suffix | Add suffix to `himotoki/suffixes.py` |
 | Wrong POS tag | Update POS mapping in `himotoki/lookup.py` |
 | Missing dictionary entry | Add to custom dictionary |
@@ -351,25 +349,18 @@ runSubagent(
 
 #### Agent 1: Bug Search Agent (Triage)
 
-Finds bugs and creates detailed beads issues for later fixing. **Maximize autonomy** - use decision framework above.
+Finds bugs and creates detailed beads issues for later fixing. **Always confirm with user before any action.**
 
 1. **Check status**: `python scripts/llm_eval.py --triage-status`
 2. **Batch load failed entries**: `jq '[to_entries[] | select(.value.llm_score.verdict != "pass") | {idx: .key, sentence: .value.sentence, score: .value.llm_score.overall_score, issues: .value.llm_score.issues}] | .[0:20]' output/llm_results.json`
-3. **Spawn research subagents** for 5-10 entries in parallel
-4. **Classify each entry** using Auto-Skip and Auto-Fix patterns above
-5. **Auto-skip** entries matching skip patterns (no user confirmation needed)
-6. **Auto-create issues** for entries matching fix patterns
-7. **Batch confirm** only ambiguous cases: "5 auto-skipped, 3 issues created, 2 need your input"
-8. **Repeat** until all entries processed or session ending
-
-**Decision Flow:**
-```
-For each failed entry:
-  → Matches auto-skip pattern? → Skip with standard reason
-  → Matches auto-fix pattern? → Create issue with fix hint
-  → Clear root cause found? → Create detailed issue
-  → Ambiguous? → Add to batch for user confirmation
-```
+3. **Analyze each entry**: Use chunkhound to find relevant code, identify root cause
+4. **Present findings to user**: Use `ask_questions` tool with options:
+   - Create beads issue (suggest fix approach)
+   - Skip with reason (suggest reason from patterns)
+   - Investigate more
+5. **Wait for user confirmation** before any skip or issue creation
+6. **Execute user's decision**: Skip or create issue as directed
+7. **Repeat** for each entry
 
 **Issue Template for Beads:**
 ```bash
@@ -437,11 +428,6 @@ The agents are fully independent:
 Coordination happens through:
 - **beads issues**: Work queue between triage and fix agents
 - **triage lock file**: Prevents duplicate triage work
-
-**Autonomy Goals:**
-- Triage: Process 50+ entries per session with <5 user questions
-- Fix: Implement 10+ fixes per session with continuous commits
-- Both: Always push before stopping (never leave work stranded)
 
 
 ### Output Files
