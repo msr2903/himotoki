@@ -150,6 +150,7 @@ SEQ_TO = 1008490           # と (quotative/conditional)
 SEQ_MO = 2028940           # も (also)
 SEQ_YA = 2028960           # や (and)
 SEQ_KA = 2028970           # か (question)
+SEQ_YO = 2029090           # よ (emphasis particle)
 
 # --- Compound Particles ---
 SEQ_NIHA = 2215430         # には

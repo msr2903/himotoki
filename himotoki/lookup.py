@@ -797,6 +797,18 @@ def find_word_with_conj_type(
     
     return find_word_with_conj_prop(session, word, filter_fn)
 
+
+# Blocklist for spurious conjugation relationships in the database
+# These are (seq, from_seq) pairs that should NOT be treated as conjugations
+# because the seq entry is primarily a different word (e.g., particle) that
+# happens to have the same reading as a conjugated form
+# Example: Particle よ (seq 2029090) looks like adjective stem of いい (seq 2820690)
+#          but standalone よ should be parsed as particle, not adjective stem
+BLOCKED_CONJUGATIONS = {
+    (2029090, 2820690),  # よ (particle) ← いい (adj-ix adjective stem)
+}
+
+
 def get_conj_data(
     session: Session,
     seq: int,
@@ -836,6 +848,9 @@ def get_conj_data(
         query = query.where(Conjugation.id.in_(conj_ids))
     
     conjugations = session.execute(query).scalars().all()
+    
+    # Filter out blocked conjugation relationships
+    conjugations = [c for c in conjugations if (c.seq, c.from_seq) not in BLOCKED_CONJUGATIONS]
     
     result = []
     for conj in conjugations:

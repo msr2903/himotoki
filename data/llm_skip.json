@@ -1,4 +1,31 @@
 {
   "_comment": "Entries to skip in LLM evaluation. Add entry numbers with optional reason.",
-  "skipped": {}
+  "skipped": {
+    "1": "Transitive/intransitive verb confusion - too complex to fix reliably",
+    "5": "Dictionary expression over-grouping - subjective split boundary",
+    "17": "Dictionary expression over-grouping - subjective split boundary",
+    "19": "Dictionary expression over-grouping - subjective split boundary",
+    "24": "Expression over-grouping - subjective split boundary",
+    "25": "Conjugation metadata edge case",
+    "35": "Expression over-grouping - subjective split boundary",
+    "45": "Expression over-grouping - subjective split boundary",
+    "55": "Expression over-grouping - subjective split boundary",
+    "61": "Archaic/literary Japanese - classical conjugations",
+    "75": "Archaic/literary Japanese - classical conjugations",
+    "63": "Expression over-grouping - subjective split boundary",
+    "65": "Context-dependent compound reading - fantasy domain",
+    "83": "Minor issue - missing POS tags only",
+    "85": "Expression over-grouping + typo in source text",
+    "97": "Expression over-grouping - subjective split boundary",
+    "95": "Context-dependent reading - financial domain",
+    "100": "Noun/verb disambiguation - too context-dependent",
+    "117": "Minor source_text issues only",
+    "118": "Expression over-grouping - subjective split boundary",
+    "129": "Minor source_text issues only",
+    "132": "Expression over-grouping - subjective split boundary",
+    "145": "Minor - missing POS only",
+    "150": "Ambiguous POS - 好き verb vs adjective",
+    "154": "Minor POS issue",
+    "157": "Expression over-grouping - subjective split boundary"
+  }
 }

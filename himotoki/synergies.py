@@ -961,6 +961,80 @@ def _init_synergies():
         return [(new_right, syn, new_left)]
     
     register_synergy(synergy_shi_tada)
+    
+    # === BUG FIX: verb + よ (particle) (h0z) ===
+    # Boost verb + よ (particle) over adjective stem interpretation
+    # よ (seq=2029090) is a sentence-ending emphasis particle
+    # The adjective stem of いい -> よ (euphonic change) causes misidentification
+    # When よ follows a verb, it's almost always the particle
+    SEQ_YO_PARTICLE = 2029090
+    
+    def synergy_verb_yo(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for verb + よ (particle)."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left is a verb
+        left_verbs = []
+        verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n', 'v5t', 'v5u', 'vk', 'vs', 'vs-i'}
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            if verb_pos.intersection(posi):
+                left_verbs.append(seg)
+        
+        if not left_verbs:
+            return []
+        
+        # Check if right is よ particle (seq=2029090) AND is not conjugated
+        right_yo = []
+        for seg in seg_list_right.segments:
+            info = getattr(seg, 'info', {})
+            seq_set = info.get('seq_set', set())
+            if SEQ_YO_PARTICLE in seq_set:
+                # Check that this is NOT a conjugated form
+                conj = info.get('conj', [])
+                is_conjugated = False
+                for cdata in conj:
+                    if hasattr(cdata, 'prop') and cdata.prop:
+                        if getattr(cdata.prop, 'conj_type', None) is not None:
+                            is_conjugated = True
+                            break
+                if not is_conjugated:
+                    right_yo.append(seg)
+        
+        if not right_yo:
+            return []
+        
+        syn = Synergy(
+            description="verb+yo",
+            connector=" ",
+            score=30,  # Strong boost to prefer particle よ after verbs
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_verbs,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_yo,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_verb_yo)
 
 
 # Initialize synergies on module load
