@@ -38,3 +38,16 @@ bd sync               # Sync with git
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
 
+## Codebase Search
+
+This project uses **chuckhound MCP** for efficient codebase searching.
+
+**Quick reference:**
+- Use chuckhound MCP to search for code patterns, symbols, and references across the codebase
+- Simplifies finding relevant code sections when understanding context or making changes
+- Enables faster navigation and discovery of implementation details
+
+**How it works:**
+   • Integrates with the workspace for semantic and text-based searches
+   • Returns contextualized results with file paths and line numbers
+   • Helps identify related code patterns and dependencies
