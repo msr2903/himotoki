@@ -1038,6 +1038,75 @@ def _init_synergies():
     
     register_synergy(synergy_verb_yo)
     
+    # === BUG FIX: copula + よ (particle) (v42) ===
+    # Boost copula + よ (particle) to prevent よそ mis-segmentation
+    # When です/だ is followed by よ particle, boost that interpretation
+    # This prevents "ですよその" from being parsed as "です+よそ+の"
+    SEQ_DESU = 1628500  # です
+    SEQ_DA = 2089020    # だ
+    SEQ_YOSO = 1612400  # よそ (elsewhere) - used for blocking
+    
+    def synergy_copula_yo(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for copula + よ (particle) to prevent よそ mis-segmentation."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left is copula (です or だ)
+        filter_copula = filter_in_seq_set(SEQ_DESU, SEQ_DA)
+        left_copula = [s for s in seg_list_left.segments if filter_copula(s)]
+        if not left_copula:
+            return []
+        
+        # Check if right is よ particle (seq=SEQ_YO_PARTICLE, not conjugated)
+        right_yo = []
+        for seg in seg_list_right.segments:
+            info = getattr(seg, 'info', {})
+            seq_set = info.get('seq_set', set())
+            if SEQ_YO_PARTICLE in seq_set:
+                # Check that this is NOT a conjugated form
+                conj = info.get('conj', [])
+                is_conjugated = False
+                for cdata in conj:
+                    if hasattr(cdata, 'prop') and cdata.prop:
+                        if getattr(cdata.prop, 'conj_type', None) is not None:
+                            is_conjugated = True
+                            break
+                if not is_conjugated:
+                    right_yo.append(seg)
+        
+        if not right_yo:
+            return []
+        
+        syn = Synergy(
+            description="copula+yo",
+            connector=" ",
+            score=40,  # Strong boost to prefer particle よ after copula
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_copula,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_yo,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_copula_yo)
+    
     # 前(まえ) + に synergy - boost noun reading over prefix reading
     # When 前 is followed by に particle, prefer まえ (noun) over ぜん (prefix)
     def synergy_mae_ni(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
