@@ -170,6 +170,57 @@ def get_kana_for_entry(session: Session, seq: int) -> str:
     return kana_text or ''
 
 
+def get_matching_kana_for_kanji(session: Session, seq: int, kanji_text: str) -> str:
+    """
+    Get kana reading that best matches the kanji text's suffix pattern.
+    
+    For conjugated forms, the DB may have multiple kana readings with different
+    suffixes (e.g., いわないで and いわなくて for 言わないで). We want the kana
+    whose suffix matches the kanji's suffix.
+    
+    Args:
+        session: Database session
+        seq: Entry sequence number
+        kanji_text: The matched kanji text (e.g., "言わないで")
+    
+    Returns:
+        The best matching kana reading
+    """
+    # Get all kana readings for this entry
+    kana_results = session.execute(
+        select(KanaText.text, KanaText.ord)
+        .where(KanaText.seq == seq)
+        .order_by(KanaText.ord)
+    ).all()
+    
+    if not kana_results:
+        return ''
+    
+    if len(kana_results) == 1:
+        return kana_results[0][0]
+    
+    # For multiple readings, try to match suffix patterns
+    # Common confusing pairs: ないで/なくて, ないと/なくと
+    # Extract the kana suffix from kanji (last few hiragana chars)
+    kanji_suffix = ''
+    for char in reversed(kanji_text):
+        code = ord(char)
+        # Hiragana: 0x3040-0x309F
+        if 0x3040 <= code <= 0x309F:
+            kanji_suffix = char + kanji_suffix
+        else:
+            break
+    
+    if kanji_suffix:
+        # Find a kana reading that ends with the same suffix
+        for kana, ord_num in kana_results:
+            if kana.endswith(kanji_suffix):
+                return kana
+    
+    # Fall back to first reading if no suffix match
+    return kana_results[0][0]
+
+
 # ============================================================================
 # Global Meanings Cache for Performance
 # ============================================================================
@@ -729,13 +780,12 @@ def word_info_from_segment(
     # Handle both ORM objects (KanjiText/KanaText) and raw namedtuples (RawKanjiReading/RawKanaReading)
     if isinstance(reading, (KanjiText, RawKanjiReading)):
         word_type = WordType.KANJI
-        # Get best kana for kanji text - try best_kana attr, then cache, then DB lookup
+        # Get best kana for kanji text - try best_kana attr, then suffix matching
         kana = reading.best_kana
         if not kana:
-            if cache:
-                kana = cache.get_kana(word.seq)
-            else:
-                kana = get_kana_for_entry(session, word.seq)
+            # Use suffix matching to get correct kana (e.g., ないで vs なくて)
+            kanji_text = reading.text
+            kana = get_matching_kana_for_kanji(session, word.seq, kanji_text)
     else:
         word_type = WordType.KANA
         kana = reading.text
