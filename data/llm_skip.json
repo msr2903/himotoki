@@ -26,6 +26,11 @@
     "145": "Minor - missing POS only",
     "150": "Ambiguous POS - 好き verb vs adjective",
     "154": "Minor POS issue",
-    "157": "Expression over-grouping - subjective split boundary"
+    "157": "Expression over-grouping - subjective split boundary",
+    "163": "Conjugation metadata issue",
+    "168": "Minor - missing reading",
+    "170": "Phonetic sound change rule",
+    "196": "Expression over-grouping",
+    "198": "Expression over-grouping"
   }
 }

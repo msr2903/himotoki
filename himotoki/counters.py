@@ -97,6 +97,7 @@ def parse_number(text: str) -> Optional[int]:
     - Arabic numerals (1, 2, 3 or １, ２, ３)
     - Kanji numerals (一, 二, 三)
     - Mixed (十二, 百三十四)
+    - Arabic + Kanji multiplier (5億, 10万)
     
     Returns None if the text is not a valid number.
     """
@@ -115,6 +116,20 @@ def parse_number(text: str) -> Optional[int]:
     
     if arabic_str and len(arabic_str) == len(text):
         return int(arabic_str)
+    
+    # Try Arabic prefix + Kanji multiplier (e.g., 5億, 10万)
+    if arabic_str:
+        arabic_value = int(arabic_str)
+        suffix = text[len(arabic_str):]
+        
+        # Check if suffix is a single multiplier
+        if len(suffix) == 1 and suffix in KANJI_NUMBERS:
+            multiplier = KANJI_NUMBERS[suffix]
+            if multiplier >= 10:  # 十, 百, 千, 万, 億
+                return arabic_value * multiplier
+        
+        # Check if suffix is multiple multipliers (e.g., 10万億 -> 10 * 万 * 億)
+        # Not implemented for now, but could extend if needed
     
     # Try kanji numerals
     return parse_kanji_number(text)
@@ -167,7 +182,17 @@ def number_to_kana(n: int, separator: str = '') -> str:
     
     parts = []
     
-    # Handle 10000s
+    # Handle 100000000s (億)
+    if n >= 100000000:
+        oku = n // 100000000
+        if oku > 1:
+            parts.append(number_to_kana(oku))
+        else:
+            parts.append('いち')
+        parts.append('おく')
+        n %= 100000000
+    
+    # Handle 10000s (万)
     if n >= 10000:
         man = n // 10000
         if man > 1:
