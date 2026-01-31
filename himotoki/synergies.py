@@ -33,6 +33,8 @@ from himotoki.constants import (
     SEQ_DAKE, SEQ_GORO, SEQ_MADE, SEQ_NADO, SEQ_NOMI, SEQ_SAE, SEQ_TTE, SEQ_KARA, SEQ_NITOTTE,
     # Verbs
     SEQ_SURU, SEQ_IRU, SEQ_KURU,
+    # Nouns with reading ambiguity
+    SEQ_MAE_NOUN,
     # Expressions
     SEQ_NITSURE, SEQ_OSUSUME,
     # Pre-built set
@@ -1035,6 +1037,54 @@ def _init_synergies():
         return [(new_right, syn, new_left)]
     
     register_synergy(synergy_verb_yo)
+    
+    # 前(まえ) + に synergy - boost noun reading over prefix reading
+    # When 前 is followed by に particle, prefer まえ (noun) over ぜん (prefix)
+    def synergy_mae_ni(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for 前(まえ) + に to prefer noun reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for seq=SEQ_MAE_NOUN (まえ reading)
+        filter_left = filter_in_seq_set(SEQ_MAE_NOUN)
+        left_mae = [s for s in seg_list_left.segments if filter_left(s)]
+        if not left_mae:
+            return []
+        
+        # Filter right for に particle
+        filter_right = filter_in_seq_set(SEQ_NI)
+        right_ni = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_ni:
+            return []
+        
+        # Create synergy with high score to push まえ over ぜん
+        syn = Synergy(
+            description="mae+ni",
+            connector=" ",
+            score=25,  # Higher score to ensure まえ wins over ぜん
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_mae,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_ni,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_mae_ni)
 
 
 # Initialize synergies on module load
