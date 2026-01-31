@@ -1,0 +1,4 @@
+{
+  "_comment": "Entries to skip in LLM evaluation. Add entry numbers with optional reason.",
+  "skipped": {}
+}

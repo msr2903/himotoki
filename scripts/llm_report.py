@@ -4,20 +4,41 @@
 import json
 import html
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict
+
+PROJECT_ROOT = Path(__file__).parent.parent
+DATA_DIR = PROJECT_ROOT / "data"
+DEFAULT_SKIP_FILE = DATA_DIR / "llm_skip.json"
+
+
+def _load_skip_list(skip_file: Path) -> Dict[str, str]:
+    """Load skip list from JSON file. Returns dict of index -> reason."""
+    if not skip_file.exists():
+        return {}
+    try:
+        with open(skip_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data.get("skipped", {})
+    except (json.JSONDecodeError, KeyError):
+        return {}
+
 
 def escape(text: str) -> str:
     """HTML escape text."""
     return html.escape(str(text)) if text else ""
 
-def generate_html_report(results: list[dict[str, Any]]) -> str:
+def generate_html_report(results: list[dict[str, Any]], skipped: Dict[str, str] = None) -> str:
     """Generate interactive HTML report from LLM results."""
+    if skipped is None:
+        skipped = {}
     
     # Calculate summary stats
     total = len(results)
-    passed = sum(1 for r in results if r.get("llm_score", {}).get("verdict") == "pass")
-    failed = sum(1 for r in results if r.get("llm_score", {}).get("verdict") == "fail")
-    avg_score = sum(r.get("llm_score", {}).get("overall_score", 0) or 0 for r in results) / total if total else 0
+    skipped_count = len(skipped)
+    active_results = [r for idx, r in enumerate(results) if str(idx + 1) not in skipped]
+    passed = sum(1 for r in active_results if r.get("llm_score", {}).get("verdict") == "pass")
+    failed = sum(1 for r in active_results if r.get("llm_score", {}).get("verdict") == "fail")
+    avg_score = sum(r.get("llm_score", {}).get("overall_score", 0) or 0 for r in active_results) / len(active_results) if active_results else 0
     
     # Build rows data as JSON for JavaScript
     rows_data = []
@@ -71,6 +92,19 @@ def generate_html_report(results: list[dict[str, Any]]) -> str:
 {notes or "None"}
 """
         
+        # Determine lowest dimension for categorization
+        dim_scores = {
+            "segmentation": dims.get("segmentation", 5) or 5,
+            "reading": dims.get("reading", 5) or 5,
+            "conjugation": dims.get("conjugation", 5) or 5,
+            "pos": dims.get("pos", 5) or 5,
+            "dictionary_form": dims.get("dictionary_form", 5) or 5,
+        }
+        worst_dim = min(dim_scores, key=dim_scores.get) if dim_scores else ""
+        
+        is_skipped = str(idx + 1) in skipped
+        skip_reason = skipped.get(str(idx + 1), "")
+        
         rows_data.append({
             "idx": idx + 1,
             "sentence": r.get("sentence", ""),
@@ -81,14 +115,19 @@ def generate_html_report(results: list[dict[str, Any]]) -> str:
             "conj_score": dims.get("conjugation", 0) or 0,
             "pos_score": dims.get("pos", 0) or 0,
             "dict_score": dims.get("dictionary_form", 0) or 0,
+            "dimension_scores": dim_scores,
+            "worst_dim": worst_dim,
             "issues": issues,
             "notes": notes,
             "segments_html": segments_html,
             "copy_text": copy_text,
             "time_himotoki": r.get("time_himotoki", 0),
             "time_llm": r.get("time_llm", 0),
+            "skipped": is_skipped,
+            "skip_reason": skip_reason,
         })
     
+    skipped_json = json.dumps(skipped, ensure_ascii=False)
     rows_json = json.dumps(rows_data, ensure_ascii=False)
     
     html_content = f'''<!DOCTYPE html>
@@ -524,12 +563,16 @@ def generate_html_report(results: list[dict[str, Any]]) -> str:
                 <div class="value">{failed}</div>
                 <div class="label">Failed</div>
             </div>
+            <div class="stat-card" style="background:#fff3cd;">
+                <div class="value">{skipped_count}</div>
+                <div class="label">Skipped</div>
+            </div>
             <div class="stat-card">
                 <div class="value">{avg_score:.1f}</div>
                 <div class="label">Avg Score</div>
             </div>
             <div class="stat-card">
-                <div class="value">{passed/total*100:.1f}%</div>
+                <div class="value">{passed/(passed+failed)*100 if (passed+failed) > 0 else 0:.1f}%</div>
                 <div class="label">Pass Rate</div>
             </div>
         </div>
@@ -540,6 +583,7 @@ def generate_html_report(results: list[dict[str, Any]]) -> str:
                 <option value="all">All Results</option>
                 <option value="pass">Pass Only</option>
                 <option value="fail">Fail Only</option>
+                <option value="skipped">Skipped Only</option>
             </select>
             
             <label>Score Range:</label>
@@ -549,6 +593,21 @@ def generate_html_report(results: list[dict[str, Any]]) -> str:
             
             <label>Search:</label>
             <input type="text" id="searchText" placeholder="Search sentences..." style="width:200px">
+            
+            <label>Dimension:</label>
+            <select id="filterDimension">
+                <option value="all">All Dimensions</option>
+                <option value="segmentation">Segmentation Issues</option>
+                <option value="reading">Reading Issues</option>
+                <option value="conjugation">Conjugation Issues</option>
+                <option value="pos">POS Issues</option>
+                <option value="dictionary_form">Dictionary Form Issues</option>
+            </select>
+            
+            <label style="display:flex;align-items:center;gap:4px;">
+                <input type="checkbox" id="hideSkipped" checked>
+                Hide Skipped
+            </label>
             
             <button onclick="applyFilters()">Apply</button>
             <button class="secondary" onclick="resetFilters()">Reset</button>
@@ -589,7 +648,7 @@ def generate_html_report(results: list[dict[str, Any]]) -> str:
     
     <script>
         const rowsData = {rows_json};
-        let filteredData = [...rowsData];
+        let filteredData = rowsData.filter(r => !r.skipped);
         let currentSort = {{ col: 'idx', asc: true }};
         
         function renderTable() {{
@@ -605,21 +664,27 @@ def generate_html_report(results: list[dict[str, Any]]) -> str:
             noResults.classList.add('hidden');
             
             tbody.innerHTML = filteredData.map(r => `
-                <tr class="${{r.verdict}}">
+                <tr class="${{r.skipped ? 'skipped' : r.verdict}}">
                     <td>${{r.idx}}</td>
                     <td class="sentence-cell">${{escapeHtml(r.sentence)}}</td>
-                    <td class="score-cell">${{r.score}}</td>
-                    <td><span class="verdict-badge ${{r.verdict}}">${{r.verdict}}</span></td>
+                    <td class="score-cell">${{r.skipped ? '-' : r.score}}</td>
                     <td>
-                        <div class="dim-scores">
+                        ${{r.skipped 
+                            ? '<span class="verdict-badge" style="background:#ffc107;color:#000;">skipped</span>' 
+                            : `<span class="verdict-badge ${{r.verdict}}">${{r.verdict}}</span>`}}
+                    </td>
+                    <td>
+                        ${{r.skipped 
+                            ? `<span style="color:#666;font-style:italic;">${{escapeHtml(r.skip_reason || 'No reason')}}</span>`
+                            : `<div class="dim-scores">
                             <span class="dim-score ${{r.seg_score < 4 ? 'low' : ''}}">Seg: ${{r.seg_score}}</span>
                             <span class="dim-score ${{r.read_score < 4 ? 'low' : ''}}">Read: ${{r.read_score}}</span>
                             <span class="dim-score ${{r.conj_score < 4 ? 'low' : ''}}">Conj: ${{r.conj_score}}</span>
                             <span class="dim-score ${{r.pos_score < 4 ? 'low' : ''}}">POS: ${{r.pos_score}}</span>
                             <span class="dim-score ${{r.dict_score < 4 ? 'low' : ''}}">Dict: ${{r.dict_score}}</span>
-                        </div>
+                        </div>`}}
                     </td>
-                    <td>${{r.issues.length > 0 ? r.issues.length + ' issue(s)' : '-'}}</td>
+                    <td>${{r.skipped ? '-' : (r.issues.length > 0 ? r.issues.length + ' issue(s)' : '-')}}</td>
                     <td>
                         <button class="action-btn" onclick="showDetails(${{r.idx - 1}})">View</button>
                         <button class="action-btn copy-btn" onclick="copyRow(${{r.idx - 1}})">Copy</button>
@@ -659,14 +724,29 @@ def generate_html_report(results: list[dict[str, Any]]) -> str:
         
         function applyFilters() {{
             const verdict = document.getElementById('filterVerdict').value;
+            const dimension = document.getElementById('filterDimension').value;
+            const hideSkipped = document.getElementById('hideSkipped').checked;
             const minScore = parseFloat(document.getElementById('minScore').value) || 0;
             const maxScore = parseFloat(document.getElementById('maxScore').value) || 100;
             const search = document.getElementById('searchText').value.toLowerCase();
             
             filteredData = rowsData.filter(r => {{
+                // Handle skipped filtering
+                if (verdict === 'skipped') {{
+                    return r.skipped === true;
+                }}
+                if (hideSkipped && r.skipped) return false;
+                
                 if (verdict !== 'all' && r.verdict !== verdict) return false;
                 if (r.score < minScore || r.score > maxScore) return false;
                 if (search && !r.sentence.toLowerCase().includes(search)) return false;
+                
+                // Dimension filter: show if worst_dim matches or score < 100 in that dimension
+                if (dimension !== 'all') {{
+                    const dims = r.dimension_scores || {{}};
+                    if (dims[dimension] === undefined || dims[dimension] >= 100) return false;
+                }}
+                
                 return true;
             }});
             
@@ -675,10 +755,12 @@ def generate_html_report(results: list[dict[str, Any]]) -> str:
         
         function resetFilters() {{
             document.getElementById('filterVerdict').value = 'all';
+            document.getElementById('filterDimension').value = 'all';
+            document.getElementById('hideSkipped').checked = true;
             document.getElementById('minScore').value = '';
             document.getElementById('maxScore').value = '';
             document.getElementById('searchText').value = '';
-            filteredData = [...rowsData];
+            filteredData = rowsData.filter(r => !r.skipped);
             renderTable();
         }}
         
@@ -838,10 +920,12 @@ def main():
     parser = argparse.ArgumentParser(description="Generate HTML report from LLM evaluation results")
     parser.add_argument("-i", "--input", default="output/llm_results.json", help="Input JSON file")
     parser.add_argument("-o", "--output", default="output/llm_report.html", help="Output HTML file")
+    parser.add_argument("--skip-file", default="data/llm_skip.json", help="Skip list file")
     args = parser.parse_args()
     
     input_path = Path(args.input)
     output_path = Path(args.output)
+    skip_path = Path(args.skip_file)
     
     if not input_path.exists():
         print(f"Error: Input file not found: {input_path}")
@@ -851,8 +935,13 @@ def main():
     with open(input_path, "r", encoding="utf-8") as f:
         results = json.load(f)
     
+    # Load skip list
+    skipped = _load_skip_list(skip_path)
+    if skipped:
+        print(f"Loaded {len(skipped)} skipped entries")
+    
     print(f"Generating report for {len(results)} results...")
-    html_content = generate_html_report(results)
+    html_content = generate_html_report(results, skipped)
     
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
