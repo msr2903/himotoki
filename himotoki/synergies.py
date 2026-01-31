@@ -904,6 +904,63 @@ def _init_synergies():
         return [(new_right, syn, new_left)]
     
     register_synergy(synergy_verb_nante)
+    
+    # === BUG FIX: し (particle) + ただ (adverb) (f5d) ===
+    # Boost し+ただ over した+だ pattern
+    # し (seq=2086640) is a particle meaning "and/besides"
+    # ただ (seq=1538900) is an adverb meaning "only/just"
+    # Pattern: ねーしただ = "isn't, and just..." not "isn't, did, is..."
+    SEQ_SHI_PARTICLE = 2086640
+    SEQ_TADA_ADV = 1538900
+    
+    def synergy_shi_tada(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for し (particle) + ただ (adverb)."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left is し particle (seq=2086640)
+        filter_shi = filter_in_seq_set(SEQ_SHI_PARTICLE)
+        left_shi = [s for s in seg_list_left.segments if filter_shi(s)]
+        
+        if not left_shi:
+            return []
+        
+        # Check if right is ただ (seq=1538900)
+        filter_tada = filter_in_seq_set(SEQ_TADA_ADV)
+        right_tada = [s for s in seg_list_right.segments if filter_tada(s)]
+        
+        if not right_tada:
+            return []
+        
+        syn = Synergy(
+            description="shi+tada",
+            connector=" ",
+            score=10,  # Small boost to prefer し+ただ over した+だ
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_shi,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_tada,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_shi_tada)
 
 
 # Initialize synergies on module load
@@ -1667,6 +1724,81 @@ def _init_segfilters():
         return results if results else []
     
     register_segfilter(segfilter_to_mo)
+    
+    # === BUG FIX: Block verb-negative-imperative + ん (nwd, 5zp) ===
+    # Pattern: verb ending with negative imperative な + ん should be blocked
+    # This forces the segmenter to use verb + なんて instead of verbな + ん + て
+    # Example: 発動させるな + ん + て → 発動させる + なんて
+    SEQ_N_PARTICLE = 2139720  # ん (particle/interjection)
+    
+    def segfilter_neg_imperative_n(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block verb-negative-imperative + ん pattern to prefer verb + なんて."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left has any negative imperative verbs
+        left_neg_imp = []
+        left_other = []
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            conj = info.get('conj', [])
+            is_neg_imperative = False
+            for cdata in conj:
+                if hasattr(cdata, 'prop') and cdata.prop:
+                    # Check for imperative + negative
+                    if getattr(cdata.prop, 'conj_type', None) == 10:  # CONJ_IMPERATIVE
+                        if getattr(cdata.prop, 'neg', False):
+                            is_neg_imperative = True
+                            break
+            
+            if is_neg_imperative:
+                left_neg_imp.append(seg)
+            else:
+                left_other.append(seg)
+        
+        # Check if right is ん (seq=2139720)
+        filter_n = filter_in_seq_set(SEQ_N_PARTICLE)
+        right_n = [s for s in seg_list_right.segments if filter_n(s)]
+        right_other = [s for s in seg_list_right.segments if not filter_n(s)]
+        
+        # If not the pattern we're blocking, pass through
+        if not left_neg_imp or not right_n:
+            return [(seg_list_left, seg_list_right)]
+        
+        results = []
+        # Allow left_other with any right
+        if left_other:
+            results.append((
+                SegmentList(
+                    segments=left_other,
+                    start=seg_list_left.start,
+                    end=seg_list_left.end,
+                    matches=seg_list_left.matches,
+                ),
+                seg_list_right,
+            ))
+        
+        # Allow left_neg_imp with right_other (non-ん)
+        if right_other:
+            results.append((
+                seg_list_left,
+                SegmentList(
+                    segments=right_other,
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    matches=seg_list_right.matches,
+                ),
+            ))
+        
+        return results if results else []
+    
+    register_segfilter(segfilter_neg_imperative_n)
 
 
 _init_segfilters()
