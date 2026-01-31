@@ -221,6 +221,7 @@ SEQ_MOII = 900001          # もいい (synthetic: て+もいい suffix)
 
 # --- Compound Expressions ---
 SEQ_MAE_NOUN = 1392580     # 前/まえ (before - noun reading, not ぜん prefix)
+SEQ_HOU_NOUN = 1516930     # 方/ほう (direction - noun reading, not かた)
 SEQ_KADOUKA = 2087300      # かどうか (whether or not)
 SEQ_NITSURE = 2136050      # につれ (as; in proportion to)
 SEQ_OSUSUME = 1002150      # おすすめ (recommendation)

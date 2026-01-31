@@ -34,7 +34,7 @@ from himotoki.constants import (
     # Verbs
     SEQ_SURU, SEQ_IRU, SEQ_KURU,
     # Nouns with reading ambiguity
-    SEQ_MAE_NOUN,
+    SEQ_MAE_NOUN, SEQ_HOU_NOUN,
     # Expressions
     SEQ_NITSURE, SEQ_OSUSUME,
     # Pre-built set
@@ -1085,6 +1085,55 @@ def _init_synergies():
         return [(new_right, syn, new_left)]
     
     register_synergy(synergy_mae_ni)
+    
+    # の + 方(ほう) synergy - boost direction reading over person reading
+    # When の is followed by 方, prefer ほう (direction) over かた (person)
+    # Pattern: 〜の方 (towards/that direction) uses ほう reading
+    def synergy_no_hou(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for の + 方(ほう) to prefer direction reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for の particle
+        filter_left = filter_in_seq_set(SEQ_NO)
+        left_no = [s for s in seg_list_left.segments if filter_left(s)]
+        if not left_no:
+            return []
+        
+        # Filter right for seq=SEQ_HOU_NOUN (ほう reading)
+        filter_right = filter_in_seq_set(SEQ_HOU_NOUN)
+        right_hou = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_hou:
+            return []
+        
+        # Create synergy with high score to push ほう over かた
+        syn = Synergy(
+            description="no+hou",
+            connector=" ",
+            score=25,  # Higher score to ensure ほう wins
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_no,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_hou,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_no_hou)
 
 
 # Initialize synergies on module load
