@@ -354,7 +354,7 @@ runSubagent(
 Finds bugs and creates detailed beads issues for later fixing. **Maximize autonomy** - use decision framework above.
 
 1. **Check status**: `python scripts/llm_eval.py --triage-status`
-2. **Batch load failed entries**: `jq '.[] | select(.pass==false)' output/llm_results.json | head -50`
+2. **Batch load failed entries**: `jq '[to_entries[] | select(.value.llm_score.verdict != "pass") | {idx: .key, sentence: .value.sentence, score: .value.llm_score.overall_score, issues: .value.llm_score.issues}] | .[0:20]' output/llm_results.json`
 3. **Spawn research subagents** for 5-10 entries in parallel
 4. **Classify each entry** using Auto-Skip and Auto-Fix patterns above
 5. **Auto-skip** entries matching skip patterns (no user confirmation needed)
