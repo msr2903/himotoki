@@ -107,6 +107,8 @@ def find_sticky_positions(text: str) -> List[int]:
     Find positions where words cannot start or end.
     
     Words cannot start after sokuon (っ) or end before modifier characters (ゃゅょー etc.)
+    Words also cannot start at a long vowel mark (ー) position since it always modifies
+    the previous kana.
     This prevents invalid word boundaries.
     
     Args:
@@ -130,11 +132,25 @@ def find_sticky_positions(text: str) -> List[int]:
                 if next_class and next_class in KANA_CLASSES:
                     sticky.append(pos + 1)
         
-        # Before modifier characters, words can't end
-        elif char_class in MODIFIER_CLASSES or char_class in ITERATION_CLASSES:
-            # Exception: at end of string with long vowel
+        # === BUG FIX: かーい elongation (ghx) ===
+        # Long vowel mark (ー) cannot be the START of a word
+        # It always modifies the previous kana, so words cannot start at this position
+        elif char_class == 'long_vowel':
+            # Add this position to sticky (words can't start here)
+            if pos > 0:  # Only if not at the very start
+                sticky.append(pos)
+            # Also, words can't end before long vowel (existing logic)
             at_end = pos == text_len - 1
-            if not at_end or char_class != 'long_vowel':
+            if not at_end:
+                prev_char = text[pos - 1] if pos > 0 else ''
+                if not (prev_char and is_long_vowel_modifier(char_class, prev_char)):
+                    sticky.append(pos)
+        
+        # Before other modifier characters, words can't end
+        elif char_class in MODIFIER_CLASSES or char_class in ITERATION_CLASSES:
+            # Exception: at end of string with long vowel (handled above now)
+            at_end = pos == text_len - 1
+            if not at_end:
                 # Also check for long vowel modifier pattern
                 if pos > 0 and char_class == 'long_vowel':
                     prev_char = text[pos - 1]
@@ -620,6 +636,11 @@ def get_segment_splits(seg_left: Any, seg_right: SegmentList) -> List[List[Any]]
     # First, apply segfilters to get valid segment pairs
     filtered_pairs = apply_segfilters(seg_left, seg_right)
     
+    # If segfilters completely blocked this combination, return empty
+    # (Don't fall back to the original combination - it was blocked for a reason)
+    if not filtered_pairs:
+        return []
+    
     for new_left, new_right in filtered_pairs:
         if not new_right or not new_right.segments:
             continue
@@ -641,10 +662,10 @@ def get_segment_splits(seg_left: Any, seg_right: SegmentList) -> List[List[Any]]
         else:
             results.append([new_right])
     
-    # If no results, return simple combination
+    # If no results from filtered pairs but filtering was applied,
+    # just return empty (the combination was fully blocked)
     if not results:
-        if seg_right.segments:
-            return [[seg_right, seg_left]] if seg_left else [[seg_right]]
+        return []
     
     return results
 

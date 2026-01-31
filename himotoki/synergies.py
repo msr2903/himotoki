@@ -774,6 +774,136 @@ def _init_synergies():
         score=20,  # Strong synergy to beat noun+copula patterns
         connector=" ",
     )
+    
+    # === BUG FIX: volitional + とも (1k3) ===
+    # Add synergy for volitional form + とも (seq=1632180)
+    # This pattern means "even if" (e.g., 反対しようとも = even if they oppose)
+    # We need to boost とも when it follows a volitional form
+    def synergy_volitional_tomo(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for volitional form + とも."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left has volitional conjugation
+        left_volitional = []
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            conj = info.get('conj', [])
+            for cdata in conj:
+                if hasattr(cdata, 'prop') and cdata.prop:
+                    if getattr(cdata.prop, 'conj_type', None) == 9:  # CONJ_VOLITIONAL = 9
+                        left_volitional.append(seg)
+                        break
+        
+        if not left_volitional:
+            return []
+        
+        # Check if right is とも (seq=1632180)
+        filter_tomo = filter_in_seq_set(1632180)
+        right_tomo = [s for s in seg_list_right.segments if filter_tomo(s)]
+        
+        if not right_tomo:
+            return []
+        
+        syn = Synergy(
+            description="volitional+tomo",
+            connector=" ",
+            score=50,  # Strong synergy to prefer compound とも
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_volitional,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_tomo,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_volitional_tomo)
+    
+    # === BUG FIX: verb + なんて (v3f) ===
+    # Add synergy for verb + なんて (seq=1188370)
+    # This prevents 提出させられるな + ん + て (imperative negative split)
+    # なんて is an expression meaning "such things as" that follows verb plain form
+    def synergy_verb_nante(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for verb + なんて."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left is verb-like (non-negative, non-imperative)
+        left_verbs = []
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n', 'v5t', 'v5u', 'vk', 'vs', 'vs-i'}
+            
+            if verb_pos.intersection(posi):
+                # Check it's not imperative negative
+                conj = info.get('conj', [])
+                is_imperative_neg = False
+                for cdata in conj:
+                    if hasattr(cdata, 'prop') and cdata.prop:
+                        if getattr(cdata.prop, 'conj_type', None) == 10:  # CONJ_IMPERATIVE
+                            if getattr(cdata.prop, 'neg', False):
+                                is_imperative_neg = True
+                                break
+                
+                if not is_imperative_neg:
+                    left_verbs.append(seg)
+        
+        if not left_verbs:
+            return []
+        
+        # Check if right is なんて (seq=1188370)
+        filter_nante = filter_in_seq_set(1188370)
+        right_nante = [s for s in seg_list_right.segments if filter_nante(s)]
+        
+        if not right_nante:
+            return []
+        
+        syn = Synergy(
+            description="verb+nante",
+            connector=" ",
+            score=60,  # Strong synergy to prefer なんて as expression
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_verbs,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_nante,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_verb_nante)
 
 
 # Initialize synergies on module load
@@ -1016,6 +1146,93 @@ def _init_penalties():
         return None
     
     register_penalty(penalty_hitotachi_split)
+    
+    # === BUG FIX: につけ (7g2) ===
+    # に + つけ should be penalized to prefer compound につけ (seq=2840365)
+    # につけ is a grammatical expression meaning "whenever"
+    # つけ seqs: 1495750 (noun), conjugations of つける (10092135, 10092153, etc.)
+    def_generic_penalty(
+        name="penalty-ni-tsuke",
+        test_left=has_seq_simple({2028990}),  # に
+        test_right=has_seq_simple({1495750, 10092135, 10092153, 10092153, 1495740}),  # つけ
+        description="ni+tsuke-penalty",
+        score=-30,
+        serial=True,
+    )
+    
+    # === BUG FIX: 未だに (bzl) ===
+    # 未だ + に should be penalized to prefer compound 未だに (seq=1527140)
+    # 未だに is an adverb meaning "still" or "even now"
+    # 未だ seqs: 1527110
+    def_generic_penalty(
+        name="penalty-mada-ni",
+        test_left=has_seq_simple({1527110}),  # 未だ
+        test_right=has_seq_simple({2028990}),  # に
+        description="mada+ni-penalty",
+        score=-30,
+        serial=True,
+    )
+    
+    # === BUG FIX: と + も after volitional (1k3) ===
+    # と + も should be penalized to prefer compound とも (seq=1632180)
+    # when following a volitional form
+    # とも is a particle meaning "even if" after volitional form
+    def_generic_penalty(
+        name="penalty-to-mo",
+        test_left=has_seq_simple({1008490}),  # と
+        test_right=has_seq_simple({2028940}),  # も
+        description="to+mo-penalty",
+        score=-30,
+        serial=True,
+    )
+    
+    # === BUG FIX: たん boundary (klu) ===
+    # verb stem + たん should be penalized when past+ん is intended
+    # たん (seq=2646370) is a prefix/noun, not past+explanatory
+    # This prevents 仕掛け + たん instead of 仕掛けた + ん
+    # We need to check if left is a verb stem (continuative form)
+    # and right is たん (which should be た + ん instead)
+    def penalty_verb_tan(seg_list_left: Any, seg_list_right: Any) -> Optional[Synergy]:
+        """Penalize verb stem + たん when past+ん is intended."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be serial
+        if start != end:
+            return None
+        
+        # Check if right is たん (seq=2646370)
+        segments_right = getattr(seg_list_right, 'segments', [])
+        has_tan = False
+        for seg in segments_right:
+            info = getattr(seg, 'info', {})
+            seq_set = info.get('seq_set', set())
+            if 2646370 in seq_set:
+                has_tan = True
+                break
+        
+        if not has_tan:
+            return None
+        
+        # Check if left ends with verb (indicated by conjugation info)
+        segments_left = getattr(seg_list_left, 'segments', [])
+        for seg in segments_left:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            # Check if it's a verb-like word (verb, suru-verb, etc.)
+            verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n', 'v5t', 'v5u', 'vk', 'vs', 'vs-i', 'n'}
+            if verb_pos.intersection(posi):
+                return Synergy(
+                    description="verb-stem+tan-penalty",
+                    connector=" ",
+                    score=-50,  # Strong penalty to prefer past+explanatory
+                    start=start,
+                    end=end,
+                )
+        
+        return None
+    
+    register_penalty(penalty_verb_tan)
     
     # Short kana words together
     def_generic_penalty(
@@ -1280,6 +1497,176 @@ def _init_segfilters():
         filter_left=lambda s: not filter_in_seq_set(*NOUN_PARTICLES)(s),
         filter_right=filter_in_seq_set(*HONORIFICS),
     )
+    
+    # === BUG FIX: Block patterns where compound expressions exist ===
+    
+    # Segfilter: Block に + つけ to prefer につけ (7g2)
+    # につけ (seq=2840365) is a grammatical expression "whenever"
+    def segfilter_ni_tsuke(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block に + つけ pattern to prefer につけ as compound."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left is に (seq=2028990)
+        filter_ni = filter_in_seq_set(2028990)
+        left_ni = [s for s in seg_list_left.segments if filter_ni(s)]
+        left_other = [s for s in seg_list_left.segments if not filter_ni(s)]
+        
+        # Check if right is つけ (seq=1495750 or conjugations)
+        filter_tsuke = filter_in_seq_set(1495750, 10092135, 10092153, 1495740)
+        right_tsuke = [s for s in seg_list_right.segments if filter_tsuke(s)]
+        right_other = [s for s in seg_list_right.segments if not filter_tsuke(s)]
+        
+        # If not the pattern we're blocking, pass through
+        if not left_ni or not right_tsuke:
+            return [(seg_list_left, seg_list_right)]
+        
+        results = []
+        # Allow left_other with any right
+        if left_other:
+            results.append((
+                SegmentList(
+                    segments=left_other,
+                    start=seg_list_left.start,
+                    end=seg_list_left.end,
+                    matches=seg_list_left.matches,
+                ),
+                seg_list_right,
+            ))
+        
+        # Allow left_ni with right_other (non-tsuke)
+        if right_other:
+            results.append((
+                seg_list_left,
+                SegmentList(
+                    segments=right_other,
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    matches=seg_list_right.matches,
+                ),
+            ))
+        
+        return results if results else []
+    
+    register_segfilter(segfilter_ni_tsuke)
+    
+    # Segfilter: Block 未だ + に to prefer 未だに (bzl)
+    # 未だに (seq=1527140) is an adverb "still/even now"
+    def segfilter_mada_ni(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block 未だ + に pattern to prefer 未だに as compound."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left is 未だ (seq=1527110)
+        filter_mada = filter_in_seq_set(1527110)
+        left_mada = [s for s in seg_list_left.segments if filter_mada(s)]
+        left_other = [s for s in seg_list_left.segments if not filter_mada(s)]
+        
+        # Check if right is に (seq=2028990)
+        filter_ni = filter_in_seq_set(2028990)
+        right_ni = [s for s in seg_list_right.segments if filter_ni(s)]
+        right_other = [s for s in seg_list_right.segments if not filter_ni(s)]
+        
+        # If not the pattern we're blocking, pass through
+        if not left_mada or not right_ni:
+            return [(seg_list_left, seg_list_right)]
+        
+        results = []
+        # Allow left_other with any right
+        if left_other:
+            results.append((
+                SegmentList(
+                    segments=left_other,
+                    start=seg_list_left.start,
+                    end=seg_list_left.end,
+                    matches=seg_list_left.matches,
+                ),
+                seg_list_right,
+            ))
+        
+        # Allow left_mada with right_other (non-ni)
+        if right_other:
+            results.append((
+                seg_list_left,
+                SegmentList(
+                    segments=right_other,
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    matches=seg_list_right.matches,
+                ),
+            ))
+        
+        return results if results else []
+    
+    register_segfilter(segfilter_mada_ni)
+    
+    # Segfilter: Block と + も to prefer とも (1k3)
+    # とも (seq=1632180) is a particle meaning "even if"
+    def segfilter_to_mo(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block と + も pattern to prefer とも as compound particle."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left is と (seq=1008490)
+        filter_to = filter_in_seq_set(1008490)
+        left_to = [s for s in seg_list_left.segments if filter_to(s)]
+        left_other = [s for s in seg_list_left.segments if not filter_to(s)]
+        
+        # Check if right is も (seq=2028940)
+        filter_mo = filter_in_seq_set(2028940)
+        right_mo = [s for s in seg_list_right.segments if filter_mo(s)]
+        right_other = [s for s in seg_list_right.segments if not filter_mo(s)]
+        
+        # If not the pattern we're blocking, pass through
+        if not left_to or not right_mo:
+            return [(seg_list_left, seg_list_right)]
+        
+        results = []
+        # Allow left_other with any right
+        if left_other:
+            results.append((
+                SegmentList(
+                    segments=left_other,
+                    start=seg_list_left.start,
+                    end=seg_list_left.end,
+                    matches=seg_list_left.matches,
+                ),
+                seg_list_right,
+            ))
+        
+        # Allow left_to with right_other (non-mo)
+        if right_other:
+            results.append((
+                seg_list_left,
+                SegmentList(
+                    segments=right_other,
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    matches=seg_list_right.matches,
+                ),
+            ))
+        
+        return results if results else []
+    
+    register_segfilter(segfilter_to_mo)
 
 
 _init_segfilters()
