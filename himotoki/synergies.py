@@ -34,7 +34,7 @@ from himotoki.constants import (
     # Verbs
     SEQ_SURU, SEQ_IRU, SEQ_KURU,
     # Nouns with reading ambiguity
-    SEQ_MAE_NOUN, SEQ_HOU_NOUN,
+    SEQ_MAE_NOUN, SEQ_HOU_NOUN, SEQ_MEN_NOUN,
     # Expressions
     SEQ_NITSURE, SEQ_OSUSUME,
     # Pre-built set
@@ -1134,6 +1134,54 @@ def _init_synergies():
         return [(new_right, syn, new_left)]
     
     register_synergy(synergy_no_hou)
+    
+    # noun + 面(めん) synergy - boost aspect reading over face reading
+    # When a noun is followed by 面, prefer めん (aspect) over つら (face)
+    # Pattern: X面 (X aspect/side) like コスト面, 経済面 uses めん reading
+    def synergy_noun_men(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for noun + 面(めん) to prefer aspect reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for nouns
+        left_nouns = [s for s in seg_list_left.segments if filter_is_noun(s)]
+        if not left_nouns:
+            return []
+        
+        # Filter right for seq=SEQ_MEN_NOUN (めん reading)
+        filter_right = filter_in_seq_set(SEQ_MEN_NOUN)
+        right_men = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_men:
+            return []
+        
+        # Create synergy with high score to push めん over つら
+        syn = Synergy(
+            description="noun+men",
+            connector=" ",
+            score=25,  # Higher score to ensure めん wins
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_nouns,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_men,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_noun_men)
 
 
 # Initialize synergies on module load
