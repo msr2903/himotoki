@@ -486,8 +486,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 22.837641954421997
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 9.35014295578003
   },
   {
     "sentence": "限界を超えろ今ここで立ち上がらなければ全てが終わってしまうんだ",
@@ -901,8 +901,8 @@
     "differences": [
       "Segment '超えろ': source: 超える vs 越える"
     ],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.6943130493164062
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.561737060546875
   },
   {
     "sentence": "お前のその歪んだ正義を俺がこの手で叩き潰してやる",
@@ -1318,8 +1318,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.49294519424438477
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.41098785400390625
   },
   {
     "sentence": "背中は預けたぞ俺たちが力を合わせればどんな敵だって倒せるはずだ",
@@ -1825,8 +1825,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.5253171920776367
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.42937779426574707
   },
   {
     "sentence": "逃げ場なんてどこにもない覚悟を決めてかかってこい",
@@ -1998,8 +1998,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.666003942489624
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.5303962230682373
   },
   {
     "sentence": "この一撃に全ての魔力を込めるこれが俺の最強の魔法だ",
@@ -2566,7 +2566,7 @@
       "Segment '込める': conj_type: Potential vs None"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3950846195220947
+    "time_himotoki": 0.3263411521911621
   },
   {
     "sentence": "運命を変える力が欲しいならその代償を支払わなければならない",
@@ -2995,7 +2995,7 @@
       "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
     ],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.5123381614685059
+    "time_himotoki": 0.42283010482788086
   },
   {
     "sentence": "貴様の動きは見切った次は私の番だと言ったはずだ",
@@ -3513,7 +3513,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.5234501361846924
+    "time_himotoki": 0.4198880195617676
   },
   {
     "sentence": "世界が滅びようとしているのにまだ自分たちの利益ばかり考えているのか",
@@ -3951,8 +3951,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.5049920082092285
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.41724395751953125
   },
   {
     "sentence": "守るべきものがある限り私は何度でも立ち上がる",
@@ -4272,8 +4272,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.38564181327819824
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.33207011222839355
   },
   {
     "sentence": "その言葉冥土の土産に持って逝くがいい",
@@ -4559,8 +4559,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.3552088737487793
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3049280643463135
   },
   {
     "sentence": "貴様ごときに敗北するなど私のプライドが許さない",
@@ -4913,7 +4913,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.49834585189819336
+    "time_himotoki": 0.4053502082824707
   },
   {
     "sentence": "見せてやるよ地獄の底から這い上がってきた俺の執念を",
@@ -5333,8 +5333,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.4297640323638916
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.3613908290863037
   },
   {
     "sentence": "これが最後の警告だ大人しく武器を捨てて投降しろ",
@@ -5718,8 +5718,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.4877643585205078
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.31987929344177246
   },
   {
     "sentence": "その程度の攻撃でこの俺を倒せるとでも思ったのか",
@@ -6169,8 +6169,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3367459774017334
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.2755470275878906
   },
   {
     "sentence": "君がいない世界なんて僕にとっては光のない闇と同じなんだ",
@@ -6771,8 +6771,8 @@
       "Segment '同じ': conj_type: Adjective Stem vs None",
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.4999210834503174
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.39282989501953125
   },
   {
     "sentence": "ずっと伝えたかった言葉があるけれどどうしても声にならなかった",
@@ -7061,7 +7061,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.4681558609008789
+    "time_himotoki": 0.39919304847717285
   },
   {
     "sentence": "あの日交わした約束を君はまだ覚えているだろうか",
@@ -7417,8 +7417,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3912491798400879
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.33873939514160156
   },
   {
     "sentence": "涙を流すのは弱いからじゃない耐えきれないほどの悲しみがあるからだ",
@@ -7669,8 +7669,8 @@
     "differences": [
       "Ichiran error: Timeout"
     ],
-    "time_ichiran": 1.0262699127197266,
-    "time_himotoki": 0.6059548854827881
+    "time_ichiran": 1.0237650871276855,
+    "time_himotoki": 0.5538749694824219
   },
   {
     "sentence": "君の笑顔を取り戻すためなら僕は悪魔に魂を売ってもいい",
@@ -8170,8 +8170,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.09808349609375e-05,
-    "time_himotoki": 0.4255990982055664
+    "time_ichiran": 1.811981201171875e-05,
+    "time_himotoki": 0.379058837890625
   },
   {
     "sentence": "さよならなんて言わないできっとまたどこかで巡り会えるはずだから",
@@ -8521,8 +8521,8 @@
     "differences": [
       "Segment '巡り会える': source: 巡り会う vs めぐり合う"
     ],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 0.5357389450073242
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.4453470706939697
   },
   {
     "sentence": "失って初めて気づいたんだ君がどれだけ大切な存在だったかを",
@@ -9008,8 +9008,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.621246337890625e-05,
-    "time_himotoki": 0.4400768280029297
+    "time_ichiran": 1.2159347534179688e-05,
+    "time_himotoki": 0.3811819553375244
   },
   {
     "sentence": "未来なんて誰にも分からないけど君となら歩いていける気がする",
@@ -9363,8 +9363,8 @@
     "differences": [
       "Segment 'なら': conj_type: None vs Provisional (~eba)"
     ],
-    "time_ichiran": 1.52587890625e-05,
-    "time_himotoki": 0.45972180366516113
+    "time_ichiran": 1.8835067749023438e-05,
+    "time_himotoki": 0.37790417671203613
   },
   {
     "sentence": "たとえ世界中が敵に回ったとしても僕だけは君の味方だ",
@@ -9785,7 +9785,7 @@
     ],
     "differences": [],
     "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.3726620674133301
+    "time_himotoki": 0.3291349411010742
   },
   {
     "sentence": "過去を悔やんでも何も変わらない今できることを精一杯やるだけだ",
@@ -10253,8 +10253,8 @@
     "differences": [
       "Segment 'できる': conj_type: Potential vs None"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.379133939743042
+    "time_ichiran": 1.2874603271484375e-05,
+    "time_himotoki": 0.3312399387359619
   },
   {
     "sentence": "君の温もりが消えてしまう前にもう一度だけ抱きしめさせてくれ",
@@ -10437,10 +10437,10 @@
       }
     ],
     "differences": [
-      "Ichiran error: Timeout"
+      "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 1.0201616287231445,
-    "time_himotoki": 0.933600902557373
+    "time_ichiran": 0.03863930702209473,
+    "time_himotoki": 0.7421338558197021
   },
   {
     "sentence": "心に空いた穴は時間だけでは埋められないものもあるんだ",
@@ -10933,8 +10933,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.39574599266052246
+    "time_ichiran": 1.71661376953125e-05,
+    "time_himotoki": 0.33380770683288574
   },
   {
     "sentence": "それでも生きていかなくちゃいけない残された私たちは",
@@ -11041,10 +11041,10 @@
       }
     ],
     "differences": [
-      "Ichiran error: Timeout"
+      "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 1.0251271724700928,
-    "time_himotoki": 0.5838749408721924
+    "time_ichiran": 0.036772966384887695,
+    "time_himotoki": 0.47634291648864746
   },
   {
     "sentence": "君の名前を呼ぶたびに胸が張り裂けそうになる",
@@ -11426,8 +11426,8 @@
       "Ichiran: ['君', 'の', '名前', 'を', '呼ぶ', 'たびに', '胸', 'が', '張り裂け', 'そうになる']",
       "Himotoki: ['君', 'の', '名前', 'を', '呼ぶ', 'たびに', '胸', 'が', '張り裂けそう', 'に', 'なる']"
     ],
-    "time_ichiran": 1.7881393432617188e-05,
-    "time_himotoki": 0.47483277320861816
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.3289988040924072
   },
   {
     "sentence": "「ありがとう」の一言さえ言えずに別れてしまったことが心残りだ",
@@ -11656,10 +11656,10 @@
       }
     ],
     "differences": [
-      "Ichiran error: Timeout"
+      "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 1.0210890769958496,
-    "time_himotoki": 0.493847131729126
+    "time_ichiran": 0.03659415245056152,
+    "time_himotoki": 0.36597132682800293
   },
   {
     "sentence": "明日のテスト範囲全然復習してなくてマジで終わったかもしれない",
@@ -12007,8 +12007,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5974044799804688e-05,
-    "time_himotoki": 0.4566679000854492
+    "time_ichiran": 2.1219253540039062e-05,
+    "time_himotoki": 0.3452029228210449
   },
   {
     "sentence": "部活の先輩が引退しちゃうのすごく寂しいけど応援しなきゃだよね",
@@ -12204,10 +12204,10 @@
       }
     ],
     "differences": [
-      "Ichiran error: Ichiran returned code 137: "
+      "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.6180601119995117,
-    "time_himotoki": 0.3663642406463623
+    "time_ichiran": 0.03753972053527832,
+    "time_himotoki": 0.3148770332336426
   },
   {
     "sentence": "文化祭のクラス出し物意見が割れてて全然決まらないんだ",
@@ -12591,8 +12591,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.71661376953125e-05,
-    "time_himotoki": 0.43860697746276855
+    "time_ichiran": 1.5974044799804688e-05,
+    "time_himotoki": 0.38941383361816406
   },
   {
     "sentence": "放課後駅前の新しいカフェに行ってみんなで勉強しない",
@@ -12938,8 +12938,8 @@
     "differences": [
       "Segment '行って': source: 行う vs 行く"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.36277198791503906
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.33466100692749023
   },
   {
     "sentence": "担任の先生に呼び出されたんだけど何か悪いことしたっけな",
@@ -13297,8 +13297,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.33980894088745117
+    "time_ichiran": 9.298324584960938e-06,
+    "time_himotoki": 0.34432387351989746
   },
   {
     "sentence": "修学旅行の班決め仲良い子と一緒になれるかドキドキする",
@@ -13648,8 +13648,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.2159347534179688e-05,
-    "time_himotoki": 0.30350804328918457
+    "time_ichiran": 1.52587890625e-05,
+    "time_himotoki": 0.2809288501739502
   },
   {
     "sentence": "体育祭のリレー選手に選ばれちゃってプレッシャーが半端ないよ",
@@ -13997,8 +13997,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 0.345566987991333
+    "time_ichiran": 1.1205673217773438e-05,
+    "time_himotoki": 0.31976795196533203
   },
   {
     "sentence": "あの子最近転校してきたばかりなのにもうクラスの中心にいるよね",
@@ -14468,8 +14468,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.36126208305358887
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.3119020462036133
   },
   {
     "sentence": "宿題のプリント無くしちゃったんだけど見せてもらってもいい",
@@ -14725,8 +14725,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.4323446750640869
+    "time_ichiran": 1.1920928955078125e-05,
+    "time_himotoki": 0.3880932331085205
   },
   {
     "sentence": "卒業式の答辞を読むことになって今から緊張で胃が痛い",
@@ -15144,8 +15144,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.3381471633911133
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.30403923988342285
   },
   {
     "sentence": "今日の給食私の好きなカレーライスだから絶対おかわりするわ",
@@ -15571,8 +15571,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.7881393432617188e-05,
-    "time_himotoki": 0.3823370933532715
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.3522212505340576
   },
   {
     "sentence": "夏休みの課題図書まだ半分も読んでないのに提出日明日じゃん",
@@ -15996,7 +15996,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3273458480834961
+    "time_himotoki": 0.31332993507385254
   },
   {
     "sentence": "部活の大会が近いから土日も休みなしで練習なんだ",
@@ -16492,8 +16492,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.34032773971557617
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.3273749351501465
   },
   {
     "sentence": "あの先輩すごく頭いいのに気さくで話しやすいよね",
@@ -16827,8 +16827,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.3828277587890625e-05,
-    "time_himotoki": 0.3555891513824463
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.34226512908935547
   },
   {
     "sentence": "席替えで窓際の席になれたから授業中寝てもバレないかも",
@@ -17166,8 +17166,8 @@
     "differences": [
       "Segment 'バレない': source: バレる vs ばれる"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.30739712715148926
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.28862810134887695
   },
   {
     "sentence": "なんでそうなるの普通に考えたらありえない展開でしょ",
@@ -17487,8 +17487,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.621246337890625e-05,
-    "time_himotoki": 0.31197476387023926
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.29605698585510254
   },
   {
     "sentence": "ダイエット中だって言ってるのに目の前でケーキ食べるのやめてよ",
@@ -17906,8 +17906,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.31085205078125
+    "time_ichiran": 2.6226043701171875e-06,
+    "time_himotoki": 0.2906351089477539
   },
   {
     "sentence": "寝坊してパンをくわえて走ったら曲がり角で誰かとぶつかると思った",
@@ -18315,8 +18315,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.621246337890625e-05,
-    "time_himotoki": 0.372222900390625
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.34755992889404297
   },
   {
     "sentence": "猫がパソコンのキーボードの上に乗ってきて仕事が全然進まないんだけど",
@@ -18846,8 +18846,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.33704519271850586
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.32429003715515137
   },
   {
     "sentence": "このアニメの最終回想像の斜め上を行き過ぎて理解が追いつかない",
@@ -19261,8 +19261,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 0.4098689556121826
+    "time_ichiran": 5.7220458984375e-06,
+    "time_himotoki": 0.38370776176452637
   },
   {
     "sentence": "部屋の片付けしてたら昔のアルバムが出てきてつい見入っちゃったよ",
@@ -19681,7 +19681,7 @@
       "Segment '出てきて': conj_type: None vs Conjunctive (~te)"
     ],
     "time_ichiran": 1.3828277587890625e-05,
-    "time_himotoki": 0.41777801513671875
+    "time_himotoki": 0.4044311046600342
   },
   {
     "sentence": "コンビニでおでん買おうとしたら大根だけ売り切れててショック",
@@ -19963,8 +19963,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.359544038772583
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.3541882038116455
   },
   {
     "sentence": "カラオケでアニソン縛りしようぜって言ったのお前だろ歌えよ",
@@ -20391,8 +20391,8 @@
       "Ichiran: ['カラオケ', 'で', 'アニソン', '縛り', 'しよう', 'ぜって', '言', 'った', 'の', 'お前', 'だろ', '歌え', 'よ']",
       "Himotoki: ['カラオケ', 'で', 'アニソン', '縛り', 'しよう', 'ぜ', 'って', '言った', 'の', 'お前', 'だろ', '歌え', 'よ']"
     ],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.30013489723205566
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 0.2907741069793701
   },
   {
     "sentence": "スマホの充電が家に忘れてきちゃって一日中ソワソワしてた",
@@ -20721,7 +20721,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.31311917304992676
+    "time_himotoki": 0.3172478675842285
   },
   {
     "sentence": "推しのグッズが出るたびに財布が軽くなっていく現象に名前をつけて",
@@ -21138,8 +21138,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.32279205322265625
+    "time_ichiran": 1.5974044799804688e-05,
+    "time_himotoki": 0.30740904808044434
   },
   {
     "sentence": "目覚まし時計を三つセットしたのに全部無意識に止めてたっぽい",
@@ -21491,8 +21491,8 @@
     "differences": [
       "Segment '止めてた': conj_type: None vs Past (~ta)"
     ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.4139389991760254
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.39938998222351074
   },
   {
     "sentence": "料理動画を見て作ってみたけど見た目が全然違う物体が生成された",
@@ -21970,8 +21970,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.47728610038757324
+    "time_ichiran": 2.002716064453125e-05,
+    "time_himotoki": 0.4489457607269287
   },
   {
     "sentence": "電車で寝過ごして起きたら全然知らない駅にいた時の絶望感",
@@ -22407,8 +22407,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5735626220703125e-05,
-    "time_himotoki": 0.3744330406188965
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.3552420139312744
   },
   {
     "sentence": "雨傘を持っていった日に限って晴れるの何かの呪いなのかな",
@@ -22874,8 +22874,8 @@
       "Segment '呪い': conj_type: Continuative (~i) vs None",
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.3272099494934082
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.31652188301086426
   },
   {
     "sentence": "久しぶりに運動したら翌日じゃなくて翌々日に筋肉痛が来た",
@@ -23218,7 +23218,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3305552005767822
+    "time_himotoki": 0.31667518615722656
   },
   {
     "sentence": "古の契約に基づき我汝を召喚せん。答えよ英霊たちよ",
@@ -23630,7 +23630,7 @@
       "Himotoki: ['古', 'の', '契約', 'に基づき', '我', '汝', 'を', '召喚', 'せん', '。', '答え', 'よ', '英霊', 'たち', 'よ']"
     ],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.30160999298095703
+    "time_himotoki": 0.28976988792419434
   },
   {
     "sentence": "このダンジョンには凶暴な魔物が巣食っているから十分に警戒して進もう",
@@ -24091,8 +24091,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.33998799324035645
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3099520206451416
   },
   {
     "sentence": "伝説の聖剣を抜くことができるのは清らかな心を持つ者だけだ",
@@ -24622,8 +24622,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.32297396659851074
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.29387807846069336
   },
   {
     "sentence": "回復魔法が間に合わなかったくそっ俺の力が足りないばかりに",
@@ -25036,8 +25036,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.3542141914367676
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3006627559661865
   },
   {
     "sentence": "魔王城の結界を破るには四つの精霊石を集める必要があるんだ",
@@ -25682,8 +25682,8 @@
       "Ichiran: ['魔', '王城', 'の', '結界', 'を', '破る', 'には', '四つ', 'の', '精霊', '石', 'を', '集める', '必要', 'が', 'ある', 'ん', 'だ']",
       "Himotoki: ['魔王', '城', 'の', '結界', 'を', '破る', 'には', '四つ', 'の', '精霊', '石', 'を', '集める', '必要', 'が', 'ある', 'ん', 'だ']"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.2887871265411377
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.2699861526489258
   },
   {
     "sentence": "レベルが足りなくてあのボスにはまだ手も足も出ないよ",
@@ -26000,7 +26000,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.2841451168060303
+    "time_himotoki": 0.25582003593444824
   },
   {
     "sentence": "村人たちからクエストを受注して報酬で新しい装備を整えよう",
@@ -26408,8 +26408,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.3627278804779053
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.3316659927368164
   },
   {
     "sentence": "異世界に転生したらチート能力で無双できると思ったのに",
@@ -26755,8 +26755,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.35216307640075684
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.3190031051635742
   },
   {
     "sentence": "詠唱を破棄して魔法を発動させるなんてあいつ化け物か",
@@ -27114,8 +27114,8 @@
     "differences": [
       "Segment '発動させる': conj_type: None vs Potential"
     ],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 8.467134952545166
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.3185751438140869
   },
   {
     "sentence": "パーティーメンバーとの連携が乱れれば全滅もあり得るぞ",
@@ -27501,8 +27501,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.2936840057373047
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.2669987678527832
   },
   {
     "sentence": "闇の勢力が拡大していて世界は滅亡の危機に瀕している",
@@ -27725,8 +27725,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03757190704345703,
-    "time_himotoki": 0.33289384841918945
+    "time_ichiran": 0.037242889404296875,
+    "time_himotoki": 0.2943089008331299
   },
   {
     "sentence": "ドラゴンが守っている財宝を手に入れれば一生遊んで暮らせるはずだ",
@@ -28096,8 +28096,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5974044799804688e-05,
-    "time_himotoki": 0.3742818832397461
+    "time_ichiran": 1.811981201171875e-05,
+    "time_himotoki": 0.33329081535339355
   },
   {
     "sentence": "スキルツリーをどう振るかでキャラクターの性能が大きく変わるね",
@@ -28593,8 +28593,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1205673217773438e-05,
-    "time_himotoki": 0.30240368843078613
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.28173112869262695
   },
   {
     "sentence": "ポーションの在庫が尽きたこれ以上の戦闘は危険だ撤退しよう",
@@ -29008,8 +29008,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1682510375976562e-05,
-    "time_himotoki": 0.29663920402526855
+    "time_ichiran": 1.2159347534179688e-05,
+    "time_himotoki": 0.2698197364807129
   },
   {
     "sentence": "封印されし禁断の魔法書を開いてしまった者の末路は悲惨だ",
@@ -29489,8 +29489,8 @@
     "differences": [
       "Segment '開いてしまった': conj_type: None vs Past (~ta)"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.406282901763916
+    "time_ichiran": 1.1205673217773438e-05,
+    "time_himotoki": 0.35198307037353516
   },
   {
     "sentence": "MPが切れた誰かマナポーションを持っていないか",
@@ -29652,8 +29652,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.037241220474243164,
-    "time_himotoki": 0.27611398696899414
+    "time_ichiran": 0.039589881896972656,
+    "time_himotoki": 0.2577972412109375
   },
   {
     "sentence": "ギルドの依頼掲示板に高難易度の討伐クエストが貼り出されていた",
@@ -29884,8 +29884,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03975987434387207,
-    "time_himotoki": 0.4099550247192383
+    "time_ichiran": 0.034879446029663086,
+    "time_himotoki": 0.37064671516418457
   },
   {
     "sentence": "セーブポイントが見つからないままもう二時間も探索している",
@@ -30053,8 +30053,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.036605119705200195,
-    "time_himotoki": 0.35415196418762207
+    "time_ichiran": 0.03871583938598633,
+    "time_himotoki": 0.32706618309020996
   },
   {
     "sentence": "隠し通路を見つけたぞきっとレアアイテムがあるに違いない",
@@ -30466,8 +30466,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 0.33439111709594727
+    "time_ichiran": 2.288818359375e-05,
+    "time_himotoki": 0.307934045791626
   },
   {
     "sentence": "ラスボスだと思っていたのが実は操られていたただの傀儡だったとは",
@@ -30927,8 +30927,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 0.32137298583984375
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.2870666980743408
   },
   {
     "sentence": "政府は本日午後の閣議で新たな経済対策を盛り込んだ補正予算案を決定しました",
@@ -31207,8 +31207,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03726387023925781,
-    "time_himotoki": 0.388347864151001
+    "time_ichiran": 0.03831195831298828,
+    "time_himotoki": 0.3468611240386963
   },
   {
     "sentence": "次期衆議院選挙に向け各党は公約の作成や候補者の調整を急いでいます",
@@ -31762,8 +31762,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.7881393432617188e-05,
-    "time_himotoki": 0.32111096382141113
+    "time_ichiran": 2.1696090698242188e-05,
+    "time_himotoki": 0.3002591133117676
   },
   {
     "sentence": "国会では野党側が首相の政治資金問題を厳しく追及する構えを見せています",
@@ -32286,8 +32286,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 0.38921499252319336
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.3599221706390381
   },
   {
     "sentence": "内閣支持率は先月の調査から5ポイント下落し政権運営に陰りが見え始めています",
@@ -32771,8 +32771,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 0.42867493629455566
+    "time_ichiran": 1.1920928955078125e-05,
+    "time_himotoki": 0.4013040065765381
   },
   {
     "sentence": "法改正により来年度から一定の条件を満たす企業の法人税が減税される見守です",
@@ -33279,8 +33279,8 @@
     "differences": [
       "Segment '減税される': conj_type: None vs Passive"
     ],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.4493448734283447
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 0.4184579849243164
   },
   {
     "sentence": "政府は外交ルートを通じて周辺諸国に対し冷静な対応を求めていく方針です",
@@ -33765,8 +33765,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.37098097801208496
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.34536004066467285
   },
   {
     "sentence": "地方自治体の財政難が深刻化しており国からの支援拡充を求める声が上がっています",
@@ -34302,8 +34302,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.4279508590698242
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.39267611503601074
   },
   {
     "sentence": "新しい法案が可決されれば国民生活に多大な影響を与えることが予想されます",
@@ -34557,8 +34557,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03743696212768555,
-    "time_himotoki": 0.3557438850402832
+    "time_ichiran": 0.038774728775024414,
+    "time_himotoki": 0.3170890808105469
   },
   {
     "sentence": "首相は記者会見で自身の進退について明言を避けつつも改革への意欲を強調しました",
@@ -34875,8 +34875,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03979897499084473,
-    "time_himotoki": 0.4163858890533447
+    "time_ichiran": 0.03505825996398926,
+    "time_himotoki": 0.37085700035095215
   },
   {
     "sentence": "国際社会と連携し地球規模の課題解決に向けてリーダーシップを発揮していく必要があります",
@@ -35126,8 +35126,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0404508113861084,
-    "time_himotoki": 0.3212931156158447
+    "time_ichiran": 0.03834104537963867,
+    "time_himotoki": 0.2925240993499756
   },
   {
     "sentence": "東京株式市場は米国の利上げ観測を背景に全面安の展開となりました",
@@ -35619,8 +35619,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.3659980297088623
+    "time_ichiran": 2.002716064453125e-05,
+    "time_himotoki": 0.34516000747680664
   },
   {
     "sentence": "円相場は一時1ドル145円台まで下落し約24年ぶりの円安水準を更新しました",
@@ -35916,8 +35916,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.035736083984375,
-    "time_himotoki": 0.31377267837524414
+    "time_ichiran": 0.0366058349609375,
+    "time_himotoki": 0.29944586753845215
   },
   {
     "sentence": "大手自動車メーカー各社は半導体不足の影響で減産を余儀なくされています",
@@ -36148,8 +36148,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0440828800201416,
-    "time_himotoki": 0.3953990936279297
+    "time_ichiran": 0.03686714172363281,
+    "time_himotoki": 0.3750591278076172
   },
   {
     "sentence": "消費者物価指数は前年同月比で3.0%上昇し家計への負担が増しています",
@@ -36360,8 +36360,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.05289125442504883,
-    "time_himotoki": 0.37397313117980957
+    "time_ichiran": 0.03827834129333496,
+    "time_himotoki": 0.3586287498474121
   },
   {
     "sentence": "中央銀行は金融緩和政策の維持を決定しましたが市場では政策修正の思惑がくすぶっています",
@@ -36954,8 +36954,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.811981201171875e-05,
-    "time_himotoki": 0.33034396171569824
+    "time_ichiran": 1.6689300537109375e-05,
+    "time_himotoki": 0.3199763298034668
   },
   {
     "sentence": "企業の設備投資は持ち直しの動きが見られるものの先行き不透明感は拭えません",
@@ -37462,8 +37462,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 0.4667379856109619
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.4476432800292969
   },
   {
     "sentence": "スタートアップ企業の資金調達環境は厳しさを増しておりイノベーションへの影響が懸念されます",
@@ -37696,8 +37696,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03711390495300293,
-    "time_himotoki": 0.39050769805908203
+    "time_ichiran": 0.03558611869812012,
+    "time_himotoki": 0.35538411140441895
   },
   {
     "sentence": "インバウンド需要の回復により観光業やサービス業の業績が改善傾向にあります",
@@ -38243,8 +38243,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.811981201171875e-05,
-    "time_himotoki": 0.3014810085296631
+    "time_ichiran": 2.1696090698242188e-05,
+    "time_himotoki": 0.28826212882995605
   },
   {
     "sentence": "最低賃金の引き上げが決定されましたが中小企業の経営への影響が懸念されています",
@@ -38499,8 +38499,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.042975664138793945,
-    "time_himotoki": 0.3898742198944092
+    "time_ichiran": 0.03873610496520996,
+    "time_himotoki": 0.35344386100769043
   },
   {
     "sentence": "貿易赤字が過去最大となりエネルギー価格の高騰が主な要因と分析されています",
@@ -38735,8 +38735,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04099583625793457,
-    "time_himotoki": 0.3641359806060791
+    "time_ichiran": 0.035859107971191406,
+    "time_himotoki": 0.32292675971984863
   },
   {
     "sentence": "少子高齢化が急速に進む中社会保障制度の持続可能性が大きな課題となっています",
@@ -39232,8 +39232,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.7881393432617188e-05,
-    "time_himotoki": 0.3533031940460205
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.3354220390319824
   },
   {
     "sentence": "待機児童問題の解決に向け政府は保育施設の整備や保育士の処遇改善を進めています",
@@ -39859,8 +39859,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 0.3386092185974121
+    "time_ichiran": 6.198883056640625e-06,
+    "time_himotoki": 0.30864381790161133
   },
   {
     "sentence": "近年異常気象による自然災害が頻発しており防災対策の強化が急務です",
@@ -40306,8 +40306,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.32974910736083984
+    "time_ichiran": 6.198883056640625e-06,
+    "time_himotoki": 0.2988307476043701
   },
   {
     "sentence": "若者のテレビ離れが進む一方でインターネット動画配信サービスの利用が拡大しています",
@@ -40559,8 +40559,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03872394561767578,
-    "time_himotoki": 0.33799028396606445
+    "time_ichiran": 0.03719305992126465,
+    "time_himotoki": 0.3020150661468506
   },
   {
     "sentence": "教育現場ではタブレット端末を活用したICT教育の導入が加速しています",
@@ -40888,8 +40888,8 @@
       "Ichiran: ['教育現場', 'では', 'タブレット', '端末', 'を', '活用した']",
       "Himotoki: ['教育現場', 'では', 'タブレット', '端末', 'を', '活用した', 'ICT', '教育', 'の', '導入', 'が', '加速しています']"
     ],
-    "time_ichiran": 1.4781951904296875e-05,
-    "time_himotoki": 0.3191189765930176
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.2904813289642334
   },
   {
     "sentence": "長時間労働の是正を目指し働き方改革関連法に基づいた取り組みが各企業で進められています",
@@ -41430,8 +41430,8 @@
     "differences": [
       "Segment '取り組み': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.37594175338745117
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.34729695320129395
   },
   {
     "sentence": "高齢者ドライバーによる交通事故が相次いでおり免許返納制度の見直しが議論されています",
@@ -41648,8 +41648,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04159903526306152,
-    "time_himotoki": 0.44103074073791504
+    "time_ichiran": 0.03626394271850586,
+    "time_himotoki": 0.40939998626708984
   },
   {
     "sentence": "コロナ禍を経てテレワークが定着し地方への移住に関心を持つ人が増えています",
@@ -42171,8 +42171,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 0.32555699348449707
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.3019428253173828
   },
   {
     "sentence": "食品ロスの削減に向け賞味期限の見直しやフードバンク活動への支援が行われています",
@@ -42724,8 +42724,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3561849594116211
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.33544301986694336
   },
   {
     "sentence": "孤独や孤立の問題が深刻化しており政府は担当大臣を設置して対策に乗り出しました",
@@ -42995,8 +42995,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0381927490234375,
-    "time_himotoki": 0.35195493698120117
+    "time_ichiran": 0.06764078140258789,
+    "time_himotoki": 0.3429720401763916
   },
   {
     "sentence": "国連安全保障理事会は紛争地域への人道支援を継続することで全会一致で合意しました",
@@ -43224,8 +43224,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03721785545349121,
-    "time_himotoki": 0.3191647529602051
+    "time_ichiran": 0.0357208251953125,
+    "time_himotoki": 0.3075881004333496
   },
   {
     "sentence": "欧州連合は環境規制の強化などを盛り込んだ新たな成長戦略を発表しました",
@@ -43459,8 +43459,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04063105583190918,
-    "time_himotoki": 0.35308122634887695
+    "time_ichiran": 0.035737037658691406,
+    "time_himotoki": 0.3357100486755371
   },
   {
     "sentence": "中東情勢の緊迫化を受け原油価格が急騰し世界経済への影響が懸念されています",
@@ -43745,8 +43745,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03764033317565918,
-    "time_himotoki": 0.33409905433654785
+    "time_ichiran": 0.035917043685913086,
+    "time_himotoki": 0.321336030960083
   },
   {
     "sentence": "世界保健機関は新たな変異ウイルスの感染拡大に対し警戒を呼びかけています",
@@ -44132,8 +44132,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.621246337890625e-05,
-    "time_himotoki": 0.4372427463531494
+    "time_ichiran": 2.002716064453125e-05,
+    "time_himotoki": 0.3983590602874756
   },
   {
     "sentence": "主要国首脳会議では気候変動対策や食料安全保障などが主要な議題となる見通しです",
@@ -44658,8 +44658,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 0.382814884185791
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.36648106575012207
   },
   {
     "sentence": "開発途上国へのワクチン供給を支援するため国際的な枠組みを通じた協力が求められています",
@@ -45212,7 +45212,7 @@
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3461010456085205
+    "time_himotoki": 0.32546091079711914
   },
   {
     "sentence": "難民受け入れの問題を巡り各国の足並みの乱れが浮き彫りとなっています",
@@ -45734,8 +45734,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1205673217773438e-05,
-    "time_himotoki": 0.41188883781433105
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.385465145111084
   },
   {
     "sentence": "米中関係の悪化は世界的なサプライチェーンの分断を招く恐れがあります",
@@ -46227,8 +46227,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 0.3284189701080322
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.3157351016998291
   },
   {
     "sentence": "宇宙開発競争が激化する中民間の宇宙旅行ビジネスが注目を集めています",
@@ -46584,8 +46584,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3199779987335205
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.30490684509277344
   },
   {
     "sentence": "国際的なサイバー攻撃の脅威が高まっており各国はセキュリティ対策の強化を急いでいます",
@@ -47111,8 +47111,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3161461353302002
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.29619383811950684
   },
   {
     "sentence": "人工知能技術の進化により自動運転車の実用化が現実味を帯びてきました",
@@ -47532,8 +47532,8 @@
     "differences": [
       "Segment '帯びてきました': source: 来る vs 行く"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.37603092193603516
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.33919405937194824
   },
   {
     "sentence": "量子コンピューターの実用化に向けた研究開発競争が世界各国で激化しています",
@@ -47744,8 +47744,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03694891929626465,
-    "time_himotoki": 0.2987639904022217
+    "time_ichiran": 0.0370030403137207,
+    "time_himotoki": 0.28203892707824707
   },
   {
     "sentence": "次世代通信規格5Gのエリア拡大が進みIoT機器の普及が加速すると期待されています",
@@ -48024,8 +48024,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03795599937438965,
-    "time_himotoki": 0.3143470287322998
+    "time_ichiran": 0.03545808792114258,
+    "time_himotoki": 0.2936680316925049
   },
   {
     "sentence": "再生医療の分野ではiPS細胞を用いた新たな治療法の臨床試験が始まっています",
@@ -48289,8 +48289,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03940415382385254,
-    "time_himotoki": 0.34862208366394043
+    "time_ichiran": 0.037407875061035156,
+    "time_himotoki": 0.32521581649780273
   },
   {
     "sentence": "脱炭素社会の実現に向け再生可能エネルギーの導入拡大が不可欠となっています",
@@ -48782,8 +48782,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.002716064453125e-05,
-    "time_himotoki": 0.2998530864715576
+    "time_ichiran": 1.8835067749023438e-05,
+    "time_himotoki": 0.2781031131744385
   },
   {
     "sentence": "メタバースと呼ばれる仮想空間での経済活動が注目され多くの企業が参入しています",
@@ -49028,8 +49028,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03515791893005371,
-    "time_himotoki": 0.34967803955078125
+    "time_ichiran": 0.035492897033691406,
+    "time_himotoki": 0.3213350772857666
   },
   {
     "sentence": "ゲノム編集技術を応用した農作物の開発が進み食料問題解決への寄与が期待されています",
@@ -49312,8 +49312,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04012322425842285,
-    "time_himotoki": 0.35986900329589844
+    "time_ichiran": 0.03631305694580078,
+    "time_himotoki": 0.3358490467071533
   },
   {
     "sentence": "ブロックチェーン技術は金融だけでなく物流や行政など幅広い分野での活用が検討されています",
@@ -49598,8 +49598,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03943920135498047,
-    "time_himotoki": 0.36510682106018066
+    "time_ichiran": 0.0361330509185791,
+    "time_himotoki": 0.3359692096710205
   },
   {
     "sentence": "海洋プラスチック汚染の問題解決に向け生分解性プラスチックの開発が進められています",
@@ -50045,7 +50045,7 @@
     ],
     "differences": [],
     "time_ichiran": 1.5974044799804688e-05,
-    "time_himotoki": 0.33840203285217285
+    "time_himotoki": 0.2994811534881592
   },
   {
     "sentence": "スーパーコンピューターを用いたシミュレーションにより新薬開発の期間短縮が可能になりました",
@@ -50549,8 +50549,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 9.298324584960938e-06,
-    "time_himotoki": 0.30879688262939453
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.29291296005249023
   },
   {
     "sentence": "プロ野球の年間最優秀選手に史上最年少で完全試合を達成した投手が選出されました",
@@ -50797,8 +50797,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0377659797668457,
-    "time_himotoki": 0.3724653720855713
+    "time_ichiran": 0.03591799736022949,
+    "time_himotoki": 0.34953808784484863
   },
   {
     "sentence": "サッカー日本代表は強豪国相手に歴史的な勝利を収め決勝トーナメント進出を決めました",
@@ -51282,8 +51282,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 2.09808349609375e-05,
-    "time_himotoki": 0.3656470775604248
+    "time_ichiran": 2.193450927734375e-05,
+    "time_himotoki": 0.35448408126831055
   },
   {
     "sentence": "伝統芸能の継承者不足が深刻化しており国は若手育成のための支援策を打ち出しました",
@@ -51570,8 +51570,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03746294975280762,
-    "time_himotoki": 0.3953988552093506
+    "time_ichiran": 0.03478503227233887,
+    "time_himotoki": 0.38014721870422363
   },
   {
     "sentence": "将棋のタイトル戦で挑戦者が現役最強の王者を破り新名人が誕生しました",
@@ -51871,8 +51871,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.038520097732543945,
-    "time_himotoki": 0.3348381519317627
+    "time_ichiran": 0.035871028900146484,
+    "time_himotoki": 0.30892300605773926
   },
   {
     "sentence": "国立博物館で開催中の特別展は連日多くの来場者で賑わいを見せています",
@@ -52350,8 +52350,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.811981201171875e-05,
-    "time_himotoki": 0.344937801361084
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 0.323167085647583
   },
   {
     "sentence": "フィギュアスケートの世界選手権で日本人選手が男女ともにメダルを獲得しました",
@@ -52564,8 +52564,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04065394401550293,
-    "time_himotoki": 0.3269820213317871
+    "time_ichiran": 0.04013800621032715,
+    "time_himotoki": 0.31380319595336914
   },
   {
     "sentence": "国内最大級の音楽フェスティバルが3年ぶりに開催され会場は熱気に包まれました",
@@ -53078,8 +53078,8 @@
       "Ichiran: ['国内', '最大級', 'の', '音楽', 'フェスティバル', 'が', '3', '年ぶり', 'に', '開催され', '会場', 'は', '熱気', 'に', '包まれました']",
       "Himotoki: ['国内', '最大級', 'の', '音楽', 'フェスティバル', 'が', '3年', 'ぶり', 'に', '開催され', '会場', 'は', '熱気', 'に', '包まれました']"
     ],
-    "time_ichiran": 1.7881393432617188e-05,
-    "time_himotoki": 0.41326117515563965
+    "time_ichiran": 1.8835067749023438e-05,
+    "time_himotoki": 0.3823540210723877
   },
   {
     "sentence": "芥川賞と直木賞の選考会が行われ若手作家のデビュー作が受賞を果たしました",
@@ -53341,8 +53341,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03947281837463379,
-    "time_himotoki": 0.36728692054748535
+    "time_ichiran": 0.04022502899169922,
+    "time_himotoki": 0.3378787040710449
   },
   {
     "sentence": "eスポーツの国際大会で日本チームが優勝し賞金1億円を獲得しました",
@@ -53599,8 +53599,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0376129150390625,
-    "time_himotoki": 0.2924330234527588
+    "time_ichiran": 0.03678607940673828,
+    "time_himotoki": 0.26492905616760254
   },
   {
     "sentence": "世界遺産への登録を目指している古墳群についてユネスコの諮問機関が登録を勧告しました",
@@ -53884,8 +53884,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03921079635620117,
-    "time_himotoki": 0.3375840187072754
+    "time_ichiran": 0.0345001220703125,
+    "time_himotoki": 0.3088388442993164
   },
   {
     "sentence": "大型で非常に強い台風10号は勢力を保ったまま九州地方に上陸する恐れがあります",
@@ -54391,8 +54391,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.71661376953125e-05,
-    "time_himotoki": 0.3431239128112793
+    "time_ichiran": 1.9073486328125e-05,
+    "time_himotoki": 0.3202648162841797
   },
   {
     "sentence": "気象庁は東海地方から関東地方にかけて線状降水帯が発生したと発表しました",
@@ -54594,8 +54594,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.14023208618164062,
-    "time_himotoki": 0.3859889507293701
+    "time_ichiran": 0.0375521183013916,
+    "time_himotoki": 0.32810401916503906
   },
   {
     "sentence": "地震の影響で新幹線が運転を見合わせており多くの利用客に影響が出ています",
@@ -55150,8 +55150,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.09808349609375e-05,
-    "time_himotoki": 0.46871089935302734
+    "time_ichiran": 1.9311904907226562e-05,
+    "time_himotoki": 0.4111807346343994
   },
   {
     "sentence": "記録的な大雪により関越道では多数の車が立ち往生する事態となりました",
@@ -55708,8 +55708,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.3402702808380127
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.3174610137939453
   },
   {
     "sentence": "この夏の猛暑は異常気象によるものと見られ熱中症への厳重な警戒が必要です",
@@ -56321,8 +56321,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.5207207202911377
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.37474608421325684
   },
   {
     "sentence": "河川の氾濫や土砂崩れの危険性が高まっているため自治体から避難指示が出されています",
@@ -56593,8 +56593,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03920602798461914,
-    "time_himotoki": 0.4546799659729004
+    "time_ichiran": 0.03589010238647461,
+    "time_himotoki": 0.354327917098999
   },
   {
     "sentence": "火山活動が活発化しており気象庁は噴火警戒レベルを引き上げました",
@@ -56876,8 +56876,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.288818359375e-05,
-    "time_himotoki": 0.3989870548248291
+    "time_ichiran": 1.9073486328125e-05,
+    "time_himotoki": 0.31723999977111816
   },
   {
     "sentence": "梅雨前線の影響で西日本を中心に局地的な激しい雨が降る見込みです",
@@ -57366,8 +57366,8 @@
       "Segment 'な': conj_type: Adjective Stem vs None",
       "Segment '見込み': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.38124513626098633
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.32376885414123535
   },
   {
     "sentence": "桜の開花予想が発表され今年は平年より一週間ほど早くなる予想です",
@@ -57893,8 +57893,8 @@
     "differences": [
       "Segment 'より': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 0.34590578079223633
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.29059529304504395
   },
   {
     "sentence": "大気の状態が不安定になっており落雷や竜巻などの突風に注意してください",
@@ -58166,8 +58166,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.047857046127319336,
-    "time_himotoki": 0.42468786239624023
+    "time_ichiran": 0.03536820411682129,
+    "time_himotoki": 0.3404569625854492
   },
   {
     "sentence": "君のことは好きだけど今の僕には君を幸せにする自信がないんだ",
@@ -58799,8 +58799,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.71661376953125e-05,
-    "time_himotoki": 0.38062500953674316
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.33188509941101074
   },
   {
     "sentence": "もしあの時違う選択をしていたら私たちは今も一緒にいられたのかな",
@@ -59070,8 +59070,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04010176658630371,
-    "time_himotoki": 0.4793121814727783
+    "time_ichiran": 0.037552833557128906,
+    "time_himotoki": 0.42545509338378906
   },
   {
     "sentence": "「愛してる」なんて簡単に言わないで言葉の重みが分からない人なんて信じられない",
@@ -59331,8 +59331,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03891396522521973,
-    "time_himotoki": 0.4827110767364502
+    "time_ichiran": 0.03538870811462402,
+    "time_himotoki": 0.4098670482635498
   },
   {
     "sentence": "遠距離恋愛なんて無理だと思ってたけど君となら乗り越えられる気がする",
@@ -59750,8 +59750,8 @@
     "differences": [
       "Segment 'なら': conj_type: None vs Provisional (~eba)"
     ],
-    "time_ichiran": 2.09808349609375e-05,
-    "time_himotoki": 0.39785099029541016
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.3607358932495117
   },
   {
     "sentence": "運命の赤い糸なんて信じてなかったけどあなたに出会って考えが変わった",
@@ -60099,8 +60099,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 0.33872509002685547
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.30544400215148926
   },
   {
     "sentence": "浮気されたことよりもそれを隠そうとして嘘をつかれたことの方が傷ついたよ",
@@ -60556,8 +60556,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 0.5241560935974121
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.4778258800506592
   },
   {
     "sentence": "君の過去も含めて全部受け入れる覚悟はできているつもりだ",
@@ -60977,8 +60977,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.38752079010009766
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.34679412841796875
   },
   {
     "sentence": "結婚してくださいこれからの人生を君と共に歩んでいきたいんです",
@@ -61338,8 +61338,8 @@
     "differences": [
       "Segment '結婚してください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 0.43622398376464844
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.393247127532959
   },
   {
     "sentence": "友達としてしか見られないって言われた時時間が止まったような気がした",
@@ -61527,8 +61527,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03867697715759277,
-    "time_himotoki": 0.5533480644226074
+    "time_ichiran": 0.03617119789123535,
+    "time_himotoki": 0.49051713943481445
   },
   {
     "sentence": "私のこと一番に考えてくれないならもう付き合っていけない",
@@ -61859,7 +61859,7 @@
     ],
     "differences": [],
     "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.498002290725708
+    "time_himotoki": 0.44317007064819336
   },
   {
     "sentence": "偶然再会した元カレが驚くほど素敵になっていて心が揺れてしまった",
@@ -62246,8 +62246,8 @@
     "differences": [
       "Segment '揺れてしまった': conj_type: None vs Past (~ta)"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.393723726272583
+    "time_ichiran": 2.6226043701171875e-06,
+    "time_himotoki": 0.3519423007965088
   },
   {
     "sentence": "素直になれなくていつも君を傷つけるようなことばかり言ってしまう",
@@ -62643,8 +62643,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.7220458984375e-06,
-    "time_himotoki": 0.4234292507171631
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.38710904121398926
   },
   {
     "sentence": "二人の未来が見えないってそれって別れたいってことなの",
@@ -63074,8 +63074,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3263828754425049
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.2980842590332031
   },
   {
     "sentence": "誰になんと言われようと私は彼のことを信じ続けるわ",
@@ -63553,8 +63553,8 @@
       "Ichiran: ['誰', 'に', 'なんと', '言われよう', 'と', '私', 'は', '彼', 'の', 'こと', 'を', '信じ', '続ける', 'わ']",
       "Himotoki: ['誰', 'に', 'なんと', '言われよう', 'と', '私', 'は', '彼', 'の', 'こと', 'を', '信じ続ける', 'わ']"
     ],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 0.396104097366333
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.35924196243286133
   },
   {
     "sentence": "幸せになることがこんなに怖いなんて今まで知らなかった",
@@ -63902,8 +63902,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 0.33420610427856445
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.33821868896484375
   },
   {
     "sentence": "このプロジェクトが成功するかどうかは君たちの頑張りにかかっているんだ",
@@ -64353,8 +64353,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.457927942276001
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.4184601306915283
   },
   {
     "sentence": "部長のパワハラにはもう耐えられません人事部に相談させてもらいます",
@@ -64521,8 +64521,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.044980764389038086,
-    "time_himotoki": 0.5541388988494873
+    "time_ichiran": 0.03808712959289551,
+    "time_himotoki": 0.4747121334075928
   },
   {
     "sentence": "残業ばかり続いていて最近ろくに睡眠も取れていないんです",
@@ -64872,8 +64872,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 0.32742786407470703
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.30127406120300293
   },
   {
     "sentence": "プレゼン資料の締め切りは明日ですよね徹業してでも完成させます",
@@ -65100,8 +65100,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03908491134643555,
-    "time_himotoki": 0.414705753326416
+    "time_ichiran": 0.035833120346069336,
+    "time_himotoki": 0.366107702255249
   },
   {
     "sentence": "今期の売上目標未達だとボーナスの査定に響くから頼むよ",
@@ -65625,8 +65625,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.3176860809326172
+    "time_ichiran": 2.09808349609375e-05,
+    "time_himotoki": 0.28299593925476074
   },
   {
     "sentence": "クライアントからのクレーム対応新人に任せるのは荷が重すぎるんじゃないか",
@@ -65845,8 +65845,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03914499282836914,
-    "time_himotoki": 0.40062522888183594
+    "time_ichiran": 0.03658032417297363,
+    "time_himotoki": 0.31598424911499023
   },
   {
     "sentence": "同期が出世していく中で自分だけ取り残されているような焦りを感じる",
@@ -66066,8 +66066,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04264378547668457,
-    "time_himotoki": 0.36383700370788574
+    "time_ichiran": 0.03705120086669922,
+    "time_himotoki": 0.3299579620361328
   },
   {
     "sentence": "この会社辞めますもっと自分のスキルを活かせる場所で勝負したいんです",
@@ -66312,8 +66312,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04048418998718262,
-    "time_himotoki": 0.4613938331604004
+    "time_ichiran": 0.03650832176208496,
+    "time_himotoki": 0.41428470611572266
   },
   {
     "sentence": "会議の議事録要点をまとめて今日中にメールで共有しておいて",
@@ -66663,8 +66663,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.673004150390625e-05,
-    "time_himotoki": 0.5041332244873047
+    "time_ichiran": 1.71661376953125e-05,
+    "time_himotoki": 0.44909071922302246
   },
   {
     "sentence": "接待ゴルフなんて時代遅れだとは思うけどこれも仕事のうちだからな",
@@ -67162,7 +67162,7 @@
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.34996485710144043
+    "time_himotoki": 0.31688499450683594
   },
   {
     "sentence": "稟議書がまだ承認されていないので発注の手続きを進められません",
@@ -67548,8 +67548,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.31429505348205566
+    "time_ichiran": 6.198883056640625e-06,
+    "time_himotoki": 0.2867610454559326
   },
   {
     "sentence": "有給休暇を取りたいんですがこの時期はやっぱり迷惑でしょうか",
@@ -67939,8 +67939,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.31896114349365234
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 0.28127622604370117
   },
   {
     "sentence": "新しい企画案斬新で面白いけどコスト面での課題が大きいね",
@@ -68466,8 +68466,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.33985018730163574
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.30469608306884766
   },
   {
     "sentence": "リストラの対象になっているかもしれないって噂本当なんですか",
@@ -68857,8 +68857,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.42148900032043457
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.37549424171447754
   },
   {
     "sentence": "仕事と家庭の両立が難しくてどちらも中途半端になっている気がする",
@@ -69276,8 +69276,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 0.4412219524383545
+    "time_ichiran": 9.775161743164062e-06,
+    "time_himotoki": 0.3941771984100342
   },
   {
     "sentence": "検査の結果が出るまでは何とも言えませんが覚悟だけはしておいてください",
@@ -69535,8 +69535,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04085373878479004,
-    "time_himotoki": 0.4120512008666992
+    "time_ichiran": 0.03641700744628906,
+    "time_himotoki": 0.36467409133911133
   },
   {
     "sentence": "この手術は非常に難易度が高いですが我々のチームなら必ず成功させられます",
@@ -69782,8 +69782,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03978681564331055,
-    "time_himotoki": 0.41928815841674805
+    "time_ichiran": 0.036283016204833984,
+    "time_himotoki": 0.37126898765563965
   },
   {
     "sentence": "患者さんの命を救うためならどんなリスクを負ってでもメスを握るのが外科医だ",
@@ -70474,8 +70474,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5974044799804688e-05,
-    "time_himotoki": 0.32351016998291016
+    "time_ichiran": 2.193450927734375e-05,
+    "time_himotoki": 0.29152917861938477
   },
   {
     "sentence": "心拍数が低下していますすぐに除細動器を持ってきてください",
@@ -70726,8 +70726,8 @@
     "differences": [
       "Segment '持ってきてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.3687119483947754
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.3367600440979004
   },
   {
     "sentence": "残念ながら手遅れでしたご家族に連絡を取ってあげてください",
@@ -71000,7 +71000,7 @@
       "Segment 'あげてください': conj_type: None vs Imperative"
     ],
     "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.3832972049713135
+    "time_himotoki": 0.3489210605621338
   },
   {
     "sentence": "奇跡的に意識が回復しましたこれは医学では説明がつかないことです",
@@ -71421,8 +71421,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.3723747730255127
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.32944488525390625
   },
   {
     "sentence": "リハビリは辛いと思いますが諦めずに一緒に頑張りましょう",
@@ -71773,8 +71773,8 @@
     "differences": [
       "Segment '諦めず': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 0.37059688568115234
+    "time_ichiran": 6.198883056640625e-06,
+    "time_himotoki": 0.33704304695129395
   },
   {
     "sentence": "院内感染を防ぐために面会時間を制限させていただいております",
@@ -71909,8 +71909,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03928875923156738,
-    "time_himotoki": 0.39899110794067383
+    "time_ichiran": 0.03417801856994629,
+    "time_himotoki": 0.3567228317260742
   },
   {
     "sentence": "救急車の受け入れ要請が来ていますがICUは満床で断るしかありません",
@@ -72277,8 +72277,8 @@
       "Ichiran: ['救急車', 'の', '受け入れ', '要請', 'が', '来ています', 'が']",
       "Himotoki: ['救急車', 'の', '受け入れ', '要請', 'が', '来ています', 'が', 'ICU', 'は', '満床', 'で', '断る', 'しか', 'ありません']"
     ],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 0.3798987865447998
+    "time_ichiran": 1.5735626220703125e-05,
+    "time_himotoki": 0.32991790771484375
   },
   {
     "sentence": "研修医の君にそんな判断ができるわけないだろう上司の指示を仰ぎなさい",
@@ -72811,8 +72811,8 @@
       "Segment 'できる': conj_type: Potential vs None",
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 0.4294393062591553
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.3922691345214844
   },
   {
     "sentence": "余命宣告を本人にするかどうかご家族でよく話し合って決めてください",
@@ -73226,7 +73226,7 @@
       "Segment '決めてください': conj_type: None vs Imperative"
     ],
     "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 0.39699769020080566
+    "time_himotoki": 0.35507678985595703
   },
   {
     "sentence": "ドナーが見つかりましたすぐに移植手術の準備に入ります",
@@ -73532,8 +73532,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.3452599048614502
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3122291564941406
   },
   {
     "sentence": "医療ミスが疑われる事例が発生しました至急調査委員会を立ち上げてください",
@@ -73915,8 +73915,8 @@
     "differences": [
       "Segment '立ち上げてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.42302799224853516
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.378284215927124
   },
   {
     "sentence": "看護師さんが優しくて入院生活の不安が少し和らぎました",
@@ -74294,8 +74294,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3350090980529785
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.30341100692749023
   },
   {
     "sentence": "薬の副作用が出る可能性があるので体調に変化があったらすぐに教えてください",
@@ -74857,8 +74857,8 @@
     "differences": [
       "Segment '教えてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3218660354614258
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.2967679500579834
   },
   {
     "sentence": "犯人は必ずこの現場に戻ってくるそれまで張り込みを続けるぞ",
@@ -75282,8 +75282,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.811981201171875e-05,
-    "time_himotoki": 0.33522605895996094
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 0.3112950325012207
   },
   {
     "sentence": "状況証拠は揃っているんだ嘘をついてもお前の立場が悪くなるだけだ",
@@ -75741,8 +75741,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3134782314300537
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.29300999641418457
   },
   {
     "sentence": "私のアリバイは完璧ですよその時間は友人と映画を見ていましたから",
@@ -76304,8 +76304,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.3909759521484375e-06,
-    "time_himotoki": 0.42957377433776855
+    "time_ichiran": 1.2874603271484375e-05,
+    "time_himotoki": 0.42491984367370605
   },
   {
     "sentence": "被害者のダイイングメッセージが事件解決の鍵を握っているかもしれない",
@@ -76589,8 +76589,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.344650268554688e-06,
-    "time_himotoki": 0.3339378833770752
+    "time_ichiran": 5.7220458984375e-06,
+    "time_himotoki": 0.32912206649780273
   },
   {
     "sentence": "この事件裏に大きな組織が関わっている可能性があるな深入りするなよ",
@@ -77090,8 +77090,8 @@
       "Ichiran: ['この', '事件', '裏', 'に', '大きな', '組織', 'が', '関わっている', '可能性', 'が', 'ある', 'な', '深入りする', 'なよ']",
       "Himotoki: ['この', '事件', '裏', 'に', '大きな', '組織', 'が', '関わっている', '可能性', 'が', 'ある', 'な', '深入りするな', 'よ']"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3562769889831543
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.32531285285949707
   },
   {
     "sentence": "弁護士が到着するまで一切の質問にはお答えしません",
@@ -77478,7 +77478,7 @@
       "Segment '答え': conj_type: Continuative (~i) vs None"
     ],
     "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.3202648162841797
+    "time_himotoki": 0.28952503204345703
   },
   {
     "sentence": "動機は怨恨かそれとも金銭トラブルか洗いざらい調べ上げろ",
@@ -77827,7 +77827,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.38075995445251465
+    "time_himotoki": 0.34660887718200684
   },
   {
     "sentence": "科学捜査の結果凶器から被告人の指紋が検出されました",
@@ -78183,8 +78183,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.3027510643005371
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.2799558639526367
   },
   {
     "sentence": "私は無実だ誰かが私を陥れようとして罠を仕掛けたんだ",
@@ -78677,8 +78677,8 @@
       "Ichiran: ['私', 'は', '無実', 'だ', '誰か', 'が', '私', 'を', '陥れようとして', '罠', 'を', '仕掛けた', 'ん', 'だ']",
       "Himotoki: ['私', 'は', '無実', 'だ', '誰か', 'が', '私', 'を', '陥れようとして', '罠', 'を', '仕掛け', 'たん', 'だ']"
     ],
-    "time_ichiran": 1.5735626220703125e-05,
-    "time_himotoki": 0.5662422180175781
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.5171949863433838
   },
   {
     "sentence": "刑事が勘で動くなんて時代遅れだ今はプロファイリングの時代だよ",
@@ -79198,8 +79198,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 0.28597211837768555
+    "time_ichiran": 1.2159347534179688e-05,
+    "time_himotoki": 0.2669076919555664
   },
   {
     "sentence": "時効まであと一週間絶対に犯人を逃がすわけにはいかない",
@@ -79519,8 +79519,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.3074519634246826
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.2757530212402344
   },
   {
     "sentence": "あの時の目撃証言が嘘だったなんて今さら言われても困ります",
@@ -79902,8 +79902,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.6226043701171875e-06,
-    "time_himotoki": 0.30358386039733887
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.289017915725708
   },
   {
     "sentence": "密室殺人のトリックを解くなんてまるでミステリー小説の世界だ",
@@ -80325,8 +80325,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.30839085578918457
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.28101396560668945
   },
   {
     "sentence": "自首をして罪を償うことが被害者へのせめてもの償いになるはずだ",
@@ -80916,8 +80916,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.4288640022277832
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3449978828430176
   },
   {
     "sentence": "裁判員制度で選ばれた市民が人の一生を左右する判決を下すなんて",
@@ -81408,8 +81408,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3390991687774658
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.315169095993042
   },
   {
     "sentence": "警察内部に情報を漏らしているスパイがいる誰も信用するな",
@@ -81825,8 +81825,8 @@
       "Ichiran: ['警察', '内部', 'に', '情報', 'を', '漏らしている', 'スパイ', 'が', 'いる', '誰も', '信用する', 'な']",
       "Himotoki: ['警察', '内部', 'に', '情報', 'を', '漏らしている', 'スパイ', 'が', 'いる', '誰も', '信用するな']"
     ],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.3397488594055176
+    "time_ichiran": 1.8835067749023438e-05,
+    "time_himotoki": 0.3077430725097656
   },
   {
     "sentence": "遺産相続をめぐる骨肉の争いが悲劇的な結末を招いてしまった",
@@ -82184,8 +82184,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3352069854736328
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.30858898162841797
   },
   {
     "sentence": "目撃者が記憶を失っていて捜査は振り出しに戻ってしまった",
@@ -82473,8 +82473,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 0.4241921901702881
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.36637425422668457
   },
   {
     "sentence": "真実はいつも一つだなんて綺麗事世の中には暴かない方がいい秘密もある",
@@ -82971,7 +82971,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3204371929168701
+    "time_himotoki": 0.3062291145324707
   },
   {
     "sentence": "この街を守るのが俺たちの仕事だどんな悪党にも好き勝手はさせない",
@@ -83527,8 +83527,8 @@
     "differences": [
       "Segment 'させない': conj_type: Potential vs Non-past, source: 注す vs させる"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.31978583335876465
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.31186985969543457
   },
   {
     "sentence": "監察医の所見によると死亡推定時刻は昨夜の午後10時から11時の間だ",
@@ -84043,7 +84043,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3431282043457031
+    "time_himotoki": 0.3267180919647217
   },
   {
     "sentence": "ガサ入れを行うには令状が必要だ裁判所に行って取ってこい",
@@ -84453,8 +84453,8 @@
     "differences": [
       "Segment '行って': source: 行う vs 行く"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.33246898651123047
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 0.3163020610809326
   },
   {
     "sentence": "容疑者が逃走した緊急配備を敷いて行方を追え",
@@ -84766,8 +84766,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5974044799804688e-05,
-    "time_himotoki": 0.2766530513763428
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.2623708248138428
   },
   {
     "sentence": "被害者のリストに共通点が見つかったこれは連続殺人事件だ",
@@ -85183,7 +85183,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3914351463317871
+    "time_himotoki": 0.37855005264282227
   },
   {
     "sentence": "未解決事件捜査班通称「コールドケース」担当に異動を命じる",
@@ -85427,8 +85427,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.036492109298706055,
-    "time_himotoki": 0.311812162399292
+    "time_ichiran": 0.03280901908874512,
+    "time_himotoki": 0.2877991199493408
   },
   {
     "sentence": "久しぶり元気してた最後会ったのっていつだっけ卒業式以来かな",
@@ -85848,8 +85848,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.6941299438476562e-05,
-    "time_himotoki": 0.3878331184387207
+    "time_ichiran": 1.8358230590820312e-05,
+    "time_himotoki": 0.3455348014831543
   },
   {
     "sentence": "明けましておめでとうございます今年もどうぞよろしくお願いいたします",
@@ -85948,8 +85948,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.050390005111694336,
-    "time_himotoki": 0.4700949192047119
+    "time_ichiran": 0.03481006622314453,
+    "time_himotoki": 0.385941743850708
   },
   {
     "sentence": "はじめまして今日からこちらの部署に配属になりました田中と申します",
@@ -86198,8 +86198,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.037587881088256836,
-    "time_himotoki": 0.3747420310974121
+    "time_ichiran": 0.0400388240814209,
+    "time_himotoki": 0.3310389518737793
   },
   {
     "sentence": "ご無沙汰しておりますお変わりなくお過ごしでしょうか",
@@ -86407,8 +86407,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.47955322265625e-05,
-    "time_himotoki": 0.36881518363952637
+    "time_ichiran": 1.52587890625e-05,
+    "time_himotoki": 0.32050514221191406
   },
   {
     "sentence": "お誕生日おめでとうこれささやかだけど私からのプレゼントです",
@@ -86752,8 +86752,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.4145231246948242
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.37236714363098145
   },
   {
     "sentence": "昨日はごちそうさまでした久しぶりに美味しいお酒が飲めて楽しかったです",
@@ -86931,8 +86931,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.042549848556518555,
-    "time_himotoki": 0.45485734939575195
+    "time_ichiran": 0.0387883186340332,
+    "time_himotoki": 0.4268150329589844
   },
   {
     "sentence": "大変長らくお待たせいたしましたこちらがご注文の品でございます",
@@ -87310,8 +87310,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 0.3712489604949951
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.34334421157836914
   },
   {
     "sentence": "いらっしゃいませ何名様でのご利用でしょうかご予約はされていますか",
@@ -87530,8 +87530,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03903985023498535,
-    "time_himotoki": 0.3870420455932617
+    "time_ichiran": 0.036128997802734375,
+    "time_himotoki": 0.3497891426086426
   },
   {
     "sentence": "お気をつけてお帰りくださいまたのご来店を心よりお待ちしております",
@@ -87753,8 +87753,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04458880424499512,
-    "time_himotoki": 0.4116342067718506
+    "time_ichiran": 0.0356440544128418,
+    "time_himotoki": 0.3738439083099365
   },
   {
     "sentence": "お疲れ様でした今日はこれで上がらせていただきますね",
@@ -88002,8 +88002,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.09808349609375e-05,
-    "time_himotoki": 0.37859296798706055
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.3434872627258301
   },
   {
     "sentence": "最近急に寒くなってきたから風邪ひかないように気をつけてね",
@@ -88290,7 +88290,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.4533669948577881
+    "time_himotoki": 0.41758203506469727
   },
   {
     "sentence": "お子さんもうそんなに大きくなったの人の子の成長って早いわね",
@@ -88678,8 +88678,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.31076693534851074
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.28644824028015137
   },
   {
     "sentence": "来週の飲み会幹事を任されちゃったんだけどどこかいいお店知らない",
@@ -88893,8 +88893,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03945493698120117,
-    "time_himotoki": 0.3611140251159668
+    "time_ichiran": 0.03611183166503906,
+    "time_himotoki": 0.33018016815185547
   },
   {
     "sentence": "ご愁傷様です突然のことで言葉が見つかりませんがお力落としのないように",
@@ -89411,7 +89411,7 @@
     ],
     "differences": [],
     "time_ichiran": 2.5272369384765625e-05,
-    "time_himotoki": 0.4003927707672119
+    "time_himotoki": 0.3663978576660156
   },
   {
     "sentence": "退職されると聞いて驚きました新天地でのご活躍をお祈りしています",
@@ -89621,8 +89621,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03910994529724121,
-    "time_himotoki": 0.3524291515350342
+    "time_ichiran": 0.03510093688964844,
+    "time_himotoki": 0.32915520668029785
   },
   {
     "sentence": "すみません写真を撮っていただけますか背景のタワーも入れてほしいんですけど",
@@ -90054,8 +90054,8 @@
       "Ichiran: ['すみません', '写真を撮っていただけます', 'か', '背景', 'の', 'タワー', 'も', '入れて', 'ほしい', 'ん', 'です', 'けど']",
       "Himotoki: ['すみません', '写真を撮って', 'いただけます', 'か', '背景', 'の', 'タワー', 'も', '入れて', 'ほしい', 'ん', 'です', 'けど']"
     ],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.4610412120819092
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.4235551357269287
   },
   {
     "sentence": "今度の連休もし暇だったらドライブにでも行かない",
@@ -90407,8 +90407,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.30864882469177246
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.2836148738861084
   },
   {
     "sentence": "ちょっとお願いがあるんだけど来週のシフト代わってもらえないかな",
@@ -90831,7 +90831,7 @@
       "Segment '代わって': source: 代わる vs 替わる"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.31911301612854004
+    "time_himotoki": 0.301332950592041
   },
   {
     "sentence": "今手が離せないので後でこちらから折り返し電話してもよろしいでしょうか",
@@ -91030,8 +91030,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03752589225769043,
-    "time_himotoki": 0.39324092864990234
+    "time_ichiran": 0.03607010841369629,
+    "time_himotoki": 0.369182825088501
   },
   {
     "sentence": "駅前のカフェで待ち合わせでいいかな13時くらいには着けると思う",
@@ -91487,8 +91487,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.52587890625e-05,
-    "time_himotoki": 0.3440539836883545
+    "time_ichiran": 1.8835067749023438e-05,
+    "time_himotoki": 0.32485294342041016
   },
   {
     "sentence": "明日雨らしいからバーベキューは延期にした方がいいかもしれないね",
@@ -91690,8 +91690,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03355860710144043,
-    "time_himotoki": 0.32868504524230957
+    "time_ichiran": 0.0353541374206543,
+    "time_himotoki": 0.30458903312683105
   },
   {
     "sentence": "チケットが余ってるんだけど一緒に行かない興味ないかもしれないけど",
@@ -92035,8 +92035,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 0.3152749538421631
+    "time_ichiran": 1.811981201171875e-05,
+    "time_himotoki": 0.29459691047668457
   },
   {
     "sentence": "予約を変更したいのですが明日の19時からって空いてますか",
@@ -92468,8 +92468,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.27340102195739746
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.26035189628601074
   },
   {
     "sentence": "道に迷ってしまったみたいで現在地がよく分からないんです",
@@ -92773,8 +92773,8 @@
     "differences": [
       "Segment 'よく': conj_type: Adverbial vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.35022997856140137
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3347132205963135
   },
   {
     "sentence": "この書類書き方が分からないところがあるんだけど教えてくれない",
@@ -93127,7 +93127,7 @@
     ],
     "differences": [],
     "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 0.3444068431854248
+    "time_himotoki": 0.3237721920013428
   },
   {
     "sentence": "終電逃しちゃったからタクシーで帰るか漫画喫茶で始発待つか迷うわ",
@@ -93621,8 +93621,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.2944021224975586
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.2723667621612549
   },
   {
     "sentence": "家を出る時に鍵閉めたっけ不安になってきたから確認しに戻ろうかな",
@@ -94108,8 +94108,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.2159347534179688e-05,
-    "time_himotoki": 0.3390657901763916
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.31926870346069336
   },
   {
     "sentence": "買い物リスト作ったのに肝心のリストを家に忘れてきちゃったよ",
@@ -94527,8 +94527,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.35224103927612305
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.32999181747436523
   },
   {
     "sentence": "今度ご飯でもどうですかって誘われたんだけどこれってデートなのかな",
@@ -95094,8 +95094,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.3610858917236328
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.34664201736450195
   },
   {
     "sentence": "来月の旅行の計画立てたいから今度カフェで打ち合わせしようよ",
@@ -95515,8 +95515,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 0.4229609966278076
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.4527750015258789
   },
   {
     "sentence": "この服サイズ違いってありますかMだとちょっと肩幅がきついんです",
@@ -95795,8 +95795,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03724980354309082,
-    "time_himotoki": 0.3124241828918457
+    "time_ichiran": 0.037622928619384766,
+    "time_himotoki": 0.3174448013305664
   },
   {
     "sentence": "試着してみてもいいですかフェイスカバーをお借りできますか",
@@ -96174,8 +96174,8 @@
     "differences": [
       "Segment 'できます': conj_type: Non-past vs Potential, source: 出来る vs 為る"
     ],
-    "time_ichiran": 1.9311904907226562e-05,
-    "time_himotoki": 0.304182767868042
+    "time_ichiran": 2.002716064453125e-05,
+    "time_himotoki": 0.309478759765625
   },
   {
     "sentence": "プレゼント用にラッピングをお願いしたいんですが無料ですか",
@@ -96563,8 +96563,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.30932116508483887
+    "time_ichiran": 6.198883056640625e-06,
+    "time_himotoki": 0.32563090324401855
   },
   {
     "sentence": "ポイントカードをお持ちでない場合はこちらのアプリがお得ですよ",
@@ -97104,8 +97104,8 @@
       "Ichiran: ['ポイント', 'カード', 'を', 'お', '持ち', 'で', 'ない', '場合', 'は', 'こちら', 'の', 'アプリ', 'が', 'お得', 'です', 'よ']",
       "Himotoki: ['ポイント', 'カード', 'を', 'お', '持ち', 'でない', '場合', 'は', 'こちら', 'の', 'アプリ', 'が', 'お得', 'です', 'よ']"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.2942538261413574
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.30980825424194336
   },
   {
     "sentence": "レジ袋は有料になりますがご利用になりますか",
@@ -97488,7 +97488,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.2774467468261719
+    "time_himotoki": 0.294827938079834
   },
   {
     "sentence": "お支払いは現金のみとなっておりますがよろしいでしょうか",
@@ -97845,8 +97845,8 @@
       "Ichiran: ['お', '支払い', 'は', '現金', 'のみ', 'となって', 'おります', 'が', 'よろしいでしょう', 'か']",
       "Himotoki: ['お', '支払い', 'は', '現金', 'のみ', 'と', 'なって', 'おります', 'が', 'よろしいでしょう', 'か']"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.34939098358154297
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.35582900047302246
   },
   {
     "sentence": "この商品在庫切れで取り寄せになるんですが一週間ほどかかります",
@@ -98259,7 +98259,7 @@
       "Segment 'かかります': source: 掛かる vs 罹る"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.43413496017456055
+    "time_himotoki": 0.42092180252075195
   },
   {
     "sentence": "返品・交換はレシートをお持ちでタグがついている場合のみ可能です",
@@ -98530,8 +98530,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03801393508911133,
-    "time_himotoki": 0.30333495140075684
+    "time_ichiran": 0.039961814880371094,
+    "time_himotoki": 0.38424110412597656
   },
   {
     "sentence": "ただいまセール期間中でして2点以上お買い上げでさらに10%オフになります",
@@ -98965,8 +98965,8 @@
       "Ichiran: ['ただいま', 'セール', '期間中', 'で', 'して', '2点', '以上', 'お', '買い上げ', 'で', 'さらに']",
       "Himotoki: ['ただいま', 'セール', '期間中', 'で', 'して', '2点', '以上', 'お', '買い上げ', 'で', 'さらに', '10%', 'オフ', 'に', 'なります']"
     ],
-    "time_ichiran": 1.3828277587890625e-05,
-    "time_himotoki": 0.3411262035369873
+    "time_ichiran": 1.811981201171875e-05,
+    "time_himotoki": 0.35602378845214844
   },
   {
     "sentence": "美容院の予約をしたいんですが指名はなしで一番早い時間でお願いします",
@@ -99231,8 +99231,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.034980058670043945,
-    "time_himotoki": 0.3433079719543457
+    "time_ichiran": 0.038356781005859375,
+    "time_himotoki": 0.3325932025909424
   },
   {
     "sentence": "宅配便の受け取り時間を変更したいんですけどどうすればいいですか",
@@ -99674,8 +99674,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.125999450683594e-05,
-    "time_himotoki": 0.3893733024597168
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.3665609359741211
   },
   {
     "sentence": "携帯の機種変更を考えているんですが料金プランについて相談したいです",
@@ -99877,8 +99877,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03680586814880371,
-    "time_himotoki": 0.358644962310791
+    "time_ichiran": 0.03646278381347656,
+    "time_himotoki": 0.365386962890625
   },
   {
     "sentence": "こちらのクーポンは有効期限が切れていますのでご利用いただけません",
@@ -100257,8 +100257,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5974044799804688e-05,
-    "time_himotoki": 0.3646390438079834
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 0.3843667507171631
   },
   {
     "sentence": "スーパーの特売日だからまとめ買いして冷凍保存しておこうかな",
@@ -100412,8 +100412,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04072284698486328,
-    "time_himotoki": 0.481198787689209
+    "time_ichiran": 0.0383601188659668,
+    "time_himotoki": 0.4990098476409912
   },
   {
     "sentence": "ネットで注文した商品が届かないんだけど問い合わせ番号で調べてみよう",
@@ -100848,7 +100848,7 @@
       "Segment '問い合わせ': conj_type: Continuative (~i) vs None"
     ],
     "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 0.3395969867706299
+    "time_himotoki": 0.30988383293151855
   },
   {
     "sentence": "すみませんこの電車は東京駅に止まりますか快速だと止まらない気がして",
@@ -101094,8 +101094,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03799009323120117,
-    "time_himotoki": 0.49193882942199707
+    "time_ichiran": 0.03599071502685547,
+    "time_himotoki": 0.44068408012390137
   },
   {
     "sentence": "羽田空港行きのリムジンバス乗り場はどこですか",
@@ -101479,8 +101479,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.507469177246094e-05,
-    "time_himotoki": 0.28818798065185547
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.2672867774963379
   },
   {
     "sentence": "新幹線の指定席が満席だったから自由席で座れるか心配だな",
@@ -101961,7 +101961,7 @@
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3004782199859619
+    "time_himotoki": 0.33492183685302734
   },
   {
     "sentence": "地図アプリを見ても道が分からないんだけど私は重度の方向音痴かもしれない",
@@ -102477,8 +102477,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.48017215728759766
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.44321393966674805
   },
   {
     "sentence": "ホテルのチェックインは何時からですか荷物だけ先に預けたいんですが",
@@ -102934,8 +102934,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.37708401679992676
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.3512451648712158
   },
   {
     "sentence": "観光案内所で地図をもらっておすすめのスポットを聞いてみよう",
@@ -103305,8 +103305,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.35448288917541504
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.3250889778137207
   },
   {
     "sentence": "レンタカーを借りたいんですけど国際免許証でも大丈夫ですか",
@@ -103723,8 +103723,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 0.306776762008667
+    "time_ichiran": 8.344650268554688e-06,
+    "time_himotoki": 0.2793416976928711
   },
   {
     "sentence": "飛行機が遅延して乗り継ぎ便に間に合わないかもしれません",
@@ -104000,8 +104000,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.52587890625e-05,
-    "time_himotoki": 0.371539831161499
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.3348731994628906
   },
   {
     "sentence": "SUICAの残高が足りなくて改札で引っかかっちゃった恥ずかしい",
@@ -104160,8 +104160,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0348820686340332,
-    "time_himotoki": 0.48610615730285645
+    "time_ichiran": 0.03705883026123047,
+    "time_himotoki": 0.4204268455505371
   },
   {
     "sentence": "京都の紅葉はいつ頃が見頃ですか混雑を避けて行きたいんですけど",
@@ -104710,8 +104710,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.198883056640625e-05,
-    "time_himotoki": 0.3794560432434082
+    "time_ichiran": 1.8835067749023438e-05,
+    "time_himotoki": 0.3523731231689453
   },
   {
     "sentence": "温泉旅館に泊まって美味しい懐石料理を食べるのが最高の贅沢だよね",
@@ -105169,8 +105169,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.39099693298339844
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.3546559810638428
   },
   {
     "sentence": "海外旅行に行きたいけど円安だから国内旅行にしておこうかな",
@@ -105353,8 +105353,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.042571067810058594,
-    "time_himotoki": 0.2969779968261719
+    "time_ichiran": 0.03421521186828613,
+    "time_himotoki": 0.26952171325683594
   },
   {
     "sentence": "パスポートの期限が切れそうだから更新手続きに行かないといけない",
@@ -105704,8 +105704,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.35975098609924316
+    "time_ichiran": 1.6689300537109375e-05,
+    "time_himotoki": 0.33919215202331543
   },
   {
     "sentence": "お土産買いすぎてスーツケースに入りきらないよどうしよう",
@@ -105976,7 +105976,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.4014091491699219
+    "time_himotoki": 0.35457420349121094
   },
   {
     "sentence": "夜行バスは体が痛くなるけど安いから学生の旅行にはありがたいよね",
@@ -106467,7 +106467,7 @@
     ],
     "differences": [],
     "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 0.31324315071105957
+    "time_himotoki": 0.286776065826416
   },
   {
     "sentence": "燃えるゴミの日は火曜日と金曜日で朝8時までに出してくださいね",
@@ -106697,8 +106697,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03631329536437988,
-    "time_himotoki": 0.33971571922302246
+    "time_ichiran": 0.0361170768737793,
+    "time_himotoki": 0.3012380599975586
   },
   {
     "sentence": "エアコンから変な音がするんだけど修理業者呼んだ方がいいかな",
@@ -107120,8 +107120,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 2.002716064453125e-05,
-    "time_himotoki": 0.30554699897766113
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.2806661128997803
   },
   {
     "sentence": "隣の部屋の騒音がうるさくて眠れないんです管理会社に苦情言ってもいい",
@@ -107603,8 +107603,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 0.37360620498657227
+    "time_ichiran": 5.7220458984375e-06,
+    "time_himotoki": 0.33832812309265137
   },
   {
     "sentence": "引っ越しの見積もり取ったら高すぎてびっくりした時期ずらそうかな",
@@ -107764,8 +107764,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03847503662109375,
-    "time_himotoki": 0.45063185691833496
+    "time_ichiran": 0.03589487075805664,
+    "time_himotoki": 0.41673874855041504
   },
   {
     "sentence": "鍵をなくして部屋に入れない大家さんに連絡つかないしどうしよう",
@@ -107977,8 +107977,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03650784492492676,
-    "time_himotoki": 0.42461681365966797
+    "time_ichiran": 0.03574085235595703,
+    "time_himotoki": 0.37505292892456055
   },
   {
     "sentence": "このアパートペット不可なの知らなくて猫飼っちゃったんだけどバレるかな",
@@ -108442,8 +108442,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 2.3126602172851562e-05,
-    "time_himotoki": 0.30730175971984863
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.28334903717041016
   },
   {
     "sentence": "宅配ボックスがいっぱいで荷物が受け取れないの地味にストレスだよね",
@@ -108865,8 +108865,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.35471296310424805
+    "time_ichiran": 7.152557373046875e-06,
+    "time_himotoki": 0.3330729007720947
   },
   {
     "sentence": "電気代が先月より倍になってる暖房つけっぱなしにしたのがまずかったか",
@@ -109388,8 +109388,8 @@
     "differences": [
       "Segment 'より': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 0.3728151321411133
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.33896589279174805
   },
   {
     "sentence": "お風呂の排水溝が詰まって水が流れないパイプクリーナー買ってこなくちゃ",
@@ -109771,8 +109771,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 0.3884902000427246
+    "time_ichiran": 8.344650268554688e-06,
+    "time_himotoki": 0.3581676483154297
   },
   {
     "sentence": "ベランダで家庭菜園を始めたんだけどハーブが虫に食われて全滅した",
@@ -110219,7 +110219,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3722062110900879
+    "time_himotoki": 0.3470802307128906
   },
   {
     "sentence": "Wi-Fiの調子が悪くて動画が止まるんだけどルーター再起動してみる",
@@ -110419,8 +110419,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03960895538330078,
-    "time_himotoki": 0.3395209312438965
+    "time_ichiran": 0.03570723533630371,
+    "time_himotoki": 0.3040292263031006
   },
   {
     "sentence": "断捨離しようと思って服を出してみたけど結局捨てられなくて元に戻した",
@@ -110608,8 +110608,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0432429313659668,
-    "time_himotoki": 0.4324190616607666
+    "time_ichiran": 0.036585092544555664,
+    "time_himotoki": 0.383634090423584
   },
   {
     "sentence": "一人暮らしして初めて親のありがたみが分かった気がするよ",
@@ -110955,8 +110955,8 @@
     "differences": [
       "Segment '分かった': source: 分かつ vs 分かる"
     ],
-    "time_ichiran": 1.621246337890625e-05,
-    "time_himotoki": 0.4364299774169922
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.40244007110595703
   },
   {
     "sentence": "回覧板回さなきゃいけないのに隣の人の顔すら知らないんだよね",
@@ -111410,8 +111410,8 @@
     "differences": [
       "Segment '回さなきゃ': conj_type: Provisional (~eba) vs None, neg: True vs False"
     ],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.3199460506439209
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.3339829444885254
   },
   {
     "sentence": "更新料払うのが嫌だから契約満了のタイミングで引っ越そうと思ってる",
@@ -111865,8 +111865,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4781951904296875e-05,
-    "time_himotoki": 0.30226826667785645
+    "time_ichiran": 1.2159347534179688e-05,
+    "time_himotoki": 0.28890490531921387
   },
   {
     "sentence": "粗大ゴミを出すには予約が必要らしいよコンビニでシール買わなきゃ",
@@ -112322,8 +112322,8 @@
     "differences": [
       "Segment '買わなきゃ': conj_type: Provisional (~eba) vs None, neg: True vs False"
     ],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 0.32216811180114746
+    "time_ichiran": 1.3828277587890625e-05,
+    "time_himotoki": 0.29087209701538086
   },
   {
     "sentence": "窓の結露がひどくて毎朝拭くのが面倒くさいな",
@@ -112707,8 +112707,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.2874603271484375e-05,
-    "time_himotoki": 0.38284897804260254
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.3494758605957031
   },
   {
     "sentence": "キッチンが狭くて料理する気にならないから次は広めのキッチンの部屋がいい",
@@ -113230,8 +113230,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.3555419445037842
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.3271138668060303
   },
   {
     "sentence": "最近近所にできたパン屋さん行列ができてるけどそんなに美味しいのかな",
@@ -113715,8 +113715,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.3828277587890625e-05,
-    "time_himotoki": 0.3588080406188965
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.3297150135040283
   },
   {
     "sentence": "自治会の掃除当番日曜の朝早いから起きられるか心配だ",
@@ -114098,8 +114098,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.3174571990966797
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 0.29354000091552734
   },
   {
     "sentence": "平素は格別のご高配を賜り厚く御礼申し上げます",
@@ -114439,8 +114439,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.37904834747314453
+    "time_ichiran": 1.3828277587890625e-05,
+    "time_himotoki": 0.34603118896484375
   },
   {
     "sentence": "早速のご返信誠にありがとうございます。内容を拝見いたしました",
@@ -114689,7 +114689,7 @@
       "Himotoki: ['早速', 'の', 'ご', '返信', '誠にありがとうございます', '。', '内容', 'を', '拝見いたしました']"
     ],
     "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.5048420429229736
+    "time_himotoki": 0.456096887588501
   },
   {
     "sentence": "添付ファイルにてお見積書をお送りいたしますのでご査収のほどよろしくお願いいたします",
@@ -114933,8 +114933,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03860974311828613,
-    "time_himotoki": 0.39812803268432617
+    "time_ichiran": 0.0366971492767334,
+    "time_himotoki": 0.36974120140075684
   },
   {
     "sentence": "本件につきまして社内で検討いたしました結果今回は見送らせていただくこととなりました",
@@ -115163,8 +115163,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04033303260803223,
-    "time_himotoki": 0.46646809577941895
+    "time_ichiran": 0.03509187698364258,
+    "time_himotoki": 0.4406890869140625
   },
   {
     "sentence": "ご多忙の折大変恐縮ではございますが何卒ご容赦いただけますようお願い申し上げます",
@@ -115721,8 +115721,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.00543212890625e-05,
-    "time_himotoki": 0.36623573303222656
+    "time_ichiran": 1.811981201171875e-05,
+    "time_himotoki": 0.33591413497924805
   },
   {
     "sentence": "誠に勝手ながら下記期間を夏季休業とさせていただきます",
@@ -115898,8 +115898,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04536294937133789,
-    "time_himotoki": 0.5534849166870117
+    "time_ichiran": 0.03383970260620117,
+    "time_himotoki": 0.44571709632873535
   },
   {
     "sentence": "行き違いでご連絡をいただいておりましたら何卒ご容赦ください",
@@ -116211,8 +116211,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.621246337890625e-05,
-    "time_himotoki": 0.3658261299133301
+    "time_ichiran": 1.52587890625e-05,
+    "time_himotoki": 0.33335280418395996
   },
   {
     "sentence": "今後とも変わらぬお引き立てを賜りますよう心よりお願い申し上げます",
@@ -116551,8 +116551,8 @@
     "differences": [
       "Segment '変わらぬ': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.37622594833374023
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.33072590827941895
   },
   {
     "sentence": "取り急ぎメールにて恐縮ですがお礼申し上げます",
@@ -116804,8 +116804,8 @@
     "differences": [
       "Segment '取り急ぎ': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3023500442504883
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.27034783363342285
   },
   {
     "sentence": "ご不明な点がございましたらお気兼ねなくお問い合わせください",
@@ -117215,8 +117215,8 @@
       "Segment 'な': conj_type: Adjective Stem vs None",
       "Segment '問い合わせ': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.3904881477355957
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3515918254852295
   },
   {
     "sentence": "貴社の益々のご発展をお祈り申し上げます",
@@ -117534,8 +117534,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.3126180171966553
+    "time_ichiran": 4.291534423828125e-06,
+    "time_himotoki": 0.28493571281433105
   },
   {
     "sentence": "署名捺印の上返信用封筒にてご返送いただけますでしょうか",
@@ -117847,8 +117847,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 0.2986609935760498
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.2661771774291992
   },
   {
     "sentence": "会議の日程につきまして候補日をいくつか挙げていただけますと幸いです",
@@ -118325,8 +118325,8 @@
       "Segment 'つきまして': source: 付く vs 就く",
       "Segment '挙げて': conj_type: None vs Conjunctive (~te)"
     ],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.3696010112762451
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3308448791503906
   },
   {
     "sentence": "この度の件につきまして深くお詫び申し上げますとともに再発防止に努めてまいる所存です",
@@ -118828,8 +118828,8 @@
     "differences": [
       "Segment 'つきまして': source: 付く vs 就く"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 0.43510985374450684
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.39241814613342285
   },
   {
     "sentence": "詳細は追って担当者よりご連絡させていただきます",
@@ -119052,8 +119052,8 @@
     "differences": [
       "Segment 'より': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 1.811981201171875e-05,
-    "time_himotoki": 0.34723496437072754
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.3118011951446533
   },
   {
     "sentence": "それでは定刻となりましたのでただいまより定例会議を始めさせていただきます",
@@ -119253,8 +119253,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03944897651672363,
-    "time_himotoki": 0.45374608039855957
+    "time_ichiran": 0.03795313835144043,
+    "time_himotoki": 0.39342570304870605
   },
   {
     "sentence": "お手元の資料の3ページ目をご覧くださいここに前年度の売上推移がグラフで示されています",
@@ -119605,8 +119605,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04967188835144043,
-    "time_himotoki": 0.41520214080810547
+    "time_ichiran": 0.036592721939086914,
+    "time_himotoki": 0.37937211990356445
   },
   {
     "sentence": "本日の議題は新規プロジェクトの進捗状況と課題の共有です",
@@ -120064,8 +120064,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.71661376953125e-05,
-    "time_himotoki": 0.3203718662261963
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.29701709747314453
   },
   {
     "sentence": "貴重なご意見をいただきありがとうございます今後の参考にさせていただきます",
@@ -120291,8 +120291,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03954195976257324,
-    "time_himotoki": 0.4144608974456787
+    "time_ichiran": 0.03555607795715332,
+    "time_himotoki": 0.3761746883392334
   },
   {
     "sentence": "ただいまの発言に対して何かご質問やご意見のある方はいらっしゃいますか",
@@ -120581,8 +120581,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.038281917572021484,
-    "time_himotoki": 0.4076371192932129
+    "time_ichiran": 0.03763890266418457,
+    "time_himotoki": 0.3641622066497803
   },
   {
     "sentence": "時間も押しておりますので次の議題に移らせていただきます",
@@ -120906,8 +120906,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.4080276489257812e-05,
-    "time_himotoki": 0.4040079116821289
+    "time_ichiran": 1.71661376953125e-05,
+    "time_himotoki": 0.35640406608581543
   },
   {
     "sentence": "この点につきましては持ち帰って再度検討し後日ご回答させていただきます",
@@ -121089,8 +121089,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.043924808502197266,
-    "time_himotoki": 0.41208910942077637
+    "time_ichiran": 0.03969097137451172,
+    "time_himotoki": 0.37169694900512695
   },
   {
     "sentence": "恐れ入りますがもう一度ご説明いただけますでしょうか",
@@ -121294,8 +121294,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.3184220790863037
+    "time_ichiran": 1.4781951904296875e-05,
+    "time_himotoki": 0.2812201976776123
   },
   {
     "sentence": "結論から申し上げますと今回の提案は採用となりました",
@@ -121677,8 +121677,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.32453489303588867
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.28999876976013184
   },
   {
     "sentence": "スケジュールに関しては柔軟に対応させていただきたいと考えております",
@@ -121831,8 +121831,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04290628433227539,
-    "time_himotoki": 0.38189172744750977
+    "time_ichiran": 0.03674578666687012,
+    "time_himotoki": 0.3452579975128174
   },
   {
     "sentence": "予算の都合上全ての機能を実装するのは難しい状況です",
@@ -122288,8 +122288,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.288818359375e-05,
-    "time_himotoki": 0.3322899341583252
+    "time_ichiran": 1.5974044799804688e-05,
+    "time_himotoki": 0.3003098964691162
   },
   {
     "sentence": "リスクヘッジの観点から代替案も用意しておくべきではないでしょうか",
@@ -122648,8 +122648,8 @@
       "Ichiran: ['リスクヘッジ', 'の', '観点', 'から', '代替', '案', 'も', '用意しておく', 'べきではないでしょう', 'か']",
       "Himotoki: ['リスクヘッジ', 'の', '観点', 'から', '代替案', 'も', '用意しておく', 'べき', 'ではないでしょう', 'か']"
     ],
-    "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 0.35388994216918945
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3174779415130615
   },
   {
     "sentence": "基本合意に至りましたので今後は契約締結に向けた詳細な詰めに入ります",
@@ -123125,8 +123125,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.32906174659729004
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.30179905891418457
   },
   {
     "sentence": "全社一丸となって目標達成に向けて邁進してまいりましょう",
@@ -123332,8 +123332,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.34195709228515625
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.32175683975219727
   },
   {
     "sentence": "本日はお忙しい中お集まりいただき誠にありがとうございました",
@@ -123675,8 +123675,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.3337998390197754
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.30274391174316406
   },
   {
     "sentence": "お待たせして申し訳ございません担当者が参りますので少々お待ちください",
@@ -124070,8 +124070,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.36053991317749023
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.31893014907836914
   },
   {
     "sentence": "恐れ入りますがお名刺を一枚頂戴できますでしょうか",
@@ -124315,8 +124315,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.34709692001342773
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.2899007797241211
   },
   {
     "sentence": "弊社のサービスに関心を持っていただき光栄に存じます",
@@ -124601,7 +124601,7 @@
     ],
     "differences": [],
     "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 0.31464505195617676
+    "time_himotoki": 0.2823328971862793
   },
   {
     "sentence": "あいにく担当の佐藤はただいま席を外しております",
@@ -124903,8 +124903,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 0.3522303104400635
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.30938076972961426
   },
   {
     "sentence": "こちらでよろしければお包みいたしますがいかがなさいますか",
@@ -125078,8 +125078,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0355679988861084,
-    "time_himotoki": 0.4866788387298584
+    "time_ichiran": 0.03511190414428711,
+    "time_himotoki": 0.43106985092163086
   },
   {
     "sentence": "お客様のご要望に添えるよう精一杯努めさせていただきます",
@@ -125245,8 +125245,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03827619552612305,
-    "time_himotoki": 0.40021610260009766
+    "time_ichiran": 0.036566972732543945,
+    "time_himotoki": 0.3696410655975342
   },
   {
     "sentence": "大変申し訳ございませんがそのご要望にはお応えしかねます",
@@ -125592,8 +125592,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.71661376953125e-05,
-    "time_himotoki": 0.32729482650756836
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.29834485054016113
   },
   {
     "sentence": "ご理解とご協力をいただけますようよろしくお願い申し上げます",
@@ -125943,8 +125943,8 @@
     "differences": [
       "Segment 'よろしく': conj_type: Adverbial vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.31438302993774414
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.2678389549255371
   },
   {
     "sentence": "お足元の悪い中ご来店いただきまして誠にありがとうございます",
@@ -126226,8 +126226,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 0.2906460762023926
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.26427602767944336
   },
   {
     "sentence": "在庫状況を確認してまいりますので恐れ入りますがそのままでお待ちください",
@@ -126600,8 +126600,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3083200454711914
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.2820301055908203
   },
   {
     "sentence": "契約内容のご確認をお願いいたしますご不明点はございませんでしょうか",
@@ -126813,8 +126813,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04095792770385742,
-    "time_himotoki": 0.3404371738433838
+    "time_ichiran": 0.041131019592285156,
+    "time_himotoki": 0.3454897403717041
   },
   {
     "sentence": "貴重なご指摘をいただきありがとうございます。社内で共有させていただきます",
@@ -127128,8 +127128,8 @@
       "Ichiran: ['貴重', 'な', 'ご', '指摘', 'を', 'いただき', 'ありがとうございます']",
       "Himotoki: ['貴重', 'な', 'ご', '指摘', 'を', 'いただき', 'ありがとうございます', '。', '社内', 'で', '共有させていただきます']"
     ],
-    "time_ichiran": 1.8835067749023438e-05,
-    "time_himotoki": 0.37244105339050293
+    "time_ichiran": 2.2172927856445312e-05,
+    "time_himotoki": 0.3695039749145508
   },
   {
     "sentence": "担当者が変わりましたので改めてご挨拶に伺いたいと存じます",
@@ -127473,8 +127473,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3147900104522705
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.30971217155456543
   },
   {
     "sentence": "お電話ありがとうございます株式会社〇〇の田中が承ります",
@@ -127788,8 +127788,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.29320812225341797
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3156440258026123
   },
   {
     "sentence": "失礼ですがお名前をもう一度お伺いしてもよろしいでしょうか",
@@ -128089,8 +128089,8 @@
       "Ichiran: ['失礼', 'ですが', 'お名前', 'を', 'もう一度', 'お伺い', 'しても', 'よろしいでしょう', 'か']",
       "Himotoki: ['失礼ですが', 'お名前', 'を', 'もう一度', 'お伺い', 'しても', 'よろしいでしょう', 'か']"
     ],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.3460209369659424
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.32732081413269043
   },
   {
     "sentence": "不採算部門の整理縮小を行い経営資源を成長分野に集中させます",
@@ -128513,7 +128513,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3255438804626465
+    "time_himotoki": 0.2987520694732666
   },
   {
     "sentence": "コンプライアンスの遵守を徹底し信頼される企業を目指します",
@@ -128677,8 +128677,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.039427757263183594,
-    "time_himotoki": 0.3140091896057129
+    "time_ichiran": 0.03565216064453125,
+    "time_himotoki": 0.29668521881103516
   },
   {
     "sentence": "昨今の原材料価格の高騰を受け価格改定を実施せざるを得なくなりました",
@@ -128906,8 +128906,8 @@
     "differences": [
       "Himotoki error: Himotoki error: name 'find_word_conj_of' is not defined\nTraceback (most recent call last):\n  File \"/Users/LENOVO/Projects/himotoki/scripts/compare.py\", line 427, in run_himotoki\n    results = segment_to_json(session, sentence, limit=1)\n  File \"/Users/LENOVO/Projects/himotoki/himotoki/output.py\", line 1254, in segment_to_json\n    results = dict_segment(session, text, limit=limit)\n  File \"/Users/LENOVO/Projects/himotoki/himotoki/output.py\", line 1208, in dict_segment\n    results = segment_text(session, text, limit=limit)\n  File \"/Users/LENOVO/Projects/himotoki/himotoki/segment.py\", line 699, in segment_text\n    segment_lists = join_substring_words(session, text)\n  File \"/Users/LENOVO/Projects/himotoki/himotoki/segment.py\", line 458, in join_substring_words\n    results, kanji_break = join_substring_words_impl(session, text)\n                           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/Users/LENOVO/Projects/himotoki/himotoki/segment.py\", line 351, in join_substring_words_impl\n    substring_map = find_substring_words(session, text, sticky)\n  File \"/Users/LENOVO/Projects/himotoki/himotoki/segment.py\", line 327, in find_substring_words\n    suffix_results = find_word_suffix(session, substring)\n  File \"/Users/LENOVO/Projects/himotoki/himotoki/suffixes.py\", line 679, in find_word_suffix\n    primary_words = suffix_fn(session, root, suffix, kf)\n  File \"/Users/LENOVO/Projects/himotoki/himotoki/suffixes.py\", line 1198, in _handler_abbr_nx\n    return find_word_conj_of(session, 'しない', SEQ_SURU)\n           ^^^^^^^^^^^^^^^^^\nNameError: name 'find_word_conj_of' is not defined. Did you mean: 'find_word_with_pos'?\n"
     ],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 0.021828174591064453
+    "time_ichiran": 1.3828277587890625e-05,
+    "time_himotoki": 0.022135019302368164
   },
   {
     "sentence": "業務効率化のためにRPAツールを導入し定型業務を自動化しました",
@@ -129122,8 +129122,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03885221481323242,
-    "time_himotoki": 0.33818817138671875
+    "time_ichiran": 0.037676095962524414,
+    "time_himotoki": 0.332507848739624
   },
   {
     "sentence": "働き方改革の一環としてフレックスタイム制とテレワークを推奨しています",
@@ -129323,8 +129323,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.039174795150756836,
-    "time_himotoki": 0.33735108375549316
+    "time_ichiran": 0.03496503829956055,
+    "time_himotoki": 0.3066120147705078
   },
   {
     "sentence": "人事評価制度を見直し実力主義に基づいた公平な評価を行います",
@@ -129734,8 +129734,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.38582587242126465
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.3558211326599121
   },
   {
     "sentence": "SDGsへの取り組みを強化し持続可能な社会の実現に貢献します",
@@ -129969,8 +129969,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.039383649826049805,
-    "time_himotoki": 0.33533215522766113
+    "time_ichiran": 0.03485918045043945,
+    "time_himotoki": 0.319547176361084
   },
   {
     "sentence": "新規事業の立ち上げに伴い経験豊富な人材を募集しています",
@@ -130135,8 +130135,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03762388229370117,
-    "time_himotoki": 0.3625211715698242
+    "time_ichiran": 0.04013705253601074,
+    "time_himotoki": 0.3687171936035156
   },
   {
     "sentence": "競合他社との差別化を図るため独自の技術開発に力を入れています",
@@ -130566,8 +130566,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 0.33585309982299805
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.3404529094696045
   },
   {
     "sentence": "株式上場を目指して内部統制システムの整備を進めています",
@@ -130915,8 +130915,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.312608003616333
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.29996681213378906
   },
   {
     "sentence": "業務提携により互いの強みを活かしたシナジー効果を期待しています",
@@ -131111,8 +131111,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03818106651306152,
-    "time_himotoki": 0.3878600597381592
+    "time_ichiran": 0.04125213623046875,
+    "time_himotoki": 0.369081974029541
   },
   {
     "sentence": "取締役会の承認を経て正式に合併契約を締結いたしました",
@@ -131310,8 +131310,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03858208656311035,
-    "time_himotoki": 0.30344486236572266
+    "time_ichiran": 0.03747105598449707,
+    "time_himotoki": 0.27614903450012207
   },
   {
     "sentence": "四半期ごとの業績報告会を行い透明性の高い経営を実践します",
@@ -131763,8 +131763,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.4080276489257812e-05,
-    "time_himotoki": 0.2832467555999756
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 0.2719728946685791
   },
   {
     "sentence": "顧客満足度の向上が最終的には収益の増加につながると確信しています",
@@ -132002,8 +132002,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04111528396606445,
-    "time_himotoki": 0.343416690826416
+    "time_ichiran": 0.037023067474365234,
+    "time_himotoki": 0.33031320571899414
   },
   {
     "sentence": "PDCAサイクルを回し常に業務改善を意識して行動してください",
@@ -132181,8 +132181,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.038995981216430664,
-    "time_himotoki": 0.38042712211608887
+    "time_ichiran": 0.036225080490112305,
+    "time_himotoki": 0.352985143661499
   },
   {
     "sentence": "昨日のライブまじで神だったわ推しが尊すぎてしんどい",
@@ -132394,8 +132394,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04054713249206543,
-    "time_himotoki": 0.3035390377044678
+    "time_ichiran": 0.035646915435791016,
+    "time_himotoki": 0.27428197860717773
   },
   {
     "sentence": "それなわかりみが深すぎてマリアナ海溝まで行けるわ",
@@ -132717,8 +132717,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.9073486328125e-05,
-    "time_himotoki": 0.3721179962158203
+    "time_ichiran": 1.71661376953125e-05,
+    "time_himotoki": 0.36159777641296387
   },
   {
     "sentence": "バイトのシフト急に入れられて草断る権利ないんかーい",
@@ -133099,7 +133099,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.29473209381103516
+    "time_himotoki": 0.27534985542297363
   },
   {
     "sentence": "テスト勉強全然してないとか言って満点取る奴信用ならん",
@@ -133454,8 +133454,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.4203798770904541
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.3933582305908203
   },
   {
     "sentence": "えまじ嘘でしょガチで言ってる信じらんないんだけど",
@@ -133834,7 +133834,7 @@
     ],
     "differences": [],
     "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.29201507568359375
+    "time_himotoki": 0.27359819412231445
   },
   {
     "sentence": "インスタ映えすると思って頼んだパンケーキ量多すぎて詰んだ",
@@ -134104,8 +134104,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.33757829666137695
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.3384068012237549
   },
   {
     "sentence": "既読スルーされてるんだけど嫌われたのかなぴえん",
@@ -134355,8 +134355,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.3114001750946045
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.292388916015625
   },
   {
     "sentence": "タピオカブーム去ったけど普通に美味しいから好きなんだけど",
@@ -134742,8 +134742,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.35202479362487793
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.3231377601623535
   },
   {
     "sentence": "推し活にお金使いすぎて今月ピンチもやし生活確定だわ",
@@ -135153,8 +135153,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.52587890625e-05,
-    "time_himotoki": 0.32013487815856934
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.3185698986053467
   },
   {
     "sentence": "その服めっちゃ似合ってるセンスよすぎ天才じゃん",
@@ -135435,8 +135435,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 0.2827012538909912
+    "time_ichiran": 7.3909759521484375e-06,
+    "time_himotoki": 0.27365565299987793
   },
   {
     "sentence": "カラオケ行こうぜオールで歌いまくってストレス発散しよう",
@@ -135710,8 +135710,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.5693478584289551
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.5396363735198975
   },
   {
     "sentence": "寝坊したダッシュで行けばギリ間に合うかもしれんワンチャンある",
@@ -136020,8 +136020,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.355330228805542
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.33070802688598633
   },
   {
     "sentence": "リア充爆発しろって思ってたけど恋人できたら掌返すわ",
@@ -136367,8 +136367,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 0.32651591300964355
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.31798291206359863
   },
   {
     "sentence": "エモい写真撮れたからストーリーにあげよいいねもらえるかな",
@@ -136749,8 +136749,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.35779404640197754
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.34495091438293457
   },
   {
     "sentence": "このゲームのガチャ確率操作されてるんじゃないかってくらい渋い",
@@ -136957,8 +136957,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04226398468017578,
-    "time_himotoki": 0.3344597816467285
+    "time_ichiran": 0.03784608840942383,
+    "time_himotoki": 0.3640420436859131
   },
   {
     "sentence": "飯食い行こうぜ腹減って死にそうなんだわ",
@@ -137310,8 +137310,8 @@
       "Ichiran: ['飯', '食い', '行', 'こうぜ', '腹', '減って', '死にそう', 'な', 'ん', 'だ', 'わ']",
       "Himotoki: ['飯', '食い', '行', 'こうぜ', '腹', '減って', '死にそう', 'なんだ', 'わ']"
     ],
-    "time_ichiran": 1.811981201171875e-05,
-    "time_himotoki": 0.30715513229370117
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.30655384063720703
   },
   {
     "sentence": "お前さぁそういうとこ直した方がいいんじゃね",
@@ -137621,8 +137621,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 0.3076968193054199
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.307811975479126
   },
   {
     "sentence": "めんどくせーな明日やればいいだろ今日はもう寝る",
@@ -138009,8 +138009,8 @@
       "Ichiran: ['めんどく', 'せー', 'な', '明日', 'やれば', 'いい', 'だろ', '今日', 'は', 'もう', '寝る']",
       "Himotoki: ['めんど', 'くせー', 'な', '明日', 'やれば', 'いい', 'だろ', '今日', 'は', 'もう', '寝る']"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.35173916816711426
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.37584877014160156
   },
   {
     "sentence": "金ねーよ給料日まであと一週間もあるのにどうすんだよ",
@@ -138457,8 +138457,8 @@
     "differences": [
       "Segment 'すんだ': source: 済む vs 棲む"
     ],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 0.41400814056396484
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.40247225761413574
   },
   {
     "sentence": "あいつマジでむかつく陰で人の悪口ばっか言ってさ",
@@ -138836,8 +138836,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 8.821487426757812e-06,
-    "time_himotoki": 0.3148000240325928
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.2856588363647461
   },
   {
     "sentence": "すげーこんなん初めて見たわやっぱすげーな",
@@ -139121,8 +139121,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 2.6226043701171875e-06,
-    "time_himotoki": 0.3153841495513916
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.29377102851867676
   },
   {
     "sentence": "だりー今日学校サボって遊びに行かね",
@@ -139356,8 +139356,8 @@
     "differences": [
       "Segment '遊びに行か': conj_type: Negative Stem vs Continuative (~i), neg: True vs False"
     ],
-    "time_ichiran": 1.2159347534179688e-05,
-    "time_himotoki": 0.29253292083740234
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.2870478630065918
   },
   {
     "sentence": "ちょっと待って今行くから先入ってて",
@@ -139607,8 +139607,8 @@
     "differences": [
       "Segment '入ってて': conj_type: None vs Conjunctive (~te)"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.2756619453430176
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.25745701789855957
   },
   {
     "sentence": "別に怒ってねーしただ疲れてるだけだって言ってんだろ",
@@ -139986,8 +139986,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 8.25164532661438
+    "time_ichiran": 1.2636184692382812e-05,
+    "time_himotoki": 0.2644069194793701
   },
   {
     "sentence": "それマジでうける腹痛いんだけど",
@@ -140235,8 +140235,8 @@
     "differences": [
       "Segment 'うける': conj_type: None vs Potential"
     ],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 0.2742350101470947
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.2466261386871338
   },
   {
     "sentence": "お疲れー今日飲みに行くっしょ行くよね",
@@ -140541,7 +140541,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.24286794662475586
+    "time_himotoki": 0.220106840133667
   },
   {
     "sentence": "知らねーよそんなこと自分で調べろって感じ",
@@ -140816,8 +140816,8 @@
     "differences": [
       "Segment '知らねー': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.30261707305908203
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.26044797897338867
   },
   {
     "sentence": "やばいスマホの充電切れる充電器貸して",
@@ -141067,8 +141067,8 @@
     "differences": [
       "Segment '切れる': conj_type: Potential vs None"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3066859245300293
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.265491247177124
   },
   {
     "sentence": "これ超うまくねマジ感動したわまた食べたい",
@@ -141390,8 +141390,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.38904714584350586
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.349459171295166
   },
   {
     "sentence": "何してんの早くしないと置いてくぞ",
@@ -141673,8 +141673,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.33748817443847656
+    "time_ichiran": 6.198883056640625e-06,
+    "time_himotoki": 0.31715989112854004
   },
   {
     "sentence": "そろそろ行らなきゃ遅刻しちゃうよ（行かなければ）",
@@ -141865,8 +141865,8 @@
       "Ichiran: ['そろそろ', '行らなきゃ', '遅刻しちゃう', 'よ']",
       "Himotoki: ['そろそろ', '行らなきゃ', '遅刻しちゃう', 'よ', '（', '行かなければ', '）']"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.3195016384124756
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.29572486877441406
   },
   {
     "sentence": "これ食べちゃっていい（食べてしまって）",
@@ -142000,8 +142000,8 @@
       "Ichiran: ['これ', '食べちゃっていい']",
       "Himotoki: ['これ', '食べちゃっていい', '（', '食べてしまって', '）']"
     ],
-    "time_ichiran": 1.0251998901367188e-05,
-    "time_himotoki": 0.2807128429412842
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 0.24833369255065918
   },
   {
     "sentence": "宿題やっといた方がいいよ（やっておいた）",
@@ -142198,7 +142198,7 @@
       "Himotoki: ['宿題', 'やっといた', '方がいい', 'よ', '（', 'やっておいた', '）']"
     ],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.2801961898803711
+    "time_himotoki": 0.26029300689697266
   },
   {
     "sentence": "明日までに終わらせなきゃなんないんだ（終わらせなければならない）",
@@ -142544,8 +142544,8 @@
       "Ichiran: ['明日', 'まで', 'に', '終わらせなきゃ', 'なん', 'ない', 'ん', 'だ']",
       "Himotoki: ['明日', 'まで', 'に', '終わらせなきゃ', 'なん', 'ない', 'ん', 'だ', '（', '終わらせなければ', 'ならない', '）']"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3059959411621094
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 0.27875304222106934
   },
   {
     "sentence": "そんなこと言ったって無理なもんは無理だよ（言ってもものは）",
@@ -142986,8 +142986,8 @@
       "Ichiran: ['そんな', 'こと', '言ったって', '無理', 'な', 'もん', 'は', '無理', 'だ', 'よ']",
       "Himotoki: ['そんな', 'こと', '言ったって', '無理', 'な', 'もん', 'は', '無理', 'だ', 'よ', '（', '言っても', 'もの', 'は', '）']"
     ],
-    "time_ichiran": 1.2159347534179688e-05,
-    "time_himotoki": 0.32500195503234863
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.2802612781524658
   },
   {
     "sentence": "早く準備しなよみんな待ってるんだから（しなさいよ）",
@@ -143300,8 +143300,8 @@
       "Ichiran: ['早く', '準備し', 'なよ', 'みんな', '待ってる', 'ん', 'だから']",
       "Himotoki: ['早く', '準備し', 'なよ', 'みんな', '待ってる', 'ん', 'だから', '（', 'しなさい', 'よ', '）']"
     ],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 0.3198370933532715
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.29195499420166016
   },
   {
     "sentence": "これ買っとくね後で半分払ってくれればいいから（買っておく）",
@@ -143637,8 +143637,8 @@
       "Ichiran: ['これ', '買っとく', 'ね', '後', 'で', '半分', '払ってくれれば', 'いいから']",
       "Himotoki: ['これ', '買っとく', 'ね', '後', 'で', '半分', '払ってくれれば', 'いいから', '（', '買っておく', '）']"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3238358497619629
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.28519177436828613
   },
   {
     "sentence": "見てみてあの雲犬の形に見えない",
@@ -143942,8 +143942,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3784151077270508
+    "time_ichiran": 2.86102294921875e-06,
+    "time_himotoki": 0.34624624252319336
   },
   {
     "sentence": "そういえばあの件どうなったっけ聞くの忘れてた",
@@ -144251,8 +144251,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.34893798828125
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.31022000312805176
   },
   {
     "sentence": "飲みにいこうって言ってたやついつにする",
@@ -144576,8 +144576,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.31494784355163574
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.27860093116760254
   },
   {
     "sentence": "これやっといてって言ったのになんでやってないの",
@@ -144831,8 +144831,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.039093017578125
+    "time_ichiran": 3.0994415283203125e-06,
+    "time_himotoki": 0.03562593460083008
   },
   {
     "sentence": "雨降りそうだから傘持ってった方がいいかもよ",
@@ -145114,7 +145114,7 @@
       "Himotoki: ['雨', '降りそう', 'だ', 'から傘', '持ってった', '方がいい', 'かも', 'よ']"
     ],
     "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.3025491237640381
+    "time_himotoki": 0.2720339298248291
   },
   {
     "sentence": "言いたいことは分かるけどそう簡単に割り切れるもんじゃないよ",
@@ -145529,8 +145529,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.2901763916015625e-05,
-    "time_himotoki": 0.36030101776123047
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.3240931034088135
   },
   {
     "sentence": "知ってるくせに教えてくれないなんて意地悪だなぁ",
@@ -145776,8 +145776,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.3475677967071533
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3257327079772949
   },
   {
     "sentence": "待ってても来ないならこっちから行っちゃおうか",
@@ -146029,8 +146029,8 @@
     "differences": [
       "Segment '行っちゃおう': conj_type: None vs Volitional"
     ],
-    "time_ichiran": 2.09808349609375e-05,
-    "time_himotoki": 0.2680549621582031
+    "time_ichiran": 1.2636184692382812e-05,
+    "time_himotoki": 0.24959635734558105
   },
   {
     "sentence": "そんなに焦んなくても大丈夫だよまだ時間あるし（焦らなくても）",
@@ -146422,7 +146422,7 @@
       "Himotoki: ['そんなに', '焦ん', 'なくても', '大丈夫', 'だ', 'よ', 'まだ', '時間', 'ある', 'し', '（', '焦らなくても', '）']"
     ],
     "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.324124813079834
+    "time_himotoki": 0.29719090461730957
   },
   {
     "sentence": "これ読んどいてねテストに出るかもしれないから（読んでおいて）",
@@ -146766,8 +146766,8 @@
       "Ichiran: ['これ', '読んどいて', 'ね', 'テスト', 'に', '出る', 'かもしれない', 'から']",
       "Himotoki: ['これ', '読んどいて', 'ね', 'テスト', 'に', '出る', 'かもしれない', 'から', '（', '読んでおいて', '）']"
     ],
-    "time_ichiran": 1.71661376953125e-05,
-    "time_himotoki": 0.11951684951782227
+    "time_ichiran": 1.2159347534179688e-05,
+    "time_himotoki": 0.057579994201660156
   },
   {
     "sentence": "食べ放題なんだから元取れるまで食べまくろうぜ",
@@ -147099,7 +147099,7 @@
       "Himotoki: ['食べ放題', 'なん', 'だから', '元', '取れる', 'まで', '食べ', 'まくろう', 'ぜ']"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.31163907051086426
+    "time_himotoki": 0.28652024269104004
   },
   {
     "sentence": "帰りにコンビニ寄ってくけどなんかいる",
@@ -147347,8 +147347,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0013580322265625e-05,
-    "time_himotoki": 0.2966959476470947
+    "time_ichiran": 1.4781951904296875e-05,
+    "time_himotoki": 0.2741990089416504
   },
   {
     "sentence": "寝よっかな明日早いし（寝ようかな）",
@@ -147629,8 +147629,8 @@
       "Ichiran: ['寝', 'よっか', 'な', '明日', '早い', 'し']",
       "Himotoki: ['寝', 'よっか', 'な', '明日', '早い', 'し', '（', '寝よう', 'かな', '）']"
     ],
-    "time_ichiran": 2.6226043701171875e-06,
-    "time_himotoki": 0.283980131149292
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.25987696647644043
   },
   {
     "sentence": "「石の上にも三年」と言うように辛くても耐え続ければ必ず報われる日が来ると信じている",
@@ -147885,8 +147885,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03659987449645996,
-    "time_himotoki": 0.5498313903808594
+    "time_ichiran": 0.03854012489318848,
+    "time_himotoki": 0.4722771644592285
   },
   {
     "sentence": "「急がば回れ」の精神で近道をするよりも確実な方法を選んだ方が結果的に早く成功するだろう",
@@ -148245,8 +148245,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04294419288635254,
-    "time_himotoki": 0.3753819465637207
+    "time_ichiran": 0.03633713722229004,
+    "time_himotoki": 0.33338189125061035
   },
   {
     "sentence": "「二兎を追う者は一兎をも得ず」だから欲張らずに一つの目標に集中した方がいいよ",
@@ -148475,8 +148475,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0332949161529541,
-    "time_himotoki": 0.37993407249450684
+    "time_ichiran": 0.03446674346923828,
+    "time_himotoki": 0.34751009941101074
   },
   {
     "sentence": "彼のアドバイスは「馬の耳に念仏」でいくら言っても全く聞く耳を持ってくれない",
@@ -148717,8 +148717,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03800177574157715,
-    "time_himotoki": 0.36333203315734863
+    "time_ichiran": 0.03529500961303711,
+    "time_himotoki": 0.3358581066131592
   },
   {
     "sentence": "「猿も木から落ちる」と言うし専門家だって失敗することはあるんだからそんなに落ち込むなよ",
@@ -148999,8 +148999,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0415349006652832,
-    "time_himotoki": 0.3975100517272949
+    "time_ichiran": 0.03667497634887695,
+    "time_himotoki": 0.38576674461364746
   },
   {
     "sentence": "「知らぬが仏」で事実を知らない方が幸せなこともあるんだなと痛感した",
@@ -149331,8 +149331,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04033684730529785,
-    "time_himotoki": 0.30560827255249023
+    "time_ichiran": 0.03632378578186035,
+    "time_himotoki": 0.2966649532318115
   },
   {
     "sentence": "「一期一会」の出会いを大切にして目の前の人と誠実に向き合いたいと思っている",
@@ -149615,8 +149615,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03783822059631348,
-    "time_himotoki": 0.36092495918273926
+    "time_ichiran": 0.03442525863647461,
+    "time_himotoki": 0.3403646945953369
   },
   {
     "sentence": "「継続は力なり」と言うけれど毎日コツコツ努力することこそが一番の才能かもしれない",
@@ -149860,8 +149860,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04817605018615723,
-    "time_himotoki": 0.39180898666381836
+    "time_ichiran": 0.03513002395629883,
+    "time_himotoki": 0.3548290729522705
   },
   {
     "sentence": "「塵も積もれば山となる」でわずかな貯金でも何年も続ければ大きな金額になる",
@@ -150120,8 +150120,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03740715980529785,
-    "time_himotoki": 0.370574951171875
+    "time_ichiran": 0.035201072692871094,
+    "time_himotoki": 0.34327197074890137
   },
   {
     "sentence": "「井の中の蛙大海を知らず」にならないようにもっと外の世界に出て見識を広めるべきだ",
@@ -150419,8 +150419,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.037165164947509766,
-    "time_himotoki": 0.35170507431030273
+    "time_ichiran": 0.036460161209106445,
+    "time_himotoki": 0.32581400871276855
   },
   {
     "sentence": "「覆水盆に返らず」だよ一度口に出してしまった言葉はもう取り消せないんだ",
@@ -150645,8 +150645,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04840993881225586,
-    "time_himotoki": 0.3916463851928711
+    "time_ichiran": 0.04100608825683594,
+    "time_himotoki": 0.3953580856323242
   },
   {
     "sentence": "「雨降って地固まる」と言うように喧嘩をしたことでかえって二人の絆が深まったね",
@@ -150937,8 +150937,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03956103324890137,
-    "time_himotoki": 0.37595486640930176
+    "time_ichiran": 0.03821706771850586,
+    "time_himotoki": 0.35986828804016113
   },
   {
     "sentence": "「花より団子」で彼女は桜を見るよりも屋台の食べ物に夢中だった",
@@ -151218,8 +151218,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04009866714477539,
-    "time_himotoki": 0.3661019802093506
+    "time_ichiran": 0.03882598876953125,
+    "time_himotoki": 0.36665916442871094
   },
   {
     "sentence": "「三人寄れば文殊の知恵」だから一人で悩まずにみんなでアイデアを出し合おう",
@@ -151424,8 +151424,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04509592056274414,
-    "time_himotoki": 0.41785311698913574
+    "time_ichiran": 0.0382990837097168,
+    "time_himotoki": 0.41446995735168457
   },
   {
     "sentence": "「出る杭は打たれる」のが日本社会の悪い癖だが個性を恐れずに発揮してほしい",
@@ -151689,8 +151689,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0382990837097168,
-    "time_himotoki": 0.4495208263397217
+    "time_ichiran": 0.03676414489746094,
+    "time_himotoki": 0.43110132217407227
   },
   {
     "sentence": "「類は友を呼ぶ」と言う通り似た者同士は自然と集まるものだね",
@@ -151884,8 +151884,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0350189208984375,
-    "time_himotoki": 0.30609726905822754
+    "time_ichiran": 0.040284156799316406,
+    "time_himotoki": 0.30174899101257324
   },
   {
     "sentence": "「善は急げ」だ思い立ったらすぐに実行に移そう",
@@ -152003,8 +152003,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03608894348144531,
-    "time_himotoki": 0.31146717071533203
+    "time_ichiran": 0.03744912147521973,
+    "time_himotoki": 0.35785531997680664
   },
   {
     "sentence": "「情けは人のためならず」と言うから人に親切にしておけば巡り巡って自分に返ってくるよ",
@@ -152269,8 +152269,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.038667917251586914,
-    "time_himotoki": 0.4347541332244873
+    "time_ichiran": 0.0397188663482666,
+    "time_himotoki": 0.39914608001708984
   },
   {
     "sentence": "「失敗は成功の母」と言うしこの経験を糧にして次に活かせばいい",
@@ -152528,8 +152528,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03885984420776367,
-    "time_himotoki": 0.3281242847442627
+    "time_ichiran": 0.036971092224121094,
+    "time_himotoki": 0.31820178031921387
   },
   {
     "sentence": "「ローマは一日にして成らず」大きな事業を成し遂げるには長い時間がかかるものだ",
@@ -152739,8 +152739,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04229092597961426,
-    "time_himotoki": 0.41554999351501465
+    "time_ichiran": 0.03494381904602051,
+    "time_himotoki": 0.37737107276916504
   },
   {
     "sentence": "「虎の威を借る狐」のように権力者の力を利用して威張るような人間にはなりたくない",
@@ -152988,8 +152988,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03978300094604492,
-    "time_himotoki": 0.34282684326171875
+    "time_ichiran": 0.0356900691986084,
+    "time_himotoki": 0.3225748538970947
   },
   {
     "sentence": "「百聞は一見にしかず」人から聞くよりも実際に自分の目で見た方がよく分かるよ",
@@ -153263,8 +153263,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.042803287506103516,
-    "time_himotoki": 0.3884742259979248
+    "time_ichiran": 0.03425478935241699,
+    "time_himotoki": 0.3581702709197998
   },
   {
     "sentence": "「嘘も方便」と言うけれど相手を傷つけないための優しい嘘もあると思う",
@@ -153548,8 +153548,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03791308403015137,
-    "time_himotoki": 0.4323902130126953
+    "time_ichiran": 0.03600311279296875,
+    "time_himotoki": 0.3919711112976074
   },
   {
     "sentence": "「鬼に金棒」だね彼がチームに加わればまさに無敵だ",
@@ -153774,8 +153774,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04307103157043457,
-    "time_himotoki": 0.3270111083984375
+    "time_ichiran": 0.03544807434082031,
+    "time_himotoki": 0.32459592819213867
   },
   {
     "sentence": "「火のない所に煙は立たぬ」噂になるということは何かしらの根拠があるのかもしれない",
@@ -154023,8 +154023,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.038233280181884766,
-    "time_himotoki": 0.3543517589569092
+    "time_ichiran": 0.037999868392944336,
+    "time_himotoki": 0.3661620616912842
   },
   {
     "sentence": "「笑う門には福来る」いつも笑顔でいればきっと良いことが起こるはずだ",
@@ -154237,8 +154237,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04200387001037598,
-    "time_himotoki": 0.3491041660308838
+    "time_ichiran": 0.03493189811706543,
+    "time_himotoki": 0.35538411140441895
   },
   {
     "sentence": "「七転び八起き」何度失敗しても諦めずに立ち上がる不屈の精神が大切だ",
@@ -154489,8 +154489,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.041452646255493164,
-    "time_himotoki": 0.3509800434112549
+    "time_ichiran": 0.0365290641784668,
+    "time_himotoki": 0.3554980754852295
   },
   {
     "sentence": "「能ある鷹は爪を隠す」本当に実力のある人はそれをひけらかしたりしないものだ",
@@ -154731,8 +154731,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03758573532104492,
-    "time_himotoki": 0.51377272605896
+    "time_ichiran": 0.03690338134765625,
+    "time_himotoki": 0.5028119087219238
   },
   {
     "sentence": "「後悔先に立たず」やってしまったことを後から悔やんでも仕方がない",
@@ -154894,8 +154894,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03962874412536621,
-    "time_himotoki": 0.3799741268157959
+    "time_ichiran": 0.037754058837890625,
+    "time_himotoki": 0.35577917098999023
   },
   {
     "sentence": "「明日は明日の風が吹く」くよくよ悩まずに成り行きに任せてみるのもいいかもしれない",
@@ -155142,8 +155142,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.036128997802734375,
-    "time_himotoki": 0.3355369567871094
+    "time_ichiran": 0.03658294677734375,
+    "time_himotoki": 0.3324120044708252
   },
   {
     "sentence": "「灯台下暗し」探していた眼鏡はずっと自分の頭の上にあったんだ",
@@ -155426,8 +155426,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03725385665893555,
-    "time_himotoki": 0.3579838275909424
+    "time_ichiran": 0.03649783134460449,
+    "time_himotoki": 0.3478851318359375
   },
   {
     "sentence": "「仏の顔も三度まで」いくら温厚な彼でもこれ以上失礼なことをしたら怒るよ",
@@ -155723,8 +155723,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.036647796630859375,
-    "time_himotoki": 0.38650012016296387
+    "time_ichiran": 0.03554272651672363,
+    "time_himotoki": 0.35564398765563965
   },
   {
     "sentence": "「論より証拠」口で説明するよりも実際の結果を見せれば一目瞭然だ",
@@ -155966,8 +155966,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04067206382751465,
-    "time_himotoki": 0.33057212829589844
+    "time_ichiran": 0.0361170768737793,
+    "time_himotoki": 0.3077201843261719
   },
   {
     "sentence": "「郷に入っては郷に従え」海外に行ったらその国の文化や習慣を尊重すべきだ",
@@ -156245,8 +156245,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03711700439453125,
-    "time_himotoki": 0.32981133460998535
+    "time_ichiran": 0.039308786392211914,
+    "time_himotoki": 0.3249521255493164
   },
   {
     "sentence": "「千里の道も一歩から」どんなに遠い目標でもまずは最初の一歩を踏み出すことから始まる",
@@ -156526,8 +156526,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03726005554199219,
-    "time_himotoki": 0.3604722023010254
+    "time_ichiran": 0.037509918212890625,
+    "time_himotoki": 0.3479900360107422
   },
   {
     "sentence": "「案ずるより産むが易し」心配していたけれど実際にやってみたら意外と簡単だった",
@@ -156715,8 +156715,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03987383842468262,
-    "time_himotoki": 0.4192838668823242
+    "time_ichiran": 0.040448904037475586,
+    "time_himotoki": 0.40885376930236816
   },
   {
     "sentence": "「初心忘るべからず」慣れてきた頃こそ基本に立ち返ることが重要だ",
@@ -156945,8 +156945,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03858613967895508,
-    "time_himotoki": 0.3456308841705322
+    "time_ichiran": 0.038648128509521484,
+    "time_himotoki": 0.35636401176452637
   },
   {
     "sentence": "「備えあれば憂いなし」災害に備えて避難グッズを用意しておこう",
@@ -157104,8 +157104,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03601717948913574,
-    "time_himotoki": 0.3809828758239746
+    "time_ichiran": 0.038249969482421875,
+    "time_himotoki": 0.37707066535949707
   },
   {
     "sentence": "「猫に小判」価値の分からない人に高級なものをあげても意味がないよ",
@@ -157364,8 +157364,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03735518455505371,
-    "time_himotoki": 0.39350390434265137
+    "time_ichiran": 0.03844094276428223,
+    "time_himotoki": 0.43064308166503906
   },
   {
     "sentence": "「縁の下の力持ち」表には出なくても裏で支えてくれる人がいるから成功できるんだ",
@@ -157682,8 +157682,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04114198684692383,
-    "time_himotoki": 0.4048740863800049
+    "time_ichiran": 0.04575991630554199,
+    "time_himotoki": 0.39360785484313965
   },
   {
     "sentence": "彼が犯人であるという確たる証拠がない限り逮捕することは法的に不可能だと言わざるを得ない",
@@ -158402,8 +158402,8 @@
     "differences": [
       "Segment '言わざる': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 1.5735626220703125e-05,
-    "time_himotoki": 0.3352620601654053
+    "time_ichiran": 1.9073486328125e-05,
+    "time_himotoki": 0.31103014945983887
   },
   {
     "sentence": "いくら説明されたところで実際に自分で体験してみないことには納得できない性格なんだ",
@@ -158635,8 +158635,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.037444114685058594,
-    "time_himotoki": 0.36008715629577637
+    "time_ichiran": 0.03863406181335449,
+    "time_himotoki": 0.3471260070800781
   },
   {
     "sentence": "勉強すればするほど自分の知識がいかに不十分であるかを思い知らされる",
@@ -158889,8 +158889,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04543280601501465,
-    "time_himotoki": 0.40830326080322266
+    "time_ichiran": 0.03647899627685547,
+    "time_himotoki": 0.3751561641693115
   },
   {
     "sentence": "あの時もし電車が遅れていなかったらこの事故に巻き込まれていたかもしれないと思うとぞっとする",
@@ -159125,8 +159125,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03750109672546387,
-    "time_himotoki": 0.45420289039611816
+    "time_ichiran": 0.039077043533325195,
+    "time_himotoki": 0.42458295822143555
   },
   {
     "sentence": "上司に無理やりお酒を飲まされそうになったので体調が悪いふりをして断るしかなかった",
@@ -159384,8 +159384,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.04232478141784668,
-    "time_himotoki": 0.4543490409851074
+    "time_ichiran": 0.03560209274291992,
+    "time_himotoki": 0.43230175971984863
   },
   {
     "sentence": "彼女はまるで見てきたかのように話すが実際にはその場にいなかったはずだ",
@@ -159877,8 +159877,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.5735626220703125e-05,
-    "time_himotoki": 0.3819570541381836
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.3516528606414795
   },
   {
     "sentence": "成功するかどうかは別として挑戦すること自体に意味があるのではないだろうか",
@@ -160258,8 +160258,8 @@
     "differences": [
       "Segment 'ではない': source: で‌はある vs だ"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.39064812660217285
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.35291004180908203
   },
   {
     "sentence": "どんなに困難な状況であっても希望を捨てずに努力し続けることこそが重要だ",
@@ -160795,8 +160795,8 @@
       "Ichiran: ['どんなに', '困難', 'な', '状況', 'で', 'あっても', '希望', 'を', '捨てず', 'に', '努力し', '続ける', 'ことこそ', 'が', '重要', 'だ']",
       "Himotoki: ['どんなに', '困難', 'な', '状況', 'で', 'あっても', '希望', 'を', '捨てず', 'に', '努力し続ける', 'ことこそ', 'が', '重要', 'だ']"
     ],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.36853718757629395
+    "time_ichiran": 7.152557373046875e-06,
+    "time_himotoki": 0.34241580963134766
   },
   {
     "sentence": "子供の頃からピアノを習わせてもらっていたおかげで今こうして音楽の仕事ができている",
@@ -161032,8 +161032,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.037203311920166016,
-    "time_himotoki": 0.5079078674316406
+    "time_ichiran": 0.041323184967041016,
+    "time_himotoki": 0.5333271026611328
   },
   {
     "sentence": "彼に限ってそんな酷いことをするはずがないと信じていたのに裏切られた気分だ",
@@ -161521,8 +161521,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.09808349609375e-05,
-    "time_himotoki": 0.3830442428588867
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.3916759490966797
   },
   {
     "sentence": "行きたくないわけではないが仕事が忙しくて時間が取れないのが現状だ",
@@ -161972,8 +161972,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.4021871089935303
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.4284169673919678
   },
   {
     "sentence": "一度口にしてしまった言葉は取り消せないのだから発言にはもっと慎重であるべきだった",
@@ -162453,8 +162453,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.3373868465423584
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 0.3558540344238281
   },
   {
     "sentence": "雨が降ろうが槍が降ろうが私はこの計画を実行するつもりだ",
@@ -162700,8 +162700,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 0.3255453109741211
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.33443403244018555
   },
   {
     "sentence": "彼が来るのを待っていたのだが結局3時間待っても現れず連絡さえ取れなかった",
@@ -163228,8 +163228,8 @@
     "differences": [
       "Segment '現れず': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.3258187770843506
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 0.32216691970825195
   },
   {
     "sentence": "この問題は単に技術的な問題であるにとどまらず倫理的な側面も含んでいる",
@@ -163800,8 +163800,8 @@
       "Segment 'とどまらず': conj_type: Non-past vs None, neg: True vs False",
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.3702247142791748
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.36995697021484375
   },
   {
     "sentence": "明日までにレポートを提出させられるなんてもっと早く言ってくれればよかったのに",
@@ -164225,8 +164225,8 @@
     "differences": [
       "Segment '提出させられる': conj_type: Potential vs Passive"
     ],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 8.623066902160645
+    "time_ichiran": 1.2874603271484375e-05,
+    "time_himotoki": 0.4655301570892334
   },
   {
     "sentence": "彼女の努力には目を見張るものがあるが結果が伴っていないのが残念でならない",
@@ -164754,8 +164754,8 @@
     "differences": [
       "Segment 'ならない': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 0.3943300247192383
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.4618821144104004
   },
   {
     "sentence": "親に反対されたからといって自分の夢を簡単に諦めるわけにはいかない",
@@ -165183,8 +165183,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.0994415283203125e-06,
-    "time_himotoki": 0.36179471015930176
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.4358820915222168
   },
   {
     "sentence": "考えれば考えるほどどちらの選択肢も正解ではないような気がしてくる",
@@ -165332,8 +165332,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03912496566772461,
-    "time_himotoki": 0.4465210437774658
+    "time_ichiran": 0.04242682456970215,
+    "time_himotoki": 0.4044029712677002
   },
   {
     "sentence": "天気予報によると午後から急激に天候が崩れる恐れがあるとのことだ",
@@ -165747,8 +165747,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.811981201171875e-05,
-    "time_himotoki": 0.3187868595123291
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.327038049697876
   },
   {
     "sentence": "彼に仕事を頼むくらいなら自分でやった方がマシだ",
@@ -166094,8 +166094,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.31432485580444336
+    "time_ichiran": 6.67572021484375e-06,
+    "time_himotoki": 0.3263072967529297
   },
   {
     "sentence": "最近の若者は礼儀を知らないと言われがちだが全員がそうであるとは限らない",
@@ -166645,8 +166645,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.3312408924102783
+    "time_ichiran": 7.152557373046875e-06,
+    "time_himotoki": 0.35127902030944824
   },
   {
     "sentence": "失って初めて気づく大切さというものを身をもって体験することになった",
@@ -166956,8 +166956,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.291534423828125e-06,
-    "time_himotoki": 0.3578639030456543
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.37131810188293457
   },
   {
     "sentence": "彼は怒るどころかむしろ私の失敗を笑って許してくれた",
@@ -167155,8 +167155,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.038269996643066406,
-    "time_himotoki": 0.4137001037597656
+    "time_ichiran": 0.03949999809265137,
+    "time_himotoki": 0.4240560531616211
   },
   {
     "sentence": "できるものならやってみたいが現実的には不可能に近いだろう",
@@ -167541,8 +167541,8 @@
       "Segment 'できる': conj_type: Potential vs None",
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.28384995460510254
+    "time_ichiran": 1.7881393432617188e-05,
+    "time_himotoki": 0.2865002155303955
   },
   {
     "sentence": "この小説は読めば読むほど深い味わいが出てくる名作だ",
@@ -167958,8 +167958,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 0.30793118476867676
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 0.3217899799346924
   },
   {
     "sentence": "忙しい時に限って急な用事が入るのはなぜなんだろう",
@@ -168465,8 +168465,8 @@
       "Segment 'な': conj_type: Adjective Stem vs None",
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 5.7220458984375e-06,
-    "time_himotoki": 0.31772613525390625
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.3337709903717041
   },
   {
     "sentence": "彼は天才と呼ばれるにふさわしい才能の持ち主だが努力家でもある",
@@ -168912,8 +168912,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.39268016815185547
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.4043581485748291
   },
   {
     "sentence": "事実を知らされた時はショックだったが今となっては真実を知れてよかったと思う",
@@ -169429,8 +169429,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.3011929988861084
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 0.3201179504394531
   },
   {
     "sentence": "たとえ世界中が反対しようとも私は私の信念を貫き通すつもりだ",
@@ -169916,8 +169916,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 0.4147007465362549
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.4186859130859375
   },
   {
     "sentence": "買おうか買うまいか迷っているうちに商品は売り切れてしまった",
@@ -170266,8 +170266,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.3639698028564453
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 0.3727438449859619
   },
   {
     "sentence": "彼は何も知らなかったふりをしているが実は全ての黒幕だったのだ",
@@ -170793,8 +170793,8 @@
     "differences": [
       "Segment 'ふり': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.2944808006286621
+    "time_ichiran": 1.4066696166992188e-05,
+    "time_himotoki": 0.3074040412902832
   },
   {
     "sentence": "健康であればこそ仕事も趣味も楽しめるというものだ",
@@ -171139,7 +171139,7 @@
     ],
     "differences": [],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.33917689323425293
+    "time_himotoki": 0.34716105461120605
   },
   {
     "sentence": "このシステムを導入することによって業務効率が飛躍的に向上することが期待される",
@@ -171390,8 +171390,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.040457963943481445,
-    "time_himotoki": 0.30548810958862305
+    "time_ichiran": 0.039003849029541016,
+    "time_himotoki": 0.32221484184265137
   },
   {
     "sentence": "彼女がそんなことを言うなんて耳を疑わずにはいられなかった",
@@ -171748,8 +171748,8 @@
     "differences": [
       "Segment '耳を疑わず': conj_type: Non-past vs None, neg: True vs False"
     ],
-    "time_ichiran": 1.5974044799804688e-05,
-    "time_himotoki": 0.37616395950317383
+    "time_ichiran": 1.6927719116210938e-05,
+    "time_himotoki": 0.3872861862182617
   },
   {
     "sentence": "禁煙しようと思っているのだがストレスが溜まるとつい吸ってしまう",
@@ -172141,8 +172141,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.0251998901367188e-05,
-    "time_himotoki": 0.3259608745574951
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.32019686698913574
   },
   {
     "sentence": "日本語を勉強し始めて3年になるが敬語の使い分けは未だに難しいと感じる",
@@ -172702,8 +172702,8 @@
     "differences": [
       "Segment '使い分け': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.42522597312927246
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 0.443187952041626
   },
   {
     "sentence": "彼は自分の利益のためなら他人を犠牲にすることも厭わない冷酷な男だ",
@@ -173413,8 +173413,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 0.35021185874938965
+    "time_ichiran": 1.4781951904296875e-05,
+    "time_himotoki": 0.35724806785583496
   },
   {
     "sentence": "準備が整い次第直ちに出発することにしよう",
@@ -173656,8 +173656,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.7220458984375e-06,
-    "time_himotoki": 0.3148810863494873
+    "time_ichiran": 7.152557373046875e-06,
+    "time_himotoki": 0.32837986946105957
   },
   {
     "sentence": "これだけ言っても分からないならもう勝手にするがいい",
@@ -173902,7 +173902,7 @@
     ],
     "differences": [],
     "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.3324871063232422
+    "time_himotoki": 0.34812021255493164
   },
   {
     "sentence": "彼女の笑顔を見るにつけ私の心は癒されるのだ",
@@ -174358,8 +174358,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.0265579223632812e-05,
-    "time_himotoki": 0.40033698081970215
+    "time_ichiran": 1.3828277587890625e-05,
+    "time_himotoki": 0.42041802406311035
   },
   {
     "sentence": "この映画は見逃すわけにはいかない傑作だと評判だ",
@@ -174715,8 +174715,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 9.775161743164062e-06,
-    "time_himotoki": 0.2870042324066162
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.30240392684936523
   },
   {
     "sentence": "彼を信じた私が馬鹿だったといえばそれまでだが後悔はしていない",
@@ -174947,8 +174947,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03886842727661133,
-    "time_himotoki": 0.425372838973999
+    "time_ichiran": 0.038401126861572266,
+    "time_himotoki": 0.4465219974517822
   },
   {
     "sentence": "時間が解決してくれることもあるだろうが今はただ辛いだけだ",
@@ -175458,8 +175458,8 @@
     "differences": [
       "Segment 'だろう': conj_type: Volitional vs None"
     ],
-    "time_ichiran": 1.811981201171875e-05,
-    "time_himotoki": 0.14409899711608887
+    "time_ichiran": 1.5974044799804688e-05,
+    "time_himotoki": 0.14638900756835938
   },
   {
     "sentence": "やるからには中途半端なことはしたくない最後までやり遂げるつもりだ",
@@ -175839,8 +175839,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.36321306228637695
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 0.3789029121398926
   },
   {
     "sentence": "万が一失敗した時のためにプランBを用意しておくべきだ",
@@ -176148,7 +176148,7 @@
       "Himotoki: ['万が一', '失敗した', '時', 'の', 'ために', 'プラン', 'B', 'を', '用意しておく', 'べき', 'だ']"
     ],
     "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.2722620964050293
+    "time_himotoki": 0.2817652225494385
   },
   {
     "sentence": "彼は自分の過ちを認めるどころか人のせいにしようとしている",
@@ -176354,8 +176354,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.0370330810546875,
-    "time_himotoki": 0.45453977584838867
+    "time_ichiran": 0.04182577133178711,
+    "time_himotoki": 0.5236861705780029
   },
   {
     "sentence": "このままでは間に合わない恐れがあるので急いで作業を進めてください",
@@ -176664,8 +176664,8 @@
     "differences": [
       "Segment '進めてください': conj_type: None vs Imperative"
     ],
-    "time_ichiran": 1.9073486328125e-05,
-    "time_himotoki": 0.40399694442749023
+    "time_ichiran": 2.7894973754882812e-05,
+    "time_himotoki": 0.41995787620544434
   },
   {
     "sentence": "言われるまでもなくその件については既に承知しております",
@@ -176814,8 +176814,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03249096870422363,
-    "time_himotoki": 0.4407203197479248
+    "time_ichiran": 0.039205074310302734,
+    "time_himotoki": 0.45835208892822266
   },
   {
     "sentence": "彼女は美しさと知性を兼ね備えたまさに才色兼備の女性だ",
@@ -177233,8 +177233,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.2172927856445312e-05,
-    "time_himotoki": 0.3650398254394531
+    "time_ichiran": 2.09808349609375e-05,
+    "time_himotoki": 0.3825211524963379
   },
   {
     "sentence": "その話が本当だとしたら私たちの前提条件が全て崩れてしまうことになる",
@@ -177694,8 +177694,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 0.480924129486084
+    "time_ichiran": 9.775161743164062e-06,
+    "time_himotoki": 0.4960341453552246
   },
   {
     "sentence": "彼に会うことは二度とあるまいと思っていたが運命のいたずらか再会してしまった",
@@ -177952,8 +177952,8 @@
     "differences": [
       "Ichiran error: Ichiran returned code 1: Error response from daemon: container e67c08e74dc9a5de88315ed045a9ebc58991e0d11bd6ce0cb251eac1182d7ac6 is not running\n"
     ],
-    "time_ichiran": 0.03841996192932129,
-    "time_himotoki": 0.3942592144012451
+    "time_ichiran": 0.03970503807067871,
+    "time_himotoki": 0.4090921878814697
   },
   {
     "sentence": "努力なくして成功なしとはよく言ったものだ",
@@ -178230,8 +178230,8 @@
     "differences": [
       "Segment 'なし': conj_type: None vs Continuative (~i)"
     ],
-    "time_ichiran": 1.5735626220703125e-05,
-    "time_himotoki": 0.3013792037963867
+    "time_ichiran": 2.09808349609375e-05,
+    "time_himotoki": 0.31856393814086914
   },
   {
     "sentence": "勝って驕らず負けて腐らず常に平常心を保つことが大切だ",
@@ -178551,8 +178551,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.7220458984375e-06,
-    "time_himotoki": 0.3521590232849121
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.37064290046691895
   },
   {
     "sentence": "思い上がった振る舞いをしているといつか足元をすくわれるぞ",
@@ -178828,8 +178828,8 @@
     "differences": [
       "Segment '振る舞い': conj_type: Continuative (~i) vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.4305148124694824
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.45688581466674805
   },
   {
     "sentence": "彼は医者であると同時に優れた小説家としても知られている",
@@ -179213,8 +179213,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.3612661361694336
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3832259178161621
   },
   {
     "sentence": "これほどの好条件を提示されたら断る理由はどこにもない",
@@ -179534,8 +179534,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 0.3276379108428955
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.345048189163208
   },
   {
     "sentence": "彼女の歌声は聴く人の心を揺さぶる不思議な力を持っている",
@@ -180080,8 +180080,8 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.2967860698699951
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.3089931011199951
   },
   {
     "sentence": "人生は何が起こるか分からないだからこそ面白いとも言えるのだが",
@@ -180531,8 +180531,8 @@
       }
     ],
     "differences": [],
-    "time_ichiran": 1.621246337890625e-05,
-    "time_himotoki": 0.3326237201690674
+    "time_ichiran": 1.1920928955078125e-05,
+    "time_himotoki": 0.3506340980529785
   },
   {
     "sentence": "全てが終わった後で静かな満足感が心を満たしていった",
@@ -180959,7 +180959,7 @@
     "differences": [
       "Segment 'な': conj_type: Adjective Stem vs None"
     ],
-    "time_ichiran": 6.9141387939453125e-06,
-    "time_himotoki": 0.35525989532470703
+    "time_ichiran": 8.106231689453125e-06,
+    "time_himotoki": 0.36316895484924316
   }
 ]

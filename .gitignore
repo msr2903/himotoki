@@ -84,3 +84,4 @@ check_*.py
 
 # --- Env files ---
 .env
+.chunkhound/
