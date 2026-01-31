@@ -42,6 +42,116 @@ bd sync               # Sync with git
 
 Use **chunkhound MCP** for semantic and regex codebase searches. Returns contextualized results with file paths and line numbers.
 
+## Maximizing Agent Autonomy
+
+Agents should work as long as possible without human intervention. Follow these principles:
+
+### Autonomous Decision Framework
+
+**DECIDE YOURSELF** (don't ask):
+- Fix vs skip when pattern matches known categories below
+- Implementation approach when issue description is clear
+- Commit message wording
+- Which files to change based on root cause analysis
+- Test verification strategy
+
+**ASK USER ONLY WHEN**:
+- Ambiguous between two valid interpretations
+- Change would affect public API
+- Multiple unrelated fixes needed (confirm scope)
+- Unsure if behavior is bug or intentional feature
+
+### Auto-Skip Patterns
+
+Skip these automatically with the indicated reason:
+
+| Pattern | Reason | Example |
+|---------|--------|---------|
+| Proper noun reading | `Proper noun - multiple valid readings` | 東京 as とうきょう vs とうけい |
+| Counter ambiguity | `Counter expression - valid alternative` | 三人 as さんにん vs みたり |
+| Stylistic particle | `Stylistic choice - both valid` | は vs が emphasis |
+| Archaic reading | `Archaic reading - dictionary limitation` | 今日 as こんにち |
+| Compound boundary | `Compound boundary - subjective split` | Word can be split multiple ways |
+
+### Auto-Fix Patterns
+
+Fix these without asking:
+
+| Pattern | Action |
+|---------|--------|
+| Missing suffix | Add suffix to `himotoki/suffixes.py` |
+| Wrong POS tag | Update POS mapping in `himotoki/lookup.py` |
+| Missing dictionary entry | Add to custom dictionary |
+| Conjugation error | Fix in `himotoki/conjugation_hints.py` |
+
+### Error Recovery
+
+**Git conflicts:**
+```bash
+git stash && git pull --rebase && git stash pop
+# If conflict persists, resolve manually then continue
+```
+
+**Test failures after fix:**
+1. Check if failure is related to your change
+2. If unrelated, note it and continue
+3. If related, revert and try different approach
+
+**Push rejected:**
+```bash
+git pull --rebase && git push  # Retry
+# If still fails, check for large files (>100MB)
+```
+
+**Chunkhound lock error:**
+```bash
+kill $(lsof -t .chunkhound/db.wal) 2>/dev/null
+rm -f .chunkhound/db.wal
+```
+
+### Batch Processing
+
+Process in batches to maximize throughput:
+
+**Triage Agent:**
+- Analyze 5-10 entries before asking user for batch confirmation
+- Group similar failures together
+- Present: "Found 3 suffix issues, 2 reading issues. Auto-fix suffixes, ask about readings?"
+
+**Fix Agent:**
+- Implement up to 3 related fixes before committing
+- Run tests once after batch, not after each fix
+- Single commit for related fixes with detailed message
+
+### Progress Checkpoints
+
+Save state frequently to avoid losing work:
+
+```bash
+# After every 3-5 items processed
+git add -A && git stash  # Checkpoint work
+
+# Before long operations
+bd sync  # Ensure beads state is saved
+
+# After major progress
+git commit -m "WIP: <what's done so far>" --no-verify
+```
+
+### Escalation Thresholds
+
+Only escalate after exhausting these options:
+
+1. **Search first**: Use chunkhound to find similar patterns in codebase
+2. **Check history**: `git log --oneline -20` for recent related changes
+3. **Try both approaches**: If unsure, implement simpler one first
+4. **Timebox**: Spend max 5 minutes researching before deciding
+
+**Escalate when:**
+- Two valid approaches with different tradeoffs
+- Change requires domain knowledge you lack
+- Risk of breaking unrelated functionality
+
 ## LLM Accuracy Evaluation
 
 This project includes an LLM-based evaluation system to verify Himotoki's segmentation accuracy.
@@ -210,17 +320,25 @@ runSubagent(
 
 #### Agent 1: Bug Search Agent (Triage)
 
-Finds bugs and creates detailed beads issues for later fixing.
+Finds bugs and creates detailed beads issues for later fixing. **Maximize autonomy** - use decision framework above.
 
 1. **Check status**: `python scripts/llm_eval.py --triage-status`
-2. **Find failed entries**: `jq '.[] | select(.pass==false) | {i:.index,s:.sentence}' output/llm_results.json`
-3. **Batch research** (optional): Spawn research subagents for multiple entries in parallel
-4. **Inspect entry**: `python scripts/check_segments.py <num>` or use subagent report
-5. **Reserve entry** (optional): `python scripts/llm_eval.py --reserve <num> --agent-id "triage-1"`
-6. **Ask the User**: Use `ask_questions` tool to confirm fix vs skip (waits for user input)
-7. **Create issue or skip**:
-   - **Skip**: `python scripts/llm_eval.py --skip <num> --reason "explanation"`
-   - **Create beads issue**: Use `bd create` (see template below)
+2. **Batch load failed entries**: `jq '.[] | select(.pass==false)' output/llm_results.json | head -50`
+3. **Spawn research subagents** for 5-10 entries in parallel
+4. **Classify each entry** using Auto-Skip and Auto-Fix patterns above
+5. **Auto-skip** entries matching skip patterns (no user confirmation needed)
+6. **Auto-create issues** for entries matching fix patterns
+7. **Batch confirm** only ambiguous cases: "5 auto-skipped, 3 issues created, 2 need your input"
+8. **Repeat** until all entries processed or session ending
+
+**Decision Flow:**
+```
+For each failed entry:
+  → Matches auto-skip pattern? → Skip with standard reason
+  → Matches auto-fix pattern? → Create issue with fix hint
+  → Clear root cause found? → Create detailed issue
+  → Ambiguous? → Add to batch for user confirmation
+```
 
 **Issue Template for Beads:**
 ```bash
@@ -253,29 +371,46 @@ python scripts/llm_eval.py --rescore <num>
 
 #### Agent 2: Bug Fix Agent (Implementation)
 
-Picks up issues from beads and implements fixes.
+Picks up issues from beads and implements fixes. **Work continuously** until queue is empty or session ending.
 
-1. **Find available work**: `bd ready` or filter by label `llm-fail`
-2. **Claim the issue**: `bd update <id> --status in_progress`
-3. **Understand the problem**: Read the issue description, code locations provided
-4. **Implement the fix**: Make code changes at the identified locations
-5. **Verify locally**:
-   ```bash
-   python scripts/check_segments.py <num>  # Check segmentation changes
-   python scripts/llm_eval.py --rescore <num>  # Verify fix passes
-   ```
-   Or spawn Test Runner subagent for full validation
-6. **Commit and push**: Follow "Landing the Plane" workflow above
+1. **Batch claim**: `bd ready` - claim 3-5 related issues at once
+2. **Group by file**: Sort issues by affected code location
+3. **Implement fixes** in batches (same-file changes together)
+4. **Run tests once** after batch: `pytest tests/ -x --tb=short`
+5. **Verify fixes**: `python scripts/llm_eval.py --rescore "<n1>,<n2>,<n3>"`
+6. **Commit batch** with detailed message listing all fixes
+7. **Push** and pick up next batch
+8. **On failure**: Revert problematic fix, continue with others
+
+**Continuous Loop:**
+```
+while issues_available and not session_ending:
+    batch = claim_next_3_issues()
+    for issue in batch:
+        implement_fix(issue)
+    run_tests()
+    if tests_pass:
+        commit_and_push(batch)
+    else:
+        identify_failing_fix()
+        revert_that_fix()
+        commit_and_push(working_fixes)
+```
 
 #### Running Both Agents Simultaneously
 
 The agents are fully independent:
-- **Agent A (Triage)**: Analyzes failed entries, creates beads issues
-- **Agent B (Fix)**: Implements fixes, commits, and pushes
+- **Agent A (Triage)**: Analyzes entries, auto-classifies, batches user questions
+- **Agent B (Fix)**: Implements fixes in batches, continuous push loop
 
 Coordination happens through:
 - **beads issues**: Work queue between triage and fix agents
 - **triage lock file**: Prevents duplicate triage work
+
+**Autonomy Goals:**
+- Triage: Process 50+ entries per session with <5 user questions
+- Fix: Implement 10+ fixes per session with continuous commits
+- Both: Always push before stopping (never leave work stranded)
 
 
 ### Output Files
