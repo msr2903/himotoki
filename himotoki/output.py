@@ -48,6 +48,15 @@ SPECIAL_CONJ_INFO: Dict[int, tuple] = {
     1628500: (2089020, 1, 'cop', False, True),  # です = non-past formal of だ
 }
 
+# Particle seqs that should NOT display conjugation info even if they match
+# conjugated forms. These are standalone particles that happen to look like
+# conjugated forms but should be treated as particles in most contexts.
+# Example: で (seq 2028980) can be copula だ conjunctive form, but when it's
+# matched as a standalone word, it's almost always the case particle.
+SUPPRESS_CONJ_FOR_PARTICLES: set = {
+    2028980,  # で - case particle (location/means), not copula て-form
+}
+
 
 # ============================================================================
 # Data Classes
@@ -734,6 +743,12 @@ def word_info_from_segment(
     # Get conjugation data from segment.info (computed by calc_score)
     # This is the authoritative source for conjugation info
     conj_data = segment.info.get('conj', []) if segment.info else []
+    
+    # Suppress conjugation info for standalone particles
+    # These words have their own dictionary meaning as particles, and
+    # showing conjugation info (e.g., で as copula て-form) is misleading
+    if word.seq in SUPPRESS_CONJ_FOR_PARTICLES:
+        conj_data = []
     
     # Extract conjugation IDs for the conjugations field
     conjugations = word.conjugations
