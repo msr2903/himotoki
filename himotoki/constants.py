@@ -170,6 +170,10 @@ SEQ_TTE = 2086960          # って (quoting)
 SEQ_KARA = 1002980         # から (from/because)
 SEQ_NITOTTE = 1009600      # にとって (for; to; concerning)
 
+# --- Pronouns vs Suffixes (disambiguation needed) ---
+SEQ_KIMI = 1247250         # 君 (きみ) - pronoun "you"
+SEQ_KUN = 1247260          # 君 (くん) - suffix "Mr."
+
 # --- Common Verbs ---
 SEQ_SURU = 1157170         # する
 SEQ_IRU = 1577980          # いる (居る - to be animate)

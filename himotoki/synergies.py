@@ -1629,6 +1629,46 @@ def _init_segfilters():
         filter_right=filter_in_seq_set(*HONORIFICS),
     )
     
+    # 君/くん (suffix) must NOT be followed by particles
+    # When 君 is followed by a particle (と, は, が, etc.), it's the pronoun きみ,
+    # not the suffix くん. Remove くん from candidates when followed by particles.
+    from himotoki.constants import SEQ_KUN, NOUN_PARTICLES as NP
+    def segfilter_kun_before_particle(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Remove くん (suffix) when followed by a particle."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if right is a particle
+        filter_particle = filter_in_seq_set(*NP)
+        right_is_particle = any(filter_particle(s) for s in seg_list_right.segments)
+        
+        if not right_is_particle:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Right is a particle - remove くん from left
+        filter_kun = filter_in_seq_set(SEQ_KUN)
+        left_without_kun = [s for s in seg_list_left.segments if not filter_kun(s)]
+        
+        if not left_without_kun:
+            # All segments were くん - this path is blocked
+            return []
+        
+        new_left = SegmentList(
+            segments=left_without_kun,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        return [(new_left, seg_list_right)]
+    
+    register_segfilter(segfilter_kun_before_particle)
+    
     # === BUG FIX: Block patterns where compound expressions exist ===
     
     # Segfilter: Block に + つけ to prefer につけ (7g2)
