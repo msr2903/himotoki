@@ -743,6 +743,17 @@ def find_word_suffix(
                 
                 primary_kana = get_word_kana(pw)
                 suffix_kana = kf.text if kf else suffix
+                
+                # Special handling for contracted suffixes (chau, to)
+                # These suffixes contract the て/で from the te-form, so we need
+                # to strip it from the primary word's kana to avoid duplication.
+                # Example: 選ばれて + ちゃって → えらばれちゃって (not えらばれてちゃって)
+                if keyword in ('chau', 'to'):
+                    if primary_kana.endswith('て'):
+                        primary_kana = primary_kana[:-1]
+                    elif primary_kana.endswith('で'):
+                        primary_kana = primary_kana[:-1]
+                
                 # Include connector in kana (e.g., space for suru, kudasai, te+space)
                 compound_kana = primary_kana + connector + suffix_kana
                 
