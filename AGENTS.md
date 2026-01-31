@@ -352,15 +352,17 @@ runSubagent(
 Finds bugs and creates detailed beads issues for later fixing. **Always confirm with user before any action.**
 
 1. **Check status**: `python scripts/llm_eval.py --triage-status`
-2. **Batch load failed entries**: `jq '[to_entries[] | select(.value.llm_score.verdict != "pass") | {idx: .key, sentence: .value.sentence, score: .value.llm_score.overall_score, issues: .value.llm_score.issues}] | .[0:20]' output/llm_results.json`
-3. **Analyze each entry**: Use chunkhound to find relevant code, identify root cause
-4. **Present findings to user**: Use `ask_questions` tool with options:
-   - Create beads issue (suggest fix approach)
-   - Skip with reason (suggest reason from patterns)
-   - Investigate more
-5. **Wait for user confirmation** before any skip or issue creation
-6. **Execute user's decision**: Skip or create issue as directed
-7. **Repeat** for each entry
+2. **Show failed entries to user**: `jq '[to_entries[] | select(.value.llm_score.verdict != "pass") | {idx: .key, sentence: .value.sentence, score: .value.llm_score.overall_score, issues: .value.llm_score.issues}] | .[0:20]' output/llm_results.json`
+3. **Ask user which entries to analyze**: Use `ask_questions` - "Found X failed entries. Which should I analyze?"
+4. **For each approved entry**:
+   a. Analyze: Use chunkhound to find relevant code, identify root cause
+   b. Present findings to user with `ask_questions`:
+      - Create beads issue (suggest fix approach)
+      - Skip with reason (suggest reason from patterns)
+      - Investigate more
+   c. Wait for user confirmation
+   d. Execute user's decision: Skip or create issue as directed
+5. **Repeat** for next entry user wants to analyze
 
 **Issue Template for Beads:**
 ```bash
