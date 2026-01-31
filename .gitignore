@@ -73,6 +73,7 @@ output/report.html
 output/mismatch.json
 output/partial.json
 output/results_counters.json
+output/llm_results.json
 
 # --- External Source ---
 ichiran-source-code/
@@ -80,3 +81,6 @@ ichiran-source-code/
 # --- Debug Scripts (at root level) ---
 debug_*.py
 check_*.py
+
+# --- Env files ---
+.env

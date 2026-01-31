@@ -44,6 +44,11 @@ dev = [
     "isort>=5.12.0",
     "mypy>=1.0.0",
 ]
+eval = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.27.0",
+    "openai>=1.12.0",
+]
 
 [project.scripts]
 himotoki = "himotoki.cli:main"

@@ -142,6 +142,27 @@ pip install -e ".[dev]"
 3. **Linting**: `ruff check .`
 4. **Formatting**: `black .`
 
+### LLM Accuracy Evaluation (Local)
+
+1. **Run LLM evaluation**: `python -m scripts.llm_eval --quick`
+2. **Run with mock mode**: `python -m scripts.llm_eval --quick --mock`
+3. **Run one sentence**: `python -m scripts.llm_eval --onesentence "猫が食べる"`
+3. **Start labeler UI**: `python -m scripts.llm_labeler --host 127.0.0.1 --port 8008`
+
+Set `LLM_PROVIDER=openai` with `OPENAI_BASE_URL` (for example, http://127.0.0.1:3030/v1)
+and `OPENAI_API_KEY` (use `not-needed` for local servers that ignore keys) to use a local
+OpenAI-compatible server. Use `--mock` for offline runs.
+
+Set `LLM_PROVIDER=gemini` with `GEMINI_API_KEY` and `GEMINI_MODEL` (default: gemini-3-flash-preview)
+to use Gemini.
+
+Use `--concurrency 5` (or `LLM_CONCURRENCY=5`) to send multiple LLM requests in parallel.
+Use `--rpm` (or `LLM_RPM`) to cap request rate per minute (defaults: 2 for openai, 1 for gemini).
+
+Install the optional dependencies for the labeler UI:
+
+`pip install -e ".[eval]"`
+
 ---
 
 ## 📜 License
