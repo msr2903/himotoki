@@ -7,6 +7,18 @@ Usage:
     python -m scripts.llm_eval --sentence "猫が食べる"
     python -m scripts.llm_eval --export output/llm_results.json
 """
+# Force IPv4 BEFORE any network library imports to avoid IPv6 timeout issues
+import socket as _socket
+_orig_getaddrinfo = _socket.getaddrinfo
+def _ipv4_only_getaddrinfo(*args, **kwargs):
+    responses = _orig_getaddrinfo(*args, **kwargs)
+    return [r for r in responses if r[0] == _socket.AF_INET] or responses
+_socket.getaddrinfo = _ipv4_only_getaddrinfo
+
+# Also patch httpcore's cached socket reference
+import httpcore._backends.sync as _httpcore_sync
+_httpcore_sync.socket.getaddrinfo = _ipv4_only_getaddrinfo
+
 import argparse
 import json
 import os
@@ -671,7 +683,8 @@ def get_himotoki_session():
 
     if not _himotoki_suffixes_ready:
         init_suffixes(_himotoki_session)
-        himotoki.warm_up()
+        # Skip warm_up() for faster startup - not needed for individual rescoring
+        # himotoki.warm_up()
         _himotoki_suffixes_ready = True
 
     return _himotoki_session
@@ -928,38 +941,45 @@ class GeminiClient:
         self.timeout = timeout
 
     def judge(self, prompt: str) -> Dict[str, Any]:
+        import subprocess
+        
+        # Use v1alpha for gemini-3 models, v1beta for others
+        api_version = "v1alpha" if "gemini-3" in self.model else "v1beta"
         endpoint = (
-            f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:"
+            f"https://generativelanguage.googleapis.com/{api_version}/models/{self.model}:"
             f"generateContent?key={self.api_key}"
         )
-        payload = {
-            "contents": [
-                {
-                    "role": "user",
-                    "parts": [{"text": prompt}],
-                }
+        payload = json.dumps({
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "temperature": 1.0,
+                "maxOutputTokens": 1024,
+                # Minimal thinking for fastest response
+                "thinking_config": {"thinking_level": "MINIMAL"},
+            },
+        })
+        
+        # Use curl subprocess - most reliable on this system
+        result = subprocess.run(
+            [
+                "curl", "-s", "--max-time", str(int(self.timeout)),
+                "-X", "POST", endpoint,
+                "-H", "Content-Type: application/json",
+                "-d", payload,
             ],
-            "generationConfig": {"temperature": 0},
-        }
-        data = json.dumps(payload).encode("utf-8")
-        req = Request(
-            endpoint,
-            data=data,
-            headers={"Content-Type": "application/json"},
-            method="POST",
+            capture_output=True,
+            text=True,
+            timeout=self.timeout + 5,
         )
-        try:
-            with urlopen(req, timeout=self.timeout) as resp:
-                raw = resp.read().decode("utf-8")
-        except HTTPError as e:
-            raise RuntimeError(f"Gemini HTTP error {e.code}: {e.read().decode('utf-8')}") from e
-        except URLError as e:
-            raise RuntimeError(f"Gemini connection error: {e}") from e
+        
+        if result.returncode != 0:
+            raise RuntimeError(f"curl failed: {result.stderr}")
+        
+        response = json.loads(result.stdout)
 
-        response = json.loads(raw)
         candidates = response.get("candidates", [])
         if not candidates:
-            raise RuntimeError("Gemini returned no candidates")
+            raise RuntimeError(f"Gemini returned no candidates: {result.stdout[:200]}")
         parts = candidates[0].get("content", {}).get("parts", [])
         if not parts:
             raise RuntimeError("Gemini returned empty content")
@@ -1093,7 +1113,7 @@ def rescore_entry(
         )
     elif provider == "gemini":
         gemini_key = gemini_key or os.environ.get("GEMINI_API_KEY", "")
-        gemini_model = gemini_model or os.environ.get("GEMINI_MODEL", "gemini-1.5-flash")
+        gemini_model = gemini_model or os.environ.get("GEMINI_MODEL", "gemini-3-flash-preview")
         if not gemini_key:
             raise RuntimeError("Missing GEMINI_API_KEY for Gemini provider")
         client = GeminiClient(api_key=gemini_key, model=gemini_model, timeout=timeout)
@@ -1139,7 +1159,7 @@ def rescore_entry(
 
     print(f"\nUpdated entry #{entry_index} in {results_file}")
     
-    _prompt_generate_report(results_file)
+    # Skip interactive prompt for rescore - user can run llm_report.py manually
     return 0
 
 
@@ -1189,7 +1209,7 @@ def retry_failed_eval(
         )
     elif provider == "gemini":
         gemini_key = gemini_key or os.environ.get("GEMINI_API_KEY", "")
-        gemini_model = gemini_model or os.environ.get("GEMINI_MODEL", "gemini-1.5-flash")
+        gemini_model = gemini_model or os.environ.get("GEMINI_MODEL", "gemini-3-flash-preview")
         if not gemini_key:
             raise RuntimeError("Missing GEMINI_API_KEY for Gemini provider")
         client = GeminiClient(api_key=gemini_key, model=gemini_model, timeout=timeout)
@@ -1319,7 +1339,7 @@ def run_llm_eval(
             )
         elif provider == "gemini":
             gemini_key = gemini_key or os.environ.get("GEMINI_API_KEY", "")
-            gemini_model = gemini_model or os.environ.get("GEMINI_MODEL", "gemini-1.5-flash")
+            gemini_model = gemini_model or os.environ.get("GEMINI_MODEL", "gemini-3-flash-preview")
             if not gemini_key:
                 raise RuntimeError("Missing GEMINI_API_KEY for Gemini provider")
             client = GeminiClient(api_key=gemini_key, model=gemini_model, timeout=timeout)
@@ -1504,7 +1524,7 @@ def main():
     parser.add_argument(
         "--provider",
         type=str,
-        default=os.environ.get("LLM_PROVIDER", "openai"),
+        default=os.environ.get("LLM_PROVIDER", "gemini"),
         choices=["openai", "gemini"],
         help="LLM provider: openai or gemini",
     )

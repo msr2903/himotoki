@@ -2432,6 +2432,76 @@ def _init_segfilters():
     
     register_segfilter(segfilter_naiyou_kana)
 
+    # === Segfilter: Block ところが (conjunction) after rentaikei forms ===
+    # When ところが follows a noun-modifying verb form (rentaikei), it should be
+    # split as ところ (place) + が (particle), not the conjunction "however".
+    # Rentaikei forms: Non-past (type 1), Past (type 2), or any verb/adj that can modify nouns
+    # Example: 分からないところがある → 分からない + ところ + が + ある
+    SEQ_TOKOROGA = 1008570  # ところが (conjunction)
+    RENTAIKEI_CONJ_TYPES = {1, 2}  # Non-past, Past - both can modify nouns
+    
+    def segfilter_tokoroga(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Filter out ところが (conjunction) when preceded by a noun-modifying form."""
+        from himotoki.lookup import SegmentList
+        
+        # If no left context, allow ところが (sentence-initial is valid as conjunction)
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        def is_tokoroga_conj(seg):
+            return seg.word.seq == SEQ_TOKOROGA
+        
+        def is_rentaikei(seg):
+            """Check if segment ends with a noun-modifying (rentaikei) form."""
+            conj_list = seg.info.get('conj', [])
+            if not conj_list:
+                # No conjugation - check if it's a noun or noun-like
+                posi = seg.info.get('posi', [])
+                if any(p in posi for p in ['n', 'adj-i', 'adj-na']):
+                    return True
+                return False
+            # Check if any conjugation is rentaikei (can modify nouns)
+            for conj_data in conj_list:
+                if hasattr(conj_data, 'prop') and conj_data.prop:
+                    if conj_data.prop.conj_type in RENTAIKEI_CONJ_TYPES:
+                        return True
+            return False
+        
+        # Filter segments
+        tokoroga = [s for s in seg_list_right.segments if is_tokoroga_conj(s)]
+        other = [s for s in seg_list_right.segments if not is_tokoroga_conj(s)]
+        
+        # If no ところが, pass through
+        if not tokoroga:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left has rentaikei forms
+        rentaikei_left = [s for s in seg_list_left.segments if is_rentaikei(s)]
+        
+        # If left has rentaikei, block ところが (conjunction)
+        if rentaikei_left:
+            if other:
+                return [(
+                    seg_list_left,
+                    SegmentList(
+                        segments=other,
+                        start=seg_list_right.start,
+                        end=seg_list_right.end,
+                        matches=seg_list_right.matches,
+                    ),
+                )]
+            # No other options - block this path entirely
+            return []
+        
+        # No rentaikei on left, allow ところが
+        return [(seg_list_left, seg_list_right)]
+    
+    register_segfilter(segfilter_tokoroga)
+
 
 _init_segfilters()
 
