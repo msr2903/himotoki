@@ -1315,6 +1315,57 @@ def _init_synergies():
     
     register_synergy(synergy_verb_hito)
     
+    # 人(ひと) + の synergy - boost person reading when followed by possessive
+    # When 人 is followed by の (possessive), it should be read as ひと (person).
+    # Pattern: 人の一生, 人の話, 人の気持ち -- all use ひと
+    # This complements the verb+hito synergy by handling sentence-initial 人
+    SEQ_NO_PARTICLE = 1469800  # の (particle)
+    
+    def synergy_hito_no(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for 人(ひと) + の to prefer person reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for seq=SEQ_HITO_NOUN (ひと reading)
+        filter_left = filter_in_seq_set(SEQ_HITO_NOUN)
+        left_hito = [s for s in seg_list_left.segments if filter_left(s)]
+        if not left_hito:
+            return []
+        
+        # Filter right for の (possessive particle)
+        filter_right = filter_in_seq_set(SEQ_NO_PARTICLE)
+        right_no = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_no:
+            return []
+        
+        syn = Synergy(
+            description="hito+no",
+            connector=" ",
+            score=30,  # Strong enough to override じん
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_hito,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_no,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_hito_no)
+
     # する + 中(なか) synergy - boost middle reading over suffix reading
     # When 中 follows a verb (する中, 激化する中, etc.), it means "amid/while"
     # and should be read as なか, not ちゅう (which is a suffix like 勉強中)
