@@ -35,6 +35,7 @@ from himotoki.constants import (
     SEQ_SURU, SEQ_IRU, SEQ_KURU,
     # Nouns with reading ambiguity
     SEQ_MAE_NOUN, SEQ_HOU_NOUN, SEQ_MEN_NOUN,
+    SEQ_HITO_NOUN, SEQ_NAKA_NOUN,
     # Expressions
     SEQ_NITSURE, SEQ_OSUSUME,
     # Pre-built set
@@ -1251,6 +1252,121 @@ def _init_synergies():
         return [(new_right, syn, new_left)]
     
     register_synergy(synergy_noun_men)
+    
+    # verb/clause + 人(ひと) synergy - boost person reading over suffix reading
+    # When 人 follows a verb in plain form or a clause-ending word,
+    # it should be read as ひと (person), not じん (suffix).
+    # Pattern: 持つ人, 知らない人, いる人 -- all use ひと
+    # じん is only used as a suffix after nouns (日本人, アメリカ人)
+    def synergy_verb_hito(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for verb + 人(ひと) to prefer person reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for verbs or adjectives (clause-ending words)
+        left_verbs = []
+        verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n',
+                     'v5t', 'v5u', 'v5u-s', 'v5k-s', 'v5r-i', 'vk', 'vs',
+                     'vs-i', 'adj-i', 'adj-ix'}
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            if verb_pos.intersection(posi):
+                left_verbs.append(seg)
+        
+        if not left_verbs:
+            return []
+        
+        # Filter right for seq=SEQ_HITO_NOUN (ひと reading)
+        filter_right = filter_in_seq_set(SEQ_HITO_NOUN)
+        right_hito = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_hito:
+            return []
+        
+        syn = Synergy(
+            description="verb+hito",
+            connector=" ",
+            score=25,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_verbs,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_hito,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_verb_hito)
+    
+    # する + 中(なか) synergy - boost middle reading over suffix reading
+    # When 中 follows a verb (する中, 激化する中, etc.), it means "amid/while"
+    # and should be read as なか, not ちゅう (which is a suffix like 勉強中)
+    def synergy_verb_naka(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for verb + 中(なか) to prefer 'middle/amid' reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for verbs in plain form (non-past, non-negative)
+        left_verbs = []
+        verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n',
+                     'v5t', 'v5u', 'v5u-s', 'v5k-s', 'v5r-i', 'vk', 'vs',
+                     'vs-i'}
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            if verb_pos.intersection(posi):
+                left_verbs.append(seg)
+        
+        if not left_verbs:
+            return []
+        
+        # Filter right for seq=SEQ_NAKA_NOUN (なか reading)
+        filter_right = filter_in_seq_set(SEQ_NAKA_NOUN)
+        right_naka = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_naka:
+            return []
+        
+        syn = Synergy(
+            description="verb+naka",
+            connector=" ",
+            score=25,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_verbs,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_naka,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_verb_naka)
+    
 
 
 # Initialize synergies on module load
@@ -2129,6 +2245,51 @@ def _init_segfilters():
         return results if results else []
     
     register_segfilter(segfilter_neg_imperative_n)
+
+    # === Segfilter: Remove いくさ reading after nouns ===
+    # 戦(いくさ, seq=1587140) is an archaic standalone word for "war".
+    # When 戦 follows a noun, it should be read as せん (match/battle)
+    # as part of a compound (e.g., タイトル戦). Since せん gets culled
+    # by IDENTICAL_WORD_SCORE_CUTOFF (score 5 vs いくさ score 16),
+    # removing いくさ from the split path lets the compound path win.
+    from himotoki.constants import SEQ_IKUSA_NOUN
+    def segfilter_noun_ikusa(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Remove いくさ reading of 戦 when preceded by a noun."""
+        from himotoki.lookup import SegmentList
+
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+
+        # Check if left has a noun
+        left_has_noun = any(filter_is_noun(s) for s in seg_list_left.segments)
+        if not left_has_noun:
+            return [(seg_list_left, seg_list_right)]
+
+        # Remove いくさ from right segments
+        filter_ikusa = filter_in_seq_set(SEQ_IKUSA_NOUN)
+        right_without_ikusa = [s for s in seg_list_right.segments if not filter_ikusa(s)]
+
+        if not right_without_ikusa:
+            # All segments were いくさ - block this split so compound wins
+            return []
+
+        if len(right_without_ikusa) == len(seg_list_right.segments):
+            # No いくさ found, pass through unchanged
+            return [(seg_list_left, seg_list_right)]
+
+        new_right = SegmentList(
+            segments=right_without_ikusa,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        return [(seg_list_left, new_right)]
+
+    register_segfilter(segfilter_noun_ikusa)
 
 
 _init_segfilters()
