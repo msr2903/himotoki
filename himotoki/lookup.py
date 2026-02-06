@@ -102,6 +102,9 @@ SKIP_WORDS: Set[int] = {
     2862334,   # 振り出しに戻る - prefer component words (振り出し + に + 戻る)
     1881690,   # 写真を撮る - prefer component words (写真 + を + 撮る)
     2860921,   # 家を出る - prefer component words (家 + を + 出る)
+    2862924,   # 悪口(あっこう) - prefer わるぐち reading (seq 1575730)
+    10551045,  # 為し(なし) - prefer 無し adjective (seq 1529560)
+    10456682,  # 成し(なし) - prefer 無し adjective (seq 1529560)
 }
 
 # Final particles - words that only have meaning when they're final

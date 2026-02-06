@@ -57,6 +57,13 @@ SUPPRESS_CONJ_FOR_PARTICLES: set = {
     2028980,  # で - case particle (location/means), not copula て-form
 }
 
+# Words that have their own standalone dictionary meaning and should NOT
+# display as conjugated forms of other verbs, even though the DB links them.
+# These are typically nominalized verb forms that became independent nouns.
+SUPPRESS_CONJ_FOR_NOUNS: set = {
+    1382980,  # 積もり (つもり) - intention/plan noun, not continuative of 積もる
+}
+
 
 # ============================================================================
 # Data Classes
@@ -798,6 +805,11 @@ def word_info_from_segment(
     # These words have their own dictionary meaning as particles, and
     # showing conjugation info (e.g., で as copula て-form) is misleading
     if word.seq in SUPPRESS_CONJ_FOR_PARTICLES:
+        conj_data = []
+    
+    # Suppress conjugation info for nouns that have their own dictionary meaning
+    # These are nominalized verb forms that became independent nouns
+    if word.seq in SUPPRESS_CONJ_FOR_NOUNS:
         conj_data = []
     
     # Extract conjugation IDs for the conjugations field
