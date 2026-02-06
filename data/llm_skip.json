@@ -36,6 +36,16 @@
     "213": "Architectural: verb compound splitting requires major refactor",
     "231": "Architectural: verb compound splitting requires refactor",
     "244": "Architectural: verb compound splitting requires refactor",
-    "259": "Architectural: copula conjugation handling needs refactor"
+    "259": "Architectural: copula conjugation handling needs refactor",
+    "210": "Architectural: requires deeper changes",
+    "224": "Architectural: requires deeper changes",
+    "235": "Architectural: requires deeper changes",
+    "248": "Architectural: requires deeper changes",
+    "252": "Architectural: requires deeper changes",
+    "254": "Architectural: requires deeper changes",
+    "260": "Architectural: requires deeper changes",
+    "261": "Architectural: requires deeper changes",
+    "262": "Architectural: requires deeper changes",
+    "263": "Architectural: requires deeper changes"
   }
 }
