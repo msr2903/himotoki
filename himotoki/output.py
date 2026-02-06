@@ -64,6 +64,13 @@ SUPPRESS_CONJ_FOR_NOUNS: set = {
     1382980,  # 積もり (つもり) - intention/plan noun, not continuative of 積もる
 }
 
+# Verbs that have their own dictionary entry but might be mistakenly identified
+# as potential or other conjugated forms of different verbs. These should show
+# their own glosses, not conjugation info from another verb.
+SUPPRESS_CONJ_FOR_VERBS: set = {
+    1345930,  # 傷つける - standalone transitive v1, not potential of 傷つく
+}
+
 
 # ============================================================================
 # Data Classes
@@ -810,6 +817,11 @@ def word_info_from_segment(
     # Suppress conjugation info for nouns that have their own dictionary meaning
     # These are nominalized verb forms that became independent nouns
     if word.seq in SUPPRESS_CONJ_FOR_NOUNS:
+        conj_data = []
+    
+    # Suppress conjugation info for verbs with their own dictionary entries
+    # These might look like conjugated forms but are standalone verbs
+    if word.seq in SUPPRESS_CONJ_FOR_VERBS:
         conj_data = []
     
     # Extract conjugation IDs for the conjugations field
