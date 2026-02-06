@@ -1779,18 +1779,21 @@ def _init_penalties():
         if not has_tan:
             return None
         
-        # Check if left ends with verb (indicated by conjugation info)
+        # Check if left ends with a word that could be a verb stem (masu-stem)
+        # Words like 仕掛け (noun) can also be verb stems
+        # Penalty should be applied regardless to prefer past+explanatory
         segments_left = getattr(seg_list_left, 'segments', [])
         for seg in segments_left:
             info = getattr(seg, 'info', {})
             posi = info.get('posi', [])
-            # Check if it's a verb-like word (verb, suru-verb, etc.)
+            # Check if it's a noun that could be a verb stem (many verb stems are also nouns)
+            # or a verb form
             verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n', 'v5t', 'v5u', 'vk', 'vs', 'vs-i', 'n'}
             if verb_pos.intersection(posi):
                 return Synergy(
                     description="verb-stem+tan-penalty",
                     connector=" ",
-                    score=-50,  # Strong penalty to prefer past+explanatory
+                    score=-400,  # Very strong penalty - diff is often 300+ points
                     start=start,
                     end=end,
                 )
@@ -2501,6 +2504,78 @@ def _init_segfilters():
         return [(seg_list_left, seg_list_right)]
     
     register_segfilter(segfilter_tokoroga)
+
+    # === Segfilter: Block たん/たんだ after masu-stem verb forms ===
+    # たん/たんだ as standalone words should not follow 
+    # a masu-stem (continuative form) or noun that could be a verb stem.
+    # It should be た + ん (+ だ) instead.
+    # Example: 仕掛けたんだ → 仕掛けた + ん + だ, NOT 仕掛け + たん + だ
+    
+    def segfilter_tan_after_stem(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block たん/たんだ when preceded by continuative/masu-stem form."""
+        from himotoki.lookup import SegmentList
+        
+        # If no left context, allow たん at sentence start
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        def is_tan_tanda(seg):
+            """Check if segment text is たん or たんだ."""
+            return seg.word.text in ('たん', 'たんだ')
+        
+        def is_masu_stem_or_verb_noun(seg):
+            """Check if segment is a masu-stem form or a noun that could be a verb stem."""
+            conj_list = seg.info.get('conj', [])
+            if conj_list:
+                for conj_data in conj_list:
+                    if hasattr(conj_data, 'prop') and conj_data.prop:
+                        # Conj type 13 = Continuative (~masu stem)
+                        if conj_data.prop.conj_type == 13:
+                            return True
+            # Also check if it's a noun that matches a verb's masu-stem pattern
+            # Many nouns like 仕掛け are also verb stems
+            posi = seg.info.get('posi', [])
+            if 'n' in posi:
+                # Check if the word looks like a potential verb stem
+                # (ends with け/き/し/り/ち/み/び/ぎ/え/い/etc.)
+                text = seg.word.text
+                if text and any(text.endswith(k) for k in 'けきしりちみびぎにえいてれねめべげ'):
+                    return True
+            return False
+        
+        # Filter segments
+        tan_segs = [s for s in seg_list_right.segments if is_tan_tanda(s)]
+        other_segs = [s for s in seg_list_right.segments if not is_tan_tanda(s)]
+        
+        # If no たん/たんだ, pass through
+        if not tan_segs:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left has masu-stem or verb-like noun
+        has_stem = any(is_masu_stem_or_verb_noun(s) for s in seg_list_left.segments)
+        
+        if has_stem:
+            # Block たん/たんだ when preceded by masu-stem/verb-noun
+            if other_segs:
+                # Return only non-たん segments
+                new_right = SegmentList(
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    segments=other_segs
+                )
+                return [(seg_list_left, new_right)]
+            else:
+                # No alternatives - block this path
+                return []
+        
+        # Not a stem, allow たん/たんだ
+        return [(seg_list_left, seg_list_right)]
+    
+    register_segfilter(segfilter_tan_after_stem)
 
 
 _init_segfilters()
