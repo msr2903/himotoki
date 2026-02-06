@@ -31,6 +31,7 @@
     "168": "Minor - missing reading",
     "170": "Phonetic sound change rule",
     "196": "Expression over-grouping",
-    "198": "Expression over-grouping"
+    "198": "Expression over-grouping",
+    "223": "Proper noun 田中 not in JMDict. Fix requires adding names dictionary (enamdict) - larger scope change."
   }
 }
