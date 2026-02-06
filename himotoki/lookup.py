@@ -107,6 +107,7 @@ SKIP_WORDS: Set[int] = {
     10456682,  # 成し(なし) - prefer 無し adjective (seq 1529560)
     1465580,   # 入る(いる) - prefer はいる reading (seq 1465590)
     1751450,   # 精霊(しょうりょう) - prefer せいれい reading (seq 1380230)
+    2657130,   # 止まる(とどまる) - prefer とまる reading (seq 1310620)
 }
 
 # Final particles - words that only have meaning when they're final
