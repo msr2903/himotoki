@@ -2393,6 +2393,45 @@ def _init_segfilters():
 
     register_segfilter(segfilter_noun_ikusa)
 
+    # === Segfilter: Block ないよう (内容/内用/内洋) when matched from kana ===
+    # When ないよう appears in hiragana, it's almost always ない+よう (negative purposive)
+    # rather than the kanji words 内容/内用/内洋. Only allow these seqs when matched from kanji.
+    SEQ_NAIYOU_KANA = {1459400, 1459440, 2862582}  # All words with reading ないよう
+    def segfilter_naiyou_kana(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Filter out 内容/内用/内洋 when matched from kana (ないよう) instead of kanji."""
+        from himotoki.lookup import SegmentList
+        
+        def is_naiyou_from_kana(seg):
+            if not hasattr(seg, 'word'):
+                return False
+            if seg.word.seq not in SEQ_NAIYOU_KANA:
+                return False
+            # Check if this came from kana matching
+            return seg.word.word_type == 'kana'
+        
+        filtered = [s for s in seg_list_right.segments if not is_naiyou_from_kana(s)]
+        
+        if len(filtered) == len(seg_list_right.segments):
+            # Nothing filtered, pass through
+            return [(seg_list_left, seg_list_right)]
+        
+        if not filtered:
+            # All filtered out - return empty result so this path is blocked
+            # The alternative path (ない + よう) should be taken instead
+            return []
+        
+        return [(
+            seg_list_left,
+            SegmentList(
+                segments=filtered,
+                start=seg_list_right.start,
+                end=seg_list_right.end,
+                matches=seg_list_right.matches,
+            ),
+        )]
+    
+    register_segfilter(segfilter_naiyou_kana)
+
 
 _init_segfilters()
 
