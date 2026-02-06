@@ -822,9 +822,16 @@ def _segments_from_himotoki_json(data: Any) -> List[SegmentInfo]:
         conj_type, neg, fml, source = _extract_conj_info(word_info)
 
         pos_list = []
+        # First try direct gloss
         for gloss in word_info.get("gloss", []):
             if "pos" in gloss:
                 pos_list.append(gloss["pos"])
+        # If no direct POS, try conjugation source gloss
+        if not pos_list and word_info.get("conj"):
+            conj = word_info["conj"][0]
+            for gloss in conj.get("gloss", []):
+                if "pos" in gloss:
+                    pos_list.append(gloss["pos"])
 
         segments.append(
             SegmentInfo(
