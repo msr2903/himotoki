@@ -766,6 +766,7 @@ def _segments_from_himotoki_json(data: Any) -> List[SegmentInfo]:
             neg = False
             fml = False
             source = None
+            # Get conjugation info from last component (auxiliary verb)
             if components_info:
                 last_comp = components_info[-1] if components_info else {}
                 conj_type, neg, fml, source = _extract_conj_info(last_comp)
@@ -774,6 +775,28 @@ def _segments_from_himotoki_json(data: Any) -> List[SegmentInfo]:
 
             kana_parts = [c.get("kana", "") for c in components_info]
             full_kana = "".join(kana_parts) if kana_parts else info.get("kana", "")
+
+            # Extract POS from first component (main word) and source from first
+            pos_list = []
+            main_source = None
+            if components_info:
+                first_comp = components_info[0]
+                for gloss in first_comp.get("gloss", []):
+                    if "pos" in gloss:
+                        pos_list.append(gloss["pos"])
+                # Use first component's reading as source_text (main word)
+                reading = first_comp.get("reading", "")
+                if reading:
+                    main_source = reading.split(" ")[0] if " " in reading else reading
+            else:
+                # No detailed components - use first compound text as source
+                if component_texts:
+                    main_source = component_texts[0]
+            # Also check top-level gloss for non-nested compounds
+            if not pos_list:
+                for gloss in info.get("gloss", []):
+                    if "pos" in gloss:
+                        pos_list.append(gloss["pos"])
 
             segments.append(
                 SegmentInfo(
@@ -786,7 +809,8 @@ def _segments_from_himotoki_json(data: Any) -> List[SegmentInfo]:
                     conj_type=conj_type,
                     conj_neg=neg,
                     conj_fml=fml,
-                    source_text=source,
+                    source_text=main_source or source,  # Prefer main word over auxiliary
+                    pos=pos_list[:3],
                 )
             )
             continue

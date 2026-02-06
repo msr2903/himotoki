@@ -1005,6 +1005,10 @@ def word_info_gloss_json(
         seq = word_info.seq
         if seq:
             js['seq'] = seq
+            # Add gloss from the main word's seq
+            glosses = get_senses(session, seq)
+            if glosses:
+                js['gloss'] = glosses
         
         # Add compound texts if available (for ichiran compatibility)
         if word_info.compound_texts:
