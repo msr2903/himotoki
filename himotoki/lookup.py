@@ -99,6 +99,7 @@ SKIP_WORDS: Set[int] = {
     900000,    # たそう (custom)
     11553382,  # となら (continuative of となる "to become") — always と+なら
     11566952,  # となら (continuative of となる "to neighbor") — always と+なら
+    2862334,   # 振り出しに戻る - prefer component words (振り出し + に + 戻る)
 }
 
 # Final particles - words that only have meaning when they're final
