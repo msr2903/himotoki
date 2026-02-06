@@ -555,7 +555,7 @@ def init_splits():
             )
         return None
     register_split(1009470, split_nara)
-    
+
     # 気がつく
     def split_kigatsuku(session: Session, reading: Any) -> Optional[SplitResult]:
         text = getattr(reading, 'text', str(reading))
