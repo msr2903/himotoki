@@ -105,6 +105,7 @@ SKIP_WORDS: Set[int] = {
     2862924,   # 悪口(あっこう) - prefer わるぐち reading (seq 1575730)
     10551045,  # 為し(なし) - prefer 無し adjective (seq 1529560)
     10456682,  # 成し(なし) - prefer 無し adjective (seq 1529560)
+    1465580,   # 入る(いる) - prefer はいる reading (seq 1465590)
 }
 
 # Final particles - words that only have meaning when they're final
