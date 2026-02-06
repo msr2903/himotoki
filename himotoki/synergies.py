@@ -36,6 +36,10 @@ from himotoki.constants import (
     # Nouns with reading ambiguity
     SEQ_MAE_NOUN, SEQ_HOU_NOUN, SEQ_MEN_NOUN,
     SEQ_HITO_NOUN, SEQ_NAKA_NOUN,
+    # Verbs with reading ambiguity
+    SEQ_TOMARU, SEQ_TODOMARU,
+    # Adjectives with reading ambiguity
+    SEQ_KARAI, SEQ_TSURAI,
     # Expressions
     SEQ_NITSURE, SEQ_OSUSUME,
     # Pre-built set
@@ -1366,6 +1370,104 @@ def _init_synergies():
         return [(new_right, syn, new_left)]
     
     register_synergy(synergy_verb_naka)
+    
+    # が + 止まる(とまる) synergy - prefer "to stop" over "to stay/remain"
+    # When 止まる follows が (subject marker), it usually means "stops" (とまる).
+    # "とどまる" (to stay/remain) typically takes に (にとどまる).
+    # Pattern: 時間が止まった, 車が止まった, 心臓が止まった
+    def synergy_ga_tomaru(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for が + 止まる(とまる) to prefer 'to stop' reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for が particle
+        filter_ga = filter_in_seq_set(SEQ_GA)
+        left_ga = [s for s in seg_list_left.segments if filter_ga(s)]
+        if not left_ga:
+            return []
+        
+        # Filter right for とまる (seq=1310620, to stop)
+        filter_tomaru = filter_in_seq_set(SEQ_TOMARU)
+        right_tomaru = [s for s in seg_list_right.segments if filter_tomaru(s)]
+        if not right_tomaru:
+            return []
+        
+        syn = Synergy(
+            description="ga+tomaru",
+            connector=" ",
+            score=25,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_ga,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_tomaru,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_ga_tomaru)
+    
+    # は + 辛い(つらい) synergy - prefer "painful/hard" over "spicy"
+    # When 辛い follows は (topic marker), it usually means "hard/painful" (つらい).
+    # "からい" (spicy/hot) is primarily used in food contexts with direct modification.
+    # Pattern: リハビリは辛い, 別れは辛い, 現実は辛い
+    def synergy_wa_tsurai(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for は + 辛い(つらい) to prefer 'painful/hard' reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for は particle
+        filter_wa = filter_in_seq_set(SEQ_WA)
+        left_wa = [s for s in seg_list_left.segments if filter_wa(s)]
+        if not left_wa:
+            return []
+        
+        # Filter right for つらい (seq=1365860, painful/hard)
+        filter_tsurai = filter_in_seq_set(SEQ_TSURAI)
+        right_tsurai = [s for s in seg_list_right.segments if filter_tsurai(s)]
+        if not right_tsurai:
+            return []
+        
+        syn = Synergy(
+            description="wa+tsurai",
+            connector=" ",
+            score=50,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_wa,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_tsurai,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_wa_tsurai)
     
 
 
