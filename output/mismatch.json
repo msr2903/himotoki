@@ -379,8 +379,8 @@
       "Ichiran: ['君', 'の', '名前', 'を', '呼ぶ', 'たびに', '胸', 'が', '張り裂け', 'そうになる']",
       "Himotoki: ['君', 'の', '名前', 'を', '呼ぶ', 'たびに', '胸', 'が', '張り裂けそう', 'に', 'なる']"
     ],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 1.2332768440246582
+    "time_ichiran": 1.8835067749023438e-05,
+    "time_himotoki": 1.3000211715698242
   },
   {
     "sentence": "カラオケでアニソン縛りしようぜって言ったのお前だろ歌えよ",
@@ -816,7 +816,7 @@
       "Himotoki: ['カラオケ', 'で', 'アニソン', '縛り', 'しよう', 'ぜ', 'って', '言った', 'の', 'お前', 'だろ', '歌え', 'よ']"
     ],
     "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.904904842376709
+    "time_himotoki": 0.9260678291320801
   },
   {
     "sentence": "古の契約に基づき我汝を召喚せん。答えよ英霊たちよ",
@@ -1235,8 +1235,8 @@
       "Ichiran: ['古', 'の', '契約', 'に基づき', '我', '汝', 'を', '召喚', 'せん']",
       "Himotoki: ['古', 'の', '契約', 'に基づき', '我', '汝', 'を', '召喚', 'せん', '。', '答え', 'よ', '英霊', 'たち', 'よ']"
     ],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 2.0297927856445312
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 2.060577869415283
   },
   {
     "sentence": "魔王城の結界を破るには四つの精霊石を集める必要があるんだ",
@@ -1881,8 +1881,8 @@
       "Ichiran: ['魔', '王城', 'の', '結界', 'を', '破る', 'には', '四つ', 'の', '精霊', '石', 'を', '集める', '必要', 'が', 'ある', 'ん', 'だ']",
       "Himotoki: ['魔王', '城', 'の', '結界', 'を', '破る', 'には', '四つ', 'の', '精霊', '石', 'を', '集める', '必要', 'が', 'ある', 'ん', 'だ']"
     ],
-    "time_ichiran": 1.2159347534179688e-05,
-    "time_himotoki": 2.0084033012390137
+    "time_ichiran": 1.71661376953125e-05,
+    "time_himotoki": 2.035259962081909
   },
   {
     "sentence": "教育現場ではタブレット端末を活用したICT教育の導入が加速しています",
@@ -2210,8 +2210,8 @@
       "Ichiran: ['教育現場', 'では', 'タブレット', '端末', 'を', '活用した']",
       "Himotoki: ['教育現場', 'では', 'タブレット', '端末', 'を', '活用した', 'ICT', '教育', 'の', '導入', 'が', '加速しています']"
     ],
-    "time_ichiran": 1.1920928955078125e-05,
-    "time_himotoki": 1.2880210876464844
+    "time_ichiran": 1.1205673217773438e-05,
+    "time_himotoki": 1.2781567573547363
   },
   {
     "sentence": "国内最大級の音楽フェスティバルが3年ぶりに開催され会場は熱気に包まれました",
@@ -2724,8 +2724,8 @@
       "Ichiran: ['国内', '最大級', 'の', '音楽', 'フェスティバル', 'が', '3', '年ぶり', 'に', '開催され', '会場', 'は', '熱気', 'に', '包まれました']",
       "Himotoki: ['国内', '最大級', 'の', '音楽', 'フェスティバル', 'が', '3年', 'ぶり', 'に', '開催され', '会場', 'は', '熱気', 'に', '包まれました']"
     ],
-    "time_ichiran": 1.2874603271484375e-05,
-    "time_himotoki": 1.3755671977996826
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 1.3976550102233887
   },
   {
     "sentence": "誰になんと言われようと私は彼のことを信じ続けるわ",
@@ -3203,8 +3203,8 @@
       "Ichiran: ['誰', 'に', 'なんと', '言われよう', 'と', '私', 'は', '彼', 'の', 'こと', 'を', '信じ', '続ける', 'わ']",
       "Himotoki: ['誰', 'に', 'なんと', '言われよう', 'と', '私', 'は', '彼', 'の', 'こと', 'を', '信じ続ける', 'わ']"
     ],
-    "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 1.6899359226226807
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 1.684190034866333
   },
   {
     "sentence": "救急車の受け入れ要請が来ていますがICUは満床で断るしかありません",
@@ -3575,8 +3575,8 @@
       "Ichiran: ['救急車', 'の', '受け入れ', '要請', 'が', '来ています', 'が']",
       "Himotoki: ['救急車', 'の', '受け入れ', '要請', 'が', '来ています', 'が', 'ICU', 'は', '満床', 'で', '断る', 'しか', 'ありません']"
     ],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 1.411703109741211
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 1.2276811599731445
   },
   {
     "sentence": "私のアリバイは完璧ですよその時間は友人と映画を見ていましたから",
@@ -4141,8 +4141,8 @@
       "Ichiran: ['私', 'の', 'アリバイ', 'は', '完璧', 'です', 'よそ', 'の', '時間', 'は', '友人', 'と', '映画', 'を', '見ていました', 'から']",
       "Himotoki: ['私', 'の', 'アリバイ', 'は', '完璧', 'です', 'よ', 'その', '時間', 'は', '友人', 'と', '映画', 'を', '見ていました', 'から']"
     ],
-    "time_ichiran": 5.9604644775390625e-06,
-    "time_himotoki": 1.769352912902832
+    "time_ichiran": 1.0967254638671875e-05,
+    "time_himotoki": 1.7538738250732422
   },
   {
     "sentence": "この事件裏に大きな組織が関わっている可能性があるな深入りするなよ",
@@ -4646,8 +4646,8 @@
       "Ichiran: ['この', '事件', '裏', 'に', '大きな', '組織', 'が', '関わっている', '可能性', 'が', 'ある', 'な', '深入りする', 'なよ']",
       "Himotoki: ['この', '事件', '裏', 'に', '大きな', '組織', 'が', '関わっている', '可能性', 'が', 'ある', 'な', '深入りするな', 'よ']"
     ],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 1.5305798053741455
+    "time_ichiran": 5.9604644775390625e-06,
+    "time_himotoki": 1.5087878704071045
   },
   {
     "sentence": "警察内部に情報を漏らしているスパイがいる誰も信用するな",
@@ -5063,8 +5063,8 @@
       "Ichiran: ['警察', '内部', 'に', '情報', 'を', '漏らしている', 'スパイ', 'が', 'いる', '誰も', '信用する', 'な']",
       "Himotoki: ['警察', '内部', 'に', '情報', 'を', '漏らしている', 'スパイ', 'が', 'いる', '誰も', '信用するな']"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 1.282472848892212
+    "time_ichiran": 1.1682510375976562e-05,
+    "time_himotoki": 1.3338241577148438
   },
   {
     "sentence": "ご愁傷様です突然のことで言葉が見つかりませんがお力落としのないように",
@@ -5585,8 +5585,8 @@
       "Ichiran: ['ご愁傷様', 'です', '突然', 'の', 'こと', 'で', '言葉', 'が', '見つかりません', 'が', 'お', '力落とし', 'の', 'ないよう', 'に']",
       "Himotoki: ['ご愁傷様', 'です', '突然', 'の', 'こと', 'で', '言葉', 'が', '見つかりません', 'が', 'お', '力落とし', 'の', 'ない', 'ように']"
     ],
-    "time_ichiran": 1.6927719116210938e-05,
-    "time_himotoki": 1.5537850856781006
+    "time_ichiran": 1.9788742065429688e-05,
+    "time_himotoki": 1.6314632892608643
   },
   {
     "sentence": "この書類書き方が分からないところがあるんだけど教えてくれない",
@@ -5962,7 +5962,7 @@
       "Himotoki: ['この', '書類', '書き方', 'が', '分からない', 'ところ', 'が', 'ある', 'ん', 'だけど', '教えてくれない']"
     ],
     "time_ichiran": 4.76837158203125e-06,
-    "time_himotoki": 1.0821702480316162
+    "time_himotoki": 1.0554029941558838
   },
   {
     "sentence": "家を出る時に鍵閉めたっけ不安になってきたから確認しに戻ろうかな",
@@ -6487,8 +6487,8 @@
       "Ichiran: ['家を出る', '時', 'に', '鍵', '閉めた', 'っけ', '不安', 'に', 'なってきた', 'から', '確認し', 'に', '戻ろう', 'かな']",
       "Himotoki: ['家', 'を', '出る', '時', 'に', '鍵', '閉めた', 'っけ', '不安', 'に', 'なってきた', 'から', '確認し', 'に', '戻ろう', 'かな']"
     ],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 1.74412202835083
+    "time_ichiran": 9.059906005859375e-06,
+    "time_himotoki": 1.7489876747131348
   },
   {
     "sentence": "ポイントカードをお持ちでない場合はこちらのアプリがお得ですよ",
@@ -7032,8 +7032,8 @@
       "Ichiran: ['ポイント', 'カード', 'を', 'お', '持ち', 'で', 'ない', '場合', 'は', 'こちら', 'の', 'アプリ', 'が', 'お得', 'です', 'よ']",
       "Himotoki: ['ポイント', 'カード', 'を', 'お', '持ち', 'でない', '場合', 'は', 'こちら', 'の', 'アプリ', 'が', 'お得', 'です', 'よ']"
     ],
-    "time_ichiran": 8.106231689453125e-06,
-    "time_himotoki": 1.2759618759155273
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 1.3239202499389648
   },
   {
     "sentence": "お支払いは現金のみとなっておりますがよろしいでしょうか",
@@ -7390,8 +7390,8 @@
       "Ichiran: ['お', '支払い', 'は', '現金', 'のみ', 'となって', 'おります', 'が', 'よろしいでしょう', 'か']",
       "Himotoki: ['お', '支払い', 'は', '現金', 'のみ', 'と', 'なって', 'おります', 'が', 'よろしいでしょう', 'か']"
     ],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 0.9487929344177246
+    "time_ichiran": 5.0067901611328125e-06,
+    "time_himotoki": 0.9665160179138184
   },
   {
     "sentence": "ただいまセール期間中でして2点以上お買い上げでさらに10%オフになります",
@@ -7833,8 +7833,8 @@
       "Ichiran: ['ただいま', 'セール', '期間中', 'で', 'して', '2点', '以上', 'お', '買い上げ', 'で', 'さらに']",
       "Himotoki: ['ただいま', 'セール', '期間中', 'で', 'して', '2点', '以上', 'お', '買い上げ', 'で', 'さらに', '10%', 'オフ', 'に', 'なります']"
     ],
-    "time_ichiran": 2.09808349609375e-05,
-    "time_himotoki": 1.226097822189331
+    "time_ichiran": 1.5020370483398438e-05,
+    "time_himotoki": 1.2213282585144043
   },
   {
     "sentence": "早速のご返信誠にありがとうございます。内容を拝見いたしました",
@@ -8082,8 +8082,8 @@
       "Ichiran: ['早速', 'の', 'ご', '返信', '誠にありがとうございます']",
       "Himotoki: ['早速', 'の', 'ご', '返信', '誠にありがとうございます', '。', '内容', 'を', '拝見いたしました']"
     ],
-    "time_ichiran": 7.867813110351562e-06,
-    "time_himotoki": 1.0423381328582764
+    "time_ichiran": 8.821487426757812e-06,
+    "time_himotoki": 1.1030611991882324
   },
   {
     "sentence": "リスクヘッジの観点から代替案も用意しておくべきではないでしょうか",
@@ -8442,8 +8442,8 @@
       "Ichiran: ['リスクヘッジ', 'の', '観点', 'から', '代替', '案', 'も', '用意しておく', 'べきではないでしょう', 'か']",
       "Himotoki: ['リスクヘッジ', 'の', '観点', 'から', '代替案', 'も', '用意しておく', 'べき', 'ではないでしょう', 'か']"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 1.2733299732208252
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 1.3403832912445068
   },
   {
     "sentence": "貴重なご指摘をいただきありがとうございます。社内で共有させていただきます",
@@ -8761,8 +8761,8 @@
       "Ichiran: ['貴重', 'な', 'ご', '指摘', 'を', 'いただき', 'ありがとうございます']",
       "Himotoki: ['貴重', 'な', 'ご', '指摘', 'を', 'いただき', 'ありがとうございます', '。', '社内', 'で', '共有させていただきます']"
     ],
-    "time_ichiran": 1.4066696166992188e-05,
-    "time_himotoki": 1.2654600143432617
+    "time_ichiran": 1.621246337890625e-05,
+    "time_himotoki": 1.2832458019256592
   },
   {
     "sentence": "失礼ですがお名前をもう一度お伺いしてもよろしいでしょうか",
@@ -9062,8 +9062,284 @@
       "Ichiran: ['失礼', 'ですが', 'お名前', 'を', 'もう一度', 'お伺い', 'しても', 'よろしいでしょう', 'か']",
       "Himotoki: ['失礼ですが', 'お名前', 'を', 'もう一度', 'お伺い', 'しても', 'よろしいでしょう', 'か']"
     ],
-    "time_ichiran": 8.821487426757812e-06,
-    "time_himotoki": 0.9074029922485352
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 0.8895251750946045
+  },
+  {
+    "sentence": "カラオケ行こうぜオールで歌いまくってストレス発散しよう",
+    "status": "mismatch",
+    "ichiran_texts": [
+      "カラオケ",
+      "行",
+      "こうぜ",
+      "オール",
+      "で",
+      "歌いまくって",
+      "ストレス",
+      "発散しよう"
+    ],
+    "himotoki_texts": [
+      "カラオケ",
+      "行こう",
+      "ぜ",
+      "オール",
+      "で",
+      "歌いまくって",
+      "ストレス",
+      "発散しよう"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "カラオケ",
+        "kana": "カラオケ",
+        "seq": 1038660,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "行",
+        "kana": "ぎょう",
+        "seq": 1281690,
+        "score": 18,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[ctr,n]",
+          "[n]",
+          "[n]"
+        ]
+      },
+      {
+        "text": "こうぜ",
+        "kana": "こうぜ",
+        "seq": 2838238,
+        "score": 9,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "オール",
+        "kana": "オール",
+        "seq": 2856153,
+        "score": 80,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[vi,vs,n]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "だ",
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "歌いまくって",
+        "kana": "うたいまくって",
+        "seq": 10617515,
+        "score": 780,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "歌いまくる",
+        "pos": []
+      },
+      {
+        "text": "ストレス",
+        "kana": "ストレス",
+        "seq": 1071490,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "発散しよう",
+        "kana": "はっさんしよう",
+        "seq": 1477480,
+        "score": 704,
+        "is_compound": true,
+        "components": [
+          "発散",
+          "しよう"
+        ],
+        "conj_type": "Volitional",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "為る",
+        "pos": []
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "カラオケ",
+        "kana": "カラオケ",
+        "seq": 1038660,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "行こう",
+        "kana": "いこう",
+        "seq": 10291286,
+        "score": 336,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Volitional",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "行く",
+        "pos": []
+      },
+      {
+        "text": "ぜ",
+        "kana": "ぜ",
+        "seq": null,
+        "score": 0,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": []
+      },
+      {
+        "text": "オール",
+        "kana": "オール",
+        "seq": 2856153,
+        "score": 80,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n,vs,vi]"
+        ]
+      },
+      {
+        "text": "で",
+        "kana": "で",
+        "seq": 2028980,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "歌いまくって",
+        "kana": "うたいまくって",
+        "seq": 10392939,
+        "score": 780,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Conjunctive (~te)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "歌いまくる",
+        "pos": []
+      },
+      {
+        "text": "ストレス",
+        "kana": "ストレス",
+        "seq": 1071490,
+        "score": 840,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]"
+        ]
+      },
+      {
+        "text": "発散しよう",
+        "kana": "はっさんしよう",
+        "seq": 1477480,
+        "score": 704,
+        "is_compound": true,
+        "components": [
+          "発散",
+          "しよう"
+        ],
+        "conj_type": "Volitional",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "為る",
+        "pos": []
+      }
+    ],
+    "differences": [
+      "Ichiran: ['カラオケ', '行', 'こうぜ', 'オール', 'で', '歌いまくって', 'ストレス', '発散しよう']",
+      "Himotoki: ['カラオケ', '行こう', 'ぜ', 'オール', 'で', '歌いまくって', 'ストレス', '発散しよう']"
+    ],
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.698444128036499
   },
   {
     "sentence": "飯食い行こうぜ腹減って死にそうなんだわ",
@@ -9084,8 +9360,8 @@
     "himotoki_texts": [
       "飯",
       "食い",
-      "行",
-      "こうぜ",
+      "行こう",
+      "ぜ",
       "腹",
       "減って",
       "死にそう",
@@ -9300,36 +9576,30 @@
         "pos": []
       },
       {
-        "text": "行",
-        "kana": "ぎょう",
-        "seq": 1281690,
-        "score": 18,
+        "text": "行こう",
+        "kana": "いこう",
+        "seq": 10291286,
+        "score": 336,
         "is_compound": false,
         "components": [],
-        "conj_type": null,
+        "conj_type": "Volitional",
         "conj_neg": false,
         "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[n,ctr]",
-          "[n]",
-          "[n]"
-        ]
+        "source_text": "行く",
+        "pos": []
       },
       {
-        "text": "こうぜ",
-        "kana": "こうぜ",
-        "seq": 2838238,
-        "score": 9,
+        "text": "ぜ",
+        "kana": "ぜ",
+        "seq": null,
+        "score": 0,
         "is_compound": false,
         "components": [],
         "conj_type": null,
         "conj_neg": false,
         "conj_fml": false,
         "source_text": null,
-        "pos": [
-          "[n]"
-        ]
+        "pos": []
       },
       {
         "text": "腹",
@@ -9413,10 +9683,10 @@
     ],
     "differences": [
       "Ichiran: ['飯', '食い', '行', 'こうぜ', '腹', '減って', '死にそう', 'な', 'ん', 'だ', 'わ']",
-      "Himotoki: ['飯', '食い', '行', 'こうぜ', '腹', '減って', '死にそう', 'なんだ', 'わ']"
+      "Himotoki: ['飯', '食い', '行こう', 'ぜ', '腹', '減って', '死にそう', 'なんだ', 'わ']"
     ],
-    "time_ichiran": 1.5020370483398438e-05,
-    "time_himotoki": 0.8195600509643555
+    "time_ichiran": 1.3113021850585938e-05,
+    "time_himotoki": 0.6563870906829834
   },
   {
     "sentence": "めんどくせーな明日やればいいだろ今日はもう寝る",
@@ -9803,8 +10073,8 @@
       "Ichiran: ['めんどく', 'せー', 'な', '明日', 'やれば', 'いい', 'だろ', '今日', 'は', 'もう', '寝る']",
       "Himotoki: ['めんど', 'くせー', 'な', '明日', 'やれば', 'いい', 'だろ', '今日', 'は', 'もう', '寝る']"
     ],
-    "time_ichiran": 7.152557373046875e-06,
-    "time_himotoki": 1.0323047637939453
+    "time_ichiran": 7.867813110351562e-06,
+    "time_himotoki": 1.1847097873687744
   },
   {
     "sentence": "金ねーよ給料日まであと一週間もあるのにどうすんだよ",
@@ -10280,204 +10550,8 @@
       "Ichiran: ['金', 'ねー', 'よ', '給料日', 'まで', 'あと', '一週間', 'も', 'ある', 'のに', 'どう', 'すんだ', 'よ']",
       "Himotoki: ['金', 'ねー', 'よ', '給料日', 'まで', 'あと', '一週間', 'も', 'ある', 'のに', 'どう', 'すん', 'だ', 'よ']"
     ],
-    "time_ichiran": 5.245208740234375e-06,
-    "time_himotoki": 1.6043357849121094
-  },
-  {
-    "sentence": "そろそろ行らなきゃ遅刻しちゃうよ（行かなければ）",
-    "status": "mismatch",
-    "ichiran_texts": [
-      "そろそろ",
-      "行らなきゃ",
-      "遅刻しちゃう",
-      "よ"
-    ],
-    "himotoki_texts": [
-      "そろそろ",
-      "行らなきゃ",
-      "遅刻しちゃう",
-      "よ",
-      "（",
-      "行かなければ",
-      "）"
-    ],
-    "ichiran_segments": [
-      {
-        "text": "そろそろ",
-        "kana": "そろそろ",
-        "seq": 1345605,
-        "score": 336,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adv,adv-to]",
-          "[adv,adv-to]",
-          "[adv,adv-to]"
-        ]
-      },
-      {
-        "text": "行らなきゃ",
-        "kana": "やらなきゃ",
-        "seq": 10399714,
-        "score": 200,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Provisional (~eba)",
-        "conj_neg": true,
-        "conj_fml": false,
-        "source_text": "行る",
-        "pos": []
-      },
-      {
-        "text": "遅刻しちゃう",
-        "kana": "ちこくしてちゃう",
-        "seq": 1422050,
-        "score": 944,
-        "is_compound": true,
-        "components": [
-          "遅刻",
-          "して",
-          "ちゃう"
-        ],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": []
-      },
-      {
-        "text": "よ",
-        "kana": "よ",
-        "seq": 2029090,
-        "score": 16,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Adjective Stem",
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": "いい",
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      }
-    ],
-    "himotoki_segments": [
-      {
-        "text": "そろそろ",
-        "kana": "そろそろ",
-        "seq": 1345605,
-        "score": 336,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[adv,adv-to]",
-          "[adv,adv-to]",
-          "[adv,adv-to]"
-        ]
-      },
-      {
-        "text": "行らなきゃ",
-        "kana": "やらなきゃ",
-        "seq": null,
-        "score": 480,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": []
-      },
-      {
-        "text": "遅刻しちゃう",
-        "kana": "ちこくしてちゃう",
-        "seq": 1422050,
-        "score": 944,
-        "is_compound": true,
-        "components": [
-          "遅刻",
-          "して",
-          "ちゃう"
-        ],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": []
-      },
-      {
-        "text": "よ",
-        "kana": "よ",
-        "seq": 2029090,
-        "score": 11,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": [
-          "[prt]",
-          "[prt]",
-          "[prt]"
-        ]
-      },
-      {
-        "text": "（",
-        "kana": "（",
-        "seq": null,
-        "score": 0,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": []
-      },
-      {
-        "text": "行かなければ",
-        "kana": "いかなければ",
-        "seq": 10291268,
-        "score": 1656,
-        "is_compound": false,
-        "components": [],
-        "conj_type": "Provisional (~eba)",
-        "conj_neg": true,
-        "conj_fml": false,
-        "source_text": "行く",
-        "pos": []
-      },
-      {
-        "text": "）",
-        "kana": "）",
-        "seq": null,
-        "score": 0,
-        "is_compound": false,
-        "components": [],
-        "conj_type": null,
-        "conj_neg": false,
-        "conj_fml": false,
-        "source_text": null,
-        "pos": []
-      }
-    ],
-    "differences": [
-      "Ichiran: ['そろそろ', '行らなきゃ', '遅刻しちゃう', 'よ']",
-      "Himotoki: ['そろそろ', '行らなきゃ', '遅刻しちゃう', 'よ', '（', '行かなければ', '）']"
-    ],
-    "time_ichiran": 2.86102294921875e-06,
-    "time_himotoki": 0.7765660285949707
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 1.7567708492279053
   },
   {
     "sentence": "これ食べちゃっていい（食べてしまって）",
@@ -10611,8 +10685,8 @@
       "Ichiran: ['これ', '食べちゃっていい']",
       "Himotoki: ['これ', '食べちゃっていい', '（', '食べてしまって', '）']"
     ],
-    "time_ichiran": 9.059906005859375e-06,
-    "time_himotoki": 0.34621500968933105
+    "time_ichiran": 1.5735626220703125e-05,
+    "time_himotoki": 0.3376801013946533
   },
   {
     "sentence": "宿題やっといた方がいいよ（やっておいた）",
@@ -10812,8 +10886,8 @@
       "Ichiran: ['宿題', 'やっといた', '方がいい', 'よ']",
       "Himotoki: ['宿題', 'やっといた', '方がいい', 'よ', '（', 'やっておいた', '）']"
     ],
-    "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.4945709705352783
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.43950486183166504
   },
   {
     "sentence": "明日までに終わらせなきゃなんないんだ（終わらせなければならない）",
@@ -11159,8 +11233,8 @@
       "Ichiran: ['明日', 'まで', 'に', '終わらせなきゃ', 'なん', 'ない', 'ん', 'だ']",
       "Himotoki: ['明日', 'まで', 'に', '終わらせなきゃ', 'なん', 'ない', 'ん', 'だ', '（', '終わらせなければ', 'ならない', '）']"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.097426176071167
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 1.0893030166625977
   },
   {
     "sentence": "そんなこと言ったって無理なもんは無理だよ（言ってもものは）",
@@ -11605,8 +11679,8 @@
       "Ichiran: ['そんな', 'こと', '言ったって', '無理', 'な', 'もん', 'は', '無理', 'だ', 'よ']",
       "Himotoki: ['そんな', 'こと', '言ったって', '無理', 'な', 'もん', 'は', '無理', 'だ', 'よ', '（', '言っても', 'もの', 'は', '）']"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 1.8937451839447021
+    "time_ichiran": 4.76837158203125e-06,
+    "time_himotoki": 1.809481143951416
   },
   {
     "sentence": "早く準備しなよみんな待ってるんだから（しなさいよ）",
@@ -11923,8 +11997,8 @@
       "Ichiran: ['早く', '準備し', 'なよ', 'みんな', '待ってる', 'ん', 'だから']",
       "Himotoki: ['早く', '準備し', 'なよ', 'みんな', '待ってる', 'ん', 'だから', '（', 'しなさい', 'よ', '）']"
     ],
-    "time_ichiran": 6.198883056640625e-06,
-    "time_himotoki": 0.9983119964599609
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 0.9536209106445312
   },
   {
     "sentence": "これ買っとくね後で半分払ってくれればいいから（買っておく）",
@@ -12264,8 +12338,335 @@
       "Ichiran: ['これ', '買っとく', 'ね', '後', 'で', '半分', '払ってくれれば', 'いいから']",
       "Himotoki: ['これ', '買っとく', 'ね', '後', 'で', '半分', '払ってくれれば', 'いいから', '（', '買っておく', '）']"
     ],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 1.1406149864196777
+    "time_ichiran": 3.814697265625e-06,
+    "time_himotoki": 1.1206200122833252
+  },
+  {
+    "sentence": "飲みにいこうって言ってたやついつにする",
+    "status": "mismatch",
+    "ichiran_texts": [
+      "飲み",
+      "にい",
+      "こう",
+      "って",
+      "言ってた",
+      "やつ",
+      "いつ",
+      "に",
+      "する"
+    ],
+    "himotoki_texts": [
+      "飲み",
+      "に",
+      "いこう",
+      "って",
+      "言ってた",
+      "やつ",
+      "いつ",
+      "に",
+      "する"
+    ],
+    "ichiran_segments": [
+      {
+        "text": "飲み",
+        "kana": "のみ",
+        "seq": 10660490,
+        "score": 112,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Continuative (~i)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "飲む",
+        "pos": []
+      },
+      {
+        "text": "にい",
+        "kana": "にい",
+        "seq": 2260200,
+        "score": 16,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pref]"
+        ]
+      },
+      {
+        "text": "こう",
+        "kana": "こう",
+        "seq": 1004310,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[adv]",
+          "[adv]",
+          "[int]"
+        ]
+      },
+      {
+        "text": "って",
+        "kana": "って",
+        "seq": 2086960,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "言ってた",
+        "kana": "いっていた",
+        "seq": 10112667,
+        "score": 210,
+        "is_compound": true,
+        "components": [
+          "言って",
+          "いた"
+        ],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "居る",
+        "pos": []
+      },
+      {
+        "text": "やつ",
+        "kana": "やつ",
+        "seq": 1445640,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[pn]"
+        ]
+      },
+      {
+        "text": "いつ",
+        "kana": "いつ",
+        "seq": 1188760,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pn]",
+          "[pn]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "する",
+        "kana": "する",
+        "seq": 1157170,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[vs-i]",
+          "[vs-i]",
+          "[vs-i]"
+        ]
+      }
+    ],
+    "himotoki_segments": [
+      {
+        "text": "飲み",
+        "kana": "のみ",
+        "seq": 10294120,
+        "score": 112,
+        "is_compound": false,
+        "components": [],
+        "conj_type": "Continuative (~i)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "飲む",
+        "pos": []
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "いこう",
+        "kana": "いこう",
+        "seq": 1158240,
+        "score": 36,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n,vs,vt,vi]",
+          "[n,vs,vt,vi]"
+        ]
+      },
+      {
+        "text": "って",
+        "kana": "って",
+        "seq": 2086960,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "言ってた",
+        "kana": "いっていた",
+        "seq": 10578890,
+        "score": 210,
+        "is_compound": true,
+        "components": [
+          "言って",
+          "いた"
+        ],
+        "conj_type": "Past (~ta)",
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": "居る",
+        "pos": []
+      },
+      {
+        "text": "やつ",
+        "kana": "やつ",
+        "seq": 1445640,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[n]",
+          "[n]",
+          "[pn]"
+        ]
+      },
+      {
+        "text": "いつ",
+        "kana": "いつ",
+        "seq": 1188760,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[pn]",
+          "[pn]"
+        ]
+      },
+      {
+        "text": "に",
+        "kana": "に",
+        "seq": 2028990,
+        "score": 11,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[prt]",
+          "[prt]",
+          "[prt]"
+        ]
+      },
+      {
+        "text": "する",
+        "kana": "する",
+        "seq": 1157170,
+        "score": 40,
+        "is_compound": false,
+        "components": [],
+        "conj_type": null,
+        "conj_neg": false,
+        "conj_fml": false,
+        "source_text": null,
+        "pos": [
+          "[vs-i]",
+          "[vs-i]",
+          "[vs-i]"
+        ]
+      }
+    ],
+    "differences": [
+      "Ichiran: ['飲み', 'にい', 'こう', 'って', '言ってた', 'やつ', 'いつ', 'に', 'する']",
+      "Himotoki: ['飲み', 'に', 'いこう', 'って', '言ってた', 'やつ', 'いつ', 'に', 'する']"
+    ],
+    "time_ichiran": 5.245208740234375e-06,
+    "time_himotoki": 1.401231050491333
   },
   {
     "sentence": "雨降りそうだから傘持ってった方がいいかもよ",
@@ -12283,8 +12684,8 @@
     "himotoki_texts": [
       "雨",
       "降りそう",
-      "だ",
-      "から傘",
+      "だから",
+      "傘",
       "持ってった",
       "方がいい",
       "かも",
@@ -12437,14 +12838,11 @@
       },
       {
         "text": "降りそう",
-        "kana": "ふりそう",
-        "seq": 1631470,
+        "kana": "おりそう",
+        "seq": null,
         "score": 959,
-        "is_compound": true,
-        "components": [
-          "降り",
-          "そう"
-        ],
+        "is_compound": false,
+        "components": [],
         "conj_type": null,
         "conj_neg": false,
         "conj_fml": false,
@@ -12452,10 +12850,10 @@
         "pos": []
       },
       {
-        "text": "だ",
-        "kana": "だ",
-        "seq": 2089020,
-        "score": 16,
+        "text": "だから",
+        "kana": "だから",
+        "seq": 1007310,
+        "score": 144,
         "is_compound": false,
         "components": [],
         "conj_type": null,
@@ -12463,14 +12861,15 @@
         "conj_fml": false,
         "source_text": null,
         "pos": [
-          "[aux-v,cop]"
+          "[conj]",
+          "[exp]"
         ]
       },
       {
-        "text": "から傘",
-        "kana": "からかさ",
-        "seq": 1774770,
-        "score": 132,
+        "text": "傘",
+        "kana": "かさ",
+        "seq": 1301940,
+        "score": 8,
         "is_compound": false,
         "components": [],
         "conj_type": null,
@@ -12478,6 +12877,7 @@
         "conj_fml": false,
         "source_text": null,
         "pos": [
+          "[n]",
           "[n]"
         ]
       },
@@ -12548,10 +12948,10 @@
     ],
     "differences": [
       "Ichiran: ['雨降り', 'そう', 'だ', 'から傘', '持ってった', '方がいい', 'かも', 'よ']",
-      "Himotoki: ['雨', '降りそう', 'だ', 'から傘', '持ってった', '方がいい', 'かも', 'よ']"
+      "Himotoki: ['雨', '降りそう', 'だから', '傘', '持ってった', '方がいい', 'かも', 'よ']"
     ],
     "time_ichiran": 4.0531158447265625e-06,
-    "time_himotoki": 0.9672451019287109
+    "time_himotoki": 1.028113842010498
   },
   {
     "sentence": "そんなに焦んなくても大丈夫だよまだ時間あるし（焦らなくても）",
@@ -12946,8 +13346,8 @@
       "Ichiran: ['そんなに', '焦ん', 'なくても', '大丈夫', 'だ', 'よ', 'まだ', '時間', 'ある', 'し']",
       "Himotoki: ['そんなに', '焦ん', 'なくても', '大丈夫', 'だ', 'よ', 'まだ', '時間', 'ある', 'し', '（', '焦らなくても', '）']"
     ],
-    "time_ichiran": 1.0967254638671875e-05,
-    "time_himotoki": 1.2828779220581055
+    "time_ichiran": 1.2636184692382812e-05,
+    "time_himotoki": 1.2015690803527832
   },
   {
     "sentence": "これ読んどいてねテストに出るかもしれないから（読んでおいて）",
@@ -13291,8 +13691,8 @@
       "Ichiran: ['これ', '読んどいて', 'ね', 'テスト', 'に', '出る', 'かもしれない', 'から']",
       "Himotoki: ['これ', '読んどいて', 'ね', 'テスト', 'に', '出る', 'かもしれない', 'から', '（', '読んでおいて', '）']"
     ],
-    "time_ichiran": 3.814697265625e-06,
-    "time_himotoki": 0.7784030437469482
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 0.7414538860321045
   },
   {
     "sentence": "食べ放題なんだから元取れるまで食べまくろうぜ",
@@ -13623,8 +14023,8 @@
       "Ichiran: ['食べ放題', 'な', 'ん', 'だから', '元', '取れる', 'まで', '食べ', 'まくろう', 'ぜ']",
       "Himotoki: ['食べ放題', 'なん', 'だから', '元', '取れる', 'まで', '食べ', 'まくろう', 'ぜ']"
     ],
-    "time_ichiran": 1.3113021850585938e-05,
-    "time_himotoki": 0.8661010265350342
+    "time_ichiran": 1.0013580322265625e-05,
+    "time_himotoki": 0.8654730319976807
   },
   {
     "sentence": "寝よっかな明日早いし（寝ようかな）",
@@ -13905,8 +14305,8 @@
       "Ichiran: ['寝', 'よっか', 'な', '明日', '早い', 'し']",
       "Himotoki: ['寝', 'よっか', 'な', '明日', '早い', 'し', '（', '寝よう', 'かな', '）']"
     ],
-    "time_ichiran": 1.0251998901367188e-05,
-    "time_himotoki": 0.9398469924926758
+    "time_ichiran": 9.298324584960938e-06,
+    "time_himotoki": 0.9064457416534424
   },
   {
     "sentence": "どんなに困難な状況であっても希望を捨てずに努力し続けることこそが重要だ",
@@ -14446,8 +14846,8 @@
       "Ichiran: ['どんなに', '困難', 'な', '状況', 'で', 'あっても', '希望', 'を', '捨てず', 'に', '努力し', '続ける', 'ことこそ', 'が', '重要', 'だ']",
       "Himotoki: ['どんなに', '困難', 'な', '状況', 'で', 'あっても', '希望', 'を', '捨てず', 'に', '努力し続ける', 'ことこそ', 'が', '重要', 'だ']"
     ],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 1.6469790935516357
+    "time_ichiran": 6.9141387939453125e-06,
+    "time_himotoki": 1.7061879634857178
   },
   {
     "sentence": "万が一失敗した時のためにプランBを用意しておくべきだ",
@@ -14754,7 +15154,7 @@
       "Ichiran: ['万が一', '失敗した', '時', 'の', 'ために', 'プラン']",
       "Himotoki: ['万が一', '失敗した', '時', 'の', 'ために', 'プラン', 'B', 'を', '用意しておく', 'べき', 'だ']"
     ],
-    "time_ichiran": 5.0067901611328125e-06,
-    "time_himotoki": 1.3245749473571777
+    "time_ichiran": 4.0531158447265625e-06,
+    "time_himotoki": 1.3066067695617676
   }
 ]
