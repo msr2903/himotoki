@@ -597,6 +597,7 @@ BLOCKED_SUFFIX_WORDS: Set[str] = {
     'ため',   # "for/in order to" - not た+め
     'だめ',   # "no good" - not だ+め
     'さげ',   # "lowering" - not さ+げ
+    'もまず', # も+まず (also+first) - not 揉む+ず (not-rub)
 }
 
 # Abbreviation suffix types - these create compounds that should be scored 

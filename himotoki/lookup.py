@@ -108,6 +108,10 @@ SKIP_WORDS: Set[int] = {
     1465580,   # 入る(いる) - prefer はいる reading (seq 1465590)
     1751450,   # 精霊(しょうりょう) - prefer せいれい reading (seq 1380230)
     2657130,   # 止まる(とどまる) - prefer とまる reading (seq 1310620)
+    2838238,   # こうぜ(校是) - obscure word, clashes with こう+ぜ (volitional+particle)
+    2260200,   # にい(新) - uncommon kana reading, clashes with に+い verb patterns
+    2254970,   # にい(兄) - uncommon kana reading, clashes with に+い verb patterns
+    1774770,   # から傘(からかさ) - uncommon, clashes with から(because)+傘(umbrella)
 }
 
 # Final particles - words that only have meaning when they're final
