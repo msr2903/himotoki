@@ -663,6 +663,78 @@ def conj_info_json(
 # WordInfo Creation Functions
 # ============================================================================
 
+def word_info_from_word_match(
+    session: Session,
+    word_match,
+    cache: Optional[ReadingsCache] = None,
+) -> WordInfo:
+    """
+    Create a simple WordInfo from a WordMatch object.
+    Used for creating component WordInfo objects in compound words.
+    
+    Args:
+        session: Database session
+        word_match: WordMatch object from suffix/split compounds
+        cache: Optional preloaded readings cache for performance
+        
+    Returns:
+        WordInfo object with basic info (text, kana, seq, conjugations)
+    """
+    reading = word_match.reading
+    
+    # Determine word type and kana
+    if word_match.word_type == 'kanji':
+        word_type = WordType.KANJI
+        # Get kana from best_kana or matching function
+        kana = getattr(reading, 'best_kana', None)
+        if not kana:
+            kana = get_matching_kana_for_kanji(session, word_match.seq, reading.text)
+        if not kana:
+            # Last resort - use empty string
+            kana = ''
+    else:
+        word_type = WordType.KANA
+        kana = reading.text
+    
+    # Get conjugation info if available
+    conj_type_name = None
+    source_text = None
+    
+    # If there are conjugations, try to get the first one's info
+    if word_match.conjugations and word_match.conjugations != 'root':
+        conj_ids = word_match.conjugations if isinstance(word_match.conjugations, list) else [word_match.conjugations]
+        if conj_ids:
+            conj_id = conj_ids[0]
+            # Look up conjugation info - Conjugation table, then get props
+            from himotoki.db.models import Conjugation
+            conj = session.query(Conjugation).filter(Conjugation.id == conj_id).first()
+            if conj:
+                # Get conj_type from props relationship (not directly on Conjugation)
+                if conj.props:
+                    prop = conj.props[0]
+                    conj_type_name = CONJ_TYPE_NAMES.get(prop.conj_type)
+                # Get source text from from_seq
+                if conj.from_seq:
+                    if cache:
+                        source_text = cache.get_source_text(conj.from_seq)
+                    else:
+                        kanji_text = session.execute(
+                            select(KanjiText.text)
+                            .where(and_(KanjiText.seq == conj.from_seq, KanjiText.ord == 0))
+                        ).scalars().first()
+                        source_text = kanji_text
+    
+    return WordInfo(
+        type=word_type,
+        text=word_match.text,
+        kana=kana,
+        seq=word_match.seq,
+        conjugations=word_match.conjugations if word_match.conjugations != 'root' else None,
+        conj_type=conj_type_name,
+        source_text=source_text,
+    )
+
+
 def word_info_from_segment(
     session: Session,
     segment: Segment,
@@ -770,6 +842,18 @@ def word_info_from_segment(
         # This returns the text of each word in the compound
         compound_texts = word.components if word.components else []
         
+        # Create component WordInfo objects from the underlying WordMatch objects
+        # This provides detailed info (including POS) for each part of the compound
+        component_word_infos = []
+        if hasattr(word, 'words') and word.words:
+            for wm in word.words:
+                try:
+                    comp_wi = word_info_from_word_match(session, wm, cache)
+                    component_word_infos.append(comp_wi)
+                except Exception:
+                    # If we fail to create a component WordInfo, skip it
+                    pass
+        
         return WordInfo(
             type=word_type,
             text=segment.get_text(),
@@ -778,6 +862,7 @@ def word_info_from_segment(
             seq=word.seq,  # This is an int for compound words (primary's seq)
             conjugations=conjugations,
             score=int(segment.score),
+            components=component_word_infos,  # NEW: Component WordInfo objects
             start=segment.start,
             end=segment.end,
             is_compound=True,

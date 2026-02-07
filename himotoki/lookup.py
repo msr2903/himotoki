@@ -1663,10 +1663,15 @@ def calc_score(
     
     use_length_bonus = 0
     
-    # Check for skip words in conjugation chain and final particles
-    # Note: We already checked seq in SKIP_WORDS early (line ~1230), but here we check
-    # the entire seq_set which includes conjugation sources (conj_of)
-    if seq_set & SKIP_WORDS:
+    # Check for skip words in conjugation chain
+    # Only check the full seq_set (including conjugation sources) for DIRECT word matches,
+    # not when scoring a base word from a compound (use_length is set for compounds).
+    # This allows abbreviation compounds like とどまらず to score properly even though
+    # their source verb (とどまる) is in SKIP_WORDS.
+    if use_length is None and seq_set & SKIP_WORDS:
+        return 0, {}
+    elif seq in SKIP_WORDS:
+        # Always skip if the direct seq is in skip words
         return 0, {}
     if not root_p and skip_by_conj_data(conj_data):
         return 0, {}

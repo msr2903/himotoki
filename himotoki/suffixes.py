@@ -599,6 +599,29 @@ ABBREVIATION_SUFFIXES: Set[str] = {
     'teba', 'reba', 'keba', 'geba', 'neba', 'beba', 'meba', 'seba', 'ii',
 }
 
+# Stem lengths to remove from kana for abbreviation suffixes
+# These correspond to the stem parameter in ichiran's def-abbr-suffix
+# e.g., 2 means remove 2 kana chars from end before adding suffix
+# nai-x (ず/ざる/ぬ): stem=2 removes ない → あきらめない → あきらめ + ず = あきらめず
+# nakereba (なきゃ): stem=4 removes なければ → しなければ → し + なきゃ = しなきゃ
+ABBREVIATION_STEMS: Dict[str, int] = {
+    'nai': 2,        # ねー etc - ない → ね (remove 2: ない)
+    'nai-x': 2,      # ず, ざる, ぬ - ない → stem (remove 2: ない)
+    'nai-n': 2,      # ん contraction - ない → な (remove 2: ない)
+    'nakereba': 4,   # なきゃ/なくちゃ - なければ → stem (remove 4: なければ)
+    'shimashou': 5,  # しましょ - しましょう → stem (remove 5: しましょう)
+    'dewanai': 4,    # じゃない - ではない → stem (remove 4: ではない)
+    'teba': 2,       # ちゃ - てば → stem (remove 2)
+    'reba': 2,       # りゃ - れば → stem (remove 2)
+    'keba': 2,       # きゃ - けば → stem (remove 2)
+    'geba': 2,       # ぎゃ - げば → stem (remove 2)
+    'neba': 2,       # にゃ - ねば → stem (remove 2)
+    'beba': 2,       # びゃ - べば → stem (remove 2)
+    'meba': 2,       # みゃ - めば → stem (remove 2)
+    'seba': 2,       # しゃ - せば → stem (remove 2)
+    'ii': 2,         # ええ - いい → stem (remove 2)
+}
+
 
 def match_unique(suffix_class: str, matches: List[Any]) -> bool:
     """
@@ -744,15 +767,11 @@ def find_word_suffix(
                 primary_kana = get_word_kana(pw)
                 suffix_kana = kf.text if kf else suffix
                 
-                # Special handling for contracted suffixes (chau, to)
-                # These suffixes contract the て/で from the te-form, so we need
-                # to strip it from the primary word's kana to avoid duplication.
-                # Example: 選ばれて + ちゃって → えらばれちゃって (not えらばれてちゃって)
-                if keyword in ('chau', 'to'):
-                    if primary_kana.endswith('て'):
-                        primary_kana = primary_kana[:-1]
-                    elif primary_kana.endswith('で'):
-                        primary_kana = primary_kana[:-1]
+                # For abbreviation suffixes, remove stem characters from primary kana
+                # This mirrors ichiran's def-abbr-suffix destem behavior
+                abbr_stem = ABBREVIATION_STEMS.get(keyword, 0)
+                if abbr_stem > 0 and len(primary_kana) > abbr_stem:
+                    primary_kana = primary_kana[:-abbr_stem]
                 
                 # Include connector in kana (e.g., space for suru, kudasai, te+space)
                 compound_kana = primary_kana + connector + suffix_kana
@@ -1206,7 +1225,6 @@ def _handler_abbr_nx(session: Session, root: str, suffix: str, kf: Optional[Kana
     Special case: せ -> しない (for する).
     """
     if root == 'せ':
-        from himotoki.splits import find_word_conj_of
         return find_word_conj_of(session, 'しない', SEQ_SURU)
     
     from himotoki.lookup import find_word_with_conj_prop

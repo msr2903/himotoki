@@ -781,13 +781,25 @@ def _segments_from_himotoki_json(data: Any) -> List[SegmentInfo]:
             main_source = None
             if components_info:
                 first_comp = components_info[0]
+                # First try direct gloss
                 for gloss in first_comp.get("gloss", []):
                     if "pos" in gloss:
                         pos_list.append(gloss["pos"])
-                # Use first component's reading as source_text (main word)
-                reading = first_comp.get("reading", "")
-                if reading:
-                    main_source = reading.split(" ")[0] if " " in reading else reading
+                # If no direct gloss, try conj[0].gloss (for conjugated forms)
+                if not pos_list and first_comp.get("conj"):
+                    conj = first_comp["conj"][0]
+                    for gloss in conj.get("gloss", []):
+                        if "pos" in gloss:
+                            pos_list.append(gloss["pos"])
+                    # For conjugated forms, get source_text from conj[0].reading (dictionary form)
+                    conj_reading = conj.get("reading", "")
+                    if conj_reading:
+                        main_source = conj_reading.split(" ")[0] if " " in conj_reading else conj_reading
+                # Fallback: Use first component's reading as source_text
+                if not main_source:
+                    reading = first_comp.get("reading", "")
+                    if reading:
+                        main_source = reading.split(" ")[0] if " " in reading else reading
             else:
                 # No detailed components - use first compound text as source
                 if component_texts:
