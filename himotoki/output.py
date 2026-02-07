@@ -26,6 +26,7 @@ from himotoki.lookup import (
     Segment, SegmentList, WordMatch, ConjData,
     get_conj_data, find_word,
     get_conj_type_name, get_conj_neg, get_conj_fml, get_source_text,
+    POS_WITH_CONJ_RULES,
 )
 from himotoki.constants import CONJ_TYPE_NAMES, get_conj_description
 
@@ -404,6 +405,54 @@ def word_info_reading_str(word_info: WordInfo) -> str:
     return reading_str(None, word_info.text)
 
 
+def has_conjugable_pos(session: Session, seq: int) -> bool:
+    """
+    Check if a word has a part-of-speech that can be conjugated.
+    
+    This is used to determine if a dictionary form should have conj_type="Non-past".
+    Only returns True for verbs and i-adjectives which have true conjugation forms.
+    
+    Args:
+        session: Database session
+        seq: Entry sequence number
+        
+    Returns:
+        True if the word has a conjugable POS (verb or i-adjective)
+    """
+    if seq is None:
+        return False
+    
+    # Parts of speech that should show "Non-past" for dictionary forms
+    # This is more restrictive than POS_WITH_CONJ_RULES because we only want
+    # verbs and i-adjectives that have true conjugated forms.
+    # Excludes: 
+    #   - adj-na, adj-no (which use copula for conjugation)
+    #   - vs (verbal nouns that take する - the noun part doesn't conjugate)
+    NONPAST_POS = frozenset([
+        'v1', 'v1-s', 'v1s', 'v5aru', 'v5b', 'v5g', 'v5k', 'v5k-s', 'v5m', 'v5n',
+        'v5r', 'v5r-i', 'v5s', 'v5t', 'v5u', 'v5u-s', 'v5uru', 'vk',
+        'vs-i', 'vs-s', 'vz', 'adj-i', 'adj-ix',
+        'cop', 'cop-da', 'aux-v',  # Copula and auxiliary verbs
+    ])
+    
+    # Query for POS tags
+    pos_results = session.execute(
+        select(SenseProp.text)
+        .join(Sense, SenseProp.sense_id == Sense.id)
+        .where(and_(
+            Sense.seq == seq,
+            SenseProp.tag == 'pos',
+        ))
+    ).scalars().all()
+    
+    # Check if any POS is in the conjugable set
+    for pos in pos_results:
+        if pos in NONPAST_POS:
+            return True
+    
+    return False
+
+
 # ============================================================================
 # Sense/Gloss Functions
 # ============================================================================
@@ -723,6 +772,11 @@ def word_info_from_word_match(
                             .where(and_(KanjiText.seq == conj.from_seq, KanjiText.ord == 0))
                         ).scalars().first()
                         source_text = kanji_text
+    else:
+        # No conjugation data - this is a dictionary form
+        # Set conj_type to "Non-past" for verbs and adjectives
+        if has_conjugable_pos(session, word_match.seq):
+            conj_type_name = "Non-past"
     
     return WordInfo(
         type=word_type,
@@ -956,6 +1010,11 @@ def word_info_from_segment(
                     ).scalars().first()
                     if kana_text:
                         source_text = kana_text
+    else:
+        # No conjugation data - this is a dictionary form
+        # Set conj_type to "Non-past" for verbs and adjectives
+        if has_conjugable_pos(session, word.seq):
+            conj_type_name = "Non-past"
     
     return WordInfo(
         type=word_type,
