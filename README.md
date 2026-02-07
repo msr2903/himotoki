@@ -126,7 +126,7 @@ kakaserareteita
   ← 書く 【かく】
   └─ Causative (かせ): makes do
        └─ Passive (られる): is done (to)
-            └─ Conjunctive (~te) (て): and/then
+            └─ Conjunctive (~te) (て)
                  └─ Past (~ta) (た): did/was
 ```
 
@@ -140,7 +140,7 @@ nondeshimaitakatta
 * nondeshimaitakatta  飲んでしまいたかった 【のんでしまいたかった】
 
   ← 飲む 【のむ】
-  └─ Conjunctive (~te) (んで): and/then
+  └─ Conjunctive (~te) (んで)
        └─ Continuative (~i) (い): and (stem)
             └─ Past (~ta) (かった): did/was
 ```
@@ -161,7 +161,7 @@ $ himotoki "学校で勉強しています"
 * 勉強しています 【べんきょう しています】
 1. [n,vs,vt] study
 2. [n,vs,vi] diligence; working hard
-  └─ Conjunctive (~te) (て): and/then
+  └─ Conjunctive (~te) (て)
        └─ Polite (ます)
 ```
 

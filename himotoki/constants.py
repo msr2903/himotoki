@@ -115,7 +115,7 @@ def get_conj_description(conj_type: int) -> str:
 CONJ_STEP_GLOSSES: Dict[int, str] = {
     CONJ_NON_PAST: "does/is",
     CONJ_PAST: "did/was",
-    CONJ_TE: "and/then",
+    CONJ_TE: "",
     CONJ_PROVISIONAL: "if",
     CONJ_POTENTIAL: "can do",
     CONJ_PASSIVE: "is done (to)",

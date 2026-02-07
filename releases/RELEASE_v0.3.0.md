@@ -19,7 +19,7 @@ $ himotoki -f "書かせられていた"
   ← 書く 【かく】
   └─ Causative (かせ): makes do
        └─ Passive (られる): is done (to)
-            └─ Conjunctive (~te) (て): and/then
+            └─ Conjunctive (~te) (て)
                  └─ Past (~ta) (た): did/was
 ```
 

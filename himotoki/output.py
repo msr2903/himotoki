@@ -1767,7 +1767,8 @@ def format_conjugation_info(
                                 suffix = suffix[idx + 1:]  # strip ま, keep した/せん
                             neg_mark = "not " if step.neg else ""
                             label = f"{neg_mark}{step.conj_type}".strip()
-                            result.append(f"  {indent}└─ {label} ({suffix}): {step.gloss}")
+                            gloss_str = f": {step.gloss}" if step.gloss else ""
+                            result.append(f"  {indent}└─ {label} ({suffix}){gloss_str}")
                             current_depth += 1
                     else:
                         neg_mark = "not " if step.neg else ""
@@ -1784,7 +1785,8 @@ def format_conjugation_info(
                                 type_label = "Potential/Passive"
                                 gloss = "can do / is done (to)"
                         label = f"{neg_mark}{type_label}".strip()
-                        result.append(f"  {indent}└─ {label} ({step.suffix}): {gloss}")
+                        gloss_str = f": {gloss}" if gloss else ""
+                        result.append(f"  {indent}└─ {label} ({step.suffix}){gloss_str}")
                         current_depth += 1
             else:
                 # Fallback: flat format for cases where chain can't be built
