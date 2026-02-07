@@ -1756,11 +1756,15 @@ def format_conjugation_info(
                         if step.conj_type != "Non-past" or step.neg:
                             indent = "     " * current_depth
                             # Extract post-masu suffix
-                            # ました→した, ません→せん, ましょう→しょう
+                            # ました→した, ません→せん
                             suffix = step.suffix
-                            if "ま" in suffix:
+                            if step.conj_type == "Volitional":
+                                # Use abstract volitional morpheme よう
+                                # (neutral, stackable on any verb)
+                                suffix = "よう"
+                            elif "ま" in suffix:
                                 idx = suffix.index("ま")
-                                suffix = suffix[idx + 1:]  # strip ま, keep した/せん/しょう
+                                suffix = suffix[idx + 1:]  # strip ま, keep した/せん
                             neg_mark = "not " if step.neg else ""
                             label = f"{neg_mark}{step.conj_type}".strip()
                             result.append(f"  {indent}└─ {label} ({suffix}): {step.gloss}")

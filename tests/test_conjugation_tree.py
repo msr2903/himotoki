@@ -191,13 +191,12 @@ class TestSimpleConjugation:
         assert any("Volitional" in line for line in tree)
         assert any("Polite" in line for line in tree)
 
-    def test_polite_volitional_suffix_is_shou(self, session_with_suffixes):
-        """Polite volitional suffix should be しょう, not ょう."""
+    def test_polite_volitional_suffix_is_you(self, session_with_suffixes):
+        """Polite volitional suffix should be よう (abstract volitional morpheme)."""
         wi, tree = _get_tree(session_with_suffixes, "話しましょう")
         volitional_lines = [l for l in tree if "Volitional" in l]
         assert volitional_lines
-        assert "しょう" in volitional_lines[0]
-        assert "(ょう)" not in volitional_lines[0]  # must NOT be just ょう
+        assert "(よう)" in volitional_lines[0]
 
     def test_polite_past_suffix_is_shita(self, session_with_suffixes):
         """Polite past suffix should be した, not た."""

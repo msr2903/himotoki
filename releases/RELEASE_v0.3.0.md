@@ -17,17 +17,18 @@ as an indented tree:
 $ himotoki -f "書かせられていた"
 
   ← 書く 【かく】
-  └─ Causative-Passive (かされる): is made to do
-       └─ Conjunctive (~te) (て): and/then
-            └─ 居る 【いる】
+  └─ Causative (かせ): makes do
+       └─ Passive (られる): is done (to)
+            └─ Conjunctive (~te) (て): and/then
                  └─ Past (~ta) (た): did/was
 ```
 
 Each tree line shows:
-- The grammatical label (e.g., Causative-Passive, Past)
-- The suffix text that was applied (e.g., かされる, た)
-- An English gloss (e.g., "is made to do", "did/was")
+- The grammatical label (e.g., Causative, Passive, Past)
+- The suffix text that was applied (e.g., かせ, られる, た)
+- An English gloss (e.g., "makes do", "is done (to)", "did/was")
 - Markers for polite (`polite`) and negative (`not`) forms
+- Dual label `Potential/Passive` for ambiguous ichidan verb forms
 
 ### Implementation
 
@@ -80,8 +81,8 @@ non-empty suffix, avoiding variant kanji that break prefix comparison.
 
 ## Test Suite
 
-Added `tests/test_conjugation_tree.py` with 78 new tests across
-11 test classes:
+Added `tests/test_conjugation_tree.py` with 86 new tests across
+14 test classes:
 
 | Class | Coverage |
 |-------|----------|
@@ -100,7 +101,26 @@ Added `tests/test_conjugation_tree.py` with 78 new tests across
 | `TestConjStep` | Dataclass construction |
 | `TestSpecialForms` | Keigo, contracted forms |
 
-Total test count: **404 passed**.
+Total test count: **411 passed**.
+
+## Display Refinements
+
+After the initial v0.3.0 release, the conjugation tree display was
+refined based on review:
+
+- **Causative-Passive split**: Instead of one `Causative-Passive` step,
+  the tree now shows two separate steps: `Causative (かせ)` then
+  `Passive (られる)`, making the decomposition clearer.
+- **Auxiliary verb roots hidden**: Compound trees no longer show
+  intermediate root lines (居る, 仕舞う, 為る); only the suffix form
+  appears.
+- **Polite split**: Polite forms show `Polite (ます)` as its own tree
+  step, with sub-steps for Past (した), Negative (せん), Volitional (よう).
+- **Potential/Passive dual label**: Ichidan potential forms (れる/られる)
+  show `Potential/Passive` since the form is ambiguous. Godan potential
+  forms (ける, める, etc.) show just `Potential`.
+- **Standard causative suffix**: Displays standard させる/かせる instead
+  of dialectal さす/かす.
 
 ## Other Changes
 

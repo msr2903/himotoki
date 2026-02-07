@@ -2,7 +2,7 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-404%20passed-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-411%20passed-brightgreen.svg)](tests/)
 
 **Himotoki** (紐解き, "unraveling") is a Python remake of
 [ichiran](https://github.com/tshatrov/ichiran), the comprehensive Japanese
@@ -124,9 +124,10 @@ kakaserareteita
 * kakaserareteita  書かせられていた 【かかせられていた】
 
   ← 書く 【かく】
-  └─ Causative-Passive (かされる): is made to do
-       └─ Conjunctive (~te) (て): and/then
-            └─ Past (~ta) (た): did/was
+  └─ Causative (かせ): makes do
+       └─ Passive (られる): is done (to)
+            └─ Conjunctive (~te) (て): and/then
+                 └─ Past (~ta) (た): did/was
 ```
 
 A deeply nested chain parsed into its constituent parts:
@@ -160,7 +161,7 @@ $ himotoki "学校で勉強しています"
 * 勉強しています 【べんきょう しています】
 1. [n,vs,vt] study
 2. [n,vs,vi] diligence; working hard
-  └─ Conjunctive (~te) (して): and/then
+  └─ Conjunctive (~te) (て): and/then
        └─ Polite (ます)
 ```
 
@@ -208,7 +209,7 @@ scripts/
     llm_eval.py            # LLM-based accuracy evaluation (510 sentences)
     check_segments.py      # Quick segmentation change checker
     llm_report.py          # HTML report generator
-tests/                     # 404 tests (pytest + hypothesis)
+tests/                     # 411 tests (pytest + hypothesis)
 data/                      # Dictionary data, evaluation datasets
 ```
 

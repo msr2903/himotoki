@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `_build_conj_chain()`, `_get_compound_display()`,
   `_get_conjugation_display()`, `_collect_via_steps()`,
   `_get_conj_suffix()`, `_extract_suffix()` in output.py.
-- 78 new tests in `tests/test_conjugation_tree.py` covering simple
+- 86 new tests in `tests/test_conjugation_tree.py` covering simple
   conjugations, adjectives, via chains, compound words, deep chains,
   irregular verbs, godan verbs, and structural properties.
 
@@ -30,6 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Synced `VERSION` in cli.py with pyproject.toml (was stuck at 0.2.0).
 
 ### Changed
+- Causative-Passive displayed as two separate tree steps (Causative + Passive)
+  instead of one combined step.
+- Auxiliary verb roots (居る, 仕舞う, 為る) hidden from compound trees;
+  only the suffix form appears.
+- Polite forms split into own tree step with sub-steps for Past/Negative/Volitional.
+- Ichidan potential forms show dual `Potential/Passive` label; godan stays `Potential`.
+- Standard causative suffix (させる/かせる) preferred over dialectal (さす/かす).
 - README rewritten: removed all emoji, added conjugation breakdown demos
   as the first section, restructured for clarity.
 
