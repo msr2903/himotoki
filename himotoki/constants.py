@@ -211,6 +211,9 @@ SEQ_SHIMAU = 1305380       # しまう (to finish/complete)
 SEQ_MORAU = 1535910        # もらう (to receive)
 SEQ_ITADAKU = 1587290      # いただく (to receive - humble)
 SEQ_KURERU = 1269130       # くれる (to give)
+SEQ_MIRU = 1259290         # 見る/みる (to see; try doing)
+SEQ_AGERU = 1352320        # 上げる/あげる (to give; do for someone)
+SEQ_HOSHII = 1547330       # 欲しい/ほしい (to want someone to)
 
 # --- Honorific/Humble Verb Forms ---
 SEQ_ITASU = 1421900        # いたす (humble form of する)

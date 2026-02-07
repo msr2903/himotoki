@@ -33,6 +33,7 @@ from himotoki.constants import (
     CONJ_CAUSATIVE, CONJ_CAUSATIVE_PASSIVE,
     get_conj_description,
 )
+from himotoki.suffixes import get_suffix_description
 
 
 # ============================================================================
@@ -1676,28 +1677,41 @@ def _get_compound_display(
     for comp in wi.components[1:]:
         indent = "     " * depth
         comp_kana = comp.kana if isinstance(comp.kana, str) else (comp.kana[0] if comp.kana else comp.text)
+        comp_seq = comp.seq[0] if isinstance(comp.seq, list) else comp.seq if comp.seq else None
+        
+        # Get suffix description for this component
+        desc = get_suffix_description(comp_seq) if comp_seq else None
+        desc_str = f" ({desc})" if desc else ""
         
         if comp.conjugations and comp.conjugations != 'root' and comp.seq:
             # This suffix component is itself conjugated (e.g., いた = past of いる)
-            comp_seq = comp.seq[0] if isinstance(comp.seq, list) else comp.seq
             comp_chain = format_conjugation_info(session, comp_seq, comp.conjugations)
             if comp_chain:
-                # Merge the sub-chain into our tree, skipping auxiliary verb roots
+                # Merge the sub-chain into our tree, showing auxiliary verb identity
                 for line in comp_chain:
                     stripped = line.lstrip()
                     if stripped.startswith("←"):
-                        # Skip auxiliary verb root lines (いる, しまう, する, etc.)
-                        continue
+                        # Extract auxiliary verb name from root line and show as tree node
+                        # e.g., "← 仕舞う 【しまう】" → show "└─ しまう (completion/regret)"
+                        aux_name = stripped[2:].strip()  # Remove "← " prefix
+                        # Prefer the kana reading (inside 【...】) for auxiliary verbs
+                        if "【" in aux_name and "】" in aux_name:
+                            start = aux_name.index("【") + 1
+                            end = aux_name.index("】")
+                            aux_name = aux_name[start:end]
+                        sub_indent = "     " * depth
+                        result.append(f"  {sub_indent}└─ {aux_name}{desc_str}")
+                        depth += 1
                     elif stripped.startswith("└─"):
                         # Sub-tree step → show at current depth
                         sub_indent = "     " * depth
                         result.append(f"  {sub_indent}{stripped}")
                         depth += 1
             else:
-                result.append(f"  {indent}└─ {comp_kana}")
+                result.append(f"  {indent}└─ {comp_kana}{desc_str}")
                 depth += 1
         else:
-            result.append(f"  {indent}└─ {comp_kana}")
+            result.append(f"  {indent}└─ {comp_kana}{desc_str}")
             depth += 1
     
     return result

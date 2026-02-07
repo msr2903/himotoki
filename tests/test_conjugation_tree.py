@@ -699,3 +699,165 @@ class TestSpecialForms:
         assert len(tree) >= 2
         assert any("食べる" in line for line in tree)
         assert any("Past" in line for line in tree)
+
+
+# =============================================================================
+# Integration tests: auxiliary verb labels in conjugated compounds (nvuf)
+# =============================================================================
+
+
+class TestAuxVerbLabels:
+    """Test that conjugated auxiliary verbs show their identity in the tree.
+    
+    Bug himotoki-nvuf: When compound words have conjugated auxiliaries
+    (e.g., 飲んでしまった), the auxiliary name was dropped from the tree.
+    """
+
+    def test_te_shimau_past_shows_shimau(self, session_with_suffixes):
+        """飲んでしまった should show しまう in the tree."""
+        wi, tree = _get_tree(session_with_suffixes, "飲んでしまった")
+        assert any("しまう" in line for line in tree), f"しまう not found in: {tree}"
+
+    def test_te_iru_past_shows_iru(self, session_with_suffixes):
+        """食べていた should show いる in the tree."""
+        wi, tree = _get_tree(session_with_suffixes, "食べていた")
+        assert any("いる" in line for line in tree), f"いる not found in: {tree}"
+
+    def test_te_kureru_past_shows_kureru(self, session_with_suffixes):
+        """教えてくれた should show くれる in the tree."""
+        wi, tree = _get_tree(session_with_suffixes, "教えてくれた")
+        assert any("くれる" in line for line in tree), f"くれる not found in: {tree}"
+
+    def test_te_morau_past_shows_morau(self, session_with_suffixes):
+        """読んでもらった should show もらう in the tree."""
+        wi, tree = _get_tree(session_with_suffixes, "読んでもらった")
+        assert any("もらう" in line for line in tree), f"もらう not found in: {tree}"
+
+    def test_causative_passive_te_iru_past_shows_iru(self, session_with_suffixes):
+        """書かせられていた should show いる in the tree."""
+        wi, tree = _get_tree(session_with_suffixes, "書かせられていた")
+        assert any("いる" in line for line in tree), f"いる not found in: {tree}"
+
+    def test_te_shimau_tai_shows_shimau(self, session_with_suffixes):
+        """食べてしまいたい should show しまう in the tree."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてしまいたい")
+        assert any("しまう" in line for line in tree), f"しまう not found in: {tree}"
+
+    def test_te_miru_past_shows_miru(self, session_with_suffixes):
+        """食べてみた should show みる in the tree."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてみた")
+        assert any("みる" in line for line in tree), f"みる not found in: {tree}"
+
+    def test_te_ageru_past_shows_ageru(self, session_with_suffixes):
+        """食べてあげた should show あげる in the tree."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてあげた")
+        assert any("あげる" in line for line in tree), f"あげる not found in: {tree}"
+
+
+# =============================================================================
+# Integration tests: suffix descriptions in display (z5js)
+# =============================================================================
+
+
+class TestSuffixDescriptions:
+    """Test that suffix components show descriptions in the conjugation tree.
+    
+    Bug himotoki-z5js: Base-form te-auxiliaries showed as bare text
+    without descriptions (e.g., └─ いる instead of └─ いる (continuing action)).
+    """
+
+    def test_te_iru_shows_description(self, session_with_suffixes):
+        """食べている should show いる with description."""
+        wi, tree = _get_tree(session_with_suffixes, "食べている")
+        iru_lines = [l for l in tree if "いる" in l and "└─" in l]
+        assert iru_lines, f"いる tree line not found in: {tree}"
+        assert "continuing action" in iru_lines[0], f"Description missing in: {iru_lines[0]}"
+
+    def test_te_shimau_past_shows_description(self, session_with_suffixes):
+        """飲んでしまった should show しまう with description."""
+        wi, tree = _get_tree(session_with_suffixes, "飲んでしまった")
+        shimau_lines = [l for l in tree if "しまう" in l and "└─" in l]
+        assert shimau_lines, f"しまう tree line not found in: {tree}"
+        assert "completion" in shimau_lines[0], f"Description missing in: {shimau_lines[0]}"
+
+    def test_te_miru_shows_description(self, session_with_suffixes):
+        """食べてみる should show みる with description."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてみる")
+        miru_lines = [l for l in tree if "みる" in l and "└─" in l]
+        assert miru_lines, f"みる tree line not found in: {tree}"
+        assert "try" in miru_lines[0], f"Description missing in: {miru_lines[0]}"
+
+    def test_te_ageru_shows_description(self, session_with_suffixes):
+        """食べてあげる should show あげる with description."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてあげる")
+        ageru_lines = [l for l in tree if "あげる" in l and "└─" in l]
+        assert ageru_lines, f"あげる tree line not found in: {tree}"
+        assert "for someone" in ageru_lines[0], f"Description missing in: {ageru_lines[0]}"
+
+    def test_te_hoshii_shows_description(self, session_with_suffixes):
+        """食べてほしい should show ほしい with description."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてほしい")
+        hoshii_lines = [l for l in tree if "ほしい" in l and "└─" in l]
+        assert hoshii_lines, f"ほしい tree line not found in: {tree}"
+        assert "want" in hoshii_lines[0], f"Description missing in: {hoshii_lines[0]}"
+
+    def test_te_iru_past_shows_description(self, session_with_suffixes):
+        """食べていた: even conjugated いる should show its description."""
+        wi, tree = _get_tree(session_with_suffixes, "食べていた")
+        iru_lines = [l for l in tree if "いる" in l and "└─" in l]
+        assert iru_lines, f"いる tree line not found in: {tree}"
+        assert "continuing action" in iru_lines[0], f"Description missing in: {iru_lines[0]}"
+
+    def test_tsuzukeru_shows_description(self, session_with_suffixes):
+        """走り続けている should show つづける with description."""
+        wi, tree = _get_tree(session_with_suffixes, "走り続けている")
+        tsuzukeru_lines = [l for l in tree if "つづける" in l and "└─" in l]
+        assert tsuzukeru_lines, f"つづける tree line not found in: {tree}"
+        assert "continue" in tsuzukeru_lines[0], f"Description missing in: {tsuzukeru_lines[0]}"
+
+
+# =============================================================================
+# Integration tests: new te-form suffixes (tsdr)
+# =============================================================================
+
+
+class TestNewTeSuffixes:
+    """Test newly registered te-form suffixes: miru, ageru, hoshii.
+    
+    Bug himotoki-tsdr: These common suffixes were not registered,
+    causing them to be parsed as separate words instead of compounds.
+    """
+
+    def test_te_miru_is_compound(self, session_with_suffixes):
+        """食べてみる should be a single compound word."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてみる")
+        assert wi.is_compound, f"Expected compound for 食べてみる"
+        assert any("みる" in line for line in tree)
+
+    def test_te_miru_past_is_compound(self, session_with_suffixes):
+        """食べてみた should be a single compound word."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてみた")
+        assert wi.is_compound, f"Expected compound for 食べてみた"
+
+    def test_te_ageru_is_compound(self, session_with_suffixes):
+        """食べてあげる should be a single compound word."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてあげる")
+        assert wi.is_compound, f"Expected compound for 食べてあげる"
+        assert any("あげる" in line for line in tree)
+
+    def test_te_ageru_past_is_compound(self, session_with_suffixes):
+        """食べてあげた should be a single compound word."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてあげた")
+        assert wi.is_compound, f"Expected compound for 食べてあげた"
+
+    def test_te_hoshii_is_compound(self, session_with_suffixes):
+        """食べてほしい should be a single compound word."""
+        wi, tree = _get_tree(session_with_suffixes, "食べてほしい")
+        assert wi.is_compound, f"Expected compound for 食べてほしい"
+        assert any("ほしい" in line for line in tree)
+
+    def test_te_miru_different_verb(self, session_with_suffixes):
+        """読んでみる should also be a compound."""
+        wi, tree = _get_tree(session_with_suffixes, "読んでみる")
+        assert wi.is_compound, f"Expected compound for 読んでみる"
+        assert any("読む" in line for line in tree)

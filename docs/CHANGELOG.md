@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2025-07-18
+
+### Added
+- **New te-form suffixes**: Registered てみる (try doing), てあげる (do for
+  someone), and てほしい (want someone to) as suffix compounds.  Previously
+  parsed as two separate words.
+- `SEQ_MIRU`, `SEQ_AGERU`, `SEQ_HOSHII` constants in constants.py.
+- Suffix descriptions for miru, ageru, hoshii in SUFFIX_DESCRIPTION dict.
+- 21 new tests in `tests/test_conjugation_tree.py` covering auxiliary verb
+  labels, suffix descriptions, and new te-form suffixes.
+
+### Fixed
+- **Conjugation chain aux verb labels**: Conjugated auxiliary verbs
+  (e.g., しまう in 飲んでしまった, いる in 食べていた) now show their
+  identity in the conjugation tree instead of being invisible.
+- **Suffix descriptions in display**: Base-form and conjugated suffix
+  components now show descriptions (e.g., `└─ いる (continuing action)`
+  instead of bare `└─ いる`).  Uses kana reading for auxiliary verbs
+  (しまう not 仕舞う).
+
 ## [0.3.0] - 2025-07-17
 
 ### Added

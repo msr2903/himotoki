@@ -33,7 +33,8 @@ from himotoki.constants import (
     SEQ_WA, SEQ_MO,
     # Common verbs
     SEQ_IRU, SEQ_KURU, SEQ_SURU, SEQ_TOMU, SEQ_ORU, SEQ_ARU, SEQ_OKU, SEQ_IKU,
-    SEQ_SHIMAU, SEQ_MORAU, SEQ_ITADAKU, SEQ_KURERU,
+    SEQ_SHIMAU, SEQ_MORAU, SEQ_ITADAKU, SEQ_KURERU, SEQ_MIRU, SEQ_AGERU,
+    SEQ_HOSHII,
     # Honorific/humble verb forms
     SEQ_ITASU, SEQ_SARERU, SEQ_SASERU, SEQ_TOKU,
     # Suffix-related
@@ -64,6 +65,9 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     'morau': '(asking) to get somebody to do something',
     'itadaku': '(asking) to get somebody to do something (polite)',
     'iku': 'is becoming / action starting now and continuing',
+    'miru': 'to try doing ...',
+    'ageru': 'to do something for someone',
+    'hoshii': 'want someone to ...',
     'suru': 'makes a verb from a noun',
     'itasu': 'makes a verb from a noun (humble)',
     'sareru': 'makes a verb from a noun (honorific or passive)',
@@ -317,6 +321,15 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         _load_conjs(session, 'te+space', SEQ_KURERU, suffix_class='kureru')
         _load_conjs(session, 'te+space', SEQ_MORAU, suffix_class='morau')
         _load_conjs(session, 'te+space', SEQ_ITADAKU, suffix_class='itadaku')
+        
+        # みる (miru) - try doing
+        _load_conjs(session, 'te+space', SEQ_MIRU, suffix_class='miru')
+        
+        # あげる (ageru) - do for someone
+        _load_conjs(session, 'te+space', SEQ_AGERU, suffix_class='ageru')
+        
+        # ほしい (hoshii) - want someone to
+        _load_conjs(session, 'te+space', SEQ_HOSHII, suffix_class='hoshii')
         
         # いく (iku) - going/becoming
         for kf in get_kana_forms(session, SEQ_IKU):
