@@ -1225,6 +1225,7 @@ def _handler_abbr_nx(session: Session, root: str, suffix: str, kf: Optional[Kana
     Special case: せ -> しない (for する).
     """
     if root == 'せ':
+        from himotoki.splits import find_word_conj_of
         return find_word_conj_of(session, 'しない', SEQ_SURU)
     
     from himotoki.lookup import find_word_with_conj_prop
