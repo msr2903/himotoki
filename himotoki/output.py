@@ -29,7 +29,9 @@ from himotoki.lookup import (
     POS_WITH_CONJ_RULES,
 )
 from himotoki.constants import (
-    CONJ_TYPE_NAMES, CONJ_STEP_GLOSSES, get_conj_description,
+    CONJ_TYPE_NAMES, CONJ_STEP_GLOSSES,
+    CONJ_CAUSATIVE, CONJ_CAUSATIVE_PASSIVE,
+    get_conj_description,
 )
 
 
@@ -1725,27 +1727,60 @@ def format_conjugation_info(
                 current_depth = 0
                 for step in steps:
                     indent = "     " * current_depth
-                    if step.fml:
+                    if step.conj_type == "Causative-Passive":
+                        # Split into two separate steps: Causative then Passive
+                        suffix = step.suffix
+                        caus_suffix = suffix
+                        pass_suffix = ""
+                        if "られ" in suffix:
+                            idx = suffix.index("られ")
+                            caus_suffix = suffix[:idx]
+                            pass_suffix = suffix[idx:]
+                        elif "され" in suffix:
+                            idx = suffix.index("され")
+                            caus_suffix = suffix[:idx + 1]  # include さ
+                            pass_suffix = suffix[idx + 1:]  # れる
+                        result.append(f"  {indent}└─ Causative ({caus_suffix}): makes do")
+                        current_depth += 1
+                        indent = "     " * current_depth
+                        if pass_suffix:
+                            result.append(f"  {indent}└─ Passive ({pass_suffix}): is done (to)")
+                        else:
+                            result.append(f"  {indent}└─ Passive: is done (to)")
+                        current_depth += 1
+                    elif step.fml:
                         # Show Polite as its own tree step
                         result.append(f"  {indent}└─ Polite (ます)")
                         current_depth += 1
                         # If there's an actual conjugation beyond plain polite non-past
                         if step.conj_type != "Non-past" or step.neg:
                             indent = "     " * current_depth
-                            # Extract post-masu suffix (ました→た, ません→ん)
+                            # Extract post-masu suffix
+                            # ました→した, ません→せん, ましょう→しょう
                             suffix = step.suffix
-                            for masu_prefix in ('まし', 'ませ'):
-                                if masu_prefix in suffix:
-                                    suffix = suffix[suffix.index(masu_prefix) + len(masu_prefix):]
-                                    break
+                            if "ま" in suffix:
+                                idx = suffix.index("ま")
+                                suffix = suffix[idx + 1:]  # strip ま, keep した/せん/しょう
                             neg_mark = "not " if step.neg else ""
                             label = f"{neg_mark}{step.conj_type}".strip()
                             result.append(f"  {indent}└─ {label} ({suffix}): {step.gloss}")
                             current_depth += 1
                     else:
                         neg_mark = "not " if step.neg else ""
-                        label = f"{neg_mark}{step.conj_type}".strip()
-                        result.append(f"  {indent}└─ {label} ({step.suffix}): {step.gloss}")
+                        type_label = step.conj_type
+                        gloss = step.gloss
+                        if type_label == "Potential":
+                            # Show dual label only when form is ambiguous
+                            # Godan potential starts with え-dan kana (け,せ,て,...)
+                            # which is clearly just Potential. Only れ/られ forms
+                            # (ichidan verbs) are ambiguous with Passive.
+                            _GODAN_POTENTIAL = set("えけせてねへめげ")
+                            first_char = step.suffix[0] if step.suffix else ""
+                            if first_char not in _GODAN_POTENTIAL:
+                                type_label = "Potential/Passive"
+                                gloss = "can do / is done (to)"
+                        label = f"{neg_mark}{type_label}".strip()
+                        result.append(f"  {indent}└─ {label} ({step.suffix}): {gloss}")
                         current_depth += 1
             else:
                 # Fallback: flat format for cases where chain can't be built
@@ -1840,13 +1875,21 @@ def _collect_via_steps(
         # Get suffix text from src_map
         # Pick the reading that gives the shortest non-empty suffix
         # to avoid variant kanji (e.g., 喰べ for 食べ) breaking extraction
+        # Exception: Causative types prefer longest suffix:
+        # - Causative: standard させる over dialectal さす
+        # - Causative-Passive: full かせられる splits cleanly into かせ + られる
+        prefer_long = cd.prop.conj_type in (CONJ_CAUSATIVE, CONJ_CAUSATIVE_PASSIVE)
         suffix = ""
         if cd.src_map:
             best_suffix = None
             for text, src in cd.src_map:
                 s = _extract_suffix(text, src)
                 if s and s != text:  # real match (not fallback to full text)
-                    if best_suffix is None or len(s) < len(best_suffix):
+                    if best_suffix is None:
+                        best_suffix = s
+                    elif prefer_long and len(s) > len(best_suffix):
+                        best_suffix = s
+                    elif not prefer_long and len(s) < len(best_suffix):
                         best_suffix = s
             
             if best_suffix is not None:
@@ -1882,13 +1925,19 @@ def _get_conj_suffix(
     if not src_readings:
         return ""
     
-    # Pick the reading that gives the best (shortest non-empty) suffix.
-    # This avoids variant kanji (e.g., 喰べ for 食べ) breaking suffix extraction.
+    # Pick the reading that gives the best suffix.
+    # Usually shortest non-empty to avoid variant kanji breaking extraction.
+    # Exception: Causative types prefer longest (standard form over dialectal).
+    prefer_long = prop.conj_type in (CONJ_CAUSATIVE, CONJ_CAUSATIVE_PASSIVE)
     best_suffix = None
     for sr in src_readings:
         suffix = _extract_suffix(sr.text, sr.source_text)
         if suffix and suffix != sr.text:  # suffix != full text means we found a real match
-            if best_suffix is None or len(suffix) < len(best_suffix):
+            if best_suffix is None:
+                best_suffix = suffix
+            elif prefer_long and len(suffix) > len(best_suffix):
+                best_suffix = suffix
+            elif not prefer_long and len(suffix) < len(best_suffix):
                 best_suffix = suffix
     
     if best_suffix is not None:

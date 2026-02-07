@@ -191,6 +191,28 @@ class TestSimpleConjugation:
         assert any("Volitional" in line for line in tree)
         assert any("Polite" in line for line in tree)
 
+    def test_polite_volitional_suffix_is_shou(self, session_with_suffixes):
+        """Polite volitional suffix should be しょう, not ょう."""
+        wi, tree = _get_tree(session_with_suffixes, "話しましょう")
+        volitional_lines = [l for l in tree if "Volitional" in l]
+        assert volitional_lines
+        assert "しょう" in volitional_lines[0]
+        assert "(ょう)" not in volitional_lines[0]  # must NOT be just ょう
+
+    def test_polite_past_suffix_is_shita(self, session_with_suffixes):
+        """Polite past suffix should be した, not た."""
+        wi, tree = _get_tree(session_with_suffixes, "走っていました")
+        past_lines = [l for l in tree if "Past" in l]
+        assert past_lines
+        assert "した" in past_lines[0]
+
+    def test_polite_negative_suffix_is_sen(self, session_with_suffixes):
+        """Polite negative suffix should be せん, not ん."""
+        wi, tree = _get_tree(session_with_suffixes, "食べません")
+        neg_lines = [l for l in tree if "not" in l.lower()]
+        assert neg_lines
+        assert "せん" in neg_lines[0]
+
 
 # =============================================================================
 # Integration tests: adjective conjugation
@@ -256,9 +278,11 @@ class TestViaChains:
 
     def test_causative_passive(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "書かせられた")
-        assert len(tree) >= 3
+        assert len(tree) >= 4  # root + Causative + Passive + Past
         assert any("書く" in line for line in tree)
-        assert any("Causative-Passive" in line for line in tree)
+        # Causative-Passive is split into two steps
+        assert any("Causative" in line and "Passive" not in line for line in tree)
+        assert any("Passive" in line and "Causative" not in line for line in tree)
         assert any("Past" in line for line in tree)
 
     def test_potential_negative_past(self, session_with_suffixes):
@@ -267,6 +291,38 @@ class TestViaChains:
         assert any("食べる" in line for line in tree)
         assert any("not" in line.lower() for line in tree)
         assert any("Past" in line for line in tree)
+
+    def test_potential_ichidan_shows_dual_label(self, session_with_suffixes):
+        """Ichidan potential (れる) is ambiguous with passive, show dual label."""
+        wi, tree = _get_tree(session_with_suffixes, "食べられなかった")
+        pot_lines = [l for l in tree if "Potential" in l]
+        assert pot_lines
+        assert "Potential/Passive" in pot_lines[0]
+
+    def test_potential_godan_shows_single_label(self, session_with_suffixes):
+        """Godan potential (ける, める, etc.) is unambiguous, show single label."""
+        wi, tree = _get_tree(session_with_suffixes, "行けない")
+        pot_lines = [l for l in tree if "Potential" in l]
+        assert pot_lines
+        assert "Potential/Passive" not in pot_lines[0]
+        assert "Potential" in pot_lines[0]
+
+    def test_causative_suffix_standard_form(self, session_with_suffixes):
+        """Causative should show standard form (させる) not dialectal (さす)."""
+        wi, tree = _get_tree(session_with_suffixes, "食べさせる")
+        caus_lines = [l for l in tree if "Causative" in l]
+        assert caus_lines
+        assert "させる" in caus_lines[0]
+
+    def test_causative_passive_split_suffixes(self, session_with_suffixes):
+        """Causative-Passive should split into Causative (かせ) + Passive (られる)."""
+        wi, tree = _get_tree(session_with_suffixes, "書かせられた")
+        caus_lines = [l for l in tree if "Causative" in l and "Passive" not in l]
+        pass_lines = [l for l in tree if "Passive" in l and "Causative" not in l]
+        assert caus_lines
+        assert pass_lines
+        assert "かせ" in caus_lines[0]
+        assert "られる" in pass_lines[0]
 
     def test_potential_past(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "読めた")
@@ -346,9 +402,11 @@ class TestCompoundDisplay:
 
     def test_causative_passive_te_iru(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "書かせられている")
-        assert len(tree) >= 3
+        assert len(tree) >= 4  # root + Causative + Passive + te
         assert any("書く" in line for line in tree)
-        assert any("Causative-Passive" in line for line in tree)
+        # Causative-Passive is split into two steps
+        assert any("Causative" in line and "Passive" not in line for line in tree)
+        assert any("Passive" in line and "Causative" not in line for line in tree)
         assert any("Conjunctive" in line or "~te" in line for line in tree)
 
 
@@ -442,9 +500,11 @@ class TestDeepChains:
     def test_causative_passive_te_iru_past(self, session_with_suffixes):
         """書かせられていた: causative-passive + te + iru + past."""
         wi, tree = _get_tree(session_with_suffixes, "書かせられていた")
-        assert len(tree) >= 4
+        assert len(tree) >= 5  # root + Causative + Passive + te + Past
         assert any("書く" in line for line in tree)
-        assert any("Causative-Passive" in line for line in tree)
+        # Causative-Passive is split into two steps
+        assert any("Causative" in line and "Passive" not in line for line in tree)
+        assert any("Passive" in line and "Causative" not in line for line in tree)
         assert any("Past" in line for line in tree)
 
 
