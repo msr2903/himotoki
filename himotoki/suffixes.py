@@ -591,6 +591,14 @@ SUFFIX_UNIQUE_ONLY: Set[str] = {
     'eba', 'teba', 'reba', 'keba', 'geba', 'neba', 'beba', 'meba', 'seba', 'ii',
 }
 
+# Words that should NEVER be decomposed into root+suffix compounds.
+# e.g., ため should not be split into た (adj stem of たい) + め (suffix).
+BLOCKED_SUFFIX_WORDS: Set[str] = {
+    'ため',   # "for/in order to" - not た+め
+    'だめ',   # "no good" - not だ+め
+    'さげ',   # "lowering" - not さ+げ
+}
+
 # Abbreviation suffix types - these create compounds that should be scored 
 # without using the abbreviated compound's mora length.
 # Matches Ichiran's def-abbr-suffix handlers which create proxy-text objects.
@@ -659,6 +667,10 @@ def find_word_suffix(
     Returns:
         List of compound word matches
     """
+    # Block known words that should never be decomposed into root+suffix
+    if word in BLOCKED_SUFFIX_WORDS:
+        return []
+
     # Guard against excessive recursion using both explicit depth and context var
     current_depth = _current_suffix_depth.get()
     effective_depth = max(depth, current_depth)
@@ -772,6 +784,21 @@ def find_word_suffix(
                 abbr_stem = ABBREVIATION_STEMS.get(keyword, 0)
                 if abbr_stem > 0 and len(primary_kana) > abbr_stem:
                     primary_kana = primary_kana[:-abbr_stem]
+                
+                # For contraction suffixes (chau, to), the handler reconstructs
+                # the te-form (root + て/で) for lookup. The primary word kana
+                # includes trailing て/で but in the surface text, that て/で
+                # has been contracted (ちゃ, じゃ, と, ど). Strip the trailing
+                # て/で from primary kana to avoid kana inflation.
+                if keyword in ('chau', 'to'):
+                    if primary_kana.endswith('て') or primary_kana.endswith('で'):
+                        primary_kana = primary_kana[:-1]
+                
+                # For teiru (contracted, without leading い), the surface suffix
+                # is shorter than kf.text (e.g., る vs いる). Use the actual
+                # suffix text for kana to match the contracted pronunciation.
+                if keyword == 'teiru' and kf and len(suffix) < len(kf.text):
+                    suffix_kana = suffix
                 
                 # Include connector in kana (e.g., space for suru, kudasai, te+space)
                 compound_kana = primary_kana + connector + suffix_kana

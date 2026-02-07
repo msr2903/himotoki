@@ -773,8 +773,12 @@ def _segments_from_himotoki_json(data: Any) -> List[SegmentInfo]:
             else:
                 conj_type, neg, fml, source = _extract_conj_info(info)
 
-            kana_parts = [c.get("kana", "") for c in components_info]
-            full_kana = "".join(kana_parts) if kana_parts else info.get("kana", "")
+            # Prefer compound's top-level kana (which handles contractions correctly)
+            # over concatenated component kana (which may inflate contracted forms)
+            full_kana = info.get("kana", "")
+            if not full_kana:
+                kana_parts = [c.get("kana", "") for c in components_info]
+                full_kana = "".join(kana_parts)
 
             # Extract POS from first component (main word) and source from first
             pos_list = []
@@ -830,6 +834,69 @@ def _segments_from_himotoki_json(data: Any) -> List[SegmentInfo]:
         word_info = info
         if "alternative" in info and info["alternative"]:
             word_info = info["alternative"][0]
+
+        # If the selected alternative is itself a compound, handle it as such
+        if "compound" in word_info:
+            component_texts = word_info.get("compound", [])
+            components_info = word_info.get("components", [])
+            full_text = word_info.get("text") or info.get("text") or "".join(component_texts)
+
+            conj_type = None
+            neg = False
+            fml = False
+            source = None
+            if components_info:
+                last_comp = components_info[-1] if components_info else {}
+                conj_type, neg, fml, source = _extract_conj_info(last_comp)
+            else:
+                conj_type, neg, fml, source = _extract_conj_info(word_info)
+
+            # Prefer compound's top-level kana over concatenated component kana
+            full_kana = word_info.get("kana", "") or info.get("kana", "")
+            if not full_kana:
+                kana_parts = [c.get("kana", "") for c in components_info]
+                full_kana = "".join(kana_parts)
+
+            pos_list = []
+            main_source = None
+            if components_info:
+                first_comp = components_info[0]
+                for gloss in first_comp.get("gloss", []):
+                    if "pos" in gloss:
+                        pos_list.append(gloss["pos"])
+                if not pos_list and first_comp.get("conj"):
+                    conj = first_comp["conj"][0]
+                    for gloss in conj.get("gloss", []):
+                        if "pos" in gloss:
+                            pos_list.append(gloss["pos"])
+                    conj_reading = conj.get("reading", "")
+                    if conj_reading:
+                        main_source = conj_reading.split(" ")[0] if " " in conj_reading else conj_reading
+                if not main_source:
+                    reading = first_comp.get("reading", "")
+                    if reading:
+                        main_source = reading.split(" ")[0] if " " in reading else reading
+            if not pos_list:
+                for gloss in word_info.get("gloss", []):
+                    if "pos" in gloss:
+                        pos_list.append(gloss["pos"])
+
+            segments.append(
+                SegmentInfo(
+                    text=full_text,
+                    kana=full_kana,
+                    seq=components_info[0].get("seq") if components_info else word_info.get("seq"),
+                    score=info.get("score", 0),
+                    is_compound=True,
+                    components=component_texts,
+                    conj_type=conj_type,
+                    conj_neg=neg,
+                    conj_fml=fml,
+                    source_text=main_source or source,
+                    pos=pos_list[:3],
+                )
+            )
+            continue
 
         conj_type, neg, fml, source = _extract_conj_info(word_info)
 
