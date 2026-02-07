@@ -550,12 +550,25 @@ def get_senses(session: Session, seq: Union[int, List[int]]) -> List[Dict[str, A
     return result
 
 
+def get_root_seq(session: Session, seq: int) -> Optional[int]:
+    """Get the root (dictionary form) seq for a conjugated entry.
+    
+    Walks the conjugation table to find the from_seq (root entry).
+    Returns None if no conjugation data found.
+    """
+    conjs = session.execute(
+        select(Conjugation).where(Conjugation.seq == seq)
+    ).scalars().all()
+    if conjs:
+        return conjs[0].from_seq
+    return None
+
+
 def get_senses_str(session: Session, seq: Union[int, List[int]]) -> str:
     """Get senses as formatted string.
     
-    Args:
-        session: Database session
-        seq: Entry sequence number or list (for compound words)
+    If the entry has no senses (e.g., a conjugation-only entry),
+    returns an empty string.
     """
     lines = []
     rpos = '[]'

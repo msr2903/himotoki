@@ -15,7 +15,7 @@ from himotoki.db.connection import get_session, get_db_path
 from himotoki.output import (
     dict_segment, simple_segment,
     segment_to_json, segment_to_text,
-    WordType, word_info_reading_str, get_senses_str,
+    WordType, word_info_reading_str, get_senses_str, get_root_seq,
     get_conj_description, get_entry_reading,
     format_conjugation_info, _get_conjugation_display,
 )
@@ -74,7 +74,15 @@ def format_word_info_text(session, word_infos, include_romanization: bool = True
         
         if wi.seq:
             senses = get_senses_str(session, wi.seq)
-            lines.append(senses)
+            if not senses:
+                # Conjugated entry with no own senses — try root entry
+                first_seq = wi.seq if isinstance(wi.seq, int) else (wi.seq[0] if wi.seq else None)
+                if first_seq:
+                    root_seq = get_root_seq(session, first_seq)
+                    if root_seq:
+                        senses = get_senses_str(session, root_seq)
+            if senses:
+                lines.append(senses)
         
         # Conjugation info (breakdown tree)
         conj_strs = _get_conjugation_display(session, wi)
