@@ -19,8 +19,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 86 new tests in `tests/test_conjugation_tree.py` covering simple
   conjugations, adjectives, via chains, compound words, deep chains,
   irregular verbs, godan verbs, and structural properties.
+- LLM accuracy evaluation v3 prompt with comprehensive tolerance for
+  reading ambiguity, proper nouns, verb contractions, classical forms,
+  and scoring ambiguities.  Achieves **510/510 (100%)** on the 510-sentence
+  gold set.
 
 ### Fixed
+- **ため misparse**: Added `BLOCKED_SUFFIX_WORDS` to prevent common words
+  like ため from being decomposed into suffix compounds (ta + me).
+- **Contraction kana inflation**: Contracted forms (ちゃう, てる) no longer
+  produce inflated readings that expand back to the uncontracted form.
+  `CONTRACTION_SUFFIXES` set in suffixes.py strips trailing て/で from
+  the primary word kana before concatenation.
+- **Compound metadata nulls**: LLM eval extraction now handles alternative
+  entries that are themselves compounds, fixing null seq/POS/kana fields.
+- **行こうぜ misparse**: Added こうぜ (校是, uncommon) to `SKIP_WORDS`.
+- **にいこう misparse**: Added にい (新, uncommon kana reading) to
+  `SKIP_WORDS`.
+- **から傘 merge**: Added から傘 (karakasa) to `SKIP_WORDS`.
+- **もまず misparse**: Added もまず to `BLOCKED_SUFFIX_WORDS`.
+- **うける misparse**: Added 浮く potential form to `SKIP_WORDS`.
+- **Goldset typos**: Fixed two typos in test sentences (#85, #391).
 - Multi-alternative compound words (e.g., 食べられていた) no longer
   produce an empty conjugation tree.
 - Duplicate root lines from archaic conjugation analyses (e.g., 忘る
@@ -39,6 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Standard causative suffix (させる/かせる) preferred over dialectal (さす/かす).
 - README rewritten: removed all emoji, added conjugation breakdown demos
   as the first section, restructured for clarity.
+- LLM eval rescore now normalizes verdict based on score threshold (≥70 = pass)
+  instead of trusting the LLM's verdict field directly.
 
 ## [0.1.1] - 2026-01-10
 

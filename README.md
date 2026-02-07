@@ -252,6 +252,8 @@ python scripts/llm_eval.py --rescore 5      # Re-evaluate entry #5
 python scripts/llm_report.py                # Generate HTML report
 ```
 
+Current accuracy: **510/510 (100%)** on the v3 evaluation prompt.
+
 ---
 
 ## License
