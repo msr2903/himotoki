@@ -112,6 +112,7 @@ SKIP_WORDS: Set[int] = {
     2260200,   # にい(新) - uncommon kana reading, clashes with に+い verb patterns
     2254970,   # にい(兄) - uncommon kana reading, clashes with に+い verb patterns
     1774770,   # から傘(からかさ) - uncommon, clashes with から(because)+傘(umbrella)
+    10253059,  # うける(浮く potential) - always prefer 受ける (seq 1329590) reading
 }
 
 # Final particles - words that only have meaning when they're final
