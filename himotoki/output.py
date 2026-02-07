@@ -1667,24 +1667,22 @@ def _get_compound_display(
             comp_seq = comp.seq[0] if isinstance(comp.seq, list) else comp.seq
             comp_chain = format_conjugation_info(session, comp_seq, comp.conjugations)
             if comp_chain:
-                # Merge the sub-chain into our tree
+                # Merge the sub-chain into our tree, skipping auxiliary verb roots
                 for line in comp_chain:
                     stripped = line.lstrip()
                     if stripped.startswith("←"):
-                        # Root line → show as a suffix entry at current depth
-                        root_text = stripped[2:].strip()
-                        result.append(f"  {indent}└─ {root_text}")
-                        depth += 1
+                        # Skip auxiliary verb root lines (いる, しまう, する, etc.)
+                        continue
                     elif stripped.startswith("└─"):
-                        # Sub-tree step → show at incremented depth
+                        # Sub-tree step → show at current depth
                         sub_indent = "     " * depth
                         result.append(f"  {sub_indent}{stripped}")
                         depth += 1
             else:
-                result.append(f"  {indent}└─ {comp.text} 【{comp_kana}】")
+                result.append(f"  {indent}└─ {comp_kana}")
                 depth += 1
         else:
-            result.append(f"  {indent}└─ {comp.text} 【{comp_kana}】")
+            result.append(f"  {indent}└─ {comp_kana}")
             depth += 1
     
     return result
@@ -1724,12 +1722,31 @@ def format_conjugation_info(
                 # Show tree breakdown
                 root_reading = get_entry_reading(session, conj.from_seq)
                 result.append(f"  ← {root_reading}")
-                for i, step in enumerate(steps):
-                    indent = "     " * i
-                    neg_mark = "not " if step.neg else ""
-                    fml_mark = "polite " if step.fml else ""
-                    label = f"{fml_mark}{neg_mark}{step.conj_type}".strip()
-                    result.append(f"  {indent}└─ {label} ({step.suffix}): {step.gloss}")
+                current_depth = 0
+                for step in steps:
+                    indent = "     " * current_depth
+                    if step.fml:
+                        # Show Polite as its own tree step
+                        result.append(f"  {indent}└─ Polite (ます)")
+                        current_depth += 1
+                        # If there's an actual conjugation beyond plain polite non-past
+                        if step.conj_type != "Non-past" or step.neg:
+                            indent = "     " * current_depth
+                            # Extract post-masu suffix (ました→た, ません→ん)
+                            suffix = step.suffix
+                            for masu_prefix in ('まし', 'ませ'):
+                                if masu_prefix in suffix:
+                                    suffix = suffix[suffix.index(masu_prefix) + len(masu_prefix):]
+                                    break
+                            neg_mark = "not " if step.neg else ""
+                            label = f"{neg_mark}{step.conj_type}".strip()
+                            result.append(f"  {indent}└─ {label} ({suffix}): {step.gloss}")
+                            current_depth += 1
+                    else:
+                        neg_mark = "not " if step.neg else ""
+                        label = f"{neg_mark}{step.conj_type}".strip()
+                        result.append(f"  {indent}└─ {label} ({step.suffix}): {step.gloss}")
+                        current_depth += 1
             else:
                 # Fallback: flat format for cases where chain can't be built
                 neg_str = ' Negative' if prop.neg else ' Affirmative'

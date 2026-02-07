@@ -130,9 +130,9 @@ class TestSimpleConjugation:
 
     def test_polite_past(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "行きました")
-        assert len(tree) >= 2
+        assert len(tree) >= 3
         assert any("行く" in line for line in tree)
-        assert any("polite" in line for line in tree)
+        assert any("Polite" in line for line in tree)
         assert any("Past" in line for line in tree)
 
     def test_te_form(self, session_with_suffixes):
@@ -175,21 +175,21 @@ class TestSimpleConjugation:
         wi, tree = _get_tree(session_with_suffixes, "食べます")
         assert len(tree) >= 2
         assert any("食べる" in line for line in tree)
-        assert any("polite" in line for line in tree)
+        assert any("Polite" in line for line in tree)
 
     def test_polite_negative(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "食べません")
-        assert len(tree) >= 2
+        assert len(tree) >= 3
         assert any("食べる" in line for line in tree)
-        assert any("polite" in line for line in tree)
+        assert any("Polite" in line for line in tree)
         assert any("not" in line.lower() for line in tree)
 
     def test_polite_volitional(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "食べましょう")
-        assert len(tree) >= 2
+        assert len(tree) >= 3
         assert any("食べる" in line for line in tree)
         assert any("Volitional" in line for line in tree)
-        assert any("polite" in line for line in tree)
+        assert any("Polite" in line for line in tree)
 
 
 # =============================================================================
@@ -277,10 +277,10 @@ class TestViaChains:
 
     def test_passive_polite_past(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "読まれました")
-        assert len(tree) >= 3
+        assert len(tree) >= 4
         assert any("読む" in line for line in tree)
         assert any("Passive" in line for line in tree)
-        assert any("polite" in line for line in tree)
+        assert any("Polite" in line for line in tree)
         assert any("Past" in line for line in tree)
 
 
@@ -296,7 +296,7 @@ class TestCompoundDisplay:
         wi, tree = _get_tree(session_with_suffixes, "食べている")
         assert len(tree) >= 2
         assert any("食べる" in line for line in tree)
-        assert any("いる" in line for line in tree)
+        assert any("Conjunctive" in line or "~te" in line for line in tree)
 
     def test_te_iru_past(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "走っていた")
@@ -349,7 +349,7 @@ class TestCompoundDisplay:
         assert len(tree) >= 3
         assert any("書く" in line for line in tree)
         assert any("Causative-Passive" in line for line in tree)
-        assert any("いる" in line for line in tree)
+        assert any("Conjunctive" in line or "~te" in line for line in tree)
 
 
 # =============================================================================
@@ -427,7 +427,7 @@ class TestDeepChains:
     def test_te_shimau_tai_past(self, session_with_suffixes):
         """飲んでしまいたかった: te + shimau + tai + past."""
         wi, tree = _get_tree(session_with_suffixes, "飲んでしまいたかった")
-        assert len(tree) >= 5
+        assert len(tree) >= 4
         assert any("飲む" in line for line in tree)
         assert any("Conjunctive" in line or "~te" in line for line in tree)
         assert any("Past" in line for line in tree)
@@ -435,7 +435,7 @@ class TestDeepChains:
     def test_te_shimau_tai_neg_past(self, session_with_suffixes):
         """飲んでしまいたくなかった: te + shimau + tai + neg + past."""
         wi, tree = _get_tree(session_with_suffixes, "飲んでしまいたくなかった")
-        assert len(tree) >= 5
+        assert len(tree) >= 4
         assert any("飲む" in line for line in tree)
         assert any("not" in line.lower() for line in tree)
 
@@ -475,7 +475,7 @@ class TestIrregularVerbs:
     def test_copula_polite_past(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "でした")
         assert len(tree) >= 2
-        assert any("polite" in line for line in tree)
+        assert any("Polite" in line for line in tree)
         assert any("Past" in line for line in tree)
 
 
@@ -554,10 +554,11 @@ class TestTreeStructure:
             assert "└─" in line, f"Expected └─ in: {line}"
 
     def test_steps_have_gloss(self, session_with_suffixes):
-        """Each step line should have a colon-separated gloss."""
+        """Each conjugation step line should have a colon-separated gloss."""
         wi, tree = _get_tree(session_with_suffixes, "食べた")
         for line in tree[1:]:
-            if "└─" in line and "【" not in line:  # Skip suffix component lines
+            if "└─" in line and "【" not in line and "Polite" not in line:
+                # Skip suffix component lines and Polite-only lines
                 assert ":" in line, f"Expected gloss (colon) in: {line}"
 
     def test_indentation_increases(self, session_with_suffixes):
@@ -630,8 +631,8 @@ class TestSpecialForms:
 
     def test_irasshaimashita(self, session_with_suffixes):
         wi, tree = _get_tree(session_with_suffixes, "いらっしゃいました")
-        assert len(tree) >= 2
-        assert any("polite" in line for line in tree)
+        assert len(tree) >= 3
+        assert any("Polite" in line for line in tree)
         assert any("Past" in line for line in tree)
 
     def test_chau_contraction(self, session_with_suffixes):

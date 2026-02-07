@@ -4,71 +4,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-404%20passed-brightgreen.svg)](tests/)
 
-**Himotoki** (紐解き, "unraveling") is a Python port of
+**Himotoki** (紐解き, "unraveling") is a Python remake of
 [ichiran](https://github.com/tshatrov/ichiran), the comprehensive Japanese
 morphological analyzer. It segments Japanese text into words, provides
 dictionary definitions, and traces conjugation chains back to their root
 forms -- all powered by a portable SQLite backend.
-
----
-
-## Conjugation Breakdown
-
-Himotoki traces conjugated words through every transformation step,
-showing the root form and each inflection applied:
-
-```
-$ himotoki -f "書かせられていた"
-
-kakaserareteita
-
-* kakaserareteita  書かせられていた 【かかせられていた】
-
-  ← 書く 【かく】
-  └─ Causative-Passive (かされる): is made to do
-       └─ Conjunctive (~te) (て): and/then
-            └─ 居る 【いる】
-                 └─ Past (~ta) (た): did/was
-```
-
-A deeply nested chain parsed into its constituent parts:
-
-```
-$ himotoki -f "飲んでしまいたかった"
-
-nondeshimaitakatta
-
-* nondeshimaitakatta  飲んでしまいたかった 【のんでしまいたかった】
-
-  ← 飲む 【のむ】
-  └─ Conjunctive (~te) (んで): and/then
-       └─ 仕舞う 【しまう】
-            └─ Continuative (~i) (い): and (stem)
-                 └─ たい
-                      └─ Past (~ta) (かった): did/was
-```
-
-Full sentence analysis with per-word dictionary entries and conjugation trees:
-
-```
-$ himotoki "学校で勉強しています"
-
-* 学校 【がっこう】
-1. [n] school
-
-* で
-1. [prt] at; in
-2. [prt] at; when
-3. [prt] by; with
-
-* 勉強しています 【べんきょう しています】
-1. [n,vs,vt] study
-2. [n,vs,vi] diligence; working hard
-  └─ 為る 【する】
-       └─ Conjunctive (~te) (て): and/then
-            └─ 居る 【いる】
-                 └─ polite Non-past (ます): does/is
-```
 
 ---
 
@@ -167,6 +107,61 @@ results = himotoki.analyze("日本語を勉強しています")
 for words, score in results:
     for w in words:
         print(f"{w.text} 【{w.kana}】 - {w.gloss[:50]}...")
+```
+
+---
+
+## Conjugation Breakdown
+
+Himotoki traces conjugated words through every transformation step,
+showing the root form and each inflection applied:
+
+```
+$ himotoki -f "書かせられていた"
+
+kakaserareteita
+
+* kakaserareteita  書かせられていた 【かかせられていた】
+
+  ← 書く 【かく】
+  └─ Causative-Passive (かされる): is made to do
+       └─ Conjunctive (~te) (て): and/then
+            └─ Past (~ta) (た): did/was
+```
+
+A deeply nested chain parsed into its constituent parts:
+
+```
+$ himotoki -f "飲んでしまいたかった"
+
+nondeshimaitakatta
+
+* nondeshimaitakatta  飲んでしまいたかった 【のんでしまいたかった】
+
+  ← 飲む 【のむ】
+  └─ Conjunctive (~te) (んで): and/then
+       └─ Continuative (~i) (い): and (stem)
+            └─ Past (~ta) (かった): did/was
+```
+
+Full sentence analysis with per-word dictionary entries and conjugation trees:
+
+```
+$ himotoki "学校で勉強しています"
+
+* 学校 【がっこう】
+1. [n] school
+
+* で
+1. [prt] at; in
+2. [prt] at; when
+3. [prt] by; with
+
+* 勉強しています 【べんきょう しています】
+1. [n,vs,vt] study
+2. [n,vs,vi] diligence; working hard
+  └─ Conjunctive (~te) (して): and/then
+       └─ Polite (ます)
 ```
 
 ---
