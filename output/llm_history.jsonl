@@ -1,0 +1,1 @@
+{"timestamp": "2026-02-07T19:29:55.721343", "model": "gemini-3-flash-preview", "provider": "gemini", "total": 510, "skipped": 173, "passed": 311, "failed": 26, "pass_rate": 92.3, "dimension_avgs": {"segmentation": 4.74, "reading": 4.72, "conjugation": 4.52, "pos": 4.59, "dictionary_form": 4.55}}

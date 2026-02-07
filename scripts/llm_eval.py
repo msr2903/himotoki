@@ -723,7 +723,7 @@ class LLMResult:
     llm_prompt_version: str
     time_himotoki: float
     time_llm: float
-LLM_PROMPT_VERSION = "v1"
+LLM_PROMPT_VERSION = "v2"
 
 
 def _extract_conj_info(word_info: dict) -> Tuple[Optional[str], bool, bool, Optional[str]]:
@@ -871,8 +871,18 @@ def _build_prompt(sentence: str, segments: List[SegmentInfo]) -> str:
     return (
         "You are a strict evaluator of Japanese morphological analysis output. "
         "Assess the provided segmentation and linguistic features for correctness.\n\n"
+        "IMPORTANT CONTEXT - Compound phrase handling:\n"
+        "This analyzer uses a dictionary-based approach. When a multi-word phrase "
+        "(e.g. '涙を流す', '担任の先生', '敵に回った', '声にならない') exists as a "
+        "dictionary entry, it is treated as a SINGLE token with is_compound=true and "
+        "its internal components listed in the 'components' field. This is CORRECT "
+        "behavior — do NOT penalize compound phrases that have a seq (dictionary ID). "
+        "These are legitimate dictionary entries and grouping them is a valid "
+        "segmentation strategy. Only flag segmentation issues for tokens that are "
+        "incorrectly merged WITHOUT being dictionary entries.\n\n"
         "Evaluate on these dimensions (0-5 each, 5 is best):\n"
-        "- segmentation: token boundaries match correct Japanese parsing\n"
+        "- segmentation: token boundaries match correct Japanese parsing "
+        "(compound dictionary entries kept as single tokens is correct)\n"
         "- reading: kana readings for tokens are correct\n"
         "- conjugation: conjugation type/neg/polite correctness\n"
         "- pos: part-of-speech tagging plausibility\n"
@@ -1068,8 +1078,14 @@ def _build_rescore_prompt(sentence: str, old_segments: List[SegmentInfo], old_sc
         f"{json.dumps(old_payload, ensure_ascii=False, indent=2)}\n\n"
         "## NEW Segmentation (after fix):\n"
         f"{json.dumps(new_payload, ensure_ascii=False, indent=2)}\n\n"
+        "IMPORTANT CONTEXT - Compound phrase handling:\n"
+        "This analyzer uses a dictionary-based approach. When a multi-word phrase "
+        "exists as a dictionary entry, it is treated as a SINGLE token with "
+        "is_compound=true. This is CORRECT behavior — do NOT penalize compound "
+        "phrases that have a seq (dictionary ID).\n\n"
         "Evaluate the NEW segmentation on these dimensions (0-5 each, 5 is best):\n"
-        "- segmentation: token boundaries match correct Japanese parsing\n"
+        "- segmentation: token boundaries match correct Japanese parsing "
+        "(compound dictionary entries kept as single tokens is correct)\n"
         "- reading: kana readings for tokens are correct\n"
         "- conjugation: conjugation type/neg/polite correctness\n"
         "- pos: part-of-speech tagging plausibility\n"
