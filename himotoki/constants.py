@@ -111,6 +111,29 @@ def get_conj_description(conj_type: int) -> str:
     return CONJ_TYPE_NAMES.get(conj_type, f'Type {conj_type}')
 
 
+# English glosses for each conjugation step (for breakdown tree)
+CONJ_STEP_GLOSSES: Dict[int, str] = {
+    CONJ_NON_PAST: "does/is",
+    CONJ_PAST: "did/was",
+    CONJ_TE: "and/then",
+    CONJ_PROVISIONAL: "if",
+    CONJ_POTENTIAL: "can do",
+    CONJ_PASSIVE: "is done (to)",
+    CONJ_CAUSATIVE: "makes do",
+    CONJ_CAUSATIVE_PASSIVE: "is made to do",
+    CONJ_VOLITIONAL: "let's/will",
+    CONJ_IMPERATIVE: "do!",
+    CONJ_CONDITIONAL: "if/when",
+    CONJ_ALTERNATIVE: "doing things like",
+    CONJ_CONTINUATIVE: "and (stem)",
+    CONJ_ADVERBIAL: "adverbially",
+    CONJ_ADJECTIVE_STEM: "stem",
+    CONJ_NEGATIVE_STEM: "not (stem)",
+    CONJ_CAUSATIVE_SU: "makes do",
+    CONJ_ADJECTIVE_LITERARY: "old/literary",
+}
+
+
 # Weak conjugation forms - these don't contribute as much to scoring
 # Format: (conj_type, neg, fml) where None means "any"
 # From ichiran's *weak-conj-forms*

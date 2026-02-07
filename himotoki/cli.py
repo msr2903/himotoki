@@ -17,7 +17,7 @@ from himotoki.output import (
     segment_to_json, segment_to_text,
     WordType, word_info_reading_str, get_senses_str,
     get_conj_description, get_entry_reading,
-    format_conjugation_info,
+    format_conjugation_info, _get_conjugation_display,
 )
 from himotoki.characters import romanize_word
 
@@ -76,11 +76,10 @@ def format_word_info_text(session, word_infos, include_romanization: bool = True
             senses = get_senses_str(session, wi.seq)
             lines.append(senses)
         
-        # Conjugation info
-        if wi.conjugations and wi.conjugations != CONJUGATION_ROOT and wi.seq:
-            conj_strs = format_conjugation_info(session, wi.seq, wi.conjugations)
-            for cs in conj_strs:
-                lines.append(cs)
+        # Conjugation info (breakdown tree)
+        conj_strs = _get_conjugation_display(session, wi)
+        for cs in conj_strs:
+            lines.append(cs)
     
     return '\n'.join(lines)
 

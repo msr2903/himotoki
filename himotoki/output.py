@@ -28,7 +28,9 @@ from himotoki.lookup import (
     get_conj_type_name, get_conj_neg, get_conj_fml, get_source_text,
     POS_WITH_CONJ_RULES,
 )
-from himotoki.constants import CONJ_TYPE_NAMES, get_conj_description
+from himotoki.constants import (
+    CONJ_TYPE_NAMES, CONJ_STEP_GLOSSES, get_conj_description,
+)
 
 
 # ============================================================================
@@ -138,6 +140,16 @@ class WordInfo:
             'meanings': self.meanings,
             'pos': self.pos,
         }
+
+
+@dataclass
+class ConjStep:
+    """One step in a conjugation breakdown chain."""
+    conj_type: str       # e.g., "Passive", "Past (~ta)"
+    suffix: str          # e.g., "られる", "た"
+    gloss: str           # e.g., "is done (to)", "did/was"
+    neg: bool = False    # True if this step is negative
+    fml: bool = False    # True if this step is formal/polite
 
 
 # ============================================================================
@@ -1109,6 +1121,12 @@ def word_info_from_segment_list(
         start=segment_list.start,
         end=segment_list.end,
         skipped=matches - len(wi_list),
+        # Propagate conjugation info from primary alternative
+        conjugations=wi1.conjugations,
+        conj_type=wi1.conj_type,
+        conj_neg=wi1.conj_neg,
+        conj_fml=wi1.conj_fml,
+        source_text=wi1.source_text,
     )
 
 
@@ -1555,13 +1573,114 @@ def segment_to_text(
             senses = get_senses_str(session, wi.seq)
             lines.append(senses)
         
-        # Conjugation info
-        if wi.conjugations and wi.conjugations != 'root' and wi.seq:
-            conj_strs = format_conjugation_info(session, wi.seq, wi.conjugations)
-            for cs in conj_strs:
-                lines.append(cs)
+        # Conjugation info (breakdown tree)
+        conj_strs = _get_conjugation_display(session, wi)
+        for cs in conj_strs:
+            lines.append(cs)
     
     return '\n'.join(lines)
+
+
+def _get_conjugation_display(
+    session: Session,
+    wi: WordInfo,
+) -> List[str]:
+    """Get conjugation display lines for a WordInfo.
+    
+    Handles:
+    - Single words with DB conjugation chains (via chain → tree)
+    - Multi-alternative words (seq is a list)
+    - Compound words (show chain for primary component + suffix components)
+    
+    Returns empty list if word is not conjugated or is a root form.
+    """
+    if not wi.seq:
+        return []
+    
+    # Compound words: show breakdown for each component that has conjugation
+    if wi.is_compound and wi.components:
+        return _get_compound_display(session, wi)
+    
+    conjugations = wi.conjugations
+    if not conjugations or conjugations == 'root':
+        return []
+    
+    # For multi-alternative words (seq is a list), use the first seq
+    seq = wi.seq[0] if isinstance(wi.seq, list) else wi.seq
+    
+    return format_conjugation_info(session, seq, conjugations)
+
+
+def _get_compound_display(
+    session: Session,
+    wi: WordInfo,
+) -> List[str]:
+    """Get conjugation display for a compound word.
+    
+    Shows the primary component's conjugation chain, then lists
+    each suffix component on subsequent tree lines.
+    
+    Example for 書かせられていた:
+      ← 書く【かく】
+      └─ Causative-Passive (書かせられる): is made to do
+           └─ Conjunctive (~te) (て): and/then
+                └─ いる (progressive)
+                     └─ Past (~ta) (た): did/was
+    """
+    result = []
+    
+    if not wi.components:
+        return result
+    
+    primary = wi.components[0]
+    
+    # Get the primary component's conjugation chain
+    primary_chain = []
+    if primary.conjugations and primary.conjugations != 'root' and primary.seq:
+        primary_seq = primary.seq[0] if isinstance(primary.seq, list) else primary.seq
+        primary_chain = format_conjugation_info(session, primary_seq, primary.conjugations)
+    
+    if primary_chain:
+        result.extend(primary_chain)
+    
+    # Count existing tree depth from primary chain
+    depth = 0
+    for line in primary_chain:
+        stripped = line.lstrip()
+        if stripped.startswith("└─"):
+            depth += 1
+    
+    # Add remaining components as continuation of the tree
+    for comp in wi.components[1:]:
+        indent = "     " * depth
+        comp_kana = comp.kana if isinstance(comp.kana, str) else (comp.kana[0] if comp.kana else comp.text)
+        
+        if comp.conjugations and comp.conjugations != 'root' and comp.seq:
+            # This suffix component is itself conjugated (e.g., いた = past of いる)
+            comp_seq = comp.seq[0] if isinstance(comp.seq, list) else comp.seq
+            comp_chain = format_conjugation_info(session, comp_seq, comp.conjugations)
+            if comp_chain:
+                # Merge the sub-chain into our tree
+                for line in comp_chain:
+                    stripped = line.lstrip()
+                    if stripped.startswith("←"):
+                        # Root line → show as a suffix entry at current depth
+                        root_text = stripped[2:].strip()
+                        result.append(f"  {indent}└─ {root_text}")
+                        depth += 1
+                    elif stripped.startswith("└─"):
+                        # Sub-tree step → show at incremented depth
+                        sub_indent = "     " * depth
+                        result.append(f"  {sub_indent}{stripped}")
+                        depth += 1
+            else:
+                result.append(f"  {indent}└─ {comp.text} 【{comp_kana}】")
+                depth += 1
+        else:
+            result.append(f"  {indent}└─ {comp.text} 【{comp_kana}】")
+            depth += 1
+    
+    return result
 
 
 def format_conjugation_info(
@@ -1569,7 +1688,12 @@ def format_conjugation_info(
     seq: int,
     conjugations: List[int],
 ) -> List[str]:
-    """Format conjugation info as text lines."""
+    """Format conjugation info as text lines with breakdown tree.
+    
+    For simple conjugations (no via chain), shows the classic bracket format
+    plus a single-step tree. For multi-step conjugations (via chains),
+    shows a full derivation tree with box-drawing characters.
+    """
     result = []
     
     query = select(Conjugation).where(Conjugation.seq == seq)
@@ -1584,11 +1708,177 @@ def format_conjugation_info(
         ).scalars().all()
         
         for prop in props:
-            neg_str = ' Negative' if prop.neg else ' Affirmative'
-            fml_str = ' Formal' if prop.fml else ' Plain'
-            type_desc = get_conj_description(prop.conj_type)
+            # Build the full conjugation chain (innermost first)
+            steps = _build_conj_chain(session, conj, prop)
             
-            result.append(f"[ Conjugation: [{prop.pos}] {type_desc}{neg_str}{fml_str}")
-            result.append(f"  {get_entry_reading(session, conj.from_seq)} ]")
+            if steps:
+                # Show tree breakdown
+                root_reading = get_entry_reading(session, conj.from_seq)
+                result.append(f"  ← {root_reading}")
+                for i, step in enumerate(steps):
+                    indent = "     " * i
+                    neg_mark = "not " if step.neg else ""
+                    fml_mark = "polite " if step.fml else ""
+                    label = f"{fml_mark}{neg_mark}{step.conj_type}".strip()
+                    result.append(f"  {indent}└─ {label} ({step.suffix}): {step.gloss}")
+            else:
+                # Fallback: flat format for cases where chain can't be built
+                neg_str = ' Negative' if prop.neg else ' Affirmative'
+                fml_str = ' Formal' if prop.fml else ' Plain'
+                type_desc = get_conj_description(prop.conj_type)
+                result.append(f"  ← [{prop.pos}] {type_desc}{neg_str}{fml_str}")
+                result.append(f"     {get_entry_reading(session, conj.from_seq)}")
     
     return result
+
+
+def _build_conj_chain(
+    session: Session,
+    conj: Conjugation,
+    outer_prop: ConjProp,
+) -> List[ConjStep]:
+    """
+    Walk a conjugation's via chain and build an ordered list of ConjSteps.
+    
+    The chain goes from the root outward:
+    e.g., for 食べられなかった (eat+passive+neg+past):
+      root: 食べる
+      step 1: Passive (られる) - from via chain  
+      step 2: not Past (た) - from outer prop (neg=True)
+    
+    For 行きました (go+polite+past):
+      root: 行く
+      step 1: Past (た) - single step (fml=True)
+    """
+    from himotoki.lookup import get_conj_data
+    
+    steps = []
+    
+    if conj.via is not None:
+        # Multi-step conjugation: walk the via chain from inside out
+        _collect_via_steps(session, conj.via, conj.from_seq, steps)
+    
+    # Add the outermost conjugation step
+    type_name = CONJ_TYPE_NAMES.get(outer_prop.conj_type, f"Type {outer_prop.conj_type}")
+    gloss = CONJ_STEP_GLOSSES.get(outer_prop.conj_type, "")
+    
+    # Modify gloss for negative
+    if outer_prop.neg and gloss:
+        gloss = f"not {gloss}"
+    
+    # Get the suffix text: difference between conjugated text and source text
+    suffix = _get_conj_suffix(session, conj, outer_prop)
+    
+    steps.append(ConjStep(
+        conj_type=type_name,
+        suffix=suffix,
+        gloss=gloss,
+        neg=bool(outer_prop.neg),
+        fml=bool(outer_prop.fml),
+    ))
+    
+    return steps
+
+
+def _collect_via_steps(
+    session: Session,
+    via_seq: int,
+    from_seq: int,
+    steps: List[ConjStep],
+) -> None:
+    """
+    Recursively collect conjugation steps from a via chain.
+    
+    Walks from the innermost via to the outermost, appending steps in order.
+    """
+    from himotoki.lookup import get_conj_data
+    
+    via_data = get_conj_data(session, via_seq, from_seq=from_seq)
+    if not via_data:
+        return
+    
+    cd = via_data[0]
+    
+    # If this via has its own via, recurse deeper first
+    if cd.via is not None:
+        _collect_via_steps(session, cd.via, cd.from_seq, steps)
+    
+    # Now add this step
+    if cd.prop:
+        type_name = CONJ_TYPE_NAMES.get(cd.prop.conj_type, f"Type {cd.prop.conj_type}")
+        gloss = CONJ_STEP_GLOSSES.get(cd.prop.conj_type, "")
+        
+        if cd.prop.neg and gloss:
+            gloss = f"not {gloss}"
+        
+        # Get suffix text from src_map
+        # Extract just the suffix portion by comparing conjugated and source texts
+        suffix = ""
+        if cd.src_map:
+            from himotoki.characters import has_kanji
+            # Pick the best (kanji-preferring) pair
+            conj_text, src_text = cd.src_map[0]
+            for text, src in cd.src_map:
+                if has_kanji(text):
+                    conj_text, src_text = text, src
+                    break
+            
+            # Extract just the changed suffix
+            suffix = _extract_suffix(conj_text, src_text)
+        
+        steps.append(ConjStep(
+            conj_type=type_name,
+            suffix=suffix,
+            gloss=gloss,
+            neg=bool(cd.prop.neg),
+            fml=bool(cd.prop.fml),
+        ))
+
+
+def _get_conj_suffix(
+    session: Session,
+    conj: Conjugation,
+    prop: ConjProp,
+) -> str:
+    """
+    Get the suffix text that represents this conjugation step.
+    
+    Uses ConjSourceReading to find the conjugated form, then extracts
+    the part that differs from the source.
+    """
+    src_readings = session.execute(
+        select(ConjSourceReading).where(ConjSourceReading.conj_id == conj.id)
+    ).scalars().all()
+    
+    if not src_readings:
+        return ""
+    
+    # Find the best (kanji-preferring) pair
+    from himotoki.characters import has_kanji
+    best = src_readings[0]
+    for sr in src_readings:
+        if has_kanji(sr.text):
+            best = sr
+            break
+    
+    return _extract_suffix(best.text, best.source_text)
+
+
+def _extract_suffix(conj_text: str, src_text: str) -> str:
+    """
+    Extract the changed suffix by comparing conjugated and source text.
+    
+    e.g., (食べられなかった, 食べられる) → なかった
+          (食べられる, 食べる) → られる (replace る with られる)
+          (行きました, 行く) → きました
+    """
+    # Find common prefix
+    common_len = 0
+    for i, (c1, c2) in enumerate(zip(conj_text, src_text)):
+        if c1 == c2:
+            common_len = i + 1
+        else:
+            break
+    
+    suffix_part = conj_text[common_len:]
+    return suffix_part if suffix_part else conj_text
