@@ -164,6 +164,64 @@ from himotoki.constants import (
 # Archaic words cache - populated on first use
 _ARCHAIC_CACHE: Optional[Set[int]] = None
 
+# ============================================================================
+# Expression Decomposition
+# ============================================================================
+# Expressions with internal particles (を, が, に, の) should be decomposed
+# into their component morphemes during segmentation. We apply a score penalty
+# to make the decomposed versions competitive with the full expression match.
+
+# Particles that indicate morpheme boundaries in expressions
+# We check for these in the middle of expression text (not at start/end)
+EXPRESSION_SPLIT_PARTICLES = frozenset('をがにのへと')
+
+# Expression penalty multiplier - applied to expressions with internal particles
+# This reduces the expression score so that component morphemes are preferred
+EXPRESSION_PENALTY_RATIO = 0.25  # 25% of original score
+
+# Expressions that should NOT be penalized (truly idiomatic, keep together)
+# These are common expressions where the particle is not at a morpheme boundary
+EXPRESSION_KEEP_TOGETHER: Set[int] = {
+    1541040,   # ありがとうございます - が/と are not morpheme boundaries
+    1002970,   # かもしれない - no real morpheme boundary
+    1466950,   # どうしても - idiomatic adverb
+    1007310,   # だから - idiomatic conjunction
+    2825982,   # だろうか - grammatical
+    1008600,   # としても - grammatical
+    2027100,   # どれだけ - idiomatic
+    2038160,   # 誰にも - could split but often kept together
+    1188490,   # 何も - idiomatic
+    2005860,   # もう一度 - idiomatic
+    1008570,   # ところが - conjunction (has segsplit)
+    1343110,   # ところで - conjunction (has segsplit)
+    1009600,   # にとって - grammatical expression
+    2083990,   # ならない - often part of ければならない
+    1293810,   # 最後 - common noun (not really an expression)
+    2750270,   # まとめて - te-form verb, often used independently
+}
+
+
+def has_splittable_particle(text: str) -> bool:
+    """
+    Check if text has a particle in the middle that indicates it should be split.
+    
+    Returns True if text has a particle character between the first and last chars.
+    This heuristic catches patterns like:
+    - 涙を流す (NounをVerb)
+    - 声にならない (NounにVerb)
+    - 窓際の席 (NounのNoun)
+    
+    But NOT patterns like:
+    - どうしても (no clear boundary)
+    - ありがとう (が is not a boundary)
+    """
+    if len(text) < 3:
+        return False
+    
+    # Check middle characters (exclude first and last)
+    middle = text[1:-1]
+    return any(c in EXPRESSION_SPLIT_PARTICLES for c in middle)
+
 
 # ============================================================================
 # LRU Cache Implementation
@@ -1850,6 +1908,14 @@ def calc_score(
             info=info, text=text,
             use_length=use_length, score_mod=score_mod
         )
+    
+    # Apply expression penalty for expressions with internal particles
+    # This makes component morphemes (Noun+を+Verb) more competitive than
+    # the full expression match (NounをVerb as single token)
+    if 'exp' in posi and seq not in EXPRESSION_KEEP_TOGETHER:
+        if has_splittable_particle(text):
+            score = int(score * EXPRESSION_PENALTY_RATIO)
+            info['exp_penalty'] = True
     
     return score, info
 
