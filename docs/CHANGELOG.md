@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-07-17
+
+### Added
+- **Conjugation breakdown tree**: Visual display tracing every inflection
+  step from surface form back to dictionary root.  Renders as an indented
+  tree with grammatical labels, suffix text, and English glosses.
+- `ConjStep` dataclass and `CONJ_STEP_GLOSSES` dictionary in constants.py
+  for conjugation step representation.
+- `_build_conj_chain()`, `_get_compound_display()`,
+  `_get_conjugation_display()`, `_collect_via_steps()`,
+  `_get_conj_suffix()`, `_extract_suffix()` in output.py.
+- 78 new tests in `tests/test_conjugation_tree.py` covering simple
+  conjugations, adjectives, via chains, compound words, deep chains,
+  irregular verbs, godan verbs, and structural properties.
+
+### Fixed
+- Multi-alternative compound words (e.g., 食べられていた) no longer
+  produce an empty conjugation tree.
+- Duplicate root lines from archaic conjugation analyses (e.g., 忘る
+  alongside 忘れる) are no longer shown.
+- Variant kanji in suffix extraction (e.g., 喰べ for 食べ, 旨味し for
+  美味し) no longer break the conjugation chain display.
+- Synced `VERSION` in cli.py with pyproject.toml (was stuck at 0.2.0).
+
+### Changed
+- README rewritten: removed all emoji, added conjugation breakdown demos
+  as the first section, restructured for clarity.
+
 ## [0.1.1] - 2026-01-10
 
 ### Changed

@@ -1,27 +1,99 @@
-# 🧶 Himotoki (紐解き)
+# Himotoki (紐解き)
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Tests](https://img.shields.io/badge/tests-404%20passed-brightgreen.svg)](tests/)
 
-**Himotoki** (紐解き, "unraveling" or "untying strings") is a Python remake of [ichiran](https://github.com/tshatrov/ichiran), the comprehensive Japanese morphological analyzer. It provides sophisticated text segmentation, dictionary lookup, and conjugation analysis, all powered by a portable SQLite backend.
-
----
-
-## ✨ Key Features
-
-- 🚀 **Fast & Portable**: Uses SQLite for rapid dictionary lookups without the need for a complex PostgreSQL setup.
-- 🧠 **Smart Segmentation**: Employs dynamic programming (Viterbi-style) to find the most linguistically plausible segmentation.
-- 📚 **Deep Dictionary Integration**: Built on JMDict, providing rich metadata, glosses, and part-of-speech information.
-- 🔄 **Advanced Deconjugation**: Recursively traces conjugated verbs and adjectives back to their dictionary forms.
-- 📊 **Scoring Engine**: Implements the "synergy" and penalty rules from ichiran to ensure high-quality results.
-- 🛠️ **Developer Friendly**: Clean Python API and a robust CLI for quick analysis.
+**Himotoki** (紐解き, "unraveling") is a Python port of
+[ichiran](https://github.com/tshatrov/ichiran), the comprehensive Japanese
+morphological analyzer. It segments Japanese text into words, provides
+dictionary definitions, and traces conjugation chains back to their root
+forms -- all powered by a portable SQLite backend.
 
 ---
 
-## 🚀 Getting Started
+## Conjugation Breakdown
 
-### Installation
+Himotoki traces conjugated words through every transformation step,
+showing the root form and each inflection applied:
+
+```
+$ himotoki -f "書かせられていた"
+
+kakaserareteita
+
+* kakaserareteita  書かせられていた 【かかせられていた】
+
+  ← 書く 【かく】
+  └─ Causative-Passive (かされる): is made to do
+       └─ Conjunctive (~te) (て): and/then
+            └─ 居る 【いる】
+                 └─ Past (~ta) (た): did/was
+```
+
+A deeply nested chain parsed into its constituent parts:
+
+```
+$ himotoki -f "飲んでしまいたかった"
+
+nondeshimaitakatta
+
+* nondeshimaitakatta  飲んでしまいたかった 【のんでしまいたかった】
+
+  ← 飲む 【のむ】
+  └─ Conjunctive (~te) (んで): and/then
+       └─ 仕舞う 【しまう】
+            └─ Continuative (~i) (い): and (stem)
+                 └─ たい
+                      └─ Past (~ta) (かった): did/was
+```
+
+Full sentence analysis with per-word dictionary entries and conjugation trees:
+
+```
+$ himotoki "学校で勉強しています"
+
+* 学校 【がっこう】
+1. [n] school
+
+* で
+1. [prt] at; in
+2. [prt] at; when
+3. [prt] by; with
+
+* 勉強しています 【べんきょう しています】
+1. [n,vs,vt] study
+2. [n,vs,vi] diligence; working hard
+  └─ 為る 【する】
+       └─ Conjunctive (~te) (て): and/then
+            └─ 居る 【いる】
+                 └─ polite Non-past (ます): does/is
+```
+
+---
+
+## Features
+
+- **Portable SQLite Backend** -- No PostgreSQL setup required. Dictionary data
+  lives in a single file (~3 GB) that is generated on first use.
+- **Dynamic-Programming Segmentation** -- Uses a Viterbi-style algorithm to
+  find the most linguistically plausible word boundaries.
+- **Deep Dictionary Integration** -- Built on JMDict, providing glosses,
+  part-of-speech tags, usage notes, and cross-references.
+- **Recursive Deconjugation** -- Walks the conjugation database to trace
+  inflected forms (passive, causative, te-form, negation, etc.) back to
+  dictionary entries.
+- **Conjugation Breakdown Tree** -- Displays each transformation step in a
+  visual tree with the suffix, grammatical label, and English gloss.
+- **Compound Word Detection** -- Recognizes suffix compounds
+  (te-iru progressive, te-shimau completion, tai desiderative, sou
+  appearance, etc.) and shows their internal structure.
+- **Scoring Engine** -- Implements synergy and penalty heuristics from
+  ichiran to resolve segmentation ambiguities.
+
+---
+
+## Installation
 
 ```bash
 pip install himotoki
@@ -29,7 +101,9 @@ pip install himotoki
 
 ### First-Time Setup
 
-On first use, Himotoki will prompt you to download and initialize the dictionary database:
+On first run, Himotoki will offer to download JMDict and build the
+SQLite database. The process takes approximately 10-20 minutes and
+requires about 3 GB of free disk space.
 
 ```bash
 himotoki "日本語テキスト"
@@ -37,50 +111,49 @@ himotoki "日本語テキスト"
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧶 Welcome to Himotoki!
+Welcome to Himotoki!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 First-time setup required. This will:
-  • Download JMdict dictionary data (~15MB compressed)
-  • Generate optimized SQLite database (~3GB)
-  • Store data in ~/.himotoki/
+  - Download JMdict dictionary data (~15MB compressed)
+  - Generate optimized SQLite database (~3GB)
+  - Store data in ~/.himotoki/
 
 Proceed with setup? [Y/n]:
 ```
 
-> ⚠️ **Disk Space**: The database requires approximately **3GB** of free disk space.  
-> The setup process takes approximately **10-20 minutes** to complete.
+Non-interactive setup for CI environments:
 
-You can also run setup manually:
 ```bash
-himotoki setup            # Interactive setup
-himotoki setup --yes      # Non-interactive (for scripts/CI)
+himotoki setup --yes
 ```
 
-### Quick CLI Usage
+---
 
-Analyze Japanese text directly from your terminal:
+## Usage
+
+### Command Line
 
 ```bash
-# Default: Dictionary info only
+# Default: dictionary info with conjugation breakdown
 himotoki "学校で勉強しています"
+
+# Full output: romanization + dictionary info + conjugation tree
+himotoki -f "食べられなかった"
 
 # Simple romanization
 himotoki -r "学校で勉強しています"
-
-# Full output (romanization + dictionary info)
-himotoki -f "学校で勉強しています"
+# Output: gakkou de benkyou shiteimasu
 
 # Kana reading with spaces
 himotoki -k "学校で勉強しています"
+# Output: がっこう で べんきょう しています
 
-# JSON output for integration
+# JSON output for programmatic use
 himotoki -j "学校で勉強しています"
 ```
 
-### Python API Example
-
-Integrate Himotoki into your own projects with ease:
+### Python API
 
 ```python
 import himotoki
@@ -98,84 +171,99 @@ for words, score in results:
 
 ---
 
-## 🏗️ Project Structure
+## How It Works
 
-Himotoki is designed with modularity in mind, keeping the database, logic, and output layers distinct.
+Himotoki processes Japanese text through three stages:
 
-```text
+1. **Segmentation** -- A dynamic-programming algorithm considers all
+   possible word boundaries and selects the highest-scoring path.
+   Scoring uses dictionary frequency data, part-of-speech synergies,
+   and penalty heuristics ported from ichiran.
+
+2. **Suffix Compound Assembly** -- Adjacent segments are checked against
+   known suffix patterns (te-iru, te-shimau, tai, sou, etc.). Matching
+   segments are merged into compound WordInfo objects with preserved
+   component structure.
+
+3. **Conjugation Chain Resolution** -- For each conjugated word, the
+   system queries the conjugation database to walk the `via` chain from
+   the surface form back to the dictionary entry. Each step records the
+   conjugation type, suffix text, and English gloss, then formats the
+   result as an indented tree.
+
+---
+
+## Project Structure
+
+```
 himotoki/
-├── himotoki/          # Main package
-│   ├── 🧠 segment.py    # Pathfinding and segmentation logic
-│   ├── 📖 lookup.py     # Dictionary retrieval and scoring
-│   ├── 🔄 constants.py  # Shared constants and SEQ definitions
-│   ├── 🗄️ db/           # SQLAlchemy models and connection
-│   ├── 📚 loading/      # JMdict and conjugation loaders
-│   └── 🖥️ cli.py        # Command line interface
-├── scripts/           # Developer tools
-│   ├── compare.py       # Ichiran comparison suite
-│   ├── init_db.py       # Database initialization
-│   └── report.py        # HTML report generator
-├── tests/             # Test suite
-├── data/              # Dictionary data files
-├── output/            # Generated results and reports
-└── docs/              # Documentation
+    segment.py             # Viterbi-style segmentation engine
+    lookup.py              # Dictionary lookup, scoring, conjugation data
+    output.py              # WordInfo, conjugation tree, JSON/text formatting
+    suffixes.py            # Suffix compound detection (te-iru, tai, etc.)
+    synergies.py           # Part-of-speech synergy and penalty rules
+    conjugation_hints.py   # Supplementary conjugation patterns
+    constants.py           # Conjugation type IDs, POS tags, glosses
+    characters.py          # Kana/kanji conversion, romanization
+    counters.py            # Japanese counter expression handling
+    cli.py                 # Command-line interface
+    db/                    # SQLAlchemy models and connection management
+    loading/               # JMDict XML parsing and database generation
+scripts/
+    llm_eval.py            # LLM-based accuracy evaluation (510 sentences)
+    check_segments.py      # Quick segmentation change checker
+    llm_report.py          # HTML report generator
+tests/                     # 404 tests (pytest + hypothesis)
+data/                      # Dictionary data, evaluation datasets
 ```
 
 ---
 
-## 🛠️ Development
+## Development
 
-We welcome contributions! To get started:
-
-### Install from Source
+### Setup
 
 ```bash
 git clone https://github.com/msr2903/himotoki.git
 cd himotoki
+python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
+pytest tests/ -x --tb=short
 ```
 
-### Development Commands
+### Testing
 
-1. **Tests**: `pytest`
-2. **Coverage**: `pytest --cov=himotoki`
-3. **Linting**: `ruff check .`
-4. **Formatting**: `black .`
+```bash
+# Run all tests
+pytest tests/ -x --tb=short
 
-### LLM Accuracy Evaluation (Local)
+# Run conjugation tree tests only
+pytest tests/test_conjugation_tree.py -v
 
-1. **Run LLM evaluation**: `python -m scripts.llm_eval --quick`
-2. **Run with mock mode**: `python -m scripts.llm_eval --quick --mock`
-3. **Run one sentence**: `python -m scripts.llm_eval --onesentence "猫が食べる"`
-3. **Start labeler UI**: `python -m scripts.llm_labeler --host 127.0.0.1 --port 8008`
+# Run with coverage
+pytest tests/ --cov=himotoki --cov-report=term-missing
+```
 
-Set `LLM_PROVIDER=openai` with `OPENAI_BASE_URL` (for example, http://127.0.0.1:3030/v1)
-and `OPENAI_API_KEY` (use `not-needed` for local servers that ignore keys) to use a local
-OpenAI-compatible server. Use `--mock` for offline runs.
+### LLM Accuracy Evaluation
 
-Set `LLM_PROVIDER=gemini` with `GEMINI_API_KEY` and `GEMINI_MODEL` (default: gemini-3-flash-preview)
-to use Gemini.
+The project includes an LLM-based evaluation system that scores
+segmentation accuracy against 510 curated Japanese sentences:
 
-Use `--concurrency 5` (or `LLM_CONCURRENCY=5`) to send multiple LLM requests in parallel.
-Use `--rpm` (or `LLM_RPM`) to cap request rate per minute (defaults: 2 for openai, 1 for gemini).
-
-Install the optional dependencies for the labeler UI:
-
-`pip install -e ".[eval]"`
+```bash
+python scripts/llm_eval.py --quick          # 50-sentence subset
+python scripts/llm_eval.py                  # Full evaluation
+python scripts/llm_eval.py --rescore 5      # Re-evaluate entry #5
+python scripts/llm_report.py                # Generate HTML report
+```
 
 ---
 
-## 📜 License
+## License
 
-Distributed under the **MIT License**. See `LICENSE` for more information.
+Distributed under the MIT License. See [LICENSE](LICENSE) for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- **[tshatrov](https://github.com/tshatrov)** for the original [ichiran](https://github.com/tshatrov/ichiran) implementation.
-- **[EDRDG](https://www.edrdg.org/)** for the invaluable JMDict resource.
-
----
-
-<p align="center">
-  <i>"Unraveling the complexities of the Japanese language, one string at a time."</i>
-</p>
+- [tshatrov](https://github.com/tshatrov) for the original
+  [ichiran](https://github.com/tshatrov/ichiran) implementation.
+- [EDRDG](https://www.edrdg.org/) for the JMDict dictionary resource.

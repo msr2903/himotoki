@@ -1601,6 +1601,13 @@ def _get_conjugation_display(
     if wi.is_compound and wi.components:
         return _get_compound_display(session, wi)
     
+    # Multi-alternative words where alternatives are compounds
+    # (e.g., 食べられていた: alternative=True, components are compound WordInfos)
+    if wi.alternative and wi.components:
+        primary = wi.components[0]
+        if primary.is_compound and primary.components:
+            return _get_compound_display(session, primary)
+    
     conjugations = wi.conjugations
     if not conjugations or conjugations == 'root':
         return []
@@ -1702,12 +1709,14 @@ def format_conjugation_info(
     
     conjs = session.execute(query).scalars().all()
     
-    for conj in conjs:
+    # Use only the first (primary) conjugation to avoid showing
+    # duplicate trees from archaic/variant analyses (e.g., 忘れる vs 忘る)
+    for conj in conjs[:1]:
         props = session.execute(
             select(ConjProp).where(ConjProp.conj_id == conj.id)
         ).scalars().all()
         
-        for prop in props:
+        for prop in props[:1]:
             # Build the full conjugation chain (innermost first)
             steps = _build_conj_chain(session, conj, prop)
             
@@ -1812,19 +1821,22 @@ def _collect_via_steps(
             gloss = f"not {gloss}"
         
         # Get suffix text from src_map
-        # Extract just the suffix portion by comparing conjugated and source texts
+        # Pick the reading that gives the shortest non-empty suffix
+        # to avoid variant kanji (e.g., 喰べ for 食べ) breaking extraction
         suffix = ""
         if cd.src_map:
-            from himotoki.characters import has_kanji
-            # Pick the best (kanji-preferring) pair
-            conj_text, src_text = cd.src_map[0]
+            best_suffix = None
             for text, src in cd.src_map:
-                if has_kanji(text):
-                    conj_text, src_text = text, src
-                    break
+                s = _extract_suffix(text, src)
+                if s and s != text:  # real match (not fallback to full text)
+                    if best_suffix is None or len(s) < len(best_suffix):
+                        best_suffix = s
             
-            # Extract just the changed suffix
-            suffix = _extract_suffix(conj_text, src_text)
+            if best_suffix is not None:
+                suffix = best_suffix
+            else:
+                # Fallback: use first reading
+                suffix = _extract_suffix(cd.src_map[0][0], cd.src_map[0][1])
         
         steps.append(ConjStep(
             conj_type=type_name,
@@ -1853,15 +1865,20 @@ def _get_conj_suffix(
     if not src_readings:
         return ""
     
-    # Find the best (kanji-preferring) pair
-    from himotoki.characters import has_kanji
-    best = src_readings[0]
+    # Pick the reading that gives the best (shortest non-empty) suffix.
+    # This avoids variant kanji (e.g., 喰べ for 食べ) breaking suffix extraction.
+    best_suffix = None
     for sr in src_readings:
-        if has_kanji(sr.text):
-            best = sr
-            break
+        suffix = _extract_suffix(sr.text, sr.source_text)
+        if suffix and suffix != sr.text:  # suffix != full text means we found a real match
+            if best_suffix is None or len(suffix) < len(best_suffix):
+                best_suffix = suffix
     
-    return _extract_suffix(best.text, best.source_text)
+    if best_suffix is not None:
+        return best_suffix
+    
+    # Fallback: use first reading
+    return _extract_suffix(src_readings[0].text, src_readings[0].source_text)
 
 
 def _extract_suffix(conj_text: str, src_text: str) -> str:
