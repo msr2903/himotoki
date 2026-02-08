@@ -40,6 +40,7 @@ from himotoki.constants import (
     # Suffix-related
     SEQ_CHAU, SEQ_CHIMAU, SEQ_TAI, SEQ_NIKUI, SEQ_II, SEQ_KUDASAI,
     SEQ_SOU, SEQ_SOU_NI_NAI, SEQ_MOII, SEQ_NAGARA,
+    SEQ_PPOI, SEQ_GATAI, SEQ_DASU, SEQ_KIRU, SEQ_KATA, SEQ_MI,
     # Blocked seqs
     BLOCKED_NAI_SEQS, BLOCKED_NAI_X_SEQS,
     # Suffix descriptions (to merge with local ones)
@@ -101,6 +102,12 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     'nakereba': 'must do / have to (contraction)',
     'shimashou': 'let\'s ... (polite volitional contraction)',
     'kurai': 'about/approximately/to the extent of',
+    'ppoi': '-ish / tends to / apt to',
+    'gatai': 'difficult to... / hard to... (literary)',
+    'dasu': 'to burst out doing / to start suddenly',
+    'kiru': 'to do completely / to finish doing',
+    'kata': 'way of doing / how to ...',
+    'mi': '-ness / depth of feeling (nominalization)',
     # Particle seqs - imported from constants and merged
     **SUFFIX_DESCRIPTION_SEQS,
 }
@@ -425,6 +432,40 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         # 続ける (tsuzukeru) - to continue (V-続ける pattern)
         # Include kanji forms so 続けて matches alongside つづけて
         _load_conjs(session, 'ren', 1405800, suffix_class='tsuzukeru', include_kanji=True)
+        
+        # っぽい (ppoi) - -ish / tends to
+        # Only register base form to avoid loading 100+ conjugation forms
+        # which include short entries like 'ぽ', 'ぽく' causing false matches
+        ppoi_kf = get_kana_form(session, SEQ_PPOI, 'っぽい')
+        if ppoi_kf:
+            _load_kf('ppoi', ppoi_kf)
+        
+        # がたい (gatai) - difficult to / hard to
+        gatai_kf = get_kana_form(session, SEQ_GATAI, 'がたい')
+        if gatai_kf:
+            _load_kf('ren', gatai_kf, suffix_class='gatai')
+        
+        # 出す (dasu) - to burst out doing / start doing
+        # Only register base form to avoid kana conflicts (だし, だして etc.)
+        dasu_kf = get_kana_form(session, SEQ_DASU, 'だす')
+        if dasu_kf:
+            _load_kf('ren', dasu_kf, suffix_class='dasu')
+        
+        # きる (kiru) - to do completely
+        # Only register base form to avoid short kana conflicts
+        kiru_kf = get_kana_form(session, SEQ_KIRU, 'きる')
+        if kiru_kf:
+            _load_kf('ren', kiru_kf, suffix_class='kiru')
+        
+        # 方 (kata) - way of doing
+        kata_kf = get_kana_form(session, SEQ_KATA, 'かた')
+        if kata_kf:
+            _load_kf('ren', kata_kf, suffix_class='kata')
+        
+        # み (mi) - adjective nominalization (-ness)
+        mi_kf = get_kana_form(session, SEQ_MI, 'み')
+        if mi_kf:
+            _load_kf('iadj', mi_kf, suffix_class='mi')
         
         # うる (uru) - can
         uru_kf = get_kana_form(session, 1454500, 'うる')
@@ -886,6 +927,7 @@ SUFFIX_SCORES: Dict[str, float] = {
     'garu': 0,
     'ra': 1,
     'rashii': 3,
+    'ppoi': 3,
     'desu': 200,
     'desho': 300,
     'tosuru': 3,
@@ -1257,11 +1299,47 @@ def _handler_ra(session: Session, root: str, suffix: str, kf: Optional[KanaText]
     return find_word_with_pos(session, root, 'pn')
 
 
+def _handler_ppoi(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
+    """Handle っぽい suffix - -ish / tends to.
+    
+    っぽい attaches to:
+    1. Verb continuative stem: 忘れ + っぽい, 飽き + っぽい
+    2. Nouns: 子供 + っぽい, 大人 + っぽい, 水 + っぽい
+    
+    Note: the っ is part of the suffix, so root already has it stripped.
+    """
+    result = find_word_with_conj_type(session, root, 13)  # Verb continuative
+    result.extend(find_word_with_pos(session, root, 'n'))
+    return result
+
+
+def _handler_mi(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
+    """Handle み suffix - adjective nominalization (-ness).
+    
+    み converts i-adjectives to nouns by replacing い with み:
+    深い → 深み (depth), 甘い → 甘み (sweetness), 暖かい → 暖かみ (warmth)
+    
+    Root will be the adjective stem (without い).
+    """
+    from himotoki.lookup import CONJ_ADJECTIVE_STEM
+    return find_word_with_conj_type(session, root, CONJ_ADJECTIVE_STEM)
+
+
 def _handler_rashii(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle らしい suffix - seems like."""
-    result1 = find_word_with_conj_type(session, root, 2)
-    result2 = find_word_with_conj_type(session, root + 'ら', 11)
-    return result1 + result2
+    """Handle らしい suffix - seems like.
+    
+    らしい attaches to:
+    1. Verb/adj conjugated forms (conj_type 2)
+    2. ら-ending forms (conj_type 11) 
+    3. Nouns: 男らしい, 春らしい, 学生らしい
+    4. Na-adjective stems: 静からしい
+    """
+    result = find_word_with_conj_type(session, root, 2)
+    result.extend(find_word_with_conj_type(session, root + 'ら', 11))
+    # Also try noun lookup for noun+rashii patterns
+    result.extend(find_word_with_pos(session, root, 'n'))
+    result.extend(find_word_with_pos(session, root, 'adj-na'))
+    return result
 
 
 def _handler_desu(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -1498,6 +1576,7 @@ SUFFIX_HANDLERS: Dict[str, Callable] = {
     'kurai': _handler_kurai,
     'iadj': _handler_iadj,
     'nade': _handler_nade,
+    'ppoi': _handler_ppoi,
     'chau': _handler_chau,  # Contracted てしまう with te-reconstruction
     'to': _handler_to_contracted,  # Contracted ておく with te-reconstruction
     # Abbreviations - each has distinct behavior matching ichiran

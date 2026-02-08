@@ -241,6 +241,12 @@ SEQ_URU = 1454500          # うる (can - classical)
 SEQ_KUDASAI = 1184270      # ください (please do)
 SEQ_SOU = 1006610          # そう (looks like)
 SEQ_SOU_NI_NAI = 2141080   # そうにない (doesn't seem like)
+SEQ_PPOI = 2083720         # っぽい (-ish, tends to)
+SEQ_GATAI = 2867504        # がたい (difficult to, hard to)
+SEQ_DASU = 1338180         # 出す (to burst out doing / start doing)
+SEQ_KIRU = 1384830         # 切る/きる (to do completely)
+SEQ_KATA = 1516925         # 方/かた (way of doing)
+SEQ_MI = 2258670           # み (-ness, adjective nominalization)
 
 # --- Synthetic Entries ---
 SEQ_TASOU = 900000         # たそう (synthetic: tai+sou suffix)
