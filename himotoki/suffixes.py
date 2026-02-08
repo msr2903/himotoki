@@ -41,6 +41,8 @@ from himotoki.constants import (
     SEQ_CHAU, SEQ_CHIMAU, SEQ_TAI, SEQ_NIKUI, SEQ_II, SEQ_KUDASAI,
     SEQ_SOU, SEQ_SOU_NI_NAI, SEQ_MOII, SEQ_NAGARA,
     SEQ_PPOI, SEQ_GATAI, SEQ_DASU, SEQ_KIRU, SEQ_KATA, SEQ_MI,
+    SEQ_YASUI, SEQ_MAKURU, SEQ_NAOSU, SEQ_SOKONAU, SEQ_WASURERU,
+    SEQ_OERU, SEQ_ZURAI, SEQ_GIMI, SEQ_PPANASHI, SEQ_TACHI,
     # Blocked seqs
     BLOCKED_NAI_SEQS, BLOCKED_NAI_X_SEQS,
     # Suffix descriptions (to merge with local ones)
@@ -108,6 +110,16 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     'kiru': 'to do completely / to finish doing',
     'kata': 'way of doing / how to ...',
     'mi': '-ness / depth of feeling (nominalization)',
+    'yasui': 'easy to ... / likely to ...',
+    'makuru': 'to do relentlessly / to keep doing',
+    'naosu': 'to redo / to do again',
+    'sokonau': 'to fail to do / to miss doing',
+    'wasureru': 'to forget to do',
+    'oeru': 'to finish doing',
+    'zurai': 'difficult to ... / hard to ...',
+    'gimi': 'tending to / -ish / -like',
+    'ppanashi': 'left doing / leaving as is',
+    'tachi': 'plural (people/animals)',
     # Particle seqs - imported from constants and merged
     **SUFFIX_DESCRIPTION_SEQS,
 }
@@ -466,6 +478,56 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         mi_kf = get_kana_form(session, SEQ_MI, 'み')
         if mi_kf:
             _load_kf('iadj', mi_kf, suffix_class='mi')
+        
+        # やすい (yasui) - easy to / likely to
+        yasui_kf = get_kana_form(session, SEQ_YASUI, 'やすい')
+        if yasui_kf:
+            _load_kf('ren', yasui_kf, suffix_class='yasui')
+        
+        # まくる (makuru) - to do relentlessly
+        makuru_kf = get_kana_form(session, SEQ_MAKURU, 'まくる')
+        if makuru_kf:
+            _load_kf('ren', makuru_kf, suffix_class='makuru')
+        
+        # なおす (naosu) - to redo / do again
+        naosu_kf = get_kana_form(session, SEQ_NAOSU, 'なおす')
+        if naosu_kf:
+            _load_kf('ren', naosu_kf, suffix_class='naosu')
+        
+        # そこなう (sokonau) - to fail to do
+        sokonau_kf = get_kana_form(session, SEQ_SOKONAU, 'そこなう')
+        if sokonau_kf:
+            _load_kf('ren', sokonau_kf, suffix_class='sokonau')
+        
+        # わすれる (wasureru) - to forget to do
+        wasureru_kf = get_kana_form(session, SEQ_WASURERU, 'わすれる')
+        if wasureru_kf:
+            _load_kf('ren', wasureru_kf, suffix_class='wasureru')
+        
+        # おえる (oeru) - to finish doing
+        oeru_kf = get_kana_form(session, SEQ_OERU, 'おえる')
+        if oeru_kf:
+            _load_kf('ren', oeru_kf, suffix_class='oeru')
+        
+        # づらい (zurai) - difficult to
+        zurai_kf = get_kana_form(session, SEQ_ZURAI, 'づらい')
+        if zurai_kf:
+            _load_kf('ren', zurai_kf, suffix_class='zurai')
+        
+        # ぎみ (gimi) - tending to / -ish
+        gimi_kf = get_kana_form(session, SEQ_GIMI, 'ぎみ')
+        if gimi_kf:
+            _load_kf('ren', gimi_kf, suffix_class='gimi')
+        
+        # っぱなし (ppanashi) - left doing
+        ppanashi_kf = get_kana_form(session, SEQ_PPANASHI, 'っぱなし')
+        if ppanashi_kf:
+            _load_kf('ren', ppanashi_kf, suffix_class='ppanashi')
+        
+        # たち (tachi) - plural suffix
+        tachi_kf = get_kana_form(session, SEQ_TACHI, 'たち')
+        if tachi_kf:
+            _load_kf('tachi', tachi_kf)
         
         # うる (uru) - can
         uru_kf = get_kana_form(session, 1454500, 'うる')
@@ -928,6 +990,7 @@ SUFFIX_SCORES: Dict[str, float] = {
     'ra': 1,
     'rashii': 3,
     'ppoi': 3,
+    'tachi': 3,
     'desu': 200,
     'desho': 300,
     'tosuru': 3,
@@ -1325,6 +1388,17 @@ def _handler_mi(session: Session, root: str, suffix: str, kf: Optional[KanaText]
     return find_word_with_conj_type(session, root, CONJ_ADJECTIVE_STEM)
 
 
+def _handler_tachi(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
+    """Handle たち suffix - plural for people/animals.
+    
+    たち attaches to nouns and pronouns:
+    学生たち, 子供たち, 私たち, 猫たち
+    """
+    result = find_word_with_pos(session, root, 'n')
+    result.extend(find_word_with_pos(session, root, 'pn'))
+    return result
+
+
 def _handler_rashii(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
     """Handle らしい suffix - seems like.
     
@@ -1577,6 +1651,7 @@ SUFFIX_HANDLERS: Dict[str, Callable] = {
     'iadj': _handler_iadj,
     'nade': _handler_nade,
     'ppoi': _handler_ppoi,
+    'tachi': _handler_tachi,
     'chau': _handler_chau,  # Contracted てしまう with te-reconstruction
     'to': _handler_to_contracted,  # Contracted ておく with te-reconstruction
     # Abbreviations - each has distinct behavior matching ichiran
