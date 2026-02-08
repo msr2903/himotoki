@@ -5,25 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.1] - 2025-07-18
+## [0.3.1] - 2026-02-08
 
 ### Added
-- **New te-form suffixes**: Registered てみる (try doing), てあげる (do for
-  someone), and てほしい (want someone to) as suffix compounds.  Previously
-  parsed as two separate words.
-- `SEQ_MIRU`, `SEQ_AGERU`, `SEQ_HOSHII` constants in constants.py.
-- Suffix descriptions for miru, ageru, hoshii in SUFFIX_DESCRIPTION dict.
-- 21 new tests in `tests/test_conjugation_tree.py` covering auxiliary verb
-  labels, suffix descriptions, and new te-form suffixes.
+- **30+ new suffix compounds**: Compound verbs (出す, 切る, 合う, 込む,
+  始める, 終わる, 付ける), te-form auxiliaries (てやる, てまいる,
+  てくださる, てさしあげる), adjective suffixes (っぽい, 難い, み, 方,
+  らしい+noun), and more (放題, やすい, まくる, 直す, 損なう, 忘れる,
+  終える, 辛い, ぎみ, っぱなし, たち, なで).
+- **Na-adjective + suffix chaining**: Na-adj stems (静か, 元気, 便利)
+  now connect to すぎる, っぽい, み, そう handlers.
+- **Auxiliary verb labels**: Conjugated auxiliary verbs (しまう, いる,
+  たい, etc.) now show their identity and description in the conjugation
+  tree instead of being invisible.
+- **Suffix descriptions in display**: Base-form suffix components include
+  grammatical descriptions (e.g., `└─ いる (indicates continuing action)`).
+- **Te-form suffixes**: てみる (try doing), てあげる (do for someone),
+  てほしい (want someone to) recognized as compound words.
+- `SEQ_MIRU`, `SEQ_AGERU`, `SEQ_HOSHII`, `SEQ_AU`, `SEQ_KOMU`,
+  `SEQ_HOUDAI`, `SEQ_OWARU`, `SEQ_HAJIMERU`, `SEQ_TSUKERU`, `SEQ_YARU`,
+  `SEQ_MAIRU`, `SEQ_KUDASARU`, `SEQ_SASHIAGERU` and more constants.
+- 22 new tests (433 total, up from 411).
 
 ### Fixed
+- **ないで reading bug**: Compound kana now uses the correct kanji reading
+  ordinal instead of always using ord=0.  食べないでほしい correctly shows
+  【たべないで ほしい】 (was 【たべなくて ほしい】).
+- **ちゃ/じゃ contraction reading**: Surface pronunciation preserved for
+  contracted forms.  食べちゃいけない shows 【たべちゃ】 (was 【たべは】).
 - **Conjugation chain aux verb labels**: Conjugated auxiliary verbs
-  (e.g., しまう in 飲んでしまった, いる in 食べていた) now show their
-  identity in the conjugation tree instead of being invisible.
+  (e.g., しまう in 飲んでしまった) now visible in conjugation tree.
 - **Suffix descriptions in display**: Base-form and conjugated suffix
-  components now show descriptions (e.g., `└─ いる (continuing action)`
-  instead of bare `└─ いる`).  Uses kana reading for auxiliary verbs
+  components now show descriptions. Uses kana reading for auxiliary verbs
   (しまう not 仕舞う).
+- 13 grammar pattern issues (abbreviations, suffix chains, handler
+  improvements, label fixes).
 
 ## [0.3.0] - 2025-07-17
 

@@ -2,7 +2,7 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-411%20passed-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-433%20passed-brightgreen.svg)](tests/)
 
 **Himotoki** (紐解き, "unraveling") is a Python remake of
 [ichiran](https://github.com/tshatrov/ichiran), the comprehensive Japanese
@@ -77,10 +77,43 @@ himotoki setup --yes
 ```bash
 # Default: dictionary info with conjugation breakdown
 himotoki "学校で勉強しています"
+```
 
+```
+* 学校 【がっこう】
+1. [n] school
+
+* で
+1. [prt] at; in
+2. [prt] at; when
+3. [prt] by; with
+
+* 勉強しています 【べんきょう しています】
+1. [n,vs,vt] study
+2. [n,vs,vi] diligence; working hard
+  └─ する (makes a verb from a noun)
+       └─ Conjunctive (~te) (て)
+            └─ いる (indicates continuing action (to be ...ing))
+                 └─ Polite (ます)
+```
+
+```bash
 # Full output: romanization + dictionary info + conjugation tree
 himotoki -f "食べられなかった"
+```
 
+```
+taberarenakatta
+
+* taberarenakatta  食べられなかった 【たべられなかった】
+1. [v1,vt] to eat
+2. [v1,vt] to live on (e.g. a salary); to live off; to subsist on
+  ← 食べる 【たべる】
+  └─ Potential/Passive (れる): can do / is done (to)
+       └─ not Past (~ta) (なかった): not did/was
+```
+
+```bash
 # Simple romanization
 himotoki -r "学校で勉強しています"
 # Output: gakkou de benkyou shiteimasu
@@ -122,12 +155,14 @@ $ himotoki -f "書かせられていた"
 kakaserareteita
 
 * kakaserareteita  書かせられていた 【かかせられていた】
-
+1. [v5k,vt] to write; to compose; to pen
+2. [v5k,vt] to draw; to paint
   ← 書く 【かく】
   └─ Causative (かせ): makes do
        └─ Passive (られる): is done (to)
             └─ Conjunctive (~te) (て)
-                 └─ Past (~ta) (た): did/was
+                 └─ いる (indicates continuing action (to be ...ing))
+                      └─ Past (~ta) (た): did/was
 ```
 
 A deeply nested chain parsed into its constituent parts:
@@ -138,11 +173,13 @@ $ himotoki -f "飲んでしまいたかった"
 nondeshimaitakatta
 
 * nondeshimaitakatta  飲んでしまいたかった 【のんでしまいたかった】
-
+1. [v5m,vt] to drink; to swallow; to take (medicine)
   ← 飲む 【のむ】
   └─ Conjunctive (~te) (んで)
-       └─ Continuative (~i) (い): and (stem)
-            └─ Past (~ta) (かった): did/was
+       └─ しまう (indicates completion / to do something by accident or regret)
+            └─ Continuative (~i) (い): and (stem)
+                 └─ たい (want to... / would like to...)
+                      └─ Past (~ta) (かった): did/was
 ```
 
 Full sentence analysis with per-word dictionary entries and conjugation trees:
@@ -161,9 +198,30 @@ $ himotoki "学校で勉強しています"
 * 勉強しています 【べんきょう しています】
 1. [n,vs,vt] study
 2. [n,vs,vi] diligence; working hard
-  └─ Conjunctive (~te) (て)
-       └─ Polite (ます)
+  └─ する (makes a verb from a noun)
+       └─ Conjunctive (~te) (て)
+            └─ いる (indicates continuing action (to be ...ing))
+                 └─ Polite (ます)
 ```
+
+---
+
+## Suffix Compounds
+
+Himotoki recognizes productive suffix patterns and merges them into
+compound words with grammatical labels:
+
+| Category | Suffixes | Example |
+|----------|----------|---------|
+| Progressive / completive | ている, てある, てしまう, ておく | 食べている → "is eating" |
+| Giving / receiving | てくれる, てもらう, てあげる, てやる | 読んであげる → "read for someone" |
+| Desire / attempt | たい, てほしい, てみる | 食べたい → "want to eat" |
+| Appearance / degree | そう, すぎる, っぽい, らしい | 高すぎる → "too expensive" |
+| Compound verbs | 出す, 切る, 合う, 込む, 始める, 終わる | 食べ始める → "start eating" |
+| Nominalization | さ, み, 方 | 深み → "depth" |
+| Contractions | ちゃう, じゃう, とく, なきゃ | 食べちゃった → "ended up eating" |
+| Polite / formal | です, でしょう, ください, いたす | 食べてください → "please eat" |
+| Na-adjective suffixes | すぎる, っぽい, み, そう | 静かすぎる → "too quiet" |
 
 ---
 
@@ -209,7 +267,7 @@ scripts/
     llm_eval.py            # LLM-based accuracy evaluation (510 sentences)
     check_segments.py      # Quick segmentation change checker
     llm_report.py          # HTML report generator
-tests/                     # 411 tests (pytest + hypothesis)
+tests/                     # 433 tests (pytest + hypothesis)
 data/                      # Dictionary data, evaluation datasets
 ```
 
