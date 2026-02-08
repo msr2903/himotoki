@@ -504,7 +504,7 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         # み (mi) - adjective nominalization (-ness)
         mi_kf = get_kana_form(session, SEQ_MI, 'み')
         if mi_kf:
-            _load_kf('iadj', mi_kf, suffix_class='mi')
+            _load_kf('mi', mi_kf, suffix_class='mi')
         
         # やすい (yasui) - easy to / likely to
         yasui_kf = get_kana_form(session, SEQ_YASUI, 'やすい')
@@ -971,8 +971,17 @@ def find_word_suffix(
                         reading = w.reading
                         # Check if it's a kanji reading - look up kana
                         if hasattr(reading, 'seq') and hasattr(reading, 'text'):
-                            # Try to get kana for this seq
-                            from himotoki.db.models import KanaText
+                            # Use the reading's ord to get the matching kana
+                            # (e.g., 食べないで ord=1 → たべないで ord=1, not たべなくて ord=0)
+                            reading_ord = getattr(reading, 'ord', None)
+                            if reading_ord is not None and isinstance(reading, KanjiText):
+                                kana_result = session.execute(
+                                    select(KanaText.text)
+                                    .where(and_(KanaText.seq == reading.seq, KanaText.ord == reading_ord))
+                                ).scalars().first()
+                                if kana_result:
+                                    return kana_result
+                            # Fallback: get first kana for this seq
                             kana_result = session.execute(
                                 select(KanaText.text)
                                 .where(KanaText.seq == reading.seq)
@@ -997,9 +1006,11 @@ def find_word_suffix(
                 # includes trailing て/で but in the surface text, that て/で
                 # has been contracted (ちゃ, じゃ, と, ど). Strip the trailing
                 # て/で from primary kana to avoid kana inflation.
+                # Also use surface suffix text for kana (e.g., ちゃ not は).
                 if keyword in ('chau', 'to'):
                     if primary_kana.endswith('て') or primary_kana.endswith('で'):
                         primary_kana = primary_kana[:-1]
+                    suffix_kana = suffix
                 
                 # For teiru (contracted, without leading い), the surface suffix
                 # is shorter than kf.text (e.g., る vs いる). Use the actual
@@ -1049,6 +1060,7 @@ SUFFIX_SCORES: Dict[str, float] = {
     'sugiru': 5,
     'sa': 2,
     'iadj': 1,
+    'mi': 1,
     'garu': 0,
     'ra': 1,
     'rashii': 3,
@@ -1302,7 +1314,8 @@ def _handler_sugiru(session: Session, root: str, suffix: str, kf: Optional[KanaT
     すぎる attaches to:
     1. Verb continuative form (ren'youkei): 食べすぎる, 飲みすぎる
     2. Adjective stem (without い): 高すぎる, 美しすぎる
-    3. Negative なさ form: 情けなさすぎる
+    3. Na-adjective root: 静かすぎる, 元気すぎる
+    4. Negative なさ form: 情けなさすぎる
     """
     if root == 'い':
         return []
@@ -1320,6 +1333,9 @@ def _handler_sugiru(session: Session, root: str, suffix: str, kf: Optional[KanaT
     # Try adjective stem (add い and look for adj-i)
     root_i = root + 'い'
     results.extend(find_word_with_pos(session, root_i, 'adj-i'))
+    
+    # Try na-adjective root: 静かすぎる, 元気すぎる
+    results.extend(find_word_with_pos(session, root, 'adj-na'))
     
     return results
 
@@ -1431,24 +1447,29 @@ def _handler_ppoi(session: Session, root: str, suffix: str, kf: Optional[KanaTex
     っぽい attaches to:
     1. Verb continuative stem: 忘れ + っぽい, 飽き + っぽい
     2. Nouns: 子供 + っぽい, 大人 + っぽい, 水 + っぽい
+    3. Na-adjective root: 静か + っぽい
     
     Note: the っ is part of the suffix, so root already has it stripped.
     """
     result = find_word_with_conj_type(session, root, 13)  # Verb continuative
     result.extend(find_word_with_pos(session, root, 'n'))
+    result.extend(find_word_with_pos(session, root, 'adj-na'))
     return result
 
 
 def _handler_mi(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
     """Handle み suffix - adjective nominalization (-ness).
     
-    み converts i-adjectives to nouns by replacing い with み:
-    深い → 深み (depth), 甘い → 甘み (sweetness), 暖かい → 暖かみ (warmth)
+    み converts adjectives to nouns:
+    - i-adj: 深い → 深み (depth), 甘い → 甘み (sweetness)
+    - na-adj: 静か → 静かみ (quietness)
     
-    Root will be the adjective stem (without い).
+    Root will be the adjective stem (without い for i-adj, or bare form for na-adj).
     """
     from himotoki.lookup import CONJ_ADJECTIVE_STEM
-    return find_word_with_conj_type(session, root, CONJ_ADJECTIVE_STEM)
+    result = find_word_with_conj_type(session, root, CONJ_ADJECTIVE_STEM)
+    result.extend(find_word_with_pos(session, root, 'adj-na'))
+    return result
 
 
 def _handler_tachi(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -1713,6 +1734,7 @@ SUFFIX_HANDLERS: Dict[str, Callable] = {
     'tosuru': _handler_tosuru,
     'kurai': _handler_kurai,
     'iadj': _handler_iadj,
+    'mi': _handler_mi,
     'nade': _handler_nade,
     'ppoi': _handler_ppoi,
     'tachi': _handler_tachi,
