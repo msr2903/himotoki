@@ -98,6 +98,9 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     'gai': 'worth it to ...',
     'tasou': 'seem to want to... (tai+sou)',
     'nade': 'na-adj conjunctive (and/being)',
+    'nakereba': 'must do / have to (contraction)',
+    'shimashou': 'let\'s ... (polite volitional contraction)',
+    'kurai': 'about/approximately/to the extent of',
     # Particle seqs - imported from constants and merged
     **SUFFIX_DESCRIPTION_SEQS,
 }
@@ -512,8 +515,8 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         _load_abbr('nai-x', 'ぬ')
         _load_abbr('nai-n', 'ん')
         
-        _load_abbr('nakereba', 'なきゃ')
-        _load_abbr('nakereba', 'なくちゃ')
+        _load_abbr('nakereba', 'なきゃ', suffix_class='nakereba')
+        _load_abbr('nakereba', 'なくちゃ', suffix_class='nakereba')
         
         _load_abbr('teba', 'ちゃ', join=True)  # つ
         _load_abbr('reba', 'りゃ')  # る
@@ -524,7 +527,7 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         _load_abbr('meba', 'みゃ')  # む
         _load_abbr('seba', 'しゃ')  # す
         
-        _load_abbr('shimashou', 'ましょ')
+        _load_abbr('shimashou', 'ましょ', suffix_class='shimashou')
         _load_abbr('dewanai', 'じゃない')
         
         _load_abbr('ii', 'ええ')
@@ -1302,8 +1305,25 @@ def _handler_tosuru(session: Session, root: str, suffix: str, kf: Optional[KanaT
 
 
 def _handler_kurai(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle くらい suffix - about/approximately."""
-    return find_word_with_conj_type(session, root, 2)
+    """Handle くらい suffix - about/approximately.
+    
+    くらい attaches to:
+    1. Verb dictionary form: 食べるくらい
+    2. Verb past form: 食べたくらい
+    3. Verb continuative form: 食べくらい (literary)
+    4. Noun/pronoun: それくらい
+    """
+    results = []
+    # Try past form
+    results.extend(find_word_with_conj_type(session, root, 2))
+    # Try continuative form
+    results.extend(find_word_with_conj_type(session, root, 13))
+    # Try dictionary form (verbs, adjectives)
+    results.extend(find_word_with_pos(session, root, 'v1'))
+    results.extend(find_word_with_pos(session, root, 'v5'))
+    results.extend(find_word_with_pos(session, root, 'adj-i'))
+    results.extend(find_word_with_pos(session, root, 'adj-na'))
+    return results
 
 
 def _handler_iadj(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
