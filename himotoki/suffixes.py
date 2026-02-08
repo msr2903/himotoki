@@ -43,6 +43,8 @@ from himotoki.constants import (
     SEQ_PPOI, SEQ_GATAI, SEQ_DASU, SEQ_KIRU, SEQ_KATA, SEQ_MI,
     SEQ_YASUI, SEQ_MAKURU, SEQ_NAOSU, SEQ_SOKONAU, SEQ_WASURERU,
     SEQ_OERU, SEQ_ZURAI, SEQ_GIMI, SEQ_PPANASHI, SEQ_TACHI,
+    SEQ_AU, SEQ_KOMU, SEQ_HOUDAI, SEQ_OWARU, SEQ_HAJIMERU, SEQ_TSUKERU,
+    SEQ_YARU, SEQ_MAIRU, SEQ_KUDASARU, SEQ_SASHIAGERU,
     # Blocked seqs
     BLOCKED_NAI_SEQS, BLOCKED_NAI_X_SEQS,
     # Suffix descriptions (to merge with local ones)
@@ -120,6 +122,16 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     'gimi': 'tending to / -ish / -like',
     'ppanashi': 'left doing / leaving as is',
     'tachi': 'plural (people/animals)',
+    'au': 'to do mutually / to do together',
+    'komu': 'to do into / to do thoroughly',
+    'houdai': 'as much as one likes / unlimited',
+    'owaru': 'to finish doing',
+    'hajimeru': 'to start doing / to begin to',
+    'tsukeru': 'to be accustomed to doing',
+    'yaru': 'to do for (someone, casual)',
+    'mairu': 'to go/come (humble, te-form auxiliary)',
+    'kudasaru': 'to kindly do for (honorific)',
+    'sashiageru': 'to do for (humble, respectful)',
     # Particle seqs - imported from constants and merged
     **SUFFIX_DESCRIPTION_SEQS,
 }
@@ -370,6 +382,18 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         # ほしい (hoshii) - want someone to
         _load_conjs(session, 'te+space', SEQ_HOSHII, suffix_class='hoshii')
         
+        # やる (yaru) - do for someone (casual)
+        _load_conjs(session, 'te+space', SEQ_YARU, suffix_class='yaru')
+        
+        # まいる (mairu) - humble go/come (te-form auxiliary)
+        _load_conjs(session, 'te+space', SEQ_MAIRU, suffix_class='mairu')
+        
+        # くださる (kudasaru) - kindly do for (honorific)
+        _load_conjs(session, 'te+space', SEQ_KUDASARU, suffix_class='kudasaru')
+        
+        # さしあげる (sashiageru) - do for (humble/respectful)
+        _load_conjs(session, 'te+space', SEQ_SASHIAGERU, suffix_class='sashiageru')
+        
         # いく (iku) - going/becoming
         for kf in get_kana_forms(session, SEQ_IKU):
             tkf = kf.text
@@ -462,17 +486,20 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         dasu_kf = get_kana_form(session, SEQ_DASU, 'だす')
         if dasu_kf:
             _load_kf('ren', dasu_kf, suffix_class='dasu')
+            _load_kf('ren', dasu_kf, suffix_class='dasu', text='出す')
         
         # きる (kiru) - to do completely
         # Only register base form to avoid short kana conflicts
         kiru_kf = get_kana_form(session, SEQ_KIRU, 'きる')
         if kiru_kf:
             _load_kf('ren', kiru_kf, suffix_class='kiru')
+            _load_kf('ren', kiru_kf, suffix_class='kiru', text='切る')
         
         # 方 (kata) - way of doing
         kata_kf = get_kana_form(session, SEQ_KATA, 'かた')
         if kata_kf:
             _load_kf('ren', kata_kf, suffix_class='kata')
+            _load_kf('ren', kata_kf, suffix_class='kata', text='方')
         
         # み (mi) - adjective nominalization (-ness)
         mi_kf = get_kana_form(session, SEQ_MI, 'み')
@@ -528,6 +555,41 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         tachi_kf = get_kana_form(session, SEQ_TACHI, 'たち')
         if tachi_kf:
             _load_kf('tachi', tachi_kf)
+        
+        # 合う (au) - mutual/reciprocal compound verb
+        au_kf = get_kana_form(session, SEQ_AU, 'あう')
+        if au_kf:
+            _load_kf('ren', au_kf, suffix_class='au')
+            _load_kf('ren', au_kf, suffix_class='au', text='合う')
+        
+        # 込む (komu) - into/thoroughly compound verb
+        komu_kf = get_kana_form(session, SEQ_KOMU, 'こむ')
+        if komu_kf:
+            _load_kf('ren', komu_kf, suffix_class='komu')
+            _load_kf('ren', komu_kf, suffix_class='komu', text='込む')
+        
+        # 放題 (houdai) - as much as one likes
+        houdai_kf = get_kana_form(session, SEQ_HOUDAI, 'ほうだい')
+        if houdai_kf:
+            _load_kf('ren', houdai_kf, suffix_class='houdai')
+            _load_kf('ren', houdai_kf, suffix_class='houdai', text='放題')
+        
+        # 終わる (owaru) - to finish doing
+        owaru_kf = get_kana_form(session, SEQ_OWARU, 'おわる')
+        if owaru_kf:
+            _load_kf('ren+', owaru_kf, suffix_class='owaru')
+            _load_kf('ren+', owaru_kf, suffix_class='owaru', text='終わる')
+        
+        # 始める (hajimeru) - to start doing
+        hajimeru_kf = get_kana_form(session, SEQ_HAJIMERU, 'はじめる')
+        if hajimeru_kf:
+            _load_kf('ren+', hajimeru_kf, suffix_class='hajimeru')
+            _load_kf('ren+', hajimeru_kf, suffix_class='hajimeru', text='始める')
+        
+        # つける (tsukeru) - to be accustomed to doing
+        tsukeru_kf = get_kana_form(session, SEQ_TSUKERU, 'つける')
+        if tsukeru_kf:
+            _load_kf('ren', tsukeru_kf, suffix_class='tsukeru')
         
         # うる (uru) - can
         uru_kf = get_kana_form(session, 1454500, 'うる')
@@ -968,6 +1030,7 @@ def find_word_suffix(
 SUFFIX_SCORES: Dict[str, float] = {
     'tai': 5,
     'ren': 5,
+    'ren+': 10,  # Higher score for longer compound verb suffixes (3+ chars)
     'ren-': 0,
     'neg': 5,
     'te': 0,
@@ -1625,6 +1688,7 @@ def _handler_abbr_ii(session: Session, root: str, suffix: str, kf: Optional[Kana
 SUFFIX_HANDLERS: Dict[str, Callable] = {
     'tai': _handler_tai,
     'ren': _handler_ren,
+    'ren+': _handler_ren,
     'ren-': _handler_ren,
     'neg': _handler_neg,
     'te': _handler_te,
