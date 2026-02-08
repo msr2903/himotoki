@@ -303,7 +303,8 @@ SEQ_O_PREFIX = 2826528     # お (polite prefix)
 
 # Blocked from nai suffix abbreviation (abbr-nee and abbr-n)
 # See ichiran dict-grammar.lisp
-BLOCKED_NAI_SEQS: Set[int] = {SEQ_IRU, SEQ_KURU}
+# みる blocked: みん overlaps with みんな causing greedy suffix chains
+BLOCKED_NAI_SEQS: Set[int] = {SEQ_IRU, SEQ_KURU, SEQ_MIRU}
 
 # Blocked from nai-x abbreviation (ず, ざる, ぬ)
 # する creates せず issues, 富む creates とまず false matches

@@ -516,12 +516,18 @@ def join_substring_words(session: Session, text: str) -> List[SegmentList]:
 # ============================================================================
 
 def get_segment_score(seg: Any) -> float:
-    """Get score from a segment, segment list, or synergy."""
+    """Get score from a segment, segment list, or synergy.
+    
+    For SegmentList, returns the max score across all alternatives.
+    This ensures the path finder uses the best available score even
+    when compounds (which may score lower) are reordered to front
+    for display purposes.
+    """
     if isinstance(seg, Segment):
         return seg.score
     elif isinstance(seg, SegmentList):
         segments = seg.segments
-        return segments[0].score if segments else 0
+        return max(s.score for s in segments) if segments else 0
     elif isinstance(seg, Synergy):
         return get_segment_score_synergy(seg)
     return 0
