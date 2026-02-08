@@ -53,7 +53,7 @@ from himotoki.constants import (
 
 SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     # Verbal suffixes
-    'chau': 'indicates completion (to finish ...)',
+    'chau': 'indicates completion / to do something by accident or regret',
     'ha': 'topic marker particle',
     'tai': 'want to... / would like to...',
     'iru': 'indicates continuing action (to be ...ing)',
