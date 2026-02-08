@@ -10,7 +10,7 @@ This module provides:
 """
 
 from dataclasses import dataclass, field
-from typing import Optional, List, Dict, Any, Union
+from typing import Optional, List, Dict, Any, Union, Tuple
 from enum import Enum
 import json
 
@@ -1795,29 +1795,81 @@ def format_conjugation_info(
                             elif "ま" in suffix:
                                 idx = suffix.index("ま")
                                 suffix = suffix[idx + 1:]  # strip ま, keep した/せん
-                            neg_mark = "not " if step.neg else ""
-                            label = f"{neg_mark}{step.conj_type}".strip()
-                            gloss_str = f": {step.gloss}" if step.gloss else ""
-                            result.append(f"  {indent}└─ {label} ({suffix}){gloss_str}")
-                            current_depth += 1
+                            if step.neg:
+                                if step.conj_type == "Non-past":
+                                    # Polite negative: せん → Negative (せん)
+                                    result.append(f"  {indent}└─ Negative ({suffix}): not")
+                                    current_depth += 1
+                                elif suffix.startswith("せん") and len(suffix) > 2:
+                                    # Polite neg + conjugation: せんでした
+                                    # → Negative (せん) + Past (でした)
+                                    conj_suffix = suffix[2:]
+                                    result.append(f"  {indent}└─ Negative (せん): not")
+                                    current_depth += 1
+                                    indent = "     " * current_depth
+                                    gloss_str = f": {step.gloss}" if step.gloss else ""
+                                    result.append(f"  {indent}└─ {step.conj_type} ({conj_suffix}){gloss_str}")
+                                    current_depth += 1
+                                else:
+                                    # Fallback for other formal neg patterns
+                                    neg_part, conj_part = _split_neg_suffix(suffix)
+                                    result.append(f"  {indent}└─ Negative ({neg_part}): not")
+                                    current_depth += 1
+                                    if conj_part:
+                                        indent = "     " * current_depth
+                                        gloss_str = f": {step.gloss}" if step.gloss else ""
+                                        result.append(f"  {indent}└─ {step.conj_type} ({conj_part}){gloss_str}")
+                                        current_depth += 1
+                            else:
+                                label = step.conj_type
+                                gloss_str = f": {step.gloss}" if step.gloss else ""
+                                result.append(f"  {indent}└─ {label} ({suffix}){gloss_str}")
+                                current_depth += 1
                     else:
-                        neg_mark = "not " if step.neg else ""
                         type_label = step.conj_type
                         gloss = step.gloss
+                        suffix = step.suffix
                         if type_label == "Potential":
                             # Show dual label only when form is ambiguous
                             # Godan potential starts with え-dan kana (け,せ,て,...)
                             # which is clearly just Potential. Only れ/られ forms
                             # (ichidan verbs) are ambiguous with Passive.
                             _GODAN_POTENTIAL = set("えけせてねへめげ")
-                            first_char = step.suffix[0] if step.suffix else ""
+                            first_char = suffix[0] if suffix else ""
                             if first_char not in _GODAN_POTENTIAL:
                                 type_label = "Potential/Passive"
                                 gloss = "can do / is done (to)"
-                        label = f"{neg_mark}{type_label}".strip()
-                        gloss_str = f": {gloss}" if gloss else ""
-                        result.append(f"  {indent}└─ {label} ({step.suffix}){gloss_str}")
-                        current_depth += 1
+                        if step.neg:
+                            # Split negative into separate tree levels
+                            if type_label == "Non-past":
+                                # Pure negative: ない is the non-past neg form
+                                result.append(f"  {indent}└─ Negative ({suffix}): not")
+                                current_depth += 1
+                            elif suffix.endswith("ない"):
+                                # Type + Negative: type applied first, then negated
+                                # e.g., けない → Potential (け) + Negative (ない)
+                                conj_suffix = suffix[:-2]
+                                gloss_str = f": {gloss}" if gloss else ""
+                                result.append(f"  {indent}└─ {type_label} ({conj_suffix}){gloss_str}")
+                                current_depth += 1
+                                indent = "     " * current_depth
+                                result.append(f"  {indent}└─ Negative (ない): not")
+                                current_depth += 1
+                            else:
+                                # Negative + conjugation: negated first, then ない conjugated
+                                # e.g., なかった → Negative (ない) + Past (かった)
+                                neg_part, conj_part = _split_neg_suffix(suffix)
+                                result.append(f"  {indent}└─ Negative ({neg_part}): not")
+                                current_depth += 1
+                                if conj_part:
+                                    indent = "     " * current_depth
+                                    gloss_str = f": {gloss}" if gloss else ""
+                                    result.append(f"  {indent}└─ {type_label} ({conj_part}){gloss_str}")
+                                    current_depth += 1
+                        else:
+                            gloss_str = f": {gloss}" if gloss else ""
+                            result.append(f"  {indent}└─ {type_label} ({suffix}){gloss_str}")
+                            current_depth += 1
             else:
                 # Fallback: flat format for cases where chain can't be built
                 neg_str = ' Negative' if prop.neg else ' Affirmative'
@@ -1841,11 +1893,14 @@ def _build_conj_chain(
     e.g., for 食べられなかった (eat+passive+neg+past):
       root: 食べる
       step 1: Passive (られる) - from via chain  
-      step 2: not Past (た) - from outer prop (neg=True)
+      step 2: Past (neg=True) - from outer prop
     
     For 行きました (go+polite+past):
       root: 行く
       step 1: Past (た) - single step (fml=True)
+    
+    Negative is stored as a flag on ConjStep.neg; the renderer splits
+    it into a separate "Negative" tree node at display time.
     """
     from himotoki.lookup import get_conj_data
     
@@ -1858,10 +1913,6 @@ def _build_conj_chain(
     # Add the outermost conjugation step
     type_name = CONJ_TYPE_NAMES.get(outer_prop.conj_type, f"Type {outer_prop.conj_type}")
     gloss = CONJ_STEP_GLOSSES.get(outer_prop.conj_type, "")
-    
-    # Modify gloss for negative
-    if outer_prop.neg and gloss:
-        gloss = f"not {gloss}"
     
     # Get the suffix text: difference between conjugated text and source text
     suffix = _get_conj_suffix(session, conj, outer_prop)
@@ -1904,9 +1955,6 @@ def _collect_via_steps(
     if cd.prop:
         type_name = CONJ_TYPE_NAMES.get(cd.prop.conj_type, f"Type {cd.prop.conj_type}")
         gloss = CONJ_STEP_GLOSSES.get(cd.prop.conj_type, "")
-        
-        if cd.prop.neg and gloss:
-            gloss = f"not {gloss}"
         
         # Get suffix text from src_map
         # Pick the reading that gives the shortest non-empty suffix
@@ -1981,6 +2029,37 @@ def _get_conj_suffix(
     
     # Fallback: use first reading
     return _extract_suffix(src_readings[0].text, src_readings[0].source_text)
+
+
+def _split_neg_suffix(suffix: str) -> Tuple[str, str]:
+    """Split a negative conjugation suffix into (neg_part, conj_part).
+    
+    The negative marker ない conjugates like an i-adjective, so negative
+    suffixes contain the neg marker plus its own conjugation ending.
+    
+    Examples:
+        なかった → (ない, かった)     # neg + past
+        まなかった → (まない, かった)  # neg + past (godan)
+        くなかった → (くない, かった)  # neg + past (i-adj)
+        なくて → (ない, くて)          # neg + te
+        なければ → (ない, ければ)      # neg + provisional
+        ないで → (ない, で)            # neg + te (variant)
+        ない → (ない, "")              # just negative
+    """
+    # ない-conjugation endings (most specific first to avoid partial matches)
+    for ending in ("かったら", "かった", "ければ", "くて"):
+        if suffix.endswith(ending):
+            neg_part = suffix[:-len(ending)] + "い"
+            return neg_part, ending
+    
+    # ないで pattern (negative te-form variant)
+    if suffix.endswith("で") and len(suffix) >= 3:
+        potential_neg = suffix[:-1]
+        if potential_neg.endswith("ない"):
+            return potential_neg, "で"
+    
+    # No further conjugation (e.g., just ない)
+    return suffix, ""
 
 
 def _extract_suffix(conj_text: str, src_text: str) -> str:

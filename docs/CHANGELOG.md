@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 22 new tests (433 total, up from 411).
 
 ### Fixed
+- **Negative split in conjugation tree**: Negative conjugations now display
+  as separate tree levels (Negative + Past) instead of combined (not Past).
+  食べられなかった shows `└─ Negative (ない): not` → `└─ Past (~ta) (かった)`.
+  Also applies to formal (ません), potential (行けない), and adjective forms.
 - **ないで reading bug**: Compound kana now uses the correct kanji reading
   ordinal instead of always using ord=0.  食べないでほしい correctly shows
   【たべないで ほしい】 (was 【たべなくて ほしい】).

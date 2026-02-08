@@ -110,7 +110,8 @@ taberarenakatta
 2. [v1,vt] to live on (e.g. a salary); to live off; to subsist on
   ← 食べる 【たべる】
   └─ Potential/Passive (れる): can do / is done (to)
-       └─ not Past (~ta) (なかった): not did/was
+       └─ Negative (ない): not
+            └─ Past (~ta) (かった): did/was
 ```
 
 ```bash

@@ -81,6 +81,21 @@ Na-adjective stems now connect to productive suffixes:
 - **ちゃ/じゃ contraction reading**: Surface pronunciation is preserved.
   食べちゃいけない shows 【たべちゃ】 (was showing 【たべは】).
 
+### Separate Negative Tree Levels
+
+Negative conjugations are now split into distinct tree levels instead of
+being combined with the conjugation type. For example, 食べられなかった:
+
+```
+Before:  └─ not Past (~ta) (なかった): not did/was
+After:   └─ Negative (ない): not
+              └─ Past (~ta) (かった): did/was
+```
+
+This gives a clearer, more linguistically accurate breakdown. Also
+applies to formal negative (ません → Polite + Negative), potential
+negative (行けない → Potential + Negative), and adjective negative forms.
+
 ## Issues Resolved
 
 ### Batch 1 -- New suffix patterns
