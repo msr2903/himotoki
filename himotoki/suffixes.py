@@ -39,7 +39,7 @@ from himotoki.constants import (
     SEQ_ITASU, SEQ_SARERU, SEQ_SASERU, SEQ_TOKU,
     # Suffix-related
     SEQ_CHAU, SEQ_CHIMAU, SEQ_TAI, SEQ_NIKUI, SEQ_II, SEQ_KUDASAI,
-    SEQ_SOU, SEQ_SOU_NI_NAI, SEQ_MOII,
+    SEQ_SOU, SEQ_SOU_NI_NAI, SEQ_MOII, SEQ_NAGARA,
     # Blocked seqs
     BLOCKED_NAI_SEQS, BLOCKED_NAI_X_SEQS,
     # Suffix descriptions (to merge with local ones)
@@ -79,6 +79,7 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     'nikui': 'difficult to...',
     'sa': '-ness (degree or condition of adjective)',
     'tsutsu': 'while ... / in the process of ...',
+    'nagara': 'while doing ... / simultaneously ...',
     'tsutsuaru': 'to be doing ... / to be in the process of doing ...',
     'tsuzukeru': 'to continue ...',
     'uru': 'can ... / to be able to ...',
@@ -96,6 +97,7 @@ SUFFIX_DESCRIPTION: Dict[Union[str, int], str] = {
     'me': 'somewhat/-ish',
     'gai': 'worth it to ...',
     'tasou': 'seem to want to... (tai+sou)',
+    'nade': 'na-adj conjunctive (and/being)',
     # Particle seqs - imported from constants and merged
     **SUFFIX_DESCRIPTION_SEQS,
 }
@@ -127,6 +129,9 @@ _suffix_ending_chars: Set[str] = set()
 # Mapping from seq to suffix class
 _suffix_class: Dict[int, str] = {}
 
+# Mapping from suffix text to suffix class (for abbreviations without seq)
+_suffix_text_class: Dict[str, str] = {}
+
 # Lock for thread-safe cache initialization
 _suffix_lock = threading.Lock()
 
@@ -138,10 +143,19 @@ _suffix_initialized = False
 # Suffix Cache Initialization
 # ============================================================================
 
-def get_suffix_description(seq: int) -> Optional[str]:
-    """Get description for a suffix by its seq number."""
-    suffix_class = _suffix_class.get(seq, seq)
-    return SUFFIX_DESCRIPTION.get(suffix_class)
+def get_suffix_description(seq: int, text: Optional[str] = None) -> Optional[str]:
+    """Get description for a suffix by its seq number, with text fallback."""
+    if seq is not None:
+        suffix_class = _suffix_class.get(seq, seq)
+        desc = SUFFIX_DESCRIPTION.get(suffix_class)
+        if desc:
+            return desc
+    # Fallback: look up by text (for abbreviation suffixes without seq)
+    if text:
+        suffix_class = _suffix_text_class.get(text)
+        if suffix_class:
+            return SUFFIX_DESCRIPTION.get(suffix_class)
+    return None
 
 
 def _update_cache(text: str, value: Tuple[str, Optional[Any]], join: bool = False):
@@ -241,9 +255,11 @@ def _load_kf(key: str, kf: KanaText, suffix_class: Optional[str] = None, text: O
     _suffix_class[kf.seq] = actual_class
 
 
-def _load_abbr(key: str, text: str, join: bool = False):
+def _load_abbr(key: str, text: str, join: bool = False, suffix_class: Optional[str] = None):
     """Load an abbreviation into suffix cache."""
     _update_cache(text, (key, None), join=join)
+    if suffix_class:
+        _suffix_text_class[text] = suffix_class
 
 
 def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
@@ -268,6 +284,7 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         
         _suffix_cache = {}
         _suffix_class = {}
+        _suffix_text_class = {}
         _suffix_ending_chars = set()
         
         # ちゃう (chau) - completion
@@ -354,7 +371,7 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         else:
             # If the custom entry doesn't exist, register abbreviation for もいい
             # This allows ～てもいい to be recognized
-            _load_abbr('teii', 'もいい')
+            _load_abbr('teii', 'もいい', suffix_class='ii')
         
         # も (mo) - even if
         mo_kf = get_kana_form(session, SEQ_MO, 'も')
@@ -378,10 +395,10 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         # patterns like 張り裂けそうになる (should be 張り裂けそう + に + なる)
         _load_conjs(session, 'sou', SEQ_SOU)
         
-        # ろう (rou) - probably
-        darou_kf = get_kana_form(session, 1928670, 'だろう')  # だろう seq not frequently used
+        # だろう (rou) - probably/conjecture
+        darou_kf = get_kana_form(session, 1928670, 'だろう')
         if darou_kf:
-            _load_kf('rou', darou_kf, text='ろう')
+            _load_kf('rou', darou_kf)  # Register full 'だろう' text
         
         # すぎる (sugiru) - too much
         _load_conjs(session, 'sugiru', 1195970)
@@ -396,6 +413,11 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         if tsutsu_kf:
             _load_kf('ren', tsutsu_kf, suffix_class='tsutsu')
         _load_conjs(session, 'ren', 2027910, suffix_class='tsutsuaru')
+        
+        # ながら (nagara) - while doing
+        nagara_kf = get_kana_form(session, SEQ_NAGARA, 'ながら')
+        if nagara_kf:
+            _load_kf('ren', nagara_kf, suffix_class='nagara')
         
         # 続ける (tsuzukeru) - to continue (V-続ける pattern)
         # Include kanji forms so 続けて matches alongside つづけて
@@ -502,10 +524,13 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         _load_abbr('meba', 'みゃ')  # む
         _load_abbr('seba', 'しゃ')  # す
         
-        _load_abbr('shimashou', 'しましょ')
+        _load_abbr('shimashou', 'ましょ')
         _load_abbr('dewanai', 'じゃない')
         
         _load_abbr('ii', 'ええ')
+        
+        # な-adjective て-form: 静かで, 元気で (copula て-form)
+        _load_abbr('nade', 'で', suffix_class='nade')
         
         _suffix_initialized = True
 
@@ -631,7 +656,7 @@ ABBREVIATION_STEMS: Dict[str, int] = {
     'nai-x': 2,      # ず, ざる, ぬ - ない → stem (remove 2: ない)
     'nai-n': 2,      # ん contraction - ない → な (remove 2: ない)
     'nakereba': 4,   # なきゃ/なくちゃ - なければ → stem (remove 4: なければ)
-    'shimashou': 5,  # しましょ - しましょう → stem (remove 5: しましょう)
+    'shimashou': 4,  # ましょ - ましょう → stem (remove 4: ましょう)
     'dewanai': 4,    # じゃない - ではない → stem (remove 4: ではない)
     'teba': 2,       # ちゃ - てば → stem (remove 2)
     'reba': 2,       # りゃ - れば → stem (remove 2)
@@ -864,6 +889,7 @@ SUFFIX_SCORES: Dict[str, float] = {
     'kurai': 3,
     'nai': 5,
     'kudasai': 360,
+    'nade': 3,
 }
 
 # Suffix connectors - space between root and suffix in kana
@@ -963,6 +989,11 @@ def _handler_tai(session: Session, root: str, suffix: str, kf: Optional[KanaText
 def _handler_ren(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
     """Handle generic ren'youkei (continuative) suffix."""
     return find_word_with_conj_type(session, root, 13)
+
+
+def _handler_teren(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
+    """Handle te-form + ren'youkei suffix (e.g., やがる - disdain)."""
+    return find_word_with_conj_type(session, root, 13)  # Continuative
 
 
 def _handler_neg(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -1065,7 +1096,14 @@ def _handler_suru(session: Session, root: str, suffix: str, kf: Optional[KanaTex
 
 
 def _handler_sou(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle そう suffix - looks like."""
+    """Handle そう suffix - looks like.
+    
+    そう attaches to:
+    1. Verb continuative form (ren'youkei): 食べそう, 降りそう
+    2. Adjective stem (without い): 美しそう, 高そう
+    3. Na-adjective root: 静かそう, 元気そう
+    4. Negative なさ form: 情けなさそう
+    """
     from himotoki.lookup import CONJ_ADJECTIVE_STEM, CONJ_ADVERBIAL
     if root in ('な', 'よ', 'よさ', 'に', 'き'):
         return []
@@ -1079,11 +1117,22 @@ def _handler_sou(session: Session, root: str, suffix: str, kf: Optional[KanaText
     # Filter out なぜる (seq 10195060 for conjugated form) which incorrectly matches なぜ + そう
     # The word なぜ is the interrogative "why", not the verb "to stroke"
     results = [r for r in results if getattr(r, 'seq', None) != 10195060]
+    
+    # Also check for na-adjectives (静かそう, 元気そう)
+    if not results:
+        results = find_word_with_pos(session, root, 'adj-na')
+    
     return results
 
 
 def _handler_sugiru(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle すぎる suffix - too much."""
+    """Handle すぎる suffix - too much.
+    
+    すぎる attaches to:
+    1. Verb continuative form (ren'youkei): 食べすぎる, 飲みすぎる
+    2. Adjective stem (without い): 高すぎる, 美しすぎる
+    3. Negative なさ form: 情けなさすぎる
+    """
     if root == 'い':
         return []
     
@@ -1092,9 +1141,16 @@ def _handler_sugiru(session: Session, root: str, suffix: str, kf: Optional[KanaT
         root_patched = root[:-1] + 'い'
         return find_word_with_neg_prop(session, root_patched)
     
-    # Add い to root and look for adjectives
+    results = []
+    
+    # Try verb continuative form (ren'youkei, conj_type=13)
+    results.extend(find_word_with_conj_type(session, root, 13))
+    
+    # Try adjective stem (add い and look for adj-i)
     root_i = root + 'い'
-    return find_word_with_pos(session, root_i, 'adj-i')
+    results.extend(find_word_with_pos(session, root_i, 'adj-i'))
+    
+    return results
 
 
 def _handler_sa(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -1106,8 +1162,31 @@ def _handler_sa(session: Session, root: str, suffix: str, kf: Optional[KanaText]
 
 
 def _handler_rou(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle ろう suffix - probably."""
-    return find_word_with_conj_type(session, root, 2)  # Past
+    """Handle だろう suffix - probably/conjecture.
+    
+    だろう attaches to:
+    1. Verb dictionary form: 食べるだろう, 行くだろう
+    2. Verb past form: 食べただろう
+    3. Adjective dictionary form: 高いだろう
+    4. Na-adjective root: 静かだろう
+    5. Negative form: 食べないだろう
+    """
+    results = []
+    
+    # Try dictionary form (direct word lookup)
+    results.extend(find_word_with_pos(session, root, 'v1'))
+    results.extend(find_word_with_pos(session, root, 'v5'))
+    results.extend(find_word_with_pos(session, root, 'adj-i'))
+    results.extend(find_word_with_pos(session, root, 'adj-na'))
+    
+    # Try past form (conj_type=2)
+    results.extend(find_word_with_conj_type(session, root, 2))
+    
+    # Try negative form
+    if root.endswith('ない'):
+        results.extend(find_word_with_neg_prop(session, root))
+    
+    return results
 
 
 def _handler_adv(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -1131,12 +1210,25 @@ def _handler_teii(session: Session, root: str, suffix: str, kf: Optional[KanaTex
 
 
 def _handler_garu(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle がる suffix - feel."""
+    """Handle がる suffix - feel/show signs of.
+    
+    がる attaches to adjective stems:
+    1. i-adjective stem: 欲しがる (from 欲しい)
+    2. tai-compound stem: 食べたがる (from 食べたい = 食べる + たい)
+    3. sou-compound stem: よさそうがる
+    """
     from himotoki.lookup import CONJ_ADJECTIVE_STEM
     if root in ('な', 'い', 'よ'):
         return []
     
     result = find_word_with_conj_type(session, root, CONJ_ADJECTIVE_STEM)
+    
+    # If no direct adjective match, check for tai compound chain
+    # e.g., 食べたがる: root='食べた' → root+'い' = '食べたい' → tai compound
+    if not result and root.endswith('た'):
+        tai_form = root + 'い'  # Reconstruct potential たい form
+        tai_results = find_word_suffix(session, tai_form)
+        result.extend(tai_results)
     
     # Also check for そ ending (そう + がる)
     if root.endswith('そ'):
@@ -1144,6 +1236,15 @@ def _handler_garu(session: Session, root: str, suffix: str, kf: Optional[KanaTex
         result.extend(find_word_with_suffix(session, root_patched, 'sou'))
     
     return result
+
+
+def _handler_nade(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
+    """Handle na-adjective て-form (で).
+    
+    で is the conjunctive/te-form for na-adjectives via copula だ:
+    静かで (being quiet; quietly and...), 元気で (being healthy), etc.
+    """
+    return find_word_with_pos(session, root, 'adj-na')
 
 
 def _handler_ra(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -1168,10 +1269,31 @@ def _handler_desu(session: Session, root: str, suffix: str, kf: Optional[KanaTex
 
 
 def _handler_desho(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle でしょう suffix."""
+    """Handle でしょう suffix - polite conjecture.
+    
+    でしょう attaches to:
+    1. Verb dictionary form: 食べるでしょう
+    2. Verb past form: 食べたでしょう
+    3. Adjective dictionary form: 高いでしょう
+    4. Na-adjective root: 静かでしょう
+    5. Negative form: 食べないでしょう
+    """
+    results = []
+    
+    # Try dictionary form (direct word lookup)
+    results.extend(find_word_with_pos(session, root, 'v1'))
+    results.extend(find_word_with_pos(session, root, 'v5'))
+    results.extend(find_word_with_pos(session, root, 'adj-i'))
+    results.extend(find_word_with_pos(session, root, 'adj-na'))
+    
+    # Try past form (conj_type=2)
+    results.extend(find_word_with_conj_type(session, root, 2))
+    
+    # Try negative form
     if root.endswith('ない'):
-        return find_word_with_neg_prop(session, root)
-    return []
+        results.extend(find_word_with_neg_prop(session, root))
+    
+    return results
 
 
 def _handler_tosuru(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -1290,9 +1412,9 @@ def _handler_abbr_nakereba(session: Session, root: str, suffix: str, kf: Optiona
 
 
 def _handler_abbr_shimasho(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
-    """Handle しましょ abbreviation."""
+    """Handle ましょ abbreviation (of ましょう - polite volitional)."""
     from himotoki.lookup import find_word_full
-    return find_word_full(session, root + 'しましょう')
+    return find_word_full(session, root + 'ましょう')
 
 
 def _handler_abbr_dewanai(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -1347,6 +1469,7 @@ SUFFIX_HANDLERS: Dict[str, Callable] = {
     'kudasai': _handler_kudasai,
     'teii': _handler_teii,
     'garu': _handler_garu,
+    'teren': _handler_teren,
     'ra': _handler_ra,
     'rashii': _handler_rashii,
     'desu': _handler_desu,
@@ -1354,6 +1477,7 @@ SUFFIX_HANDLERS: Dict[str, Callable] = {
     'tosuru': _handler_tosuru,
     'kurai': _handler_kurai,
     'iadj': _handler_iadj,
+    'nade': _handler_nade,
     'chau': _handler_chau,  # Contracted てしまう with te-reconstruction
     'to': _handler_to_contracted,  # Contracted ておく with te-reconstruction
     # Abbreviations - each has distinct behavior matching ichiran

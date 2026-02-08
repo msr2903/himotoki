@@ -2126,7 +2126,10 @@ def cull_segments(segments: List[Segment]) -> List[Segment]:
     max_score = max(s.score for s in segments)
     cutoff = max_score * IDENTICAL_WORD_SCORE_CUTOFF
     
-    return [s for s in segments if s.score >= cutoff]
+    # Protect suffix compounds from culling — they carry grammar chain info
+    # that dict entries don't have, even when their score is lower
+    return [s for s in segments if s.score >= cutoff
+            or getattr(s.word, 'is_compound', False)]
 
 
 def gen_score(

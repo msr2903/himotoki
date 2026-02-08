@@ -1677,10 +1677,13 @@ def _get_compound_display(
     for comp in wi.components[1:]:
         indent = "     " * depth
         comp_kana = comp.kana if isinstance(comp.kana, str) else (comp.kana[0] if comp.kana else comp.text)
+        # Fallback to text if kana is empty (e.g., abbreviation-based suffixes like もいい)
+        if not comp_kana:
+            comp_kana = comp.text
         comp_seq = comp.seq[0] if isinstance(comp.seq, list) else comp.seq if comp.seq else None
         
         # Get suffix description for this component
-        desc = get_suffix_description(comp_seq) if comp_seq else None
+        desc = get_suffix_description(comp_seq, text=comp_kana) if (comp_seq or comp_kana) else None
         desc_str = f" ({desc})" if desc else ""
         
         if comp.conjugations and comp.conjugations != 'root' and comp.seq:

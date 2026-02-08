@@ -493,6 +493,14 @@ def join_substring_words(session: Session, text: str) -> List[SegmentList]:
         # Only include if we have valid segments
         if scored_segments:
             culled = cull_segments(scored_segments)
+            
+            # Reorder: suffix compounds first (they carry grammar chains),
+            # then dict entries. This makes the compound the primary display.
+            compound_segs = [s for s in culled if getattr(s.word, 'is_compound', False)]
+            dict_segs = [s for s in culled if not getattr(s.word, 'is_compound', False)]
+            if compound_segs and dict_segs:
+                culled = compound_segs + dict_segs
+            
             segment_lists.append(SegmentList(
                 segments=culled,
                 start=start,
