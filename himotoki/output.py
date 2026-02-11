@@ -411,13 +411,54 @@ def _collect_segment_seqs(segment: Segment, seqs: set) -> None:
 
 
 def word_info_reading_str(word_info: WordInfo) -> str:
-    """Get formatted reading string for WordInfo."""
+    """Get formatted reading string for WordInfo.
+    
+    For compounds where する is absorbed, merges the kana
+    (e.g., 'べんきょう しています' → 'べんきょうしています').
+    """
     if word_info.type == WordType.KANJI or word_info.counter:
         kana = word_info.kana
         if isinstance(kana, list):
             kana = '/'.join(kana)
+        # Merge kana when する is absorbed into a noun compound
+        if word_info.is_compound and word_info.components and isinstance(kana, str):
+            kana = _merge_suru_kana(word_info, kana)
         return reading_str(word_info.text, kana)
     return reading_str(None, word_info.text)
+
+
+def _merge_suru_kana(word_info: WordInfo, kana: str) -> str:
+    """Merge kana spaces when する is absorbed into a noun compound.
+    
+    When the first suffix component is する (or a conjugated form of する),
+    remove the space between the noun kana and the verb kana.
+    
+    'べんきょう しています' → 'べんきょうしています'
+    'べんきょう した' → 'べんきょうした'
+    """
+    if not word_info.components or len(word_info.components) < 2:
+        return kana
+    
+    primary = word_info.components[0]
+    suffix = word_info.components[1]
+    
+    # Only absorb plain する (not させる, される, いたす, etc.)
+    # Check if primary has no conjugation (it's a noun)
+    if primary.conjugations and primary.conjugations != 'root':
+        return kana
+    
+    suffix_kana = suffix.kana if isinstance(suffix.kana, str) else (suffix.kana[0] if suffix.kana else suffix.text)
+    # する or conjugated forms start with し or す
+    if suffix_kana and (suffix_kana.startswith("し") or suffix_kana.startswith("す")):
+        # Verify it's actually する-based by checking the kana pattern
+        # Valid: する, して, した, します, しない, しました, etc.
+        # Invalid: しまう (different verb), すぐ (unrelated)
+        primary_kana = primary.kana if isinstance(primary.kana, str) else (primary.kana[0] if primary.kana else primary.text)
+        expected_prefix = primary_kana + " " + suffix_kana[0]
+        if primary_kana and kana.startswith(expected_prefix):
+            return kana.replace(primary_kana + " ", primary_kana, 1)
+    
+    return kana
 
 
 def has_conjugable_pos(session: Session, seq: int) -> bool:
@@ -1643,12 +1684,20 @@ def _get_compound_display(
     Shows the primary component's conjugation chain, then lists
     each suffix component on subsequent tree lines.
     
+    Special handling:
+    - する is absorbed into a ← root line (勉強する instead of └─ する)
+    - いる/おる after て are hidden; て is relabeled as progressive
+    
+    Example for 勉強しています (4→2 levels):
+      ← 勉強する 【べんきょうする】
+      └─ Conjunctive (~te, progressive) (て)
+           └─ Polite (ます)
+    
     Example for 書かせられていた:
       ← 書く【かく】
       └─ Causative-Passive (書かせられる): is made to do
-           └─ Conjunctive (~te) (て): and/then
-                └─ いる (progressive)
-                     └─ Past (~ta) (た): did/was
+           └─ Conjunctive (~te, progressive) (て)
+                └─ Past (~ta) (た): did/was
     """
     result = []
     
@@ -1690,34 +1739,108 @@ def _get_compound_display(
             # This suffix component is itself conjugated (e.g., いた = past of いる)
             comp_chain = format_conjugation_info(session, comp_seq, comp.conjugations)
             if comp_chain:
-                # Merge the sub-chain into our tree, showing auxiliary verb identity
-                for line in comp_chain:
-                    stripped = line.lstrip()
-                    if stripped.startswith("←"):
-                        # Extract auxiliary verb name from root line and show as tree node
-                        # e.g., "← 仕舞う 【しまう】" → show "└─ しまう (completion/regret)"
-                        aux_name = stripped[2:].strip()  # Remove "← " prefix
-                        # Prefer the kana reading (inside 【...】) for auxiliary verbs
-                        if "【" in aux_name and "】" in aux_name:
-                            start = aux_name.index("【") + 1
-                            end = aux_name.index("】")
-                            aux_name = aux_name[start:end]
-                        sub_indent = "     " * depth
-                        result.append(f"  {sub_indent}└─ {aux_name}{desc_str}")
-                        depth += 1
-                    elif stripped.startswith("└─"):
-                        # Sub-tree step → show at current depth
-                        sub_indent = "     " * depth
-                        result.append(f"  {sub_indent}{stripped}")
-                        depth += 1
+                # Extract auxiliary verb name from root line
+                aux_name = _extract_aux_name_from_chain(comp_chain)
+                
+                if aux_name == "する" and not primary_chain:
+                    # ABSORB する: show ← noun+する root line
+                    primary_kana = primary.kana if isinstance(primary.kana, str) else (primary.kana[0] if primary.kana else primary.text)
+                    if primary.text and primary.text != primary_kana:
+                        result.append(f"  ← {primary.text}する 【{primary_kana}する】")
+                    else:
+                        result.append(f"  ← {primary_kana}する")
+                    # Add する's conjugation children (skip the ← root line)
+                    for line in comp_chain[1:]:
+                        stripped = line.lstrip()
+                        if stripped.startswith("└─"):
+                            sub_indent = "     " * depth
+                            result.append(f"  {sub_indent}{stripped}")
+                            depth += 1
+                
+                elif aux_name in ("いる", "おる") and _last_line_is_te(result):
+                    # HIDE いる/おる: relabel て as progressive, promote children
+                    _relabel_te_progressive(result)
+                    # Add いる/おる's conjugation children (skip the ← root line)
+                    for line in comp_chain[1:]:
+                        stripped = line.lstrip()
+                        if stripped.startswith("└─"):
+                            sub_indent = "     " * depth
+                            result.append(f"  {sub_indent}{stripped}")
+                            depth += 1
+                
+                else:
+                    # Normal: merge sub-chain into tree
+                    for line in comp_chain:
+                        stripped = line.lstrip()
+                        if stripped.startswith("←"):
+                            sub_indent = "     " * depth
+                            result.append(f"  {sub_indent}└─ {aux_name}{desc_str}")
+                            depth += 1
+                        elif stripped.startswith("└─"):
+                            sub_indent = "     " * depth
+                            result.append(f"  {sub_indent}{stripped}")
+                            depth += 1
             else:
                 result.append(f"  {indent}└─ {comp_kana}{desc_str}")
                 depth += 1
         else:
-            result.append(f"  {indent}└─ {comp_kana}{desc_str}")
-            depth += 1
+            # Unconjugated suffix component
+            if comp_kana == "する" and not primary_chain:
+                # ABSORB unconjugated する: show ← noun+する root line
+                primary_kana = primary.kana if isinstance(primary.kana, str) else (primary.kana[0] if primary.kana else primary.text)
+                if primary.text and primary.text != primary_kana:
+                    result.append(f"  ← {primary.text}する 【{primary_kana}する】")
+                else:
+                    result.append(f"  ← {primary_kana}する")
+            elif comp_kana in ("いる", "おる") and _last_line_is_te(result):
+                # HIDE unconjugated いる/おる: relabel て as progressive
+                _relabel_te_progressive(result)
+            else:
+                result.append(f"  {indent}└─ {comp_kana}{desc_str}")
+                depth += 1
     
     return result
+
+
+def _extract_aux_name_from_chain(comp_chain: List[str]) -> Optional[str]:
+    """Extract the auxiliary verb kana name from a conjugation chain's root line.
+    
+    Given a chain like ["  ← 為る 【する】", "  └─ Past (~ta) (た)"],
+    returns "する" (the kana inside 【...】).
+    """
+    if not comp_chain:
+        return None
+    first = comp_chain[0].lstrip()
+    if not first.startswith("←"):
+        return None
+    aux_name = first[2:].strip()
+    if "【" in aux_name and "】" in aux_name:
+        start = aux_name.index("【") + 1
+        end = aux_name.index("】")
+        return aux_name[start:end]
+    return aux_name
+
+
+def _last_line_is_te(result: List[str]) -> bool:
+    """Check if the last tree line contains Conjunctive (~te)."""
+    for line in reversed(result):
+        stripped = line.lstrip()
+        if stripped.startswith("└─") and "Conjunctive (~te" in stripped:
+            return True
+        if stripped.startswith("└─") or stripped.startswith("←"):
+            return False
+    return False
+
+
+def _relabel_te_progressive(result: List[str]) -> None:
+    """Find the last Conjunctive (~te) line and relabel it as progressive."""
+    for i in range(len(result) - 1, -1, -1):
+        if "Conjunctive (~te)" in result[i]:
+            result[i] = result[i].replace(
+                "Conjunctive (~te)",
+                "Conjunctive (~te, progressive)",
+            )
+            return
 
 
 def format_conjugation_info(

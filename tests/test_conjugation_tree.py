@@ -718,10 +718,12 @@ class TestAuxVerbLabels:
         wi, tree = _get_tree(session_with_suffixes, "飲んでしまった")
         assert any("しまう" in line for line in tree), f"しまう not found in: {tree}"
 
-    def test_te_iru_past_shows_iru(self, session_with_suffixes):
-        """食べていた should show いる in the tree."""
+    def test_te_iru_past_shows_progressive(self, session_with_suffixes):
+        """食べていた should show progressive て (いる absorbed)."""
         wi, tree = _get_tree(session_with_suffixes, "食べていた")
-        assert any("いる" in line for line in tree), f"いる not found in: {tree}"
+        assert any("progressive" in line for line in tree), f"progressive not found in: {tree}"
+        # いる should be hidden (absorbed into progressive て)
+        assert not any("いる" in line for line in tree), f"いる should be hidden: {tree}"
 
     def test_te_kureru_past_shows_kureru(self, session_with_suffixes):
         """教えてくれた should show くれる in the tree."""
@@ -733,10 +735,12 @@ class TestAuxVerbLabels:
         wi, tree = _get_tree(session_with_suffixes, "読んでもらった")
         assert any("もらう" in line for line in tree), f"もらう not found in: {tree}"
 
-    def test_causative_passive_te_iru_past_shows_iru(self, session_with_suffixes):
-        """書かせられていた should show いる in the tree."""
+    def test_causative_passive_te_iru_past_shows_progressive(self, session_with_suffixes):
+        """書かせられていた should show progressive て (いる absorbed)."""
         wi, tree = _get_tree(session_with_suffixes, "書かせられていた")
-        assert any("いる" in line for line in tree), f"いる not found in: {tree}"
+        assert any("progressive" in line for line in tree), f"progressive not found in: {tree}"
+        # いる should be hidden (absorbed into progressive て)
+        assert not any("いる" in line for line in tree), f"いる should be hidden: {tree}"
 
     def test_te_shimau_tai_shows_shimau(self, session_with_suffixes):
         """食べてしまいたい should show しまう in the tree."""
@@ -766,12 +770,12 @@ class TestSuffixDescriptions:
     without descriptions (e.g., └─ いる instead of └─ いる (continuing action)).
     """
 
-    def test_te_iru_shows_description(self, session_with_suffixes):
-        """食べている should show いる with description."""
+    def test_te_iru_shows_progressive(self, session_with_suffixes):
+        """食べている should show progressive て (いる absorbed)."""
         wi, tree = _get_tree(session_with_suffixes, "食べている")
-        iru_lines = [l for l in tree if "いる" in l and "└─" in l]
-        assert iru_lines, f"いる tree line not found in: {tree}"
-        assert "continuing action" in iru_lines[0], f"Description missing in: {iru_lines[0]}"
+        assert any("progressive" in line for line in tree), f"progressive not found in: {tree}"
+        # いる should be hidden (absorbed into progressive て)
+        assert not any("いる" in line and "└─" in line for line in tree), f"いる should be hidden: {tree}"
 
     def test_te_shimau_past_shows_description(self, session_with_suffixes):
         """飲んでしまった should show しまう with description."""
@@ -801,12 +805,11 @@ class TestSuffixDescriptions:
         assert hoshii_lines, f"ほしい tree line not found in: {tree}"
         assert "want" in hoshii_lines[0], f"Description missing in: {hoshii_lines[0]}"
 
-    def test_te_iru_past_shows_description(self, session_with_suffixes):
-        """食べていた: even conjugated いる should show its description."""
+    def test_te_iru_past_shows_progressive(self, session_with_suffixes):
+        """食べていた: いる absorbed into progressive て."""
         wi, tree = _get_tree(session_with_suffixes, "食べていた")
-        iru_lines = [l for l in tree if "いる" in l and "└─" in l]
-        assert iru_lines, f"いる tree line not found in: {tree}"
-        assert "continuing action" in iru_lines[0], f"Description missing in: {iru_lines[0]}"
+        assert any("progressive" in line for line in tree), f"progressive not found in: {tree}"
+        assert not any("いる" in line and "└─" in line for line in tree), f"いる should be hidden: {tree}"
 
     def test_tsuzukeru_shows_description(self, session_with_suffixes):
         """走り続けている should show つづける with description."""
