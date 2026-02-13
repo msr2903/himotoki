@@ -1366,7 +1366,9 @@ def fill_segment_path(
                 ))
             
             # Add the segment (pass cache for optimized lookups)
-            result.append(word_info_from_segment_list(session, segment_list, cache))
+            wi = word_info_from_segment_list(session, segment_list, cache)
+            expanded = _split_copula_compound_for_output(wi)
+            result.extend(expanded)
             idx = segment_list.end
         elif isinstance(item, Segment):
             segment = item
@@ -1382,7 +1384,9 @@ def fill_segment_path(
                 ))
             
             # Add the segment (pass cache for optimized lookups)
-            result.append(word_info_from_segment(session, segment, cache))
+            wi = word_info_from_segment(session, segment, cache)
+            expanded = _split_copula_compound_for_output(wi)
+            result.extend(expanded)
             idx = segment.end
     
     # Add trailing gap if needed
@@ -1401,6 +1405,27 @@ def fill_segment_path(
         populate_meanings(session, result)
     
     return result
+
+
+def _split_copula_compound_for_output(wi: WordInfo) -> List[WordInfo]:
+    """Split na-adjective/noun + copula compounds for display output.
+
+    Keeps internal parsing/scoring behavior unchanged while presenting
+    user-facing output as separate tokens (e.g., 綺麗 + です + ね).
+    """
+    if not wi.is_compound or not wi.components or len(wi.components) != 2:
+        return [wi]
+
+    primary, suffix = wi.components
+    suffix_kana = suffix.kana if isinstance(suffix.kana, str) else (suffix.kana[0] if suffix.kana else suffix.text)
+    if suffix_kana not in ('です', 'でした'):
+        return [wi]
+
+    # Only split when primary itself is not conjugated (noun/na-adj style usage)
+    if primary.conjugations and primary.conjugations != 'root':
+        return [wi]
+
+    return [primary, suffix]
 
 
 def populate_meanings(session: Session, word_infos: List[WordInfo]) -> None:
