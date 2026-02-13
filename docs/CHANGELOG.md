@@ -28,6 +28,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 22 new tests (433 total, up from 411).
 
 ### Fixed
+- **だろう/でしょう segmentation over-absorption**: Sentence-level copula forms
+  are no longer forced into preceding-word suffix compounds. Examples like
+  神だろう, 近いだろう, 迷惑でしょうか now segment compositionally.
+- **Copula polite label in tree**: Copula-path polite steps now render as
+  `Polite (です)` instead of `Polite (ます)`.
+- **Standalone copula trees**: Standalone forms now show conjugation trees for
+  ではない, だろう, and でしょう (with source `← だ`).
+- **na-adjective + copula ambiguity**: Fixed bad splits such as
+  大丈夫で + すか and 静かで + した by preferring copula analyses.
+- **na-adjective copula tree clarity**: Forms like 静かでした now show
+  `← 静かだ` → `Polite (です)` → `Past (~ta) (でした)`.
+- **i-adjective + すぎる source form**: 高すぎる now shows source and stem in
+  the tree (`← 高い` → `Adjective Stem` → `すぎる`).
 - **Negative split in conjugation tree**: Negative conjugations now display
   as separate tree levels (Negative + Past) instead of combined (not Past).
   食べられなかった shows `└─ Negative (ない): not` → `└─ Past (~ta) (かった)`.

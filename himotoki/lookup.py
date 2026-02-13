@@ -158,6 +158,17 @@ NO_KANJI_BREAK_PENALTY: Set[int] = {
     2827864,   # なので
 }
 
+# Expression entries that are valid dictionary items but too coarse for our
+# segmentation goals. We prefer compositional analysis for these.
+SUPPRESS_SINGLE_TOKEN_SEQS: Set[int] = {
+    2825978,  # でしょうか -> prefer でしょう + か
+}
+
+# Per-entry score bonuses to prefer linguistically compositional analyses.
+SEQ_SCORE_BONUS: Dict[int, int] = {
+    10044695: 10,  # でしょう (conjugated copula) over spurious 〜で + しょうか paths
+}
+
 # Import conjugation constants from central location
 from himotoki.constants import (
     CONJ_ADVERBIAL, CONJ_ADJECTIVE_STEM, CONJ_NEGATIVE_STEM,
@@ -680,6 +691,7 @@ def find_word(
         query = select(table).where(table.text == word)
     
     results = session.execute(query).scalars().all()
+    results = [r for r in results if r.seq not in SUPPRESS_SINGLE_TOKEN_SEQS]
     return [WordMatch(reading=r) for r in results]
 
 
@@ -1552,6 +1564,10 @@ def calc_score(
     # This avoids expensive entry lookups and conjugation data retrieval
     if seq in SKIP_WORDS:
         return 0, {}
+
+    # Suppress coarse expression tokens when compositional segmentation exists.
+    if seq in SUPPRESS_SINGLE_TOKEN_SEQS:
+        return 0, {}
     
     # Fast path: Final particles only score at end of text
     if not final and seq in FINAL_PRT:
@@ -1770,6 +1786,9 @@ def calc_score(
     # Counter mode minimum score (ichiran line 926: (when ctr-mode (setf score (max 5 score))))
     if ctr_mode:
         score = max(5, score)
+
+    # Entry-specific score adjustments
+    score += SEQ_SCORE_BONUS.get(seq, 0)
     
     # Calculate prop_score and apply length multiplier (lines 927-937)
     prop_score = score

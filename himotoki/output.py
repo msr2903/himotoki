@@ -1664,6 +1664,17 @@ def _get_conjugation_display(
         primary = wi.components[0]
         if primary.is_compound and primary.components:
             return _get_compound_display(session, primary)
+
+        # Standalone alternatives may have conjugation data only on a
+        # non-primary alternative (e.g., だろう/でしょう/ではない). Fall back
+        # to the first alternative that carries conjugation metadata.
+        for alt in wi.components:
+            if alt.conjugations and alt.conjugations != 'root' and alt.seq:
+                alt_seq = alt.seq[0] if isinstance(alt.seq, list) else alt.seq
+                lines = format_conjugation_info(session, alt_seq, alt.conjugations)
+                if wi.text == 'ではない':
+                    lines = [line.replace('(じゃない)', '(ではない)') for line in lines]
+                return lines
     
     conjugations = wi.conjugations
     if not conjugations or conjugations == 'root':
@@ -1671,8 +1682,10 @@ def _get_conjugation_display(
     
     # For multi-alternative words (seq is a list), use the first seq
     seq = wi.seq[0] if isinstance(wi.seq, list) else wi.seq
-    
-    return format_conjugation_info(session, seq, conjugations)
+    lines = format_conjugation_info(session, seq, conjugations)
+    if wi.text == 'ではない':
+        lines = [line.replace('(じゃない)', '(ではない)') for line in lines]
+    return lines
 
 
 def _get_compound_display(
@@ -1734,6 +1747,36 @@ def _get_compound_display(
         # Get suffix description for this component
         desc = get_suffix_description(comp_seq, text=comp_kana) if (comp_seq or comp_kana) else None
         desc_str = f" ({desc})" if desc else ""
+
+        # na-adjective copula compounds (静かでした, 大丈夫です)
+        if not primary_chain and depth == 0 and comp_kana in ('です', 'でした'):
+            primary_kana = primary.kana if isinstance(primary.kana, str) else (primary.kana[0] if primary.kana else primary.text)
+            if primary.text and primary.text != primary_kana:
+                result.append(f"  ← {primary.text}だ 【{primary_kana}だ】")
+            else:
+                result.append(f"  ← {primary_kana}だ")
+
+            result.append("  └─ Polite (です)")
+            depth = 1
+
+            if comp_kana == 'でした':
+                result.append("       └─ Past (~ta) (でした): did/was")
+                depth = 2
+            continue
+
+        # i-adj + すぎる compounds may arrive without explicit conjugation IDs
+        # on the primary component (e.g., 高すぎる). In that case, synthesize
+        # the source + adjective stem steps for readability.
+        if not primary_chain and depth == 0 and comp_kana == "すぎる":
+            primary_kana = primary.kana if isinstance(primary.kana, str) else (primary.kana[0] if primary.kana else primary.text)
+            if primary_kana and primary_kana.endswith("い"):
+                primary_seq = primary.seq[0] if isinstance(primary.seq, list) else primary.seq
+                if primary_seq:
+                    result.append(f"  ← {get_entry_reading(session, primary_seq)}")
+                stem_kana = primary_kana[:-1]
+                result.append(f"  └─ Adjective Stem ({stem_kana}): stem")
+                depth = 1
+                indent = "     " * depth
         
         if comp.conjugations and comp.conjugations != 'root' and comp.seq:
             # This suffix component is itself conjugated (e.g., いた = past of いる)
@@ -1903,7 +1946,8 @@ def format_conjugation_info(
                         current_depth += 1
                     elif step.fml:
                         # Show Polite as its own tree step
-                        result.append(f"  {indent}└─ Polite (ます)")
+                        polite_morpheme = "です" if step.suffix.startswith("で") else "ます"
+                        result.append(f"  {indent}└─ Polite ({polite_morpheme})")
                         current_depth += 1
                         # If there's an actual conjugation beyond plain polite non-past
                         if step.conj_type != "Non-past" or step.neg:

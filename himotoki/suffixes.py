@@ -441,10 +441,8 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         # patterns like 張り裂けそうになる (should be 張り裂けそう + に + なる)
         _load_conjs(session, 'sou', SEQ_SOU)
         
-        # だろう (rou) - probably/conjecture
-        darou_kf = get_kana_form(session, 1928670, 'だろう')
-        if darou_kf:
-            _load_kf('rou', darou_kf)  # Register full 'だろう' text
+        # NOTE: だろう/でしょう are intentionally NOT loaded as absorbing suffixes.
+        # They should remain separate tokens (e.g., 神 + だろう, 迷惑 + でしょう + か).
         
         # すぎる (sugiru) - too much
         _load_conjs(session, 'sugiru', 1195970)
@@ -624,18 +622,13 @@ def init_suffixes(session: Session, blocking: bool = True, reset: bool = False):
         # らしい (rashii) - seems like
         _load_conjs(session, 'rashii', 1013240)
         
-        # です (desu) - formal copula
+        # です / でした (desu) - formal copula forms
         desu_kf = get_kana_form(session, 1628500, 'です')
         if desu_kf:
             _load_kf('desu', desu_kf)
-        
-        # でしょう (desho)
-        desho_kf = get_kana_form(session, 1008420, 'でしょう')
-        if desho_kf:
-            _load_kf('desho', desho_kf)
-        desho2_kf = get_kana_form(session, 1008420, 'でしょ')
-        if desho2_kf:
-            _load_kf('desho', desho2_kf)
+        deshita_kf = get_kana_form(session, 10044689, 'でした')
+        if deshita_kf:
+            _load_kf('desu', deshita_kf, text='でした')
         
         # とする (tosuru) - try to
         _load_conjs(session, 'tosuru', 2136890)
@@ -1055,7 +1048,6 @@ SUFFIX_SCORES: Dict[str, float] = {
     'suru': 5,
     'sou': 60,  # Default, but overridden by get_sou_score for specific roots
     'sou+': 1,
-    'rou': 1,
     'adv': 1,
     'sugiru': 5,
     'sa': 2,
@@ -1067,7 +1059,6 @@ SUFFIX_SCORES: Dict[str, float] = {
     'ppoi': 3,
     'tachi': 3,
     'desu': 200,
-    'desho': 300,
     'tosuru': 3,
     'kurai': 3,
     'nai': 5,
@@ -1502,9 +1493,14 @@ def _handler_rashii(session: Session, root: str, suffix: str, kf: Optional[KanaT
 
 def _handler_desu(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
     """Handle です suffix - formal copula."""
+    # Negative copula forms (e.g., 〜ないです)
     if root.endswith('ない') or root.endswith('なかった'):
         return find_word_with_neg_prop(session, root)
-    return []
+
+    # na-adjective + copula (e.g., 大丈夫です, 静かでした)
+    if len(root) < 2:
+        return []
+    return find_word_with_pos(session, root, 'adj-na')
 
 
 def _handler_desho(session: Session, root: str, suffix: str, kf: Optional[KanaText]) -> List[Any]:
@@ -1721,7 +1717,6 @@ SUFFIX_HANDLERS: Dict[str, Callable] = {
     'sou+': _handler_sou,
     'sugiru': _handler_sugiru,
     'sa': _handler_sa,
-    'rou': _handler_rou,
     'adv': _handler_adv,
     'kudasai': _handler_kudasai,
     'teii': _handler_teii,
@@ -1730,7 +1725,6 @@ SUFFIX_HANDLERS: Dict[str, Callable] = {
     'ra': _handler_ra,
     'rashii': _handler_rashii,
     'desu': _handler_desu,
-    'desho': _handler_desho,
     'tosuru': _handler_tosuru,
     'kurai': _handler_kurai,
     'iadj': _handler_iadj,

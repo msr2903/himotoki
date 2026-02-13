@@ -161,9 +161,8 @@ kakaserareteita
   ← 書く 【かく】
   └─ Causative (かせ): makes do
        └─ Passive (られる): is done (to)
-            └─ Conjunctive (~te) (て)
-                 └─ いる (indicates continuing action (to be ...ing))
-                      └─ Past (~ta) (た): did/was
+      └─ Conjunctive (~te, progressive) (て)
+        └─ Past (~ta) (た): did/was
 ```
 
 A deeply nested chain parsed into its constituent parts:
@@ -199,10 +198,9 @@ $ himotoki "学校で勉強しています"
 * 勉強しています 【べんきょう しています】
 1. [n,vs,vt] study
 2. [n,vs,vi] diligence; working hard
-  └─ する (makes a verb from a noun)
-       └─ Conjunctive (~te) (て)
-            └─ いる (indicates continuing action (to be ...ing))
-                 └─ Polite (ます)
+  ← 勉強する 【べんきょうする】
+  └─ Conjunctive (~te, progressive) (て)
+    └─ Polite (ます)
 ```
 
 ---

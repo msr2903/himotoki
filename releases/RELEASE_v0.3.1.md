@@ -96,6 +96,25 @@ This gives a clearer, more linguistically accurate breakdown. Also
 applies to formal negative (ません → Polite + Negative), potential
 negative (行けない → Potential + Negative), and adjective negative forms.
 
+### Copula / Conjecture Tree & Segmentation Fixes
+
+This release also resolves a cluster of copula-path bugs that affected
+conjugation display and segmentation quality:
+
+- **No more over-absorption of だろう / でしょう**:
+  - 神だろう, 近いだろう, わけないだろう now segment as
+    separate words with a proper だろう tree.
+  - 迷惑でしょうか now segments as 迷惑 + でしょう + か.
+- **Correct polite label for copula paths**:
+  - Copula branches now render `Polite (です)` (not `Polite (ます)`).
+- **Standalone copula forms now show trees**:
+  - ではない, だろう, でしょう each display `← だ` with the right chain.
+- **na-adj + copula ambiguity fixes**:
+  - 大丈夫ですか no longer misparses as 大丈夫で + すか.
+  - 静かでした no longer misparses as 静かで + した.
+- **i-adj + すぎる source form restored**:
+  - 高すぎる now shows `← 高い` → `Adjective Stem` → `すぎる`.
+
 ## Issues Resolved
 
 ### Batch 1 -- New suffix patterns
@@ -138,6 +157,16 @@ negative (行けない → Potential + Negative), and adjective negative forms.
 - `himotoki-z5js`: Show suffix descriptions in conjugation chain display
 - `himotoki-tsdr`: Register てみる, てあげる, てほしい te-form suffixes
 - Plus 13 grammar pattern issues (abbreviations, suffix chains, handler improvements)
+
+### Post-freeze bug fixes
+- `himotoki-cnfl`: darou/deshou suffix absorbs preceding word incorrectly
+- `himotoki-lvbe`: na-adj + desu splits as na-adj+de + suka
+- `himotoki-2dx0`: Copula polite shows Polite (masu) instead of Polite (desu)
+- `himotoki-lagg`: na-adj + deshita splits as na-adj+de + shita
+- `himotoki-8kra`: dewanai standalone has no conjugation tree
+- `himotoki-39vj`: darou standalone has no conjugation tree
+- `himotoki-a3qw`: deshou standalone has no conjugation tree
+- `himotoki-3wbp`: i-adj + sugiru missing source form in tree
 
 ## Test Coverage
 
