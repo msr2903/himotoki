@@ -349,6 +349,15 @@ def shutdown():
     if _executor is not None:
         _executor.shutdown(wait=True)
         _executor = None
+
+    # Drop scoring caches so a later restart cannot reuse stale ORM objects
+    from himotoki.scoring.caches import clear_scoring_caches
+    clear_scoring_caches()
+    try:
+        from himotoki.output.meanings import clear_meanings_cache
+        clear_meanings_cache()
+    except Exception:
+        pass
     
     # Close database connection
     from himotoki.db.connection import close_connection

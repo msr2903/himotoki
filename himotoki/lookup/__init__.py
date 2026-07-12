@@ -66,6 +66,7 @@ from himotoki.scoring import (
     _WORD_CACHE,
     _ENTRY_CACHE,
     _ARCHAIC_CACHE,
+    clear_scoring_caches,
     preload_scoring_caches,
     get_cached_entry,
     build_archaic_cache,
@@ -123,6 +124,7 @@ __all__ = [
     # Scoring
     'LRUCache', '_CONJ_DATA_CACHE', '_POS_SEQ_CACHE', '_UK_CACHE',
     '_WORD_CACHE', '_ENTRY_CACHE', '_ARCHAIC_CACHE',
+    'clear_scoring_caches',
     'preload_scoring_caches', 'get_cached_entry', 'build_archaic_cache',
     'is_arch', 'is_prefer_kana', 'get_non_arch_posi',
     'length_multiplier', 'length_multiplier_coeff',

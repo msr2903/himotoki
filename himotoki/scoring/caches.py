@@ -69,7 +69,7 @@ _POS_SEQ_CACHE: LRUCache = LRUCache(maxsize=4096)
 # UK (prefer kana) cache - frozenset(seqs) -> bool
 _UK_CACHE: LRUCache = LRUCache(maxsize=1024)
 
-# Word lookup cache - (word, root_only) -> List[WordMatch]
+# Word lookup cache - (db_id, word, root_only) -> List[WordMatch]
 _WORD_CACHE: LRUCache = LRUCache(maxsize=4096)
 
 # Entry cache - seq -> Entry (reduces individual lookups)
@@ -77,6 +77,22 @@ _ENTRY_CACHE: LRUCache = LRUCache(maxsize=4096)
 
 # Archaic words cache - populated on first use
 _ARCHAIC_CACHE: Optional[Set[int]] = None
+
+
+def clear_scoring_caches() -> None:
+    """
+    Clear all scoring/lookup LRU caches and the archaic set.
+
+    Call on shutdown or when switching database paths so ORM objects and
+    seq sets from a previous DB cannot leak into a new session.
+    """
+    global _ARCHAIC_CACHE
+    _CONJ_DATA_CACHE.clear()
+    _POS_SEQ_CACHE.clear()
+    _UK_CACHE.clear()
+    _WORD_CACHE.clear()
+    _ENTRY_CACHE.clear()
+    _ARCHAIC_CACHE = None
 
 
 def preload_scoring_caches(session: Session, seqs: Set[int]) -> None:

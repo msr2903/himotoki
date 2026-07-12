@@ -1,7 +1,11 @@
 """
 Regression lock: segmentation texts and path scores for a fixed sentence set.
 
-Snapshot was captured after the understandability/size/speed restructure.
+Snapshot covers ~40 sentences (compounds, counters, conjugations, particles).
+Regenerate with a warm DB when intentional scoring changes land:
+
+  HIMOTOKI_DB_PATH=data/himotoki.db python -c "..."  # see scripts or prior commits
+
 If these fail, scoring or candidate generation changed unexpectedly.
 """
 
@@ -16,7 +20,9 @@ SNAPSHOT_PATH = Path(__file__).parent / "data" / "score_equivalence_snapshot.jso
 @pytest.fixture(scope="module")
 def snapshot():
     assert SNAPSHOT_PATH.exists(), f"Missing snapshot: {SNAPSHOT_PATH}"
-    return json.loads(SNAPSHOT_PATH.read_text(encoding="utf-8"))
+    data = json.loads(SNAPSHOT_PATH.read_text(encoding="utf-8"))
+    assert len(data) >= 40, f"Expected >=40 snapshot sentences, got {len(data)}"
+    return data
 
 
 def test_score_equivalence_snapshot(db_session, snapshot):

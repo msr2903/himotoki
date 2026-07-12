@@ -235,6 +235,11 @@ def init_database(db_path: Optional[str] = None, drop_existing: bool = False):
     if db_path is not None:
         _engine = None
         _session_factory = None
+        try:
+            from himotoki.scoring.caches import clear_scoring_caches
+            clear_scoring_caches()
+        except Exception:
+            pass
     
     engine = get_engine(db_path)
     
@@ -262,6 +267,13 @@ def close_connection():
     
     with _cache_lock:
         _cache.clear()
+
+    # Scoring caches hold ORM objects / seq sets tied to the open DB
+    try:
+        from himotoki.scoring.caches import clear_scoring_caches
+        clear_scoring_caches()
+    except Exception:
+        pass
 
 
 # Cache management functions (similar to ichiran's defcache)

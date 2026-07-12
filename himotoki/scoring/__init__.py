@@ -8,6 +8,7 @@ from himotoki.scoring.caches import (
     _WORD_CACHE,
     _ENTRY_CACHE,
     _ARCHAIC_CACHE,
+    clear_scoring_caches,
     preload_scoring_caches,
     get_cached_entry,
     build_archaic_cache,

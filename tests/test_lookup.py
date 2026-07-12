@@ -519,3 +519,28 @@ class TestKanjiBreakPenalty:
         """Test that scores below cutoff aren't modified."""
         score = kanji_break_penalty([1], 3)  # Below SCORE_CUTOFF
         assert score == 3
+
+
+# ============================================================================
+# Scoring cache lifecycle
+# ============================================================================
+
+class TestClearScoringCaches:
+    """Tests for clear_scoring_caches."""
+
+    def test_clear_empties_word_and_entry_caches(self):
+        from himotoki.scoring.caches import (
+            _WORD_CACHE,
+            _ENTRY_CACHE,
+            _CONJ_DATA_CACHE,
+            clear_scoring_caches,
+        )
+
+        _WORD_CACHE[("db", "x", False)] = []
+        _ENTRY_CACHE[1] = object()
+        _CONJ_DATA_CACHE[(1, None, None, None)] = []
+        assert len(_WORD_CACHE) >= 1
+        clear_scoring_caches()
+        assert len(_WORD_CACHE) == 0
+        assert len(_ENTRY_CACHE) == 0
+        assert len(_CONJ_DATA_CACHE) == 0

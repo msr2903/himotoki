@@ -22,7 +22,7 @@ from himotoki.characters import (
 from himotoki.lookup import (
     MAX_WORD_LENGTH, SCORE_CUTOFF, GAP_PENALTY,
     WordMatch, Segment, SegmentList,
-    find_word_full, gen_score, cull_segments, gap_penalty,
+    gen_score, cull_segments, gap_penalty,
     preload_scoring_caches,
 )
 from himotoki.synergies import (
