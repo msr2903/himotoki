@@ -26,7 +26,7 @@ class Entry(Base):
     __tablename__ = "entry"
 
     seq = Column(Integer, primary_key=True)
-    content = Column(Text, nullable=False, default="")  # Original XML content
+    content = Column(Text, nullable=False, default="")  # Unused (kept for schema compatibility)
     root_p = Column(Boolean, nullable=False, default=False)  # True if this is a root entry (not conjugation)
     n_kanji = Column(Integer, nullable=False, default=0)  # Number of kanji readings
     n_kana = Column(Integer, nullable=False, default=0)  # Number of kana readings
@@ -77,13 +77,9 @@ class KanjiText(Base):
     entry = relationship("Entry", back_populates="kanji_texts")
 
     __table_args__ = (
-        Index("ix_kanji_text_seq", "seq"),
-        Index("ix_kanji_text_ord", "ord"),
-        Index("ix_kanji_text_text", "text"),
-        Index("ix_kanji_text_common", "common"),
-        # Composite indexes for common query patterns
-        Index("ix_kanji_text_text_seq", "text", "seq"),  # find_word lookups
-        Index("ix_kanji_text_seq_ord", "seq", "ord"),  # ordered retrieval by entry
+        # Covering index for hot-path: SELECT id,seq,text,ord,common,best_kana WHERE text IN (...)
+        Index("ix_kanji_text_text_cover", "text", "seq", "id", "ord", "common", "best_kana"),
+        Index("ix_kanji_text_seq_ord", "seq", "ord"),
     )
 
     def __repr__(self):
@@ -111,17 +107,12 @@ class KanaText(Base):
     entry = relationship("Entry", back_populates="kana_texts")
 
     __table_args__ = (
-        Index("ix_kana_text_seq", "seq"),
-        Index("ix_kana_text_ord", "ord"),
-        Index("ix_kana_text_text", "text"),
-        Index("ix_kana_text_common", "common"),
-        # Composite indexes for common query patterns
-        Index("ix_kana_text_text_seq", "text", "seq"),  # find_word lookups
-        Index("ix_kana_text_seq_ord", "seq", "ord"),  # ordered retrieval by entry
+        Index("ix_kana_text_text_cover", "text", "seq", "id", "ord", "common", "best_kanji"),
+        Index("ix_kana_text_seq_ord", "seq", "ord"),
     )
 
     def __repr__(self):
-        return f"<KanaText(id={self.id}, seq={self.seq}, text='{self.text}')"
+        return f"<KanaText(id={self.id}, seq={self.seq}, text='{self.text}')>"
 
 
 class Sense(Base):
@@ -293,7 +284,7 @@ class ConjSourceReading(Base):
     conjugation = relationship("Conjugation", back_populates="source_readings")
 
     __table_args__ = (
-        Index("ix_conj_source_reading_conj_id_text", "conj_id", "text"),
+        Index("ix_conj_source_reading_conj_id", "conj_id"),
     )
 
     def __repr__(self):

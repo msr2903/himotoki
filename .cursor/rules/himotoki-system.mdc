@@ -1,0 +1,33 @@
+---
+description: Himotoki architecture map — layers, hot path, where to edit. Use when changing segmentation, scoring, DB, or package layout.
+alwaysApply: false
+---
+
+# Himotoki system (short)
+
+Full walkthrough: `.cursor/docs/SYSTEM_WALKTHROUGH.md`
+
+## Layers
+
+- **API/CLI:** `__init__.py`, `cli.py`
+- **Segment (DP):** `segment.py` — sticky → substring/trie → score → Viterbi
+- **Types:** `types.py` — WordMatch, Segment, CompoundWord, ConjData
+- **Scoring:** `scoring/` — `calc_score`, caches (do not change semantics lightly)
+- **Lookup:** `lookup/` — find_word, batched `get_conj_data`
+- **Grammar:** `grammar/` — synergies, suffixes, counters, splits
+- **Output:** `output/` — WordInfo, glosses, conj display
+- **DB/load:** `db/`, `loading/`, `setup.py`
+
+Old module paths (`lookup.py`, `output.py`, `synergies.py`, …) are shims.
+
+## Equivalence
+
+Same candidates + same `calc_score` + same DP winners. Safe: indexes, batch SQL, caches, drop unused XML. Unsafe: score/POS/conj data changes.
+
+## Hot path
+
+Trie filter → 2× `text IN (...)` on kana/kanji → preload Entry/UK/POS → score → synergies in `find_best_path` → glosses only in output.
+
+## Verify
+
+`pytest tests/ -x --tb=short`; after DB schema changes rebuild with `himotoki setup` / `scripts/init_db.py` then measure size.

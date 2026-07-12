@@ -228,51 +228,58 @@ class TestCLIWithMockedSession:
             score=100,
         )
         return [([wi1], 100)]
+
+    @pytest.fixture
+    def fake_db(self, tmp_path):
+        """Existing DB path so CLI skips first-time setup prompts."""
+        db = tmp_path / "himotoki.db"
+        db.touch()
+        return db
     
-    def test_default_output(self, capsys, mock_session, mock_dict_segment):
+    def test_default_output(self, capsys, mock_session, mock_dict_segment, fake_db):
         """Test default dictionary info output."""
-        with patch('himotoki.cli.get_db_path', return_value='/test/db.sqlite'):
-            with patch('himotoki.cli.get_session', return_value=mock_session):
-                with patch('himotoki.cli.dict_segment', return_value=mock_dict_segment):
-                    with patch('himotoki.cli.get_senses_str', return_value='1. [n] test'):
-                        result = main(['テスト'])
+        with patch("himotoki.cli.get_session", return_value=mock_session), \
+             patch("himotoki.cli.dict_segment", return_value=mock_dict_segment), \
+             patch("himotoki.suffixes.init_suffixes"), \
+             patch("himotoki.cli.get_senses_str", return_value="1. [n] test"):
+            result = main(["--database", str(fake_db), "テスト"])
         
         assert result == 0
         captured = capsys.readouterr()
         # Default should show dictionary info without romanization
-        assert 'テスト' in captured.out or 'てすと' in captured.out
+        assert "テスト" in captured.out or "てすと" in captured.out
     
-    def test_romanize_output(self, capsys, mock_session, mock_dict_segment):
+    def test_romanize_output(self, capsys, mock_session, mock_dict_segment, fake_db):
         """Test -r romanization output."""
-        with patch('himotoki.cli.get_db_path', return_value='/test/db.sqlite'):
-            with patch('himotoki.cli.get_session', return_value=mock_session):
-                with patch('himotoki.cli.dict_segment', return_value=mock_dict_segment):
-                    result = main(['-r', 'テスト'])
+        with patch("himotoki.cli.get_session", return_value=mock_session), \
+             patch("himotoki.cli.dict_segment", return_value=mock_dict_segment), \
+             patch("himotoki.suffixes.init_suffixes"):
+            result = main(["--database", str(fake_db), "-r", "テスト"])
         
         assert result == 0
         captured = capsys.readouterr()
         # Should have romanized output
-        assert 'tesuto' in captured.out.lower()
+        assert "tesuto" in captured.out.lower()
     
-    def test_kana_output(self, capsys, mock_session, mock_dict_segment):
+    def test_kana_output(self, capsys, mock_session, mock_dict_segment, fake_db):
         """Test -k kana output."""
-        with patch('himotoki.cli.get_db_path', return_value='/test/db.sqlite'):
-            with patch('himotoki.cli.get_session', return_value=mock_session):
-                with patch('himotoki.cli.dict_segment', return_value=mock_dict_segment):
-                    result = main(['-k', 'テスト'])
+        with patch("himotoki.cli.get_session", return_value=mock_session), \
+             patch("himotoki.cli.dict_segment", return_value=mock_dict_segment), \
+             patch("himotoki.suffixes.init_suffixes"):
+            result = main(["--database", str(fake_db), "-k", "テスト"])
         
         assert result == 0
         captured = capsys.readouterr()
         # Should have kana output
-        assert 'てすと' in captured.out
+        assert "てすと" in captured.out
     
-    def test_json_output(self, capsys, mock_session, mock_dict_segment):
+    def test_json_output(self, capsys, mock_session, mock_dict_segment, fake_db):
         """Test -j JSON output format."""
-        with patch('himotoki.cli.get_db_path', return_value='/test/db.sqlite'):
-            with patch('himotoki.cli.get_session', return_value=mock_session):
-                with patch('himotoki.cli.dict_segment', return_value=mock_dict_segment):
-                    with patch('himotoki.output.word_info_gloss_json', return_value={'text': 'テスト'}):
-                        result = main(['-j', 'テスト'])
+        with patch("himotoki.cli.get_session", return_value=mock_session), \
+             patch("himotoki.cli.dict_segment", return_value=mock_dict_segment), \
+             patch("himotoki.suffixes.init_suffixes"), \
+             patch("himotoki.output.word_info_gloss_json", return_value={"text": "テスト"}):
+            result = main(["--database", str(fake_db), "-j", "テスト"])
         
         assert result == 0
         captured = capsys.readouterr()
@@ -284,18 +291,18 @@ class TestCLIWithMockedSession:
             # If it fails, it might be because mocking is incomplete
             pass
     
-    def test_full_output(self, capsys, mock_session, mock_dict_segment):
+    def test_full_output(self, capsys, mock_session, mock_dict_segment, fake_db):
         """Test -f full output format."""
-        with patch('himotoki.cli.get_db_path', return_value='/test/db.sqlite'):
-            with patch('himotoki.cli.get_session', return_value=mock_session):
-                with patch('himotoki.cli.dict_segment', return_value=mock_dict_segment):
-                    with patch('himotoki.cli.get_senses_str', return_value='1. [n] test'):
-                        result = main(['-f', 'テスト'])
+        with patch("himotoki.cli.get_session", return_value=mock_session), \
+             patch("himotoki.cli.dict_segment", return_value=mock_dict_segment), \
+             patch("himotoki.suffixes.init_suffixes"), \
+             patch("himotoki.cli.get_senses_str", return_value="1. [n] test"):
+            result = main(["--database", str(fake_db), "-f", "テスト"])
         
         assert result == 0
         captured = capsys.readouterr()
         # Full should have both romanization and dictionary info
-        assert 'tesuto' in captured.out.lower() or 'テスト' in captured.out
+        assert "tesuto" in captured.out.lower() or "テスト" in captured.out
 
 
 class TestCLIErrorHandling:
