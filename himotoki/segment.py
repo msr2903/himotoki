@@ -243,7 +243,7 @@ def find_substring_words(
         Dictionary mapping substring to list of matching words
     """
     from himotoki.raw_types import RawKanaReading, RawKanjiReading
-    from himotoki.trie import get_word_trie, is_trie_ready, trie_has_prefix
+    from himotoki.trie import get_word_trie
     
     if sticky is None:
         sticky = []
@@ -256,7 +256,6 @@ def find_substring_words(
     
     # Get trie for fast filtering (None if not initialized - graceful fallback)
     trie = get_word_trie()
-    trie_ready = is_trie_ready()
     
     # Collect all substrings
     text_len = len(text)
@@ -273,15 +272,8 @@ def find_substring_words(
             if part in substring_map:
                 continue
             
-            # Track ALL substrings for suffix checking first.
-            # Suffix compounds (食べたい, 〜ている, …) are not in the trie, so a
-            # prefix-prune break would drop them and change segmentation.
+            # Track all substrings for suffix checking
             all_substrings.append(part)
-
-            # No dictionary surface form has this prefix → skip DB IN-lists only.
-            # Keep scanning longer ends for suffix compounds (do not break).
-            if trie_ready and not trie_has_prefix(part):
-                continue
             
             # TRIE FILTER: Only add to DB query lists if in trie
             if trie is None or part in trie:
