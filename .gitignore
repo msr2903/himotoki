@@ -63,6 +63,7 @@ pytest_debug.log
 *.db-shm
 *.db-wal
 *.pgdump
+*.trie
 data/*.db
 data/*.sqlite
 data/JMdict_e.xml

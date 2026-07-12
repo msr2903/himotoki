@@ -9,7 +9,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Optional, Generator
 
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import StaticPool
@@ -341,7 +341,8 @@ def analyze():
     """
     engine = get_engine()
     with engine.connect() as conn:
-        conn.execute("ANALYZE")
+        conn.execute(text("ANALYZE"))
+        conn.commit()
 
 
 def vacuum():
@@ -349,5 +350,5 @@ def vacuum():
     Run VACUUM on the database to reclaim space.
     """
     engine = get_engine()
-    with engine.connect() as conn:
-        conn.execute("VACUUM")
+    with engine.connect().execution_options(isolation_level="AUTOCOMMIT") as conn:
+        conn.execute(text("VACUUM"))

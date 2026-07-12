@@ -9,12 +9,36 @@ This module provides a prefix trie of all dictionary surface forms
 before hitting the database - most substrings don't exist in the dictionary.
 """
 
+import os
+from pathlib import Path
 from typing import Optional
 
 import marisa_trie
 
 # Module-level singleton
 _WORD_TRIE: Optional[marisa_trie.Trie] = None
+
+
+def get_trie_path(db_path: Path) -> Path:
+    """Return path for persisted trie file next to the database."""
+    db_path = Path(db_path)
+    if db_path.suffix == ".db":
+        return db_path.with_suffix(".trie")
+    return db_path.parent / f"{db_path.name}.trie"
+
+
+def _get_db_path_from_session(session) -> Path:
+    """Resolve database path from session or environment."""
+    env_path = os.environ.get("HIMOTOKI_DB_PATH")
+    if env_path:
+        return Path(env_path)
+
+    bind = session.get_bind()
+    if bind is not None and bind.url.database:
+        return Path(bind.url.database)
+
+    from himotoki.db.connection import _get_default_db_path
+    return _get_default_db_path()
 
 
 def get_word_trie() -> Optional[marisa_trie.Trie]:
@@ -27,11 +51,27 @@ def is_trie_ready() -> bool:
     return _WORD_TRIE is not None
 
 
+def _build_trie_from_db(session) -> marisa_trie.Trie:
+    """Build trie from database surface forms."""
+    conn = session.connection().connection
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT text FROM kana_text "
+        "UNION ALL "
+        "SELECT text FROM kanji_text"
+    )
+    rows = cursor.fetchall()
+
+    return marisa_trie.Trie(row[0] for row in rows)
+
+
 def init_word_trie(session) -> marisa_trie.Trie:
     """
     Initialize the word trie from database.
     
     Loads all unique surface forms from kanji_text and kana_text tables.
+    Persists trie to disk next to the database for faster subsequent loads.
     Called during warm_up().
     
     Args:
@@ -43,22 +83,23 @@ def init_word_trie(session) -> marisa_trie.Trie:
     global _WORD_TRIE
     if _WORD_TRIE is not None:
         return _WORD_TRIE
-    
-    # Get raw connection for fast cursor iteration
-    conn = session.connection().connection
-    cursor = conn.cursor()
-    
-    # Use UNION ALL (faster than UNION - no dedup overhead)
-    # marisa-trie handles duplicates automatically
-    cursor.execute(
-        "SELECT text FROM kana_text "
-        "UNION ALL "
-        "SELECT text FROM kanji_text"
-    )
-    rows = cursor.fetchall()
-    
-    # Build marisa-trie (handles duplicates, ~50-80MB for 9M entries)
-    _WORD_TRIE = marisa_trie.Trie(row[0] for row in rows)
+
+    db_path = _get_db_path_from_session(session)
+    trie_path = get_trie_path(db_path)
+
+    if db_path.exists() and trie_path.exists():
+        trie_mtime = trie_path.stat().st_mtime
+        db_mtime = db_path.stat().st_mtime
+        if trie_mtime >= db_mtime:
+            _WORD_TRIE = marisa_trie.Trie().mmap(str(trie_path))
+            return _WORD_TRIE
+
+    _WORD_TRIE = _build_trie_from_db(session)
+
+    if db_path.exists():
+        trie_path.parent.mkdir(parents=True, exist_ok=True)
+        _WORD_TRIE.save(str(trie_path))
+
     return _WORD_TRIE
 
 
@@ -94,8 +135,6 @@ def trie_has_prefix(prefix: str) -> bool:
     """
     if _WORD_TRIE is None:
         return True  # Fallback: assume it might exist
-    # marisa_trie.keys(prefix) returns all keys starting with prefix
-    # We just need to check if there's at least one
     try:
         next(iter(_WORD_TRIE.iterkeys(prefix)))
         return True

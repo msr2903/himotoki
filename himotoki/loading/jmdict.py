@@ -318,11 +318,8 @@ def load_entry(
             session.delete(existing)
             session.flush()
     
-    # Serialize original content for storage
-    content = etree.tostring(entry_elem, encoding='unicode')
-    
-    # Create entry record
-    entry = Entry(seq=seq, content=content, root_p=True)
+    # Create entry record (content column kept for schema compatibility, not populated)
+    entry = Entry(seq=seq, content="", root_p=True)
     session.add(entry)
     
     # Parse kanji readings (k_ele elements)
@@ -452,6 +449,14 @@ def load_jmdict(
         logger.info("Applying errata corrections...")
         with get_session() as session:
             add_errata(session)
+    
+    # Optimize database after build
+    from himotoki.db.connection import analyze, vacuum
+    logger.info("Running ANALYZE...")
+    analyze()
+    logger.info("Running VACUUM (this may take several minutes)...")
+    vacuum()
+    logger.info("Database optimization complete")
     
     return count
 

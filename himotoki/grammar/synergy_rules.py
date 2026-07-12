@@ -1,0 +1,2078 @@
+"""
+Synergy, penalty, and segfilter rule registrations.
+"""
+
+from typing import Optional, List, Dict, Tuple, Union, Any, Callable
+
+from sqlalchemy import select, and_, or_
+from sqlalchemy.orm import Session
+
+from himotoki.db.models import KanjiText, KanaText
+from himotoki.constants import (
+    SEQ_WA, SEQ_GA, SEQ_NI, SEQ_DE, SEQ_HE, SEQ_WO, SEQ_NO, SEQ_TO, SEQ_MO, SEQ_YA, SEQ_KA,
+    SEQ_NIHA, SEQ_TOHA, SEQ_TOKA, SEQ_TOSHITE, SEQ_DESAE,
+    SEQ_DAKE, SEQ_GORO, SEQ_MADE, SEQ_NADO, SEQ_NOMI, SEQ_SAE, SEQ_TTE, SEQ_KARA, SEQ_NITOTTE,
+    SEQ_SURU, SEQ_IRU, SEQ_KURU,
+    SEQ_MAE_NOUN, SEQ_HOU_NOUN, SEQ_MEN_NOUN,
+    SEQ_HITO_NOUN, SEQ_NAKA_NOUN,
+    SEQ_TOMARU, SEQ_TODOMARU,
+    SEQ_KARAI, SEQ_TSURAI,
+    SEQ_NITSURE, SEQ_OSUSUME,
+    NOUN_PARTICLES,
+)
+
+from himotoki.grammar.synergy_filters import (
+    filter_is_noun,
+    filter_is_pos,
+    filter_in_seq_set,
+    filter_in_seq_set_simple,
+    filter_is_conjugation,
+    filter_is_compound_end,
+    filter_is_compound_end_text,
+    filter_short_kana,
+)
+from himotoki.grammar.synergies import (
+    Synergy,
+    register_synergy,
+    def_generic_synergy,
+    register_penalty,
+    def_generic_penalty,
+    register_segfilter,
+    def_segfilter_must_follow,
+)
+
+def _init_synergies():
+    """Initialize all synergy definitions."""
+    
+    # Helper to check for specific seq combinations that should NOT get noun+prt synergy
+    def not_to_before_wa(left_seg_list: Any, right_seg_list: Any) -> bool:
+        """Return False if left is と (SEQ_TO) and right is は (SEQ_WA)."""
+        left_seqs = set()
+        right_seqs = set()
+        for seg in getattr(left_seg_list, 'segments', []):
+            info = getattr(seg, 'info', {})
+            left_seqs.update(info.get('seq_set', set()))
+        for seg in getattr(right_seg_list, 'segments', []):
+            info = getattr(seg, 'info', {})
+            right_seqs.update(info.get('seq_set', set()))
+        # Block synergy if left has と and right has は
+        if SEQ_TO in left_seqs and SEQ_WA in right_seqs:
+            return False
+        return True
+    
+    # Create a modified filter_is_noun that also checks the right side
+    def filter_is_noun_not_to_wa(segment: Any, right_seg_list: Any = None) -> bool:
+        if not filter_is_noun(segment):
+            return False
+        # This will be used via custom synergy below
+        return True
+    
+    # noun + particle (with exclusion for と + は)
+    def synergy_noun_particle(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Custom noun+particle synergy that excludes と + は."""
+        # Check if left is noun
+        left_nouns = [s for s in seg_list_left.segments if filter_is_noun(s)]
+        if not left_nouns:
+            return []
+        
+        # Check if right is particle
+        particle_filter = filter_in_seq_set(*NOUN_PARTICLES)
+        right_particles = [s for s in seg_list_right.segments if particle_filter(s)]
+        if not right_particles:
+            return []
+        
+        # Check serial
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Check for と + は case that should be excluded
+        if not not_to_before_wa(seg_list_left, seg_list_right):
+            return []
+        
+        # Create synergy
+        length = seg_list_right.end - seg_list_right.start
+        score = 10 + 4 * length
+        
+        synergy = Synergy(
+            description="noun+prt",
+            connector=" ",
+            score=score,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        return [(seg_list_right, synergy, seg_list_left)]
+    
+    register_synergy(synergy_noun_particle)
+    
+    # noun + だ
+    def_generic_synergy(
+        name="synergy-noun-da",
+        filter_left=filter_is_noun,
+        filter_right=filter_in_seq_set(2089020),  # だ
+        description="noun+da",
+        score=10,
+        connector=" ",
+    )
+    
+    # の + だ/です/なんだ
+    def_generic_synergy(
+        name="synergy-no-da",
+        filter_left=filter_in_seq_set(1469800, 2139720),  # の, ん
+        filter_right=filter_in_seq_set(2089020, 1007370, 1928670),  # だ, だった, だろう
+        description="no da/desu",
+        score=15,
+        connector=" ",
+    )
+    
+    # そう + なんだ
+    def_generic_synergy(
+        name="synergy-sou-nanda",
+        filter_left=filter_in_seq_set(2137720),  # そう
+        filter_right=filter_in_seq_set(2140410),  # なんだ
+        description="sou na n da",
+        score=50,
+        connector=" ",
+    )
+    
+    # no-adjective + の
+    def_generic_synergy(
+        name="synergy-no-adjectives",
+        filter_left=filter_is_pos("adj-no"),
+        filter_right=filter_in_seq_set(1469800),  # の
+        description="no-adjective",
+        score=15,
+        connector=" ",
+    )
+    
+    # na-adjective + な/に
+    def_generic_synergy(
+        name="synergy-na-adjectives",
+        filter_left=filter_is_pos("adj-na"),
+        filter_right=filter_in_seq_set(2029110, 2028990),  # な, に
+        description="na-adjective",
+        score=15,
+        connector=" ",
+    )
+    
+    # to-adverb + と
+    def_generic_synergy(
+        name="synergy-to-adverbs",
+        filter_left=filter_is_pos("adv-to"),
+        filter_right=filter_in_seq_set(1008490),  # と
+        description="to-adverb",
+        score=lambda l, r: 10 + 10 * (l.end - l.start),
+        connector=" ",
+    )
+    
+    # noun + 中
+    def_generic_synergy(
+        name="synergy-suffix-chu",
+        filter_left=filter_is_noun,
+        filter_right=filter_in_seq_set(1620400, 2083570),  # 中
+        description="suffix-chu",
+        score=12,
+        connector="-",
+    )
+    
+    # noun + たち
+    # Use dynamic score based on noun length - longer nouns get higher synergy
+    # This helps 村人+たち (258+15=273) beat 村+人たち (263)
+    def_generic_synergy(
+        name="synergy-suffix-tachi",
+        filter_left=filter_is_noun,
+        filter_right=filter_in_seq_set(1416220),  # たち
+        description="suffix-tachi",
+        score=lambda l, r: 10 + 5 * (l.end - l.start),  # +5 per character
+        connector="-",
+    )
+    
+    # noun + ぶり
+    def_generic_synergy(
+        name="synergy-suffix-buri",
+        filter_left=filter_is_noun,
+        filter_right=filter_in_seq_set(1361140),  # ぶり
+        description="suffix-buri",
+        score=40,
+        connector="",
+    )
+    
+    # noun + 性
+    def_generic_synergy(
+        name="synergy-suffix-sei",
+        filter_left=filter_is_noun,
+        filter_right=filter_in_seq_set(1375260),  # 性
+        description="suffix-sei",
+        score=12,
+        connector="",
+    )
+    
+    # お + noun (excluding cases where it splits a valid compound like ごみ)
+    # Create a combined filter that checks pos AND excludes specific seqs
+    def filter_o_noun_right(segment: Any) -> bool:
+        """Filter for nouns that can follow お/ご prefix."""
+        # Must be a noun
+        if not filter_is_pos("n")(segment):
+            return False
+        # Exclude みの (straw raincoat) to prevent splitting ごみ
+        info = getattr(segment, 'info', {})
+        seq_set = info.get('seq_set', set())
+        excluded_seqs = {1634010, 2845080}  # みの seqs
+        if seq_set.intersection(excluded_seqs):
+            return False
+        return True
+    
+    def_generic_synergy(
+        name="synergy-o-prefix",
+        filter_left=filter_in_seq_set(1270190),  # お
+        filter_right=filter_o_noun_right,
+        description="o+noun",
+        score=10,
+        connector="",
+    )
+    
+    # 未/不 + noun
+    def_generic_synergy(
+        name="synergy-kanji-prefix",
+        filter_left=filter_in_seq_set(2242840, 1922780, 2423740),  # 未, 不
+        filter_right=filter_is_pos("n"),
+        description="kanji prefix+noun",
+        score=15,
+        connector="",
+    )
+    
+    # しちゃ/しては + いけない
+    def_generic_synergy(
+        name="synergy-shicha-ikenai",
+        filter_left=filter_is_compound_end(2028920),  # は
+        filter_right=filter_in_seq_set(1000730, 1612750, 1409110, 2829697, 1587610),
+        description="shicha ikenai",
+        score=50,
+        connector=" ",
+    )
+    
+    # しか + negative
+    def synergy_shika_negative(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        if start != end:
+            return []
+        
+        # Filter left for しか
+        filter_shika = filter_in_seq_set(1005460)
+        left_segments = [s for s in seg_list_left.segments if filter_shika(s)]
+        
+        if not left_segments:
+            return []
+        
+        # Filter right for negative conjugation
+        right_segments = []
+        for seg in seg_list_right.segments:
+            info = getattr(seg, 'info', {})
+            conj = info.get('conj', [])
+            for cdata in conj:
+                if hasattr(cdata, 'prop') and cdata.prop and getattr(cdata.prop, 'neg', False):
+                    right_segments.append(seg)
+                    break
+        
+        if not right_segments:
+            return []
+        
+        syn = Synergy(
+            description="shika+neg",
+            connector=" ",
+            score=50,
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_segments,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_segments,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_shika_negative)
+    
+    # の + 通り
+    def_generic_synergy(
+        name="synergy-no-toori",
+        filter_left=filter_in_seq_set(1469800),  # の
+        filter_right=filter_in_seq_set(1432920),  # 通り
+        description="no toori",
+        score=50,
+        connector=" ",
+    )
+    
+    # counter + おき
+    def_generic_synergy(
+        name="synergy-oki",
+        filter_left=filter_is_pos("ctr"),
+        filter_right=filter_in_seq_set(2854117, 2084550),  # おき
+        description="counter+oki",
+        score=20,
+        connector="",
+    )
+    
+    # かどうか + は (whether or not + topic marker)
+    # This prevents misparses like はま+だ instead of は+まだ
+    def_generic_synergy(
+        name="synergy-kadouka-wa",
+        filter_left=filter_in_seq_set(2087300),  # かどうか
+        filter_right=filter_in_seq_set(2028920),  # は
+        description="kadouka+wa",
+        score=30,
+        connector=" ",
+    )
+    
+    # particle + common adverb synergy
+    # This boosts patterns like は+まだ, には+まだ, も+まだ etc.
+    # Common adverbs that follow particles:
+    # まだ (1527110): still, yet
+    # もう (1010180): already, soon
+    # まず (1623080): first of all
+    # やはり (2084660): as expected
+    # すでに (1303920): already
+    # ずっと (1008930): continuously
+    # もっと (1010210): more
+    # とても (1008550): very
+    # かなり (1004920): considerably
+    # なかなか (1530760): quite, rather
+    # 少し (1340610): a little
+    # ちょっと (1008680): a little
+    # 全然 (1391950): not at all
+    # 絶対 (1391700): absolutely
+    # 本当に (1583020): really
+    # 実は (1311820): actually
+    # 確かに (1208880): certainly
+    # 多分 (1397270): probably
+    # きっと (1399930): surely
+    # たぶん (1397270): probably
+    # 結局 (1252670): after all
+    # 一応 (2423580): tentatively
+    # とりあえず (1541310): for now
+    # 相変わらず (1273140): as usual
+    # いつも (1216780): always
+    # たまに (1623560): occasionally
+    # 時々 (1320780): sometimes
+    # よく (1544660): often
+    # あまり (1010990): not very
+    COMMON_ADVERB_SEQS = {
+        1527110,  # まだ
+        1010180,  # もう
+        1623080,  # まず
+        2084660,  # やはり
+        1303920,  # すでに (既に)
+        1008930,  # ずっと
+        1010210,  # もっと
+        1008550,  # とても
+        1004920,  # かなり
+        1530760,  # なかなか
+        1340610,  # 少し
+        1008680,  # ちょっと
+        1391950,  # 全然
+        1391700,  # 絶対
+        1583020,  # 本当に
+        1311820,  # 実は
+        1208880,  # 確かに
+        1397270,  # 多分/たぶん
+        1399930,  # きっと
+        1252670,  # 結局
+        2423580,  # 一応
+        1541310,  # とりあえず
+        1273140,  # 相変わらず
+        1216780,  # いつも
+        1623560,  # たまに
+        1320780,  # 時々
+        1544660,  # よく
+        1010990,  # あまり
+    }
+    
+    # Particles that can precede common adverbs
+    PARTICLE_SEQS = {
+        2028920,  # は
+        2028930,  # が
+        2028940,  # も
+        2028990,  # に
+        2028980,  # で
+        2215430,  # には
+        2028950,  # とは
+        1007340,  # だけ
+        1525680,  # まで
+        1002980,  # から
+    }
+    
+    def_generic_synergy(
+        name="synergy-particle-adverb",
+        filter_left=filter_in_seq_set(*PARTICLE_SEQS),
+        filter_right=filter_in_seq_set(*COMMON_ADVERB_SEQS),
+        description="particle+adverb",
+        score=20,  # Strong synergy to beat noun+copula patterns
+        connector=" ",
+    )
+    
+    # === BUG FIX: volitional + とも (1k3) ===
+    # Add synergy for volitional form + とも (seq=1632180)
+    # This pattern means "even if" (e.g., 反対しようとも = even if they oppose)
+    # We need to boost とも when it follows a volitional form
+    def synergy_volitional_tomo(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for volitional form + とも."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left has volitional conjugation
+        left_volitional = []
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            conj = info.get('conj', [])
+            for cdata in conj:
+                if hasattr(cdata, 'prop') and cdata.prop:
+                    if getattr(cdata.prop, 'conj_type', None) == 9:  # CONJ_VOLITIONAL = 9
+                        left_volitional.append(seg)
+                        break
+        
+        if not left_volitional:
+            return []
+        
+        # Check if right is とも (seq=1632180)
+        filter_tomo = filter_in_seq_set(1632180)
+        right_tomo = [s for s in seg_list_right.segments if filter_tomo(s)]
+        
+        if not right_tomo:
+            return []
+        
+        syn = Synergy(
+            description="volitional+tomo",
+            connector=" ",
+            score=50,  # Strong synergy to prefer compound とも
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_volitional,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_tomo,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_volitional_tomo)
+    
+    # === BUG FIX: verb + なんて (v3f) ===
+    # Add synergy for verb + なんて (seq=1188370)
+    # This prevents 提出させられるな + ん + て (imperative negative split)
+    # なんて is an expression meaning "such things as" that follows verb plain form
+    def synergy_verb_nante(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for verb + なんて."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left is verb-like (non-negative, non-imperative)
+        left_verbs = []
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n', 'v5t', 'v5u', 'vk', 'vs', 'vs-i'}
+            
+            if verb_pos.intersection(posi):
+                # Check it's not imperative negative
+                conj = info.get('conj', [])
+                is_imperative_neg = False
+                for cdata in conj:
+                    if hasattr(cdata, 'prop') and cdata.prop:
+                        if getattr(cdata.prop, 'conj_type', None) == 10:  # CONJ_IMPERATIVE
+                            if getattr(cdata.prop, 'neg', False):
+                                is_imperative_neg = True
+                                break
+                
+                if not is_imperative_neg:
+                    left_verbs.append(seg)
+        
+        if not left_verbs:
+            return []
+        
+        # Check if right is なんて (seq=1188370)
+        filter_nante = filter_in_seq_set(1188370)
+        right_nante = [s for s in seg_list_right.segments if filter_nante(s)]
+        
+        if not right_nante:
+            return []
+        
+        syn = Synergy(
+            description="verb+nante",
+            connector=" ",
+            score=60,  # Strong synergy to prefer なんて as expression
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_verbs,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_nante,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_verb_nante)
+    
+    # === BUG FIX: し (particle) + ただ (adverb) (f5d) ===
+    # Boost し+ただ over した+だ pattern
+    # し (seq=2086640) is a particle meaning "and/besides"
+    # ただ (seq=1538900) is an adverb meaning "only/just"
+    # Pattern: ねーしただ = "isn't, and just..." not "isn't, did, is..."
+    SEQ_SHI_PARTICLE = 2086640
+    SEQ_TADA_ADV = 1538900
+    
+    def synergy_shi_tada(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for し (particle) + ただ (adverb)."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left is し particle (seq=2086640)
+        filter_shi = filter_in_seq_set(SEQ_SHI_PARTICLE)
+        left_shi = [s for s in seg_list_left.segments if filter_shi(s)]
+        
+        if not left_shi:
+            return []
+        
+        # Check if right is ただ (seq=1538900)
+        filter_tada = filter_in_seq_set(SEQ_TADA_ADV)
+        right_tada = [s for s in seg_list_right.segments if filter_tada(s)]
+        
+        if not right_tada:
+            return []
+        
+        syn = Synergy(
+            description="shi+tada",
+            connector=" ",
+            score=10,  # Small boost to prefer し+ただ over した+だ
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_shi,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_tada,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_shi_tada)
+    
+    # === BUG FIX: verb + よ (particle) (h0z) ===
+    # Boost verb + よ (particle) over adjective stem interpretation
+    # よ (seq=2029090) is a sentence-ending emphasis particle
+    # The adjective stem of いい -> よ (euphonic change) causes misidentification
+    # When よ follows a verb, it's almost always the particle
+    SEQ_YO_PARTICLE = 2029090
+    
+    def synergy_verb_yo(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for verb + よ (particle)."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left is a verb
+        left_verbs = []
+        verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n', 'v5t', 'v5u', 'vk', 'vs', 'vs-i'}
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            if verb_pos.intersection(posi):
+                left_verbs.append(seg)
+        
+        if not left_verbs:
+            return []
+        
+        # Check if right is よ particle (seq=2029090) AND is not conjugated
+        right_yo = []
+        for seg in seg_list_right.segments:
+            info = getattr(seg, 'info', {})
+            seq_set = info.get('seq_set', set())
+            if SEQ_YO_PARTICLE in seq_set:
+                # Check that this is NOT a conjugated form
+                conj = info.get('conj', [])
+                is_conjugated = False
+                for cdata in conj:
+                    if hasattr(cdata, 'prop') and cdata.prop:
+                        if getattr(cdata.prop, 'conj_type', None) is not None:
+                            is_conjugated = True
+                            break
+                if not is_conjugated:
+                    right_yo.append(seg)
+        
+        if not right_yo:
+            return []
+        
+        syn = Synergy(
+            description="verb+yo",
+            connector=" ",
+            score=30,  # Strong boost to prefer particle よ after verbs
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_verbs,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_yo,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_verb_yo)
+    
+    # === BUG FIX: copula + よ (particle) (v42) ===
+    # Boost copula + よ (particle) to prevent よそ mis-segmentation
+    # When です/だ is followed by よ particle, boost that interpretation
+    # This prevents "ですよその" from being parsed as "です+よそ+の"
+    SEQ_DESU = 1628500  # です
+    SEQ_DA = 2089020    # だ
+    SEQ_YOSO = 1612400  # よそ (elsewhere) - used for blocking
+    
+    def synergy_copula_yo(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for copula + よ (particle) to prevent よそ mis-segmentation."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be adjacent
+        if start != end:
+            return []
+        
+        # Check if left is copula (です or だ)
+        filter_copula = filter_in_seq_set(SEQ_DESU, SEQ_DA)
+        left_copula = [s for s in seg_list_left.segments if filter_copula(s)]
+        if not left_copula:
+            return []
+        
+        # Check if right is よ particle (seq=SEQ_YO_PARTICLE, not conjugated)
+        right_yo = []
+        for seg in seg_list_right.segments:
+            info = getattr(seg, 'info', {})
+            seq_set = info.get('seq_set', set())
+            if SEQ_YO_PARTICLE in seq_set:
+                # Check that this is NOT a conjugated form
+                conj = info.get('conj', [])
+                is_conjugated = False
+                for cdata in conj:
+                    if hasattr(cdata, 'prop') and cdata.prop:
+                        if getattr(cdata.prop, 'conj_type', None) is not None:
+                            is_conjugated = True
+                            break
+                if not is_conjugated:
+                    right_yo.append(seg)
+        
+        if not right_yo:
+            return []
+        
+        syn = Synergy(
+            description="copula+yo",
+            connector=" ",
+            score=40,  # Strong boost to prefer particle よ after copula
+            start=start,
+            end=end,
+        )
+        
+        from himotoki.lookup import SegmentList
+        new_left = SegmentList(
+            segments=left_copula,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_yo,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_copula_yo)
+    
+    # 前(まえ) + に synergy - boost noun reading over prefix reading
+    # When 前 is followed by に particle, prefer まえ (noun) over ぜん (prefix)
+    def synergy_mae_ni(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for 前(まえ) + に to prefer noun reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for seq=SEQ_MAE_NOUN (まえ reading)
+        filter_left = filter_in_seq_set(SEQ_MAE_NOUN)
+        left_mae = [s for s in seg_list_left.segments if filter_left(s)]
+        if not left_mae:
+            return []
+        
+        # Filter right for に particle
+        filter_right = filter_in_seq_set(SEQ_NI)
+        right_ni = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_ni:
+            return []
+        
+        # Create synergy with high score to push まえ over ぜん
+        syn = Synergy(
+            description="mae+ni",
+            connector=" ",
+            score=25,  # Higher score to ensure まえ wins over ぜん
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_mae,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_ni,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_mae_ni)
+    
+    # の + 方(ほう) synergy - boost direction reading over person reading
+    # When の is followed by 方, prefer ほう (direction) over かた (person)
+    # Pattern: 〜の方 (towards/that direction) uses ほう reading
+    def synergy_no_hou(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for の + 方(ほう) to prefer direction reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for の particle
+        filter_left = filter_in_seq_set(SEQ_NO)
+        left_no = [s for s in seg_list_left.segments if filter_left(s)]
+        if not left_no:
+            return []
+        
+        # Filter right for seq=SEQ_HOU_NOUN (ほう reading)
+        filter_right = filter_in_seq_set(SEQ_HOU_NOUN)
+        right_hou = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_hou:
+            return []
+        
+        # Create synergy with high score to push ほう over かた
+        syn = Synergy(
+            description="no+hou",
+            connector=" ",
+            score=25,  # Higher score to ensure ほう wins
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_no,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_hou,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_no_hou)
+    
+    # noun + 面(めん) synergy - boost aspect reading over face reading
+    # When a noun is followed by 面, prefer めん (aspect) over つら (face)
+    # Pattern: X面 (X aspect/side) like コスト面, 経済面 uses めん reading
+    def synergy_noun_men(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for noun + 面(めん) to prefer aspect reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for nouns
+        left_nouns = [s for s in seg_list_left.segments if filter_is_noun(s)]
+        if not left_nouns:
+            return []
+        
+        # Filter right for seq=SEQ_MEN_NOUN (めん reading)
+        filter_right = filter_in_seq_set(SEQ_MEN_NOUN)
+        right_men = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_men:
+            return []
+        
+        # Create synergy with high score to push めん over つら
+        syn = Synergy(
+            description="noun+men",
+            connector=" ",
+            score=25,  # Higher score to ensure めん wins
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_nouns,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_men,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_noun_men)
+    
+    # verb/clause + 人(ひと) synergy - boost person reading over suffix reading
+    # When 人 follows a verb in plain form or a clause-ending word,
+    # it should be read as ひと (person), not じん (suffix).
+    # Pattern: 持つ人, 知らない人, いる人 -- all use ひと
+    # じん is only used as a suffix after nouns (日本人, アメリカ人)
+    def synergy_verb_hito(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for verb + 人(ひと) to prefer person reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for verbs or adjectives (clause-ending words)
+        left_verbs = []
+        verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n',
+                     'v5t', 'v5u', 'v5u-s', 'v5k-s', 'v5r-i', 'vk', 'vs',
+                     'vs-i', 'adj-i', 'adj-ix'}
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            if verb_pos.intersection(posi):
+                left_verbs.append(seg)
+        
+        if not left_verbs:
+            return []
+        
+        # Filter right for seq=SEQ_HITO_NOUN (ひと reading)
+        filter_right = filter_in_seq_set(SEQ_HITO_NOUN)
+        right_hito = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_hito:
+            return []
+        
+        syn = Synergy(
+            description="verb+hito",
+            connector=" ",
+            score=25,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_verbs,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_hito,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_verb_hito)
+    
+    # 人(ひと) + の synergy - boost person reading when followed by possessive
+    # When 人 is followed by の (possessive), it should be read as ひと (person).
+    # Pattern: 人の一生, 人の話, 人の気持ち -- all use ひと
+    # This complements the verb+hito synergy by handling sentence-initial 人
+    SEQ_NO_PARTICLE = 1469800  # の (particle)
+    
+    def synergy_hito_no(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for 人(ひと) + の to prefer person reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for seq=SEQ_HITO_NOUN (ひと reading)
+        filter_left = filter_in_seq_set(SEQ_HITO_NOUN)
+        left_hito = [s for s in seg_list_left.segments if filter_left(s)]
+        if not left_hito:
+            return []
+        
+        # Filter right for の (possessive particle)
+        filter_right = filter_in_seq_set(SEQ_NO_PARTICLE)
+        right_no = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_no:
+            return []
+        
+        syn = Synergy(
+            description="hito+no",
+            connector=" ",
+            score=30,  # Strong enough to override じん
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_hito,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_no,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_hito_no)
+
+    # する + 中(なか) synergy - boost middle reading over suffix reading
+    # When 中 follows a verb (する中, 激化する中, etc.), it means "amid/while"
+    # and should be read as なか, not ちゅう (which is a suffix like 勉強中)
+    def synergy_verb_naka(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for verb + 中(なか) to prefer 'middle/amid' reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for verbs in plain form (non-past, non-negative)
+        left_verbs = []
+        verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n',
+                     'v5t', 'v5u', 'v5u-s', 'v5k-s', 'v5r-i', 'vk', 'vs',
+                     'vs-i'}
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            if verb_pos.intersection(posi):
+                left_verbs.append(seg)
+        
+        if not left_verbs:
+            return []
+        
+        # Filter right for seq=SEQ_NAKA_NOUN (なか reading)
+        filter_right = filter_in_seq_set(SEQ_NAKA_NOUN)
+        right_naka = [s for s in seg_list_right.segments if filter_right(s)]
+        if not right_naka:
+            return []
+        
+        syn = Synergy(
+            description="verb+naka",
+            connector=" ",
+            score=25,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_verbs,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_naka,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_verb_naka)
+    
+    # が + 止まる(とまる) synergy - prefer "to stop" over "to stay/remain"
+    # When 止まる follows が (subject marker), it usually means "stops" (とまる).
+    # "とどまる" (to stay/remain) typically takes に (にとどまる).
+    # Pattern: 時間が止まった, 車が止まった, 心臓が止まった
+    def synergy_ga_tomaru(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for が + 止まる(とまる) to prefer 'to stop' reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for が particle
+        filter_ga = filter_in_seq_set(SEQ_GA)
+        left_ga = [s for s in seg_list_left.segments if filter_ga(s)]
+        if not left_ga:
+            return []
+        
+        # Filter right for とまる (seq=1310620, to stop)
+        filter_tomaru = filter_in_seq_set(SEQ_TOMARU)
+        right_tomaru = [s for s in seg_list_right.segments if filter_tomaru(s)]
+        if not right_tomaru:
+            return []
+        
+        syn = Synergy(
+            description="ga+tomaru",
+            connector=" ",
+            score=25,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_ga,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_tomaru,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_ga_tomaru)
+    
+    # は + 辛い(つらい) synergy - prefer "painful/hard" over "spicy"
+    # When 辛い follows は (topic marker), it usually means "hard/painful" (つらい).
+    # "からい" (spicy/hot) is primarily used in food contexts with direct modification.
+    # Pattern: リハビリは辛い, 別れは辛い, 現実は辛い
+    def synergy_wa_tsurai(seg_list_left: Any, seg_list_right: Any) -> List[Tuple]:
+        """Synergy for は + 辛い(つらい) to prefer 'painful/hard' reading."""
+        from himotoki.lookup import SegmentList
+        
+        # Check serial - must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return []
+        
+        # Filter left for は particle
+        filter_wa = filter_in_seq_set(SEQ_WA)
+        left_wa = [s for s in seg_list_left.segments if filter_wa(s)]
+        if not left_wa:
+            return []
+        
+        # Filter right for つらい (seq=1365860, painful/hard)
+        filter_tsurai = filter_in_seq_set(SEQ_TSURAI)
+        right_tsurai = [s for s in seg_list_right.segments if filter_tsurai(s)]
+        if not right_tsurai:
+            return []
+        
+        syn = Synergy(
+            description="wa+tsurai",
+            connector=" ",
+            score=50,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+        
+        new_left = SegmentList(
+            segments=left_wa,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        new_right = SegmentList(
+            segments=right_tsurai,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        
+        return [(new_right, syn, new_left)]
+    
+    register_synergy(synergy_wa_tsurai)
+    
+
+
+# Initialize synergies on module load
+def _init_penalties():
+    """Initialize all penalty definitions."""
+    
+    # と + は should be penalized to prefer compound とは (seq=2028950)
+    # The noun+prt synergy gives +14 to と+は which makes it beat とは (24 vs 22)
+    # This penalty counteracts that so とは wins
+    # NOTE: This must come BEFORE other penalties so it applies first
+    def has_seq_simple(seqs: set):
+        """Check if segment_list has any of the given seq numbers."""
+        def _filter(segment_list: Any) -> bool:
+            segments = getattr(segment_list, 'segments', [])
+            for seg in segments:
+                info = getattr(seg, 'info', {})
+                seq_set = info.get('seq_set', set())
+                if seqs.intersection(seq_set):
+                    return True
+            return False
+        return _filter
+    
+    def_generic_penalty(
+        name="penalty-to-wa",
+        test_left=has_seq_simple({1008490}),  # と
+        test_right=has_seq_simple({2028920}),  # は
+        description="to+wa-penalty",
+        score=-20,
+        serial=True,
+    )
+    
+    # に + つれ should be penalized to prefer compound につれ (seq=2136050)
+    # につれ has score 36, but に(11)+つれ(40)=51 wins otherwise
+    # Need penalty of at least -(51-36)=-15, but make it larger to be safe
+    # つれ seqs include: 10351890, 1434020, 10097136, 1559290, 1434120, 10351981
+    def_generic_penalty(
+        name="penalty-ni-tsure",
+        test_left=has_seq_simple({2028990}),  # に
+        test_right=has_seq_simple({10351890, 1434020, 10097136, 1559290, 1434120, 10351981}),  # つれ
+        description="ni+tsure-penalty",
+        score=-30,
+        serial=True,
+    )
+    
+    # お + すすめ should be penalized to prefer compound おすすめ (seq=1002150)
+    # おすすめ has score 64, but お(10)+すすめ(90)=100 wins otherwise
+    # Need penalty of at least -36 to make them equal
+    # お seqs: 1343610 (common=12), 1485770 (common=5), 2089690, 2268350, 2603520, 2742870, 2826528
+    # すすめ seqs: 1210900 (noun), 10074000 (verb conjugation), 1365980, 1365990
+    def_generic_penalty(
+        name="penalty-o-susume",
+        test_left=has_seq_simple({1343610, 1485770, 2089690, 2268350, 2603520, 2742870, 2826528}),  # お
+        test_right=has_seq_simple({1210900, 10074000, 1365980, 1365990}),  # すすめ
+        description="o+susume-penalty",
+        score=-40,
+        serial=True,
+    )
+    
+    # 人がい + たら should be penalized to prefer 人 + が + いたら
+    # 人がい is a conjugation of 人がいい (seq=10043332, 2250200)
+    # 人がい(120)+たら(68)=188 beats 人(16)+が(11)+いたら(90)=117
+    # Need penalty of at least -71 to make them equal
+    # たら seqs: 1408160, 1416790, 2029050, 11435516, 11679733
+    def_generic_penalty(
+        name="penalty-hitogai-tara",
+        test_left=has_seq_simple({10043332, 2250200}),  # 人がい / 人がいい
+        test_right=has_seq_simple({1408160, 1416790, 2029050, 11435516, 11679733}),  # たら
+        description="hitogai+tara-penalty",
+        score=-75,
+        serial=True,
+    )
+    
+    # ご + みの should be penalized to prefer compound ごみ (seq=1369900)
+    # ごみ + の = 12 + 16 = 28
+    # ご(10) + みの(12) = 22, plus o+noun synergy(+10) = 32
+    # Need penalty of at least -6 to make ごみ + の win (28 > 26)
+    # Using -15 to ensure ごみ is strongly preferred
+    # ご (honorific prefix): seq=1270190
+    # みの: seq=1634010 (straw raincoat), 2845080 (Mino province)
+    def_generic_penalty(
+        name="penalty-go-mino",
+        test_left=has_seq_simple({1270190}),  # ご (honorific prefix)
+        test_right=has_seq_simple({1634010, 2845080}),  # みの
+        description="go+mino-penalty",
+        score=-15,
+        serial=True,
+    )
+    
+    # わかん + ない should be penalized to prefer compound わかんない (seq=2158960)
+    # わかんない has score 125, but わかん(110)+ない(40)=150 wins otherwise
+    # Need penalty of at least -(150-125)=-25 to make わかんない win
+    # Using -30 to ensure it's strongly preferred
+    # わかん seqs: 10256789, 10256836 (conjugated forms of 分かる)
+    # ない seqs: 10452328, 1529520 (negative adjective/suffix)
+    def_generic_penalty(
+        name="penalty-wakan-nai",
+        test_left=has_seq_simple({10256789, 10256836}),  # わかん
+        test_right=has_seq_simple({10452328, 1529520}),  # ない
+        description="wakan+nai-penalty",
+        score=-30,
+        serial=True,
+    )
+    
+    # 知らん + けど should be penalized to prefer compound 知らんけど (seq=2856919)
+    # 知らんけど exists as a single expression (Kansai dialect "I dunno but")
+    # 知らん seqs include various conjugated forms
+    # けど seqs: 1004200
+    def_generic_penalty(
+        name="penalty-shiran-kedo",
+        test_left=has_seq_simple({10350776}),  # 知らん (conjugated 知る)
+        test_right=has_seq_simple({1004200}),  # けど
+        description="shiran+kedo-penalty",
+        score=-100,  # Strong penalty since 知らんけど is a specific expression
+        serial=True,
+    )
+    
+    # はま + だ should be penalized to prefer は + まだ
+    # はま (seq=1490710, beach) + だ (copula) incorrectly beats は + まだ (still)
+    # はま+だ gets 66 (with noun+だ synergy), は+まだ gets 51
+    # With particle+adverb synergy (+20), は+まだ gets 71
+    # But we still need a penalty to be safe: -20 makes はま+だ = 46, safely below 71
+    def_generic_penalty(
+        name="penalty-hama-da",
+        test_left=has_seq_simple({1490710, 2084350}),  # はま (beach, other)
+        test_right=has_seq_simple({2089020}),  # だ (copula)
+        description="hama+da-penalty",
+        score=-20,
+        serial=True,
+    )
+    
+    # 人たち after single-kanji word should be penalized when compound word exists
+    # 村 + 人たち (263) vs 村人 + たち (258)
+    # This penalty makes 村+人たち = 263-10 = 253, so 村人+たち (258) wins
+    def penalty_hitotachi_split(seg_list_left: Any, seg_list_right: Any) -> Optional[Synergy]:
+        """Penalize single-kanji + 人たち to prefer compound + たち."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be serial
+        if start != end:
+            return None
+        
+        # Check if right is 人たち (seq=1368740)
+        segments_right = getattr(seg_list_right, 'segments', [])
+        has_hitotachi = False
+        for seg in segments_right:
+            info = getattr(seg, 'info', {})
+            seq_set = info.get('seq_set', set())
+            if 1368740 in seq_set:
+                has_hitotachi = True
+                break
+        
+        if not has_hitotachi:
+            return None
+        
+        # Check if left is a single-character word (likely kanji that could combine)
+        segments_left = getattr(seg_list_left, 'segments', [])
+        for seg in segments_left:
+            word = getattr(seg, 'word', None)
+            if word and hasattr(word, 'text'):
+                text = word.text
+                if len(text) == 1:
+                    # Single character - check if it's kanji
+                    from himotoki.characters import is_kanji
+                    if is_kanji(text):
+                        return Synergy(
+                            description="single-kanji+hitotachi-penalty",
+                            connector=" ",
+                            score=-15,  # Penalty to prefer compound+たち
+                            start=start,
+                            end=end,
+                        )
+        
+        return None
+    
+    register_penalty(penalty_hitotachi_split)
+    
+    # === BUG FIX: につけ (7g2) ===
+    # に + つけ should be penalized to prefer compound につけ (seq=2840365)
+    # につけ is a grammatical expression meaning "whenever"
+    # つけ seqs: 1495750 (noun), conjugations of つける (10092135, 10092153, etc.)
+    def_generic_penalty(
+        name="penalty-ni-tsuke",
+        test_left=has_seq_simple({2028990}),  # に
+        test_right=has_seq_simple({1495750, 10092135, 10092153, 10092153, 1495740}),  # つけ
+        description="ni+tsuke-penalty",
+        score=-30,
+        serial=True,
+    )
+    
+    # === BUG FIX: 未だに (bzl) ===
+    # 未だ + に should be penalized to prefer compound 未だに (seq=1527140)
+    # 未だに is an adverb meaning "still" or "even now"
+    # 未だ seqs: 1527110
+    def_generic_penalty(
+        name="penalty-mada-ni",
+        test_left=has_seq_simple({1527110}),  # 未だ
+        test_right=has_seq_simple({2028990}),  # に
+        description="mada+ni-penalty",
+        score=-30,
+        serial=True,
+    )
+    
+    # === BUG FIX: と + も after volitional (1k3) ===
+    # と + も should be penalized to prefer compound とも (seq=1632180)
+    # when following a volitional form
+    # とも is a particle meaning "even if" after volitional form
+    def_generic_penalty(
+        name="penalty-to-mo",
+        test_left=has_seq_simple({1008490}),  # と
+        test_right=has_seq_simple({2028940}),  # も
+        description="to+mo-penalty",
+        score=-30,
+        serial=True,
+    )
+    
+    # === BUG FIX: たん boundary (klu) ===
+    # verb stem + たん should be penalized when past+ん is intended
+    # たん (seq=2646370) is a prefix/noun, not past+explanatory
+    # This prevents 仕掛け + たん instead of 仕掛けた + ん
+    # We need to check if left is a verb stem (continuative form)
+    # and right is たん (which should be た + ん instead)
+    def penalty_verb_tan(seg_list_left: Any, seg_list_right: Any) -> Optional[Synergy]:
+        """Penalize verb stem + たん when past+ん is intended."""
+        start = seg_list_left.end
+        end = seg_list_right.start
+        
+        # Must be serial
+        if start != end:
+            return None
+        
+        # Check if right is たん (seq=2646370)
+        segments_right = getattr(seg_list_right, 'segments', [])
+        has_tan = False
+        for seg in segments_right:
+            info = getattr(seg, 'info', {})
+            seq_set = info.get('seq_set', set())
+            if 2646370 in seq_set:
+                has_tan = True
+                break
+        
+        if not has_tan:
+            return None
+        
+        # Check if left ends with a word that could be a verb stem (masu-stem)
+        # Words like 仕掛け (noun) can also be verb stems
+        # Penalty should be applied regardless to prefer past+explanatory
+        segments_left = getattr(seg_list_left, 'segments', [])
+        for seg in segments_left:
+            info = getattr(seg, 'info', {})
+            posi = info.get('posi', [])
+            # Check if it's a noun that could be a verb stem (many verb stems are also nouns)
+            # or a verb form
+            verb_pos = {'v1', 'v5r', 'v5s', 'v5k', 'v5g', 'v5b', 'v5m', 'v5n', 'v5t', 'v5u', 'vk', 'vs', 'vs-i', 'n'}
+            if verb_pos.intersection(posi):
+                return Synergy(
+                    description="verb-stem+tan-penalty",
+                    connector=" ",
+                    score=-400,  # Very strong penalty - diff is often 300+ points
+                    start=start,
+                    end=end,
+                )
+        
+        return None
+    
+    register_penalty(penalty_verb_tan)
+    
+    # Short kana words together
+    def_generic_penalty(
+        name="penalty-short",
+        test_left=filter_short_kana(1),
+        test_right=filter_short_kana(1, except_list=['と']),
+        description="short",
+        score=-9,
+        serial=False,
+    )
+    
+    # Semi-final particle not at end
+    def penalty_semi_final(seg_list_left: Any, seg_list_right: Any) -> Optional[Synergy]:
+        from himotoki.lookup import SEMI_FINAL_PRT
+        
+        # Check if left has semi-final particle
+        filter_fn = filter_in_seq_set(*SEMI_FINAL_PRT)
+        has_semi_final = any(filter_fn(s) for s in seg_list_left.segments)
+        
+        if not has_semi_final:
+            return None
+        
+        return Synergy(
+            description="semi-final not final",
+            connector=" ",
+            score=-15,
+            start=seg_list_left.end,
+            end=seg_list_right.start,
+        )
+    
+    register_penalty(penalty_semi_final)
+
+
+def _init_segfilters():
+    """Initialize all segfilter definitions."""
+    
+    # Auxiliary verbs must follow continuative form
+    AUX_VERBS = {1342560}  # 初める/そめる
+    def_segfilter_must_follow(
+        name="segfilter-aux-verb",
+        filter_left=filter_is_conjugation(13),  # Continuative
+        filter_right=filter_in_seq_set(*AUX_VERBS),
+    )
+    
+    # いる must not follow 終わる (つ + いる conflict)
+    def_segfilter_must_follow(
+        name="segfilter-tsu-iru",
+        filter_left=lambda s: not filter_in_seq_set(2221640)(s),
+        filter_right=filter_in_seq_set(1577980),  # いる
+        allow_first=True,
+    )
+    
+    # ん/んだ must not follow simple particles
+    def_segfilter_must_follow(
+        name="segfilter-n",
+        filter_left=lambda s: not filter_in_seq_set_simple(*NOUN_PARTICLES)(s),
+        filter_right=filter_in_seq_set(2139720, 2849370, 2849387),  # ん, んだ
+        allow_first=True,
+    )
+    
+    # を + 枯らす
+    def_segfilter_must_follow(
+        name="segfilter-wokarasu",
+        filter_left=filter_in_seq_set(2029010),  # を
+        filter_right=filter_in_seq_set(2087020),
+    )
+    
+    # Bad endings
+    def_segfilter_must_follow(
+        name="segfilter-badend",
+        filter_left=lambda s: False,
+        filter_right=filter_is_compound_end_text("ちゃい", "いか", "とか", "とき", "い"),
+    )
+    
+    # じゃない must not follow は compound
+    def_segfilter_must_follow(
+        name="segfilter-janai",
+        filter_left=lambda s: not filter_is_compound_end(2028920)(s),
+        filter_right=filter_in_seq_set(1529520, 1296400, 2139720),  # ない, ある, ん
+        allow_first=True,
+    )
+    
+    # だ + する (dashi problem)
+    def segfilter_dashi_fn(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        from himotoki.lookup import SegmentList
+        
+        # Right must be する/して/し
+        filter_right = filter_in_seq_set(1157170, 2424740, 1305070)
+        satisfies_right = [s for s in seg_list_right.segments if filter_right(s)]
+        contradicts_right = [s for s in seg_list_right.segments if not filter_right(s)]
+        
+        if not satisfies_right:
+            return [(seg_list_left, seg_list_right)]
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Left must not be だ without で
+        def left_ok(s):
+            info = getattr(s, 'info', {})
+            seq_set = info.get('seq_set', [])
+            if 2089020 not in seq_set:  # だ
+                return True
+            if 2028980 in seq_set:  # で
+                return True
+            return False
+        
+        satisfies_left = [s for s in seg_list_left.segments if left_ok(s)]
+        
+        if satisfies_left:
+            return [(seg_list_left, seg_list_right)]
+        
+        if contradicts_right:
+            return [(
+                seg_list_left,
+                SegmentList(
+                    segments=contradicts_right,
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    matches=seg_list_right.matches,
+                ),
+            )]
+        
+        return []
+    
+    register_segfilter(segfilter_dashi_fn)
+    
+    # Honorifics must follow noun-like words
+    HONORIFICS = {1247260}  # 君
+    def_segfilter_must_follow(
+        name="segfilter-honorific",
+        filter_left=lambda s: not filter_in_seq_set(*NOUN_PARTICLES)(s),
+        filter_right=filter_in_seq_set(*HONORIFICS),
+    )
+    
+    # 君/くん (suffix) must NOT be followed by particles
+    # When 君 is followed by a particle (と, は, が, etc.), it's the pronoun きみ,
+    # not the suffix くん. Remove くん from candidates when followed by particles.
+    from himotoki.constants import SEQ_KUN, NOUN_PARTICLES as NP
+    def segfilter_kun_before_particle(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Remove くん (suffix) when followed by a particle."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if right is a particle
+        filter_particle = filter_in_seq_set(*NP)
+        right_is_particle = any(filter_particle(s) for s in seg_list_right.segments)
+        
+        if not right_is_particle:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Right is a particle - remove くん from left
+        filter_kun = filter_in_seq_set(SEQ_KUN)
+        left_without_kun = [s for s in seg_list_left.segments if not filter_kun(s)]
+        
+        if not left_without_kun:
+            # All segments were くん - this path is blocked
+            return []
+        
+        new_left = SegmentList(
+            segments=left_without_kun,
+            start=seg_list_left.start,
+            end=seg_list_left.end,
+            matches=seg_list_left.matches,
+        )
+        return [(new_left, seg_list_right)]
+    
+    register_segfilter(segfilter_kun_before_particle)
+    
+    # === BUG FIX: Block patterns where compound expressions exist ===
+    
+    # Segfilter: Block に + つけ to prefer につけ (7g2)
+    # につけ (seq=2840365) is a grammatical expression "whenever"
+    def segfilter_ni_tsuke(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block に + つけ pattern to prefer につけ as compound."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left is に (seq=2028990)
+        filter_ni = filter_in_seq_set(2028990)
+        left_ni = [s for s in seg_list_left.segments if filter_ni(s)]
+        left_other = [s for s in seg_list_left.segments if not filter_ni(s)]
+        
+        # Check if right is つけ (seq=1495750 or conjugations)
+        filter_tsuke = filter_in_seq_set(1495750, 10092135, 10092153, 1495740)
+        right_tsuke = [s for s in seg_list_right.segments if filter_tsuke(s)]
+        right_other = [s for s in seg_list_right.segments if not filter_tsuke(s)]
+        
+        # If not the pattern we're blocking, pass through
+        if not left_ni or not right_tsuke:
+            return [(seg_list_left, seg_list_right)]
+        
+        results = []
+        # Allow left_other with any right
+        if left_other:
+            results.append((
+                SegmentList(
+                    segments=left_other,
+                    start=seg_list_left.start,
+                    end=seg_list_left.end,
+                    matches=seg_list_left.matches,
+                ),
+                seg_list_right,
+            ))
+        
+        # Allow left_ni with right_other (non-tsuke)
+        if right_other:
+            results.append((
+                seg_list_left,
+                SegmentList(
+                    segments=right_other,
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    matches=seg_list_right.matches,
+                ),
+            ))
+        
+        return results if results else []
+    
+    register_segfilter(segfilter_ni_tsuke)
+    
+    # Segfilter: Block 未だ + に to prefer 未だに (bzl)
+    # 未だに (seq=1527140) is an adverb "still/even now"
+    def segfilter_mada_ni(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block 未だ + に pattern to prefer 未だに as compound."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left is 未だ (seq=1527110)
+        filter_mada = filter_in_seq_set(1527110)
+        left_mada = [s for s in seg_list_left.segments if filter_mada(s)]
+        left_other = [s for s in seg_list_left.segments if not filter_mada(s)]
+        
+        # Check if right is に (seq=2028990)
+        filter_ni = filter_in_seq_set(2028990)
+        right_ni = [s for s in seg_list_right.segments if filter_ni(s)]
+        right_other = [s for s in seg_list_right.segments if not filter_ni(s)]
+        
+        # If not the pattern we're blocking, pass through
+        if not left_mada or not right_ni:
+            return [(seg_list_left, seg_list_right)]
+        
+        results = []
+        # Allow left_other with any right
+        if left_other:
+            results.append((
+                SegmentList(
+                    segments=left_other,
+                    start=seg_list_left.start,
+                    end=seg_list_left.end,
+                    matches=seg_list_left.matches,
+                ),
+                seg_list_right,
+            ))
+        
+        # Allow left_mada with right_other (non-ni)
+        if right_other:
+            results.append((
+                seg_list_left,
+                SegmentList(
+                    segments=right_other,
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    matches=seg_list_right.matches,
+                ),
+            ))
+        
+        return results if results else []
+    
+    register_segfilter(segfilter_mada_ni)
+    
+    # Segfilter: Block と + も to prefer とも (1k3)
+    # とも (seq=1632180) is a particle meaning "even if"
+    def segfilter_to_mo(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block と + も pattern to prefer とも as compound particle."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left is と (seq=1008490)
+        filter_to = filter_in_seq_set(1008490)
+        left_to = [s for s in seg_list_left.segments if filter_to(s)]
+        left_other = [s for s in seg_list_left.segments if not filter_to(s)]
+        
+        # Check if right is も (seq=2028940)
+        filter_mo = filter_in_seq_set(2028940)
+        right_mo = [s for s in seg_list_right.segments if filter_mo(s)]
+        right_other = [s for s in seg_list_right.segments if not filter_mo(s)]
+        
+        # If not the pattern we're blocking, pass through
+        if not left_to or not right_mo:
+            return [(seg_list_left, seg_list_right)]
+        
+        results = []
+        # Allow left_other with any right
+        if left_other:
+            results.append((
+                SegmentList(
+                    segments=left_other,
+                    start=seg_list_left.start,
+                    end=seg_list_left.end,
+                    matches=seg_list_left.matches,
+                ),
+                seg_list_right,
+            ))
+        
+        # Allow left_to with right_other (non-mo)
+        if right_other:
+            results.append((
+                seg_list_left,
+                SegmentList(
+                    segments=right_other,
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    matches=seg_list_right.matches,
+                ),
+            ))
+        
+        return results if results else []
+    
+    register_segfilter(segfilter_to_mo)
+    
+    # === BUG FIX: Block verb-negative-imperative + ん (nwd, 5zp) ===
+    # Pattern: verb ending with negative imperative な + ん should be blocked
+    # This forces the segmenter to use verb + なんて instead of verbな + ん + て
+    # Example: 発動させるな + ん + て → 発動させる + なんて
+    SEQ_N_PARTICLE = 2139720  # ん (particle/interjection)
+    
+    def segfilter_neg_imperative_n(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block verb-negative-imperative + ん pattern to prefer verb + なんて."""
+        from himotoki.lookup import SegmentList
+        
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left has any negative imperative verbs
+        left_neg_imp = []
+        left_other = []
+        for seg in seg_list_left.segments:
+            info = getattr(seg, 'info', {})
+            conj = info.get('conj', [])
+            is_neg_imperative = False
+            for cdata in conj:
+                if hasattr(cdata, 'prop') and cdata.prop:
+                    # Check for imperative + negative
+                    if getattr(cdata.prop, 'conj_type', None) == 10:  # CONJ_IMPERATIVE
+                        if getattr(cdata.prop, 'neg', False):
+                            is_neg_imperative = True
+                            break
+            
+            if is_neg_imperative:
+                left_neg_imp.append(seg)
+            else:
+                left_other.append(seg)
+        
+        # Check if right is ん (seq=2139720)
+        filter_n = filter_in_seq_set(SEQ_N_PARTICLE)
+        right_n = [s for s in seg_list_right.segments if filter_n(s)]
+        right_other = [s for s in seg_list_right.segments if not filter_n(s)]
+        
+        # If not the pattern we're blocking, pass through
+        if not left_neg_imp or not right_n:
+            return [(seg_list_left, seg_list_right)]
+        
+        results = []
+        # Allow left_other with any right
+        if left_other:
+            results.append((
+                SegmentList(
+                    segments=left_other,
+                    start=seg_list_left.start,
+                    end=seg_list_left.end,
+                    matches=seg_list_left.matches,
+                ),
+                seg_list_right,
+            ))
+        
+        # Allow left_neg_imp with right_other (non-ん)
+        if right_other:
+            results.append((
+                seg_list_left,
+                SegmentList(
+                    segments=right_other,
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    matches=seg_list_right.matches,
+                ),
+            ))
+        
+        return results if results else []
+    
+    register_segfilter(segfilter_neg_imperative_n)
+
+    # === Segfilter: Remove いくさ reading after nouns ===
+    # 戦(いくさ, seq=1587140) is an archaic standalone word for "war".
+    # When 戦 follows a noun, it should be read as せん (match/battle)
+    # as part of a compound (e.g., タイトル戦). Since せん gets culled
+    # by IDENTICAL_WORD_SCORE_CUTOFF (score 5 vs いくさ score 16),
+    # removing いくさ from the split path lets the compound path win.
+    from himotoki.constants import SEQ_IKUSA_NOUN
+    def segfilter_noun_ikusa(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Remove いくさ reading of 戦 when preceded by a noun."""
+        from himotoki.lookup import SegmentList
+
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+
+        # Check if left has a noun
+        left_has_noun = any(filter_is_noun(s) for s in seg_list_left.segments)
+        if not left_has_noun:
+            return [(seg_list_left, seg_list_right)]
+
+        # Remove いくさ from right segments
+        filter_ikusa = filter_in_seq_set(SEQ_IKUSA_NOUN)
+        right_without_ikusa = [s for s in seg_list_right.segments if not filter_ikusa(s)]
+
+        if not right_without_ikusa:
+            # All segments were いくさ - block this split so compound wins
+            return []
+
+        if len(right_without_ikusa) == len(seg_list_right.segments):
+            # No いくさ found, pass through unchanged
+            return [(seg_list_left, seg_list_right)]
+
+        new_right = SegmentList(
+            segments=right_without_ikusa,
+            start=seg_list_right.start,
+            end=seg_list_right.end,
+            matches=seg_list_right.matches,
+        )
+        return [(seg_list_left, new_right)]
+
+    register_segfilter(segfilter_noun_ikusa)
+
+    # === Segfilter: Block ないよう (内容/内用/内洋) when matched from kana ===
+    # When ないよう appears in hiragana, it's almost always ない+よう (negative purposive)
+    # rather than the kanji words 内容/内用/内洋. Only allow these seqs when matched from kanji.
+    SEQ_NAIYOU_KANA = {1459400, 1459440, 2862582}  # All words with reading ないよう
+    def segfilter_naiyou_kana(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Filter out 内容/内用/内洋 when matched from kana (ないよう) instead of kanji."""
+        from himotoki.lookup import SegmentList
+        
+        def is_naiyou_from_kana(seg):
+            if not hasattr(seg, 'word'):
+                return False
+            if seg.word.seq not in SEQ_NAIYOU_KANA:
+                return False
+            # Check if this came from kana matching
+            return seg.word.word_type == 'kana'
+        
+        filtered = [s for s in seg_list_right.segments if not is_naiyou_from_kana(s)]
+        
+        if len(filtered) == len(seg_list_right.segments):
+            # Nothing filtered, pass through
+            return [(seg_list_left, seg_list_right)]
+        
+        if not filtered:
+            # All filtered out - return empty result so this path is blocked
+            # The alternative path (ない + よう) should be taken instead
+            return []
+        
+        return [(
+            seg_list_left,
+            SegmentList(
+                segments=filtered,
+                start=seg_list_right.start,
+                end=seg_list_right.end,
+                matches=seg_list_right.matches,
+            ),
+        )]
+    
+    register_segfilter(segfilter_naiyou_kana)
+
+    # === Segfilter: Block ところが (conjunction) after rentaikei forms ===
+    # When ところが follows a noun-modifying verb form (rentaikei), it should be
+    # split as ところ (place) + が (particle), not the conjunction "however".
+    # Rentaikei forms: Non-past (type 1), Past (type 2), or any verb/adj that can modify nouns
+    # Example: 分からないところがある → 分からない + ところ + が + ある
+    SEQ_TOKOROGA = 1008570  # ところが (conjunction)
+    RENTAIKEI_CONJ_TYPES = {1, 2}  # Non-past, Past - both can modify nouns
+    
+    def segfilter_tokoroga(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Filter out ところが (conjunction) when preceded by a noun-modifying form."""
+        from himotoki.lookup import SegmentList
+        
+        # If no left context, allow ところが (sentence-initial is valid as conjunction)
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        def is_tokoroga_conj(seg):
+            return seg.word.seq == SEQ_TOKOROGA
+        
+        def is_rentaikei(seg):
+            """Check if segment ends with a noun-modifying (rentaikei) form."""
+            conj_list = seg.info.get('conj', [])
+            if not conj_list:
+                # No conjugation - check if it's a noun or noun-like
+                posi = seg.info.get('posi', [])
+                if any(p in posi for p in ['n', 'adj-i', 'adj-na']):
+                    return True
+                return False
+            # Check if any conjugation is rentaikei (can modify nouns)
+            for conj_data in conj_list:
+                if hasattr(conj_data, 'prop') and conj_data.prop:
+                    if conj_data.prop.conj_type in RENTAIKEI_CONJ_TYPES:
+                        return True
+            return False
+        
+        # Filter segments
+        tokoroga = [s for s in seg_list_right.segments if is_tokoroga_conj(s)]
+        other = [s for s in seg_list_right.segments if not is_tokoroga_conj(s)]
+        
+        # If no ところが, pass through
+        if not tokoroga:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left has rentaikei forms
+        rentaikei_left = [s for s in seg_list_left.segments if is_rentaikei(s)]
+        
+        # If left has rentaikei, block ところが (conjunction)
+        if rentaikei_left:
+            if other:
+                return [(
+                    seg_list_left,
+                    SegmentList(
+                        segments=other,
+                        start=seg_list_right.start,
+                        end=seg_list_right.end,
+                        matches=seg_list_right.matches,
+                    ),
+                )]
+            # No other options - block this path entirely
+            return []
+        
+        # No rentaikei on left, allow ところが
+        return [(seg_list_left, seg_list_right)]
+    
+    register_segfilter(segfilter_tokoroga)
+
+    # === Segfilter: Block たん/たんだ after masu-stem verb forms ===
+    # たん/たんだ as standalone words should not follow 
+    # a masu-stem (continuative form) or noun that could be a verb stem.
+    # It should be た + ん (+ だ) instead.
+    # Example: 仕掛けたんだ → 仕掛けた + ん + だ, NOT 仕掛け + たん + だ
+    
+    def segfilter_tan_after_stem(seg_list_left: Optional[Any], seg_list_right: Any) -> List[Tuple]:
+        """Block たん/たんだ when preceded by continuative/masu-stem form."""
+        from himotoki.lookup import SegmentList
+        
+        # If no left context, allow たん at sentence start
+        if seg_list_left is None:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Must be adjacent
+        if seg_list_left.end != seg_list_right.start:
+            return [(seg_list_left, seg_list_right)]
+        
+        def is_tan_tanda(seg):
+            """Check if segment text is たん or たんだ."""
+            return seg.word.text in ('たん', 'たんだ')
+        
+        def is_masu_stem_or_verb_noun(seg):
+            """Check if segment is a masu-stem form or a noun that could be a verb stem."""
+            conj_list = seg.info.get('conj', [])
+            if conj_list:
+                for conj_data in conj_list:
+                    if hasattr(conj_data, 'prop') and conj_data.prop:
+                        # Conj type 13 = Continuative (~masu stem)
+                        if conj_data.prop.conj_type == 13:
+                            return True
+            # Also check if it's a noun that matches a verb's masu-stem pattern
+            # Many nouns like 仕掛け are also verb stems
+            posi = seg.info.get('posi', [])
+            if 'n' in posi:
+                # Check if the word looks like a potential verb stem
+                # (ends with け/き/し/り/ち/み/び/ぎ/え/い/etc.)
+                text = seg.word.text
+                if text and any(text.endswith(k) for k in 'けきしりちみびぎにえいてれねめべげ'):
+                    return True
+            return False
+        
+        # Filter segments
+        tan_segs = [s for s in seg_list_right.segments if is_tan_tanda(s)]
+        other_segs = [s for s in seg_list_right.segments if not is_tan_tanda(s)]
+        
+        # If no たん/たんだ, pass through
+        if not tan_segs:
+            return [(seg_list_left, seg_list_right)]
+        
+        # Check if left has masu-stem or verb-like noun
+        has_stem = any(is_masu_stem_or_verb_noun(s) for s in seg_list_left.segments)
+        
+        if has_stem:
+            # Block たん/たんだ when preceded by masu-stem/verb-noun
+            if other_segs:
+                # Return only non-たん segments
+                new_right = SegmentList(
+                    start=seg_list_right.start,
+                    end=seg_list_right.end,
+                    segments=other_segs
+                )
+                return [(seg_list_left, new_right)]
+            else:
+                # No alternatives - block this path
+                return []
+        
+        # Not a stem, allow たん/たんだ
+        return [(seg_list_left, seg_list_right)]
+    
+    register_segfilter(segfilter_tan_after_stem)
+
+
+_init_synergies()
+_init_penalties()
+_init_segfilters()

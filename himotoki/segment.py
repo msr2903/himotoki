@@ -243,7 +243,7 @@ def find_substring_words(
         Dictionary mapping substring to list of matching words
     """
     from himotoki.raw_types import RawKanaReading, RawKanjiReading
-    from himotoki.trie import get_word_trie
+    from himotoki.trie import get_word_trie, is_trie_ready, trie_has_prefix
     
     if sticky is None:
         sticky = []
@@ -256,6 +256,7 @@ def find_substring_words(
     
     # Get trie for fast filtering (None if not initialized - graceful fallback)
     trie = get_word_trie()
+    trie_ready = is_trie_ready()
     
     # Collect all substrings
     text_len = len(text)
@@ -271,6 +272,10 @@ def find_substring_words(
             part = text[start:end]
             if part in substring_map:
                 continue
+            
+            # PREFIX PRUNE: skip longer substrings when no trie extension exists
+            if trie_ready and not trie_has_prefix(part):
+                break
             
             # Track all substrings for suffix checking
             all_substrings.append(part)
