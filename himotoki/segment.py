@@ -273,12 +273,15 @@ def find_substring_words(
             if part in substring_map:
                 continue
             
-            # PREFIX PRUNE: skip longer substrings when no trie extension exists
-            if trie_ready and not trie_has_prefix(part):
-                break
-            
-            # Track all substrings for suffix checking
+            # Track ALL substrings for suffix checking first.
+            # Suffix compounds (食べたい, 〜ている, …) are not in the trie, so a
+            # prefix-prune break would drop them and change segmentation.
             all_substrings.append(part)
+
+            # No dictionary surface form has this prefix → skip DB IN-lists only.
+            # Keep scanning longer ends for suffix compounds (do not break).
+            if trie_ready and not trie_has_prefix(part):
+                continue
             
             # TRIE FILTER: Only add to DB query lists if in trie
             if trie is None or part in trie:
